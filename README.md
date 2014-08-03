@@ -15,9 +15,6 @@ To create a new chart type extend the class ``ChartView`` and implement the nece
   <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
 </a>
 
-Screenshots
------------
-
 ![Demo Screenshot][1]
 
 
@@ -75,7 +72,7 @@ Chart - Common customization
 ```
 
 
-Line Chart
+Line chart
 ----------
 
 ```xml

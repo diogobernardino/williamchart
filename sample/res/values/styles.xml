@@ -1,0 +1,12 @@
+<resources>
+
+	 <style name="Theme.WilliamChart" parent="@style/Theme.AppCompat.Light">
+        <item name="actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="background">@color/actionbar</item>
+    </style>
+    
+</resources>

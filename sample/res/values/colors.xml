@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="axis">#37474f</color>
+    <color name="grid">#b0bec5</color>
+    <color name="text_view">#455a64</color>
+    <color name="button_pressed">#607d8b</color>
+    <color name="button_disabled">#b0bec5</color>
+    <color name="button_default">#37474f</color>
+    <color name="app_background">#e0e0e0</color>
+    <color name="actionbar">#607d8b</color>
+</resources>

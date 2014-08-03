@@ -1,4 +1,4 @@
-Chart View
+William Chart
 ===============
 
 Chart View is and Android Library based on Views to help the implementation of charts in android applications.

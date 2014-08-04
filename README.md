@@ -149,7 +149,7 @@ Listener
 Animation
 ---------
 
-Note: I've implement a few easing functions (credits to [Jesus Gollonet](http://jesusgollonet.com/)). Implementing the interface ``BaseEasingMethod`` you can create your own easing function.
+Note: I've implemented a few easing functions (credits to [Jesus Gollonet](http://jesusgollonet.com/)). Implementing the interface ``BaseEasingMethod`` you can create your own easing function.
 
 ```java
     Animation anim = new Animation();

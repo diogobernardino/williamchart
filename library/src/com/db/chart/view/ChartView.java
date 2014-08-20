@@ -28,6 +28,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Region;
 import android.graphics.Typeface;
@@ -604,6 +605,12 @@ public abstract class ChartView extends View{
 	}
 
 	
+	public ChartView setGridDashed(boolean bool){
+		style.hasGridDashed = bool;
+		return this;
+	}
+	
+	
 	public ChartView setGridColor(int color){
 		style.gridColor = color;
 		return this;
@@ -646,6 +653,7 @@ public abstract class ChartView extends View{
 		protected float gridThickness;
 		protected boolean hasGrid;
 		protected boolean hasHorizontalGrid;
+		protected boolean hasGridDashed;
 		
 		
 		/** Font */
@@ -659,6 +667,7 @@ public abstract class ChartView extends View{
 			
 			hasGrid = false;
 			hasHorizontalGrid = false;
+			hasGridDashed = false;
 			
 			gridColor = DEFAULT_COLOR;
 			gridThickness = (float) getResources().getDimension(R.dimen.axis_thickness);
@@ -681,6 +690,9 @@ public abstract class ChartView extends View{
 					false);
 			hasHorizontalGrid = attrs.getBoolean(
 					R.styleable.ChartAttrs_chart_horizontalGrid, 
+					false);
+			hasGridDashed = attrs.getBoolean(
+					R.styleable.ChartAttrs_chart_gridDashed, 
 					false);
 			
 			axisColor = attrs.getColor(
@@ -732,6 +744,8 @@ public abstract class ChartView extends View{
 			gridPaint.setStyle(Paint.Style.STROKE);
 			gridPaint.setAntiAlias(true);
 			gridPaint.setStrokeWidth(1);
+			if(hasGridDashed)
+				gridPaint.setPathEffect(new DashPathEffect(new float[] {10,10}, 0));
 		}
 
 		

@@ -11,6 +11,7 @@ import com.db.chart.model.LineSet;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
+import com.db.chart.view.animation.easing.bounce.BounceEaseOut;
 import com.db.chart.view.animation.easing.quint.QuintEaseOut;
 import com.db.williamchartdemo.R;
 
@@ -64,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 				if(updateFirst)
 					updateLineChart(randNumber(1, 3), randNumber(4, 6));
 				else
-					updateBarChart(1, randNumber(4, 6));
+					updateBarChart(randNumber(1, 3), randNumber(4, 6));
 				updateFirst = !updateFirst;
 			}
 		});
@@ -89,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
 			.setOnEntryClickListener(listener);
 		
 		updateLineChart(randNumber(1, 3), randNumber(4, 6));
-		updateBarChart(1, randNumber(4, 6));
+		updateBarChart(randNumber(1, 3), randNumber(4, 6));
 
 	}
 	
@@ -124,9 +125,8 @@ public class MainActivity extends ActionBarActivity {
 		
 		mLineChart.setGrid(randBoolean())
 			.setHorizontalGrid(randBoolean())
-			.setAnimation(new Animation()
-							.setEasing(new QuintEaseOut())
-								.setEndAction(mEndAction))
+			.setGridDashed(randBoolean())
+			.setAnimation(randAnimation())
 			.show();
 	}
 	
@@ -136,20 +136,22 @@ public class MainActivity extends ActionBarActivity {
 		
 		mBarChart.reset();
 		
-		final BarSet data = new BarSet();
-		for(int j = 0; j <nPoints; j++){
-			Bar bar = new Bar(mLabels[j], randValue());
-			bar.setColor(Color.parseColor(getColor(j)));
-			data.addBar(bar);
+		for(int i = 0; i < nSets; i++){
+			final BarSet data = new BarSet();
+			for(int j = 0; j <nPoints; j++){
+				Bar bar = new Bar(mLabels[j], randValue());
+				data.addBar(bar);
+			}
+			data.setColor(Color.parseColor(getColor(i)));
+			mBarChart.addData(data);
 		}
 		
-		mBarChart.addData(data);
-		mBarChart.setBarSpacing(randDimen(15, 35));
+		mBarChart.setBarSpacing(randDimen(15, 30));
+		mBarChart.setSetSpacing(randDimen(3, 8));
 		mBarChart.setGrid(randBoolean())
+			.setGridDashed(randBoolean())
 			//.setLabels(randBoolean())
-			.setAnimation(new Animation()
-							.setEasing(new QuintEaseOut())
-								.setEndAction(mEndAction))
+			.setAnimation(randAnimation())
 			.show();
 	}
 	
@@ -174,12 +176,26 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private static float randValue() {
-		float ya = (new Random().nextFloat() * (MAX_VALUE - MIN_VALUE)) + MIN_VALUE;
-	    return  ya;
+	    return  (new Random().nextFloat() * (MAX_VALUE - MIN_VALUE)) + MIN_VALUE;
 	} 
 	
 	private boolean hasFill(int index){
 		return (index == 2) ? true : false;
+	}
+	
+	private Animation randAnimation(){
+		int ya = new Random().nextInt(2);
+		switch (ya){
+			case 0:
+				return new Animation()
+					.setEasing(new QuintEaseOut())
+						.setEndAction(mEndAction);
+			default:
+				return new Animation()
+				.setEasing(new BounceEaseOut())
+					.setEndAction(mEndAction);
+		}
+		
 	}
 
 	private String getColor(int index){

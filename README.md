@@ -1,66 +1,67 @@
 WilliamChart
 ===============
 
-Chart View is and Android Library based on Views to help the implementation of charts in android applications.
+WilliamChart is an Android Library based on Views to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional charts but instead everything that could be pleasant and intuitive to represent and visualize data. I would prefer to keep charts simple and clean rather than overfeatured.
 
-At the moment it offers the following charts:
+At the moment it provides:
 * ``LineChartView``
+![Demo Screenshot1][1]
 * ``BarChartView``
+![Demo Screenshot2][1]
 
 It has been tested in Android 2.2 and above.
-
-To create a new chart type extend the class ``ChartView`` and implement the necessary abstract methods. I believe the data you get from those methods should be enough to draw whatever you feel like.
 
 <a href="https://play.google.com/store/apps/details?id=com.db.williamchartdemo">
   <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
 </a>
 
-![Demo Screenshot][1]
-
-
 Usage
 -----
-Each chart type has common and specific customization attributes. Add the View to your layout and configure it using styleable attributes or/and programmatically. Check the examples below.
+Each chart type has common but also specific customization attributes. Add the View to your layout and configure it using styleable attributes or/and programmatically .
 
 
 Chart - Common customization
 ----------------------
+
+To create a new chart that requires axis extend the class ``ChartView`` and implement the necessary abstract methods. I believe the data you get from those methods should be enough to draw whatever you feel like.
 
 ```xml
 
     <com.db.chart.view.ChartView
         xmlns:chart="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:padding="5dp"
-        chart:chart_shadowDx="1dp"
-        chart:chart_shadowDy="1dp"
-        chart:chart_shadowRadius="1dp"
-        chart:chart_shadowColor="#000000"
-        chart:chart_gridThickness="1dp"
-        chart:chart_labelColor="@color/label"
-        chart:chart_gridColor="@color/grid"
-        chart:chart_axisColor="@color/axis"
-        chart:chart_fontSize="10dp"
-        chart:chart_typeface="Roboto-Regular.ttf"
-        chart:chart_axisBorderSpacing="0dp"
-        chart:chart_axisThickness="2dp"
-        chart:chart_axisTopSpacing="2dp"
-        chart:chart_label="true"
-        chart:chart_grid="true"
-        chart:chart_horizontalGrid="true"
+        android:layout_height="dp"
+        ...
+        chart:chart_shadowDx="dp"
+        chart:chart_shadowDy="dp"
+        chart:chart_shadowRadius="dp"
+        chart:chart_shadowColor="color"
+        chart:chart_gridThickness="dp"
+        chart:chart_labelColor="color"
+        chart:chart_gridColor="color"
+        chart:chart_axisColor="color"
+        chart:chart_fontSize="dp"
+        chart:chart_typeface="typeface"
+        chart:chart_axisBorderSpacing="dp"
+        chart:chart_axisThickness="dp"
+        chart:chart_axisTopSpacing="dp"
+        chart:chart_label="boolean"
+        chart:chart_grid="boolean"
+        chart:chart_horizontalGrid="boolean"
+        chart:chart_gridDashed="boolean"
     />
 
 ```
 
 ```java
-    chart.setLabels(bool)
+    chart.setLabels(boolean)
     chart.setLabelColor(color)
     
-    chart.setGrid(bool)
+    chart.setGrid(boolean)
     chart.setGridColor(color)
     chart.setGridStrokeThickness(integer)
-    chart.setHorizontalGrid(bool)
+    chart.setHorizontalGrid(boolean)
+    chart.setGridDashed(boolean)
 
     chart.setBorderSpacing(float)
     chart.setStep(integer)
@@ -88,23 +89,23 @@ Line chart
     lineSet.addPoint(new Point(string, float);
     
     // Style dots
-    lineSet.setDots(bool)
+    lineSet.setDots(boolean)
     lineSet.setDotsColor(color)
     lineSet.setDotsRadius(float)
     lineSet.setDotsStrokeThickness(float)
     lineSet.setDotsStrokeColor(color)
     
     // Style line
-    lineSet.setLineThickness(rloat)
+    lineSet.setLineThickness(float)
     lineSet.setLineColor(color)
     
     // Style background fill
-    lineSet.setFill(bool)
+    lineSet.setFill(boolean)
     lineSet.setFillColor(color)
     
     // Style type
-    lineSet.setDashed(bool)
-    lineSet.setSmooth(bool);
+    lineSet.setDashed(boolean)
+    lineSet.setSmooth(boolean);
 
     chartView.addData(lineSet)
 ```
@@ -116,17 +117,19 @@ Bar chart
 ```xml
     <com.db.chart.BarChartView
         ... 
-        chart:chart_barSpacing="10dp"
+        chart:chart_barSpacing="dp"
+        chart:chart_setSpacing="dp"
     />
 ```
 
 ```java
     BarChartView chartView = new BarcChartView();
-    barChart.setBarSpacing(randDimen(15, 35));
+    barChart.setBarSpacing(dimension);
+    barChart.setSetSpacing(dimension);
 
     BarSet barSet = new BarSet();
-    Bar bar = new Bar(mLabels[j], randValue());
-    bar.setColor(Color.parseColor(getColor(j)));
+    Bar bar = new Bar(string, float);
+    bar.setColor(color);
     barSet.addBar(bar);
 
     chartView.addData(barSet)
@@ -149,24 +152,33 @@ Listener
 Animation
 ---------
 
-Note: I've implemented a few easing functions (credits to [Jesus Gollonet](http://jesusgollonet.com/)). Implementing the interface ``BaseEasingMethod`` you can create your own easing function.
-
 ```java
     Animation anim = new Animation();
 
-    anim.setDuration(int);
+    anim.setDuration(integer);
     anim.setEasing(easingFunction);
     anim.setEndAction(runnable);
     
-    chart.setAnimation(anim);
+    chart.setAnimation(animation);
 ```
 
+Implementing the interface ``BaseEasingMethod`` you can create your own easing function. I've implemented a few (credits to [Jesus Gollonet](http://jesusgollonet.com/)):
+
+* ``LinearEase``
+* ``BounceEaseOut``
+* ``CircEaseOut``
+* ``CubicEaseOut``
+* ``ExpoEaseOut``
+* ``QuadEaseOut``
+* ``QuartEaseOut``
+* ``QuintEaseOut``
+* ``SineEaseOut``
 
 TODO
-----
-* Pie Chart
+-------
 * Stack Bar Chart
-
+* Pie Chart
+* Whatever you feel like contributing...
 
 License
 -------
@@ -187,4 +199,5 @@ License
 
 
 
-[1]: ./art/demo.gif
+[1]: ./art/linechart.gif
+[2]: ./art/barchart.gif

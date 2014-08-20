@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import com.db.williamchart.R;
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
-import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 
 import android.content.Context;
@@ -33,13 +32,23 @@ import android.graphics.Region;
 import android.util.AttributeSet;
 
 /**
- * Implements a line chart extending {@link ChartView}
+ * Implements a bar chart extending {@link ChartView}
  */
 public class BarChartView extends ChartView {
+	
 	
 	/** Style applied to Graph */
 	private Style mStyle;
 
+	
+	/** Bar width */
+	private float mBarWidth;
+	
+	
+	/** Offset to control bar positions **/
+	/** Added due to multiset charts **/
+	private float mDrawingOffset;
+	
 	
 	
 	public BarChartView(Context context, AttributeSet attrs) {
@@ -81,20 +90,28 @@ public class BarChartView extends ChartView {
 	@Override
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
 		
-		for(ChartSet set: data){
+		for (int i = 0; i < data.get(0).size(); i++) {
 			
-			final BarSet barSet = (BarSet) set;
-			mStyle.mBarPaint.setColor(barSet.getColor());
+			// Set first offset to draw a group of bars
+			float drawingOffset = data.get(0).getEntry(i).getX() - mDrawingOffset;
 			
-			for (ChartEntry entry: barSet.getEntries()) {
-				Bar bar = (Bar) entry;
+			for(int j = 0; j < data.size(); j++){
+				
+				final BarSet barSet = (BarSet) data.get(j);
+				mStyle.mBarPaint.setColor(barSet.getColor());
+				Bar bar = (Bar) barSet.getEntry(i);
 				mStyle.mBarPaint.setColor(bar.getColor());
-				canvas.drawRect(new Rect((int) (bar.getX() - mStyle.mBarWidth/2), 
-										(int) bar.getY(), 
-											(int) (bar.getX() + mStyle.mBarWidth/2),
-												(int) this.getInnerChartBottom()), 
+				
+				canvas.drawRect(new Rect((int) drawingOffset, 
+									(int) bar.getY(), 
+										(int) (drawingOffset += mBarWidth),
+											(int) this.getInnerChartBottom()), 
 									mStyle.mBarPaint);
-			}
+				
+				// If last bar of group no set spacing is necessary
+				if(j != data.size()-1)
+					drawingOffset += mStyle.mSetSpacing;
+			}	
 		}
 	}
 	
@@ -102,36 +119,67 @@ public class BarChartView extends ChartView {
 	
 	/**
 	 * Calculates Bar width based on the distance of two horizontal labels
+	 * @param number of sets
 	 * @param x0
 	 * @param x1
 	 */
-	private void calculateBarsWidth(float x0, float x1) {
-		mStyle.mBarWidth = x1-x0-mStyle.mBarSpacing;
+	private void calculateBarsWidth(int n, float x0, float x1) {
+		mBarWidth = ((x1 - x0) - mStyle.mBarSpacing/2 - mStyle.mSetSpacing*(n-1))/n;
 	}
 
+	
+	/**
+	 * Having calculated previously bar width it gives the offset to know 
+	 * where to start drawing the first bar of each group.
+	 * @param n - Number of sets
+	 */
+	private void calculatePositionOffset(int n){
+		if(n % 2 == 0){
+			mDrawingOffset = n*mBarWidth/2 + (n-1)*(mStyle.mSetSpacing/2);
+		}else{
+			mDrawingOffset = n*mBarWidth/2 + ((n-1)/2)*mStyle.mSetSpacing;
+		}
+	}
+	
 	
 	
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
 		
-		calculateBarsWidth(data.get(0).getEntry(0).getX(), 
+		// Doing calculations here to avoid doing several times while drawing
+		// in case of animation
+		calculateBarsWidth(data.size(), data.get(0).getEntry(0).getX(), 
 							data.get(0).getEntry(1).getX());
+		calculatePositionOffset(data.size());
 		
-		//Define regions
+		// Define regions
+		
 		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
-		for(ChartSet set: data){
-			
-			final ArrayList<Region> regionSet = new ArrayList<Region>(set.size());
-			for(ChartEntry e : set.getEntries()){
-
-				regionSet.add(new Region((int)(e.getX() - mStyle.mBarWidth/2), 
-										(int)(e.getY()), 
-											(int)(e.getX() + mStyle.mBarWidth/2), 
-												(int)(this.getInnerChartBottom())));
-			
-			}
-			result.add(regionSet);
+		for(int i = 0; i < data.size(); i++){
+			result.add(new ArrayList<Region>());
 		}
+		
+		for (int i = 0; i < data.get(0).size(); i++) {
+			
+			// Set first offset to draw a group of bars
+			float drawingOffset = data.get(0).getEntry(i).getX() - mDrawingOffset;
+			
+			for(int j = 0; j < data.size(); j++){
+				
+				final BarSet barSet = (BarSet) data.get(j);
+				Bar bar = (Bar) barSet.getEntry(i);
+				
+				result.get(j).add(new Region((int) drawingOffset, 
+									(int) bar.getY(), 
+										(int) (drawingOffset += mBarWidth), 
+											(int)(this.getInnerChartBottom())));
+				
+				// If last bar of group no set spacing is necessary
+				if(j != data.size()-1)
+					drawingOffset += mStyle.mSetSpacing;
+			}	
+		}
+		
 		return result;
 	}
 	
@@ -145,7 +193,9 @@ public class BarChartView extends ChartView {
 	public void setBarSpacing(float spacing){
 		mStyle.mBarSpacing = spacing;
 	}
-	
+	public void setSetSpacing(float spacing){
+		mStyle.mSetSpacing = spacing;
+	}
 	
 	
 	/** 
@@ -158,12 +208,9 @@ public class BarChartView extends ChartView {
 		private Paint mBarPaint;
 		
 		
-		/** Bar width */
-		private float mBarWidth;
-		
-		
 		/** Spacing between bars */
 		private float mBarSpacing;
+		private float mSetSpacing;
 		
 		
 		/** Shadow related variables */
@@ -176,6 +223,7 @@ public class BarChartView extends ChartView {
 	    protected Style() {
 	    	
 	    	mBarSpacing = (float) getResources().getDimension(R.dimen.bar_spacing);
+	    	mSetSpacing = (float) getResources().getDimension(R.dimen.set_spacing);
 	    	
 	    	mShadowRadius = getResources().getDimension(R.dimen.shadow_radius);
 	    	mShadowDx = getResources().getDimension(R.dimen.shadow_dx);
@@ -188,6 +236,9 @@ public class BarChartView extends ChartView {
 	    	mBarSpacing = attrs.getDimension(
 	    			R.styleable.BarChartAttrs_chart_barSpacing, 
 	    				getResources().getDimension(R.dimen.bar_spacing));
+	    	mSetSpacing = attrs.getDimension(
+	    			R.styleable.BarChartAttrs_chart_barSpacing, 
+	    				getResources().getDimension(R.dimen.set_spacing));
 	    	
 	    	mShadowRadius = attrs.getDimension(
 	    			R.styleable.ChartAttrs_chart_shadowRadius, 

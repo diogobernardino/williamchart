@@ -9,6 +9,7 @@
         
         <attr name="chart_grid" format="boolean"/>
         <attr name="chart_horizontalGrid" format="boolean"/>
+        <attr name="chart_gridDashed" format="boolean"/>
         <attr name="chart_gridThickness" format="dimension"/>
         <attr name="chart_gridColor" format = "reference|color"/>
         
@@ -26,6 +27,7 @@
 	
      <declare-styleable name="BarChartAttrs">
          <attr name="chart_barSpacing" format="dimension"/>
+         <attr name="chart_setSpacing" format="dimension"/>
 	</declare-styleable>  
 </resources>
 

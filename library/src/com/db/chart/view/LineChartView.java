@@ -94,7 +94,6 @@ public class LineChartView extends ChartView {
 			
 			final LineSet lineSet = (LineSet) set;
 			
-			//TODO passar isto para o metodo
 			mStyle.mLinePaint.setColor(lineSet.getLineColor());
 			mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());
 			mStyle.mFillPaint.setColor(lineSet.getFillColor());

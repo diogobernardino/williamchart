@@ -5,9 +5,12 @@ WilliamChart is an Android Library based on Views to help the implementation of 
 
 At the moment it provides:
 * ``LineChartView``
+
 ![Demo Screenshot1][1]
+
 * ``BarChartView``
-![Demo Screenshot2][1]
+
+![Demo Screenshot2][2]
 
 It has been tested in Android 2.2 and above.
 

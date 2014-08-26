@@ -41,7 +41,6 @@ public class ChartSet {
 		mEntries.add(e);
 	}
 	
-	
 
 	public int size() {
 		return mEntries.size();

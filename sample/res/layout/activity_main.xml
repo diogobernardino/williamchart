@@ -1,13 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="#eceff1">
     
     <TextView
    	    android:id="@+id/text"
    	    android:layout_width="wrap_content"
    	    android:layout_height="wrap_content"
-   	    android:layout_centerHorizontal="true"
-   	    android:textSize="45dp"
+   	    android:textSize="20dp"
    	    android:text="onPointClick"
    	    android:textColor="@color/text_view"
    	    />
@@ -16,18 +18,16 @@
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/linechart"
 	    android:layout_width="match_parent"
-	    android:layout_height="180dp"
-	    android:layout_marginTop="5dp"
-	    android:paddingTop="5dp"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:paddingTop="10dp"
 	    android:paddingBottom="5dp"
 	    android:paddingLeft="10dp"
 	    android:paddingRight="10dp"
 	    chart:chart_shadowDy="1dp"
 	    chart:chart_shadowRadius="1dp"
 	    chart:chart_shadowColor="#80000000"
-	    chart:chart_gridColor="@color/grid"
 	    chart:chart_axisColor="@color/axis"
-	    android:layout_below="@+id/text"
 	    chart:chart_typeface="Roboto-Regular.ttf"
 	    chart:chart_axisBorderSpacing="0dp"
 	/>
@@ -36,32 +36,39 @@
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/barchart"
 	    android:layout_width="match_parent"
-	    android:layout_height="180dp"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
 	    android:paddingTop="10dp"
-	    android:paddingBottom="10dp"
+	    android:paddingBottom="5dp"
 	    android:paddingLeft="10dp"
 	    android:paddingRight="10dp"
-	    chart:chart_gridColor="#b0bec5"
 	    chart:chart_axisColor="#455a64"
-	    android:layout_below="@+id/linechart"
-	    chart:chart_shadowDx="1dp"
-	    chart:chart_shadowRadius="1dp"
-	    chart:chart_shadowColor="#80000000"
 	    chart:chart_typeface="Roboto-Regular.ttf"
 	    chart:chart_axisBorderSpacing="25dp"
 	/>
-	
+	<com.db.chart.view.StackBarChartView
+		xmlns:chart="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/stackbarchart"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:paddingTop="10dp"
+	    android:paddingBottom="5dp"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="10dp"
+	    chart:chart_axisColor="#455a64"
+	    chart:chart_typeface="Roboto-Regular.ttf"
+	    chart:chart_axisBorderSpacing="25dp"
+	/>
 
 	
 	<Button
    	    android:id="@+id/button"
    	    android:layout_width="match_parent"
-   	    android:layout_height="match_parent"
-   	    android:layout_below="@+id/barchart"
-   	    android:layout_alignParentBottom="true"
+   	    android:layout_height="wrap_content"
    	    android:text="PLAY"
    	    android:textSize="25dp"
    	    android:textColor="#ffffff"
    	    android:background="@drawable/button"/>
 	
-</RelativeLayout>
+</LinearLayout>

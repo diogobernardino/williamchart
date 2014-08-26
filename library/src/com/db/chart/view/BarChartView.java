@@ -27,7 +27,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.AttributeSet;
 
@@ -38,29 +38,31 @@ public class BarChartView extends ChartView {
 	
 	
 	/** Style applied to Graph */
-	private Style mStyle;
+	protected Style style;
 
 	
 	/** Bar width */
-	private float mBarWidth;
+	protected float mBarWidth;
+
 	
-	
-	/** Offset to control bar positions **/
-	/** Added due to multiset charts **/
+	/** 
+	 * Offset to control bar positions
+	 *  Added due to multiset charts
+	 */
 	private float mDrawingOffset;
 	
 	
 	
 	public BarChartView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mStyle = new Style(context.getTheme()
+		style = new Style(context.getTheme()
 				.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
 	}
 	
 	
 	public BarChartView(Context context) {
 		super(context);
-		mStyle = new Style();
+		style = new Style();
 	}
 	
 	
@@ -68,14 +70,14 @@ public class BarChartView extends ChartView {
 	@Override
 	public void onAttachedToWindow(){
 		super.onAttachedToWindow();
-		mStyle.init();
+		style.init();
 	}
 	
 	
 	@Override
 	public void onDetachedFromWindow(){
 		super.onDetachedFromWindow();
-		mStyle.clean();
+		style.clean();
 	}
 	
 	
@@ -98,25 +100,46 @@ public class BarChartView extends ChartView {
 			for(int j = 0; j < data.size(); j++){
 				
 				final BarSet barSet = (BarSet) data.get(j);
-				mStyle.mBarPaint.setColor(barSet.getColor());
+				style.barPaint.setColor(barSet.getColor());
 				Bar bar = (Bar) barSet.getEntry(i);
-				mStyle.mBarPaint.setColor(bar.getColor());
+				style.barPaint.setColor(bar.getColor());
 				
-				canvas.drawRect(new Rect((int) drawingOffset, 
-									(int) bar.getY(), 
-										(int) (drawingOffset += mBarWidth),
-											(int) this.getInnerChartBottom()), 
-									mStyle.mBarPaint);
+				// If bar needs background
+				if(style.hasBarBackground)
+					drawBarBackground(canvas, drawingOffset);			
+				
+				// Draw bar
+				canvas.drawRoundRect(new RectF((int) drawingOffset, 
+						(int) bar.getY(), 
+							(int) (drawingOffset + mBarWidth),
+								(int) this.getInnerChartBottom()), 
+							style.cornerRadius,
+								style.cornerRadius,
+									style.barPaint);
+
+				drawingOffset += mBarWidth;
 				
 				// If last bar of group no set spacing is necessary
 				if(j != data.size()-1)
-					drawingOffset += mStyle.mSetSpacing;
+					drawingOffset += style.mSetSpacing;
 			}	
 		}
 	}
 	
 	
 	
+	protected void drawBarBackground(Canvas canvas, float horizontalOffset) {
+		canvas.drawRoundRect(new RectF((int) horizontalOffset, 
+				(int) this.innerchartTop, 
+					(int) (horizontalOffset + mBarWidth),
+						(int) this.getInnerChartBottom()),
+					style.cornerRadius,
+						style.cornerRadius,
+							style.barBackgroundPaint);	
+	}
+	
+
+
 	/**
 	 * Calculates Bar width based on the distance of two horizontal labels
 	 * @param number of sets
@@ -124,9 +147,10 @@ public class BarChartView extends ChartView {
 	 * @param x1
 	 */
 	private void calculateBarsWidth(int n, float x0, float x1) {
-		mBarWidth = ((x1 - x0) - mStyle.mBarSpacing/2 - mStyle.mSetSpacing*(n-1))/n;
+		mBarWidth = ((x1 - x0) - style.barSpacing/2 - style.mSetSpacing*(n-1))/n;
 	}
 
+	
 	
 	/**
 	 * Having calculated previously bar width it gives the offset to know 
@@ -135,9 +159,9 @@ public class BarChartView extends ChartView {
 	 */
 	private void calculatePositionOffset(int n){
 		if(n % 2 == 0){
-			mDrawingOffset = n*mBarWidth/2 + (n-1)*(mStyle.mSetSpacing/2);
+			mDrawingOffset = n*mBarWidth/2 + (n-1)*(style.mSetSpacing/2);
 		}else{
-			mDrawingOffset = n*mBarWidth/2 + ((n-1)/2)*mStyle.mSetSpacing;
+			mDrawingOffset = n*mBarWidth/2 + ((n-1)/2)*style.mSetSpacing;
 		}
 	}
 	
@@ -155,9 +179,8 @@ public class BarChartView extends ChartView {
 		// Define regions
 		
 		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
-		for(int i = 0; i < data.size(); i++){
+		for(int i = 0; i < data.size(); i++)
 			result.add(new ArrayList<Region>());
-		}
 		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
@@ -176,7 +199,7 @@ public class BarChartView extends ChartView {
 				
 				// If last bar of group no set spacing is necessary
 				if(j != data.size()-1)
-					drawingOffset += mStyle.mSetSpacing;
+					drawingOffset += style.mSetSpacing;
 			}	
 		}
 		
@@ -186,17 +209,50 @@ public class BarChartView extends ChartView {
 	
 	
 	/*
+	 * --------
 	 * Setters
-	 * 
+	 * --------
 	 */
 	
+	/**
+	 * Define the space to use between bars.
+	 * @param spacing
+	 */
 	public void setBarSpacing(float spacing){
-		mStyle.mBarSpacing = spacing;
-	}
-	public void setSetSpacing(float spacing){
-		mStyle.mSetSpacing = spacing;
+		style.barSpacing = spacing;
 	}
 	
+	/**
+	 * When multiset, it defines the space to use set.
+	 * @param spacing
+	 */
+	public void setSetSpacing(float spacing){
+		style.mSetSpacing = spacing;
+	}
+	
+	/**
+	 * Background in bars place
+	 * @param bool
+	 */
+	public void setBarBackground(boolean bool){
+		style.hasBarBackground = bool;
+	}
+	
+	/**
+	 * Color to use in bars background.
+	 * @param color
+	 */
+	public void setBarBackgroundColor(int color){
+		style.mBarBackgroundColor = color;
+	}
+	
+	/**
+	 * Round corners of bars
+	 * @param radius - radius applied to the corners.
+	 */
+	public void setRoundCorners(float radius){
+		style.cornerRadius = radius;
+	}
 	
 	/** 
 	 * Keeps the style to be applied to the BarChart.
@@ -204,14 +260,22 @@ public class BarChartView extends ChartView {
 	 */
 	public class Style{
 		
-		/** Bars fill variables */
-		private Paint mBarPaint;
+		private int DEFAULT_COLOR = -16777216;
 		
+		/** Bars fill variables */
+		protected Paint barPaint;
+		
+		/** Bar background variables */
+		private Paint barBackgroundPaint;
+		private int mBarBackgroundColor;
+		protected boolean hasBarBackground;
 		
 		/** Spacing between bars */
-		private float mBarSpacing;
+		protected float barSpacing;
 		private float mSetSpacing;
 		
+		/** Radius to round corners **/
+		protected float cornerRadius;
 		
 		/** Shadow related variables */
 		private final float mShadowRadius;
@@ -222,18 +286,24 @@ public class BarChartView extends ChartView {
 		
 	    protected Style() {
 	    	
-	    	mBarSpacing = (float) getResources().getDimension(R.dimen.bar_spacing);
+	    	mBarBackgroundColor = DEFAULT_COLOR;
+	    	hasBarBackground = false;
+	    	
+	    	barSpacing = (float) getResources().getDimension(R.dimen.bar_spacing);
 	    	mSetSpacing = (float) getResources().getDimension(R.dimen.set_spacing);
 	    	
 	    	mShadowRadius = getResources().getDimension(R.dimen.shadow_radius);
 	    	mShadowDx = getResources().getDimension(R.dimen.shadow_dx);
 	    	mShadowDy = getResources().getDimension(R.dimen.shadow_dy);
-	    	mShadowColor = 0;
+	    	mShadowColor = DEFAULT_COLOR;
 	    }
 	    
 	    protected Style(TypedArray attrs) {
 	    	
-	    	mBarSpacing = attrs.getDimension(
+	    	mBarBackgroundColor = DEFAULT_COLOR;
+	    	hasBarBackground = false;
+	    	
+	    	barSpacing = attrs.getDimension(
 	    			R.styleable.BarChartAttrs_chart_barSpacing, 
 	    				getResources().getDimension(R.dimen.bar_spacing));
 	    	mSetSpacing = attrs.getDimension(
@@ -256,16 +326,23 @@ public class BarChartView extends ChartView {
 	    
 		private void init(){
 	    	
-	    	mBarPaint = new Paint();
-	    	mBarPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-	    	mBarPaint.setShadowLayer(mShadowRadius, mShadowDx, 
+	    	cornerRadius = 0;
+	    	
+	    	barPaint = new Paint();
+	    	barPaint.setStyle(Paint.Style.FILL);
+	    	barPaint.setShadowLayer(mShadowRadius, mShadowDx, 
 	    								mShadowDy, mShadowColor);
+	    	
+	    	barBackgroundPaint = new Paint();
+	    	barBackgroundPaint.setColor(mBarBackgroundColor);
+	    	barBackgroundPaint.setStyle(Paint.Style.FILL);
 	    }
 	    
 		
 	    private void clean(){
 	    	
-	    	mBarPaint = null;
+	    	barPaint = null;
+	    	barBackgroundPaint = null;
 	    }
 	    
 	}

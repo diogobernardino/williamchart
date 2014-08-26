@@ -142,7 +142,8 @@ class XController{
 		mChartView.style.labelPaint.setTextAlign(Align.CENTER);
 		
 		//Draw axis
-		canvas.drawLine(mInnerChartLeft, 
+		if(mChartView.style.hasXAxis)
+			canvas.drawLine(mInnerChartLeft, 
 				mAxisBottom, 
 					getInnerChartRight(), 
 						mAxisBottom, 

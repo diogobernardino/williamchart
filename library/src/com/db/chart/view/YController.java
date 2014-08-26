@@ -22,8 +22,10 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.db.williamchart.R;
+import com.db.chart.exception.ChartException;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 
@@ -32,6 +34,9 @@ import com.db.chart.model.ChartSet;
  * If the drawing is requested it will also take care of it.
  */
 class YController{
+	
+	
+	private static final String TAG = "com.db.chart.view.YController";
 	
 	
 	/** Default step between labels */
@@ -67,7 +72,7 @@ class YController{
 	
 	
 	/** Step between labels */
-	private int mStep;
+	protected int step;
 
 	
 	/** Starting X point of the axis */
@@ -100,7 +105,7 @@ class YController{
 		mChartView = chartView;
 		
 		//Set defaults
-		mStep = DEFAULT_STEP;
+		step = DEFAULT_STEP;
 		mVerTopSpacing = mChartView.getResources()
 									.getDimension(R.dimen.axis_top_spacing);;
 		mAxisHorPosition = 0;
@@ -143,6 +148,15 @@ class YController{
 		mLabels = calcLabels();
 		mAxisHorPosition = calcAxisHorizontalPosition();
 		mLabelsPos = calcLabelsPos(mChartView.data.get(0).size());
+		
+		if(mMaxLabelValue < calcMaxY()){
+			try{
+				throw new ChartException("MaxAxisValue defined < than current max set value");
+			}catch(ChartException e){
+				Log.e(TAG, "", e);
+				System.exit(1);
+			}	
+		}
 	}
 
 	
@@ -176,15 +190,16 @@ class YController{
 			
 			//Get the highest label based in maxY and step
 			mMaxLabelValue = (int) Math.ceil(maxY);
-			while(mMaxLabelValue % mStep != 0)
+			while(mMaxLabelValue % step != 0)
 				mMaxLabelValue += 1;
 		}
 		
+		
 		final ArrayList<Integer> result = new ArrayList<Integer>();
-		int aux = mStep;
+		int aux = step;
 		while(aux <= mMaxLabelValue){
 			result.add(aux);
-			aux += mStep;
+			aux += step;
 		}
 
 		//Set max Y axis label in case isn't already there
@@ -259,7 +274,7 @@ class YController{
 	protected void draw(Canvas canvas){
 		if(isDrawing){
 			
-			//TODO isto left fica mais ou menos fixe lol
+			//TODO isto left fica mais ou menos fixe
 			mChartView.style.labelPaint.setTextAlign(Align.LEFT);
 
 			// Draw labels
@@ -335,6 +350,11 @@ class YController{
 	}
 	
 	
+	public float getMaxAxisValue(){
+		return mMaxLabelValue;
+	}
+	
+	
 	
 	/*
 	 * Setters
@@ -364,8 +384,8 @@ class YController{
 	 * with {0, 2, 4, 6} as labels.
 	 * @param step - (real) value distance from every label
 	 */
-	public void setStep(int step) {
-		mStep = step;
+	public void setStep(int s) {
+		step = s;
 	}
 	
 	
@@ -376,9 +396,9 @@ class YController{
 	 * @param maxAxisValue - the maximum value that Y axis will have as a label
 	 * @param step - step - (real) value distance from every label
 	 */
-	public void setMaxAxisValue(int maxAxisValue, int step) {
+	public void setMaxAxisValue(int maxAxisValue, int s) {
 		mMaxLabelValue = maxAxisValue;
-		mStep = step;
+		step = s;
 	}
 
 }

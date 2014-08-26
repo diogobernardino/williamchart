@@ -18,6 +18,9 @@ package com.db.chart.view.animation;
 
 import java.util.ArrayList;
 
+import android.graphics.Path;
+import android.graphics.PathMeasure;
+
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;
 import com.db.chart.view.animation.easing.BaseEasingMethod;
@@ -44,33 +47,40 @@ public class Animation{
 	private Runnable mRunnable;
 	
 	
-	/** Distance between starting points and targets */
-	private float[][] mDistances;
+	/** Maintains path measures to get position updates **/
+	private PathMeasure[][] mPathMeasures;
 	
 	
-	/** Animation duration */
-	private long mDuration;
+	/** 
+	 * Animation global duration 
+	 * Likely to be removed in future.
+	 */
+	private long mGlobalDuration;
 	
 	
-	/** Keeps the current duration */
-	private long mCurrentDuration;
+	/** 
+	 * Keeps the current global duration 
+	 * Likely to be removed in future.
+	 */
+	private long mCurrentGlobalDuration;
 	
 	
-	/** Keeps the initial time of the animantion*/
-	private long mInitTime;
+	/** 
+	 * Keeps the global initial time of the animation
+	 * Likely to be removed in future.
+	 */
+	private long mGlobalInitTime;
 	
 	
 	/** Controls interpolation of the animation */
 	private BaseEasingMethod mEasing;
 
 	
-	/**
-	 * Control animation updates
-	 */
+	/** Control animation updates */
     private Runnable mAnimator = new Runnable() {
         @Override
         public void run() {
-        	if(mChartView.canYouDraw()){
+        	if(mChartView.canIPleaseAskYouToDraw()){
         		mChartView.addData(getUpdate());
         		mChartView.postInvalidate();
         	}
@@ -80,14 +90,29 @@ public class Animation{
 
     /** {@link ChartView} element to request draw updates */
 	private ChartView mChartView;
-
-	
-	/** Animation starting point */
-	private float mStartY;
 	
 	
 	/** Keeps information if animation is ongoing or not */
 	private boolean mPlaying;
+	
+	
+	/** Keeps the initial time of the animation for each of the points */
+	private long[] mInitTime;
+	
+	
+	/** Keeps the current duration of the animation in each of the points */
+	private long[] mCurrentDuration;
+	
+	
+	/** Animation duration for each of the points */
+	private int mDuration;
+	
+	
+	/** 
+	 * Keeps the information regarding whether points will be animated 
+	 * in parallel or in sequence.
+	 */
+	private boolean mInSequence;
 	
 	
 	
@@ -103,11 +128,12 @@ public class Animation{
 	
 	
 	private void init(int duration){
-		mDuration = duration;
-		mCurrentDuration = 0;
-		mInitTime = 0;
-		mPlaying = false;
+		mGlobalDuration = duration;
+		mCurrentGlobalDuration = 0;
+		mGlobalInitTime = 0;
 		mEasing = new QuintEaseOut();
+		mInSequence = false;
+		mPlaying = false;
 	}
 	
 	
@@ -127,16 +153,37 @@ public class Animation{
 		
 		mChartView = chartView;
 		mSets = sets;
-		mStartY = startY;
-		mDistances = new float[mSets.size()][mSets.get(0).size()];
+		
+		mPathMeasures = new PathMeasure[mSets.size()][mSets.get(0).size()];
+		mInitTime = new long[mSets.get(0).size()];
+		mCurrentDuration = new long[mSets.get(0).size()];
+		
+		if(mInSequence) // Divide the duration between the points
+			mDuration = (int) mGlobalDuration / mSets.get(0).size();
+		else // Duration applied to all
+			mDuration = (int) mGlobalDuration;
 		
 		for(int i = 0; i < mSets.size(); i++){
 			for(int j = 0; j < mSets.get(i).size(); j++){
-				mDistances[i][j] = startY - mSets.get(i).getEntry(j).getY();
-				mSets.get(i).getEntry(j).setY(startY);
+				Path path = new Path();
+				path.moveTo(mSets.get(i).getEntry(j).getX(), startY);
+				path.lineTo(mSets.get(i).getEntry(j).getX(), mSets.get(i).getEntry(j).getY());
+				mPathMeasures[i][j] = new PathMeasure(path, false);
 			}
 		}
 		mPlaying = true;
+		
+		// Save initial time. Only executed the first time this method gets called.
+		if(mGlobalInitTime == 0){
+			mGlobalInitTime = System.currentTimeMillis();
+			for(int i = 0; i < mInitTime.length; i++){
+				if(mInSequence){
+					mInitTime[i] = mGlobalInitTime + i * mDuration;
+				}else
+					mInitTime[i] = mGlobalInitTime;
+			}
+		}	
+		
 		return getUpdate();
 	}
 	
@@ -148,25 +195,36 @@ public class Animation{
 	 */
 	private ArrayList<ChartSet> getUpdate(){
 		
-		if(mInitTime == 0)
-			mInitTime = System.currentTimeMillis();
+		// Process current animation duration
+		long currentTime = System.currentTimeMillis();
+		mCurrentGlobalDuration = currentTime - mGlobalInitTime;
+		for(int i = 0; i < mCurrentDuration.length; i++){
+			long diff = currentTime - mInitTime[i];
+			if(diff < 0)
+				mCurrentDuration[i] = 0;
+			else
+				mCurrentDuration[i] = diff;
+		}
 		
-		mCurrentDuration = System.currentTimeMillis() - mInitTime;
-		if(mCurrentDuration > mDuration)
-			mCurrentDuration = mDuration;
+		// In case current duration slightly goes over the animation duration, 
+		// force it to the duration value
+		if(mCurrentGlobalDuration > mGlobalDuration)
+			mCurrentGlobalDuration = mGlobalDuration;
 		
+		// Update next values to be drawn
 		for(int i = 0; i < mSets.size(); i++)
 			for(int j = 0; j < mSets.get(i).size(); j++){
 				mSets.get(i).getEntry(j)
-					.setY(getEntryUpdate(i, j, normalizeTime(mCurrentDuration)));
+					.setY(getEntryUpdate(i, j, normalizeTime(j)));
 			}
 		
-		if(mCurrentDuration < mDuration){
+		// Sets the next update or finishes the animation
+		if(mCurrentGlobalDuration < mGlobalDuration){
 			mChartView.postDelayed(mAnimator, DELAY_BETWEEN_UPDATES);
-			mCurrentDuration+= DELAY_BETWEEN_UPDATES;
+			mCurrentGlobalDuration+= DELAY_BETWEEN_UPDATES;
 		}else{
-			mCurrentDuration = 0;
-			mInitTime = 0;
+			mCurrentGlobalDuration = 0;
+			mGlobalInitTime = 0;
 			if(mRunnable != null)
 				mRunnable.run();
 			mPlaying = false;
@@ -176,27 +234,38 @@ public class Animation{
 	}
 	
 	
+	
 	/**
 	 * Normalize time to a 0-1 relation.
 	 * @param currentTime - value from 0 to 1 representing the current time 
 	 * of the animation
 	 * @return value from 0 to 1 telling the next step.
 	 */
-	private float normalizeTime(long currentTime) {
-		return (float)currentTime / mDuration;
+	private float normalizeTime(int index) {
+		return (float) mCurrentDuration[index] / mDuration;
 	}
-
 	
 	
+	/**
+	 * Gets the next position value of a point
+	 * @param i - set index
+	 * @param j - point index
+	 * @param normalizedTime
+	 * @return x display value where point will be drawn
+	 */
 	private float getEntryUpdate(int i, int j, float normalizedTime){
-		return mStartY - mDistances[i][j] * mEasing.next(normalizedTime);
+		float[] pos = new float[2];
+		if(mPathMeasures[i][j].getPosTan(mPathMeasures[i][j].getLength() * mEasing.next(normalizedTime), pos, null))
+			return pos[1];
+		return 0;
 	}
 	
 	
 	
 	/*
+	 * --------
 	 * Setters
-	 * 
+	 * --------
 	 */
 	
 	public Animation setEasing(BaseEasingMethod easing){
@@ -206,7 +275,13 @@ public class Animation{
 	
 	
 	public Animation setDuration(int duration){
-		mDuration = duration;
+		mGlobalDuration = duration;
+		return this;
+	}
+	
+	
+	public Animation setAnimateInSequence(boolean bool){
+		mInSequence = bool;
 		return this;
 	}
 	
@@ -224,4 +299,5 @@ public class Animation{
 	public boolean isPlaying(){
 		return mPlaying;
 	}
+	
 }

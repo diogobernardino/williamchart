@@ -4,26 +4,28 @@ WilliamChart
 WilliamChart is an Android Library based on Views to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional charts but instead everything that could be pleasant and intuitive to represent and visualize data. I would prefer to keep charts simple and clean rather than overfeatured.
 
 At the moment it provides:
-* ``LineChartView``
 
+* ``LineChartView``
 ![Demo Screenshot1][1]
 
 * ``BarChartView``
-
 ![Demo Screenshot2][2]
+
+* ``StackBarChartView``
+![Demo Screenshot3][3]
 
 It has been tested in Android 2.2 and above.
 
-<a href="https://play.google.com/store/apps/details?id=com.db.williamchartdemo">
-  <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
+<a href="https://play.google.com/store/apps/details?id=com.db.williamchartdemo"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
 </a>
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-WilliamChart-lightgrey.svg?style=flat)](https://android-arsenal.com/details/1/769)
 
 Usage
 -----
 Each chart type has common but also specific customization attributes. Add the View to your layout and configure it using styleable attributes or/and programmatically .
 
 
-Chart - Common customization
+Chart (Common customization)
 ----------------------
 
 To create a new chart that requires axis extend the class ``ChartView`` and implement the necessary abstract methods. I believe the data you get from those methods should be enough to draw whatever you feel like.
@@ -39,19 +41,15 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
         chart:chart_shadowDy="dp"
         chart:chart_shadowRadius="dp"
         chart:chart_shadowColor="color"
-        chart:chart_gridThickness="dp"
-        chart:chart_labelColor="color"
-        chart:chart_gridColor="color"
-        chart:chart_axisColor="color"
         chart:chart_fontSize="dp"
         chart:chart_typeface="typeface"
         chart:chart_axisBorderSpacing="dp"
         chart:chart_axisThickness="dp"
         chart:chart_axisTopSpacing="dp"
+        chart:chart_axisColor="color"
+        chart:chart_axisX="boolean"
         chart:chart_label="boolean"
-        chart:chart_grid="boolean"
-        chart:chart_horizontalGrid="boolean"
-        chart:chart_gridDashed="boolean"
+        chart:chart_labelColor="color"
     />
 
 ```
@@ -59,24 +57,23 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
 ```java
     chart.setLabels(boolean)
     chart.setLabelColor(color)
-    
-    chart.setGrid(boolean)
-    chart.setGridColor(color)
-    chart.setGridStrokeThickness(integer)
-    chart.setHorizontalGrid(boolean)
-    chart.setGridDashed(boolean)
-
-    chart.setBorderSpacing(float)
-    chart.setStep(integer)
-    chart.setMaxAxisValue(integer, integer)
-    chart.setTopSpacing(float)
-
     chart.setFontSize(integer)
     chart.setTypeface(typeface)
+    
+    chart.setGrid(paint)
+    chart.setHorizontalGrid(paint)
+    chart.setVerticalGrid(paint)
+    chart.setThresholdLine(float, paint)
+
+    chart.setMaxAxisValue(integer, integer)
+    chart.setStep(integer)
+    chart.setTopSpacing(dimen)
+    chart.setBorderSpacing(dimen)
+    chart.setAxisX(boolean)
 ```
 
 
-Line chart
+LineChart
 ----------
 
 ```xml
@@ -94,12 +91,12 @@ Line chart
     // Style dots
     lineSet.setDots(boolean)
     lineSet.setDotsColor(color)
-    lineSet.setDotsRadius(float)
-    lineSet.setDotsStrokeThickness(float)
+    lineSet.setDotsRadius(dimen)
+    lineSet.setDotsStrokeThickness(dimen)
     lineSet.setDotsStrokeColor(color)
     
     // Style line
-    lineSet.setLineThickness(float)
+    lineSet.setLineThickness(dimen)
     lineSet.setLineColor(color)
     
     // Style background fill
@@ -114,8 +111,8 @@ Line chart
 ```
 
 
-Bar chart
----------
+BarChart & StackBarChart
+-------------------------
 
 ```xml
     <com.db.chart.BarChartView
@@ -127,8 +124,11 @@ Bar chart
 
 ```java
     BarChartView chartView = new BarcChartView();
-    barChart.setBarSpacing(dimension);
-    barChart.setSetSpacing(dimension);
+    barChart.setBarSpacing(dimen);
+    barChart.setSetSpacing(dimen);
+    barChart.setBarBackground(boolean);
+    barChart.setBarBackgroundColor(color);
+    barChart.setRoundCorners(dimen);
 
     BarSet barSet = new BarSet();
     Bar bar = new Bar(string, float);
@@ -137,6 +137,7 @@ Bar chart
 
     chartView.addData(barSet)
 ```
+
 
 
 Listener
@@ -161,14 +162,17 @@ Animation
     anim.setDuration(integer);
     anim.setEasing(easingFunction);
     anim.setEndAction(runnable);
+    anim.setAnimateInSequence();
     
-    chart.setAnimation(animation);
+    // Starts immediately the animation
+    chart.animate(animation);
 ```
 
 Implementing the interface ``BaseEasingMethod`` you can create your own easing function. I've implemented a few (credits to [Jesus Gollonet](http://jesusgollonet.com/)):
 
 * ``LinearEase``
 * ``BounceEaseOut``
+* ``ElasticEaseOut``
 * ``CircEaseOut``
 * ``CubicEaseOut``
 * ``ExpoEaseOut``
@@ -179,8 +183,8 @@ Implementing the interface ``BaseEasingMethod`` you can create your own easing f
 
 TODO
 -------
-* Stack Bar Chart
 * Pie Chart
+* View reaction to click/select
 * Whatever you feel like contributing...
 
 License
@@ -204,3 +208,4 @@ License
 
 [1]: ./art/linechart.gif
 [2]: ./art/barchart.gif
+[3]: ./art/stackbarchart.gif

@@ -18,9 +18,9 @@ package com.db.chart.view;
 
 import java.util.ArrayList;
 
-import com.db.chart.OnEntryClickListener;
 import com.db.williamchart.R;
 import com.db.chart.exception.ChartException;
+import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.animation.Animation;
 
@@ -28,7 +28,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Region;
 import android.graphics.Typeface;
@@ -69,6 +68,10 @@ public abstract class ChartView extends View{
 	
 	/** Chart data to be displayed */
 	protected ArrayList<ChartSet> data;
+	
+	
+	/** Threshold limit line value */
+	private float mThresholdValue;
 	
 	
 	/** Chart data to be displayed */	
@@ -121,7 +124,9 @@ public abstract class ChartView extends View{
 			chartRight = getMeasuredWidth() - getPaddingRight();
 				
 			// Initialize controllers now that we have the measures
-			mVerController.init();				
+			mVerController.init();	
+			mThresholdValue = mVerController.parseYPos(mThresholdValue);
+			
 			mHorController.init(mVerController.getInnerChartLeft());
 				
 			// Define the data chart frame. Exclude axis space.
@@ -189,6 +194,8 @@ public abstract class ChartView extends View{
 		mReadyToDraw = false;
 		mSetClicked = -1;
 		mIndexClicked = -1;
+		
+		mThresholdValue = 0;
 
 		mIsDrawing = false;
 		data = new ArrayList<ChartSet>();
@@ -214,9 +221,10 @@ public abstract class ChartView extends View{
 	
 
 	
-	/* 
-	 * Methods to be overridden.
-	 *
+	/*
+	 * --------
+	 * Methods to be overriden
+	 * --------
 	 */
 	
 	/**
@@ -282,8 +290,19 @@ public abstract class ChartView extends View{
 	public void reset(){
 		data = new ArrayList<ChartSet>();
 		mVerController.reset();
+		style.thresholdPaint = null;
+		style.gridPaint = null;
 	}
 	
+	
+	/**
+	 * Starts the animation given as parameter
+	 * @param anim
+	 */
+	public void animate(Animation anim){
+		mAnim = anim;
+		show();
+	}
 	
 	
 	/**
@@ -300,21 +319,21 @@ public abstract class ChartView extends View{
 	/**
 	 * Asks the view if it is able to draw now
 	 */
-	public boolean canYouDraw(){
+	public boolean canIPleaseAskYouToDraw(){
 		return !mIsDrawing;
 	}
 	
 	
 	
 	/*
-	 * Draw methods
-	 * 
+	 * -------------
+	 * Draw Methods
+	 * -------------
 	 */
 
 	@SuppressLint("NewApi")
 	@Override
 	protected void onDraw(Canvas canvas) {
-		//TODO why is this here?
 		mIsDrawing = true;
 		super.onDraw(canvas);
 		
@@ -323,8 +342,8 @@ public abstract class ChartView extends View{
 		if(mReadyToDraw){
 			
 			//draw grid
-			if(style.hasGrid)
-				drawGrid(canvas);
+			if(style.hasVerticalGrid)
+				drawVerticalGrid(canvas);
 			if(style.hasHorizontalGrid)
 				drawHorizontalGrid(canvas);
 			
@@ -335,13 +354,26 @@ public abstract class ChartView extends View{
 			mVerController.draw(canvas);
 			mHorController.draw(canvas);
 			
+			if(style.thresholdPaint != null)
+				drawThresholdLine(canvas);
+			
 		}
 		//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
 		mIsDrawing = false;
 	}
 	
 	
-	private void drawGrid(Canvas canvas){
+	private void drawThresholdLine(Canvas canvas) {
+		
+		canvas.drawLine(innerchartLeft, 
+				mThresholdValue, 
+					innerchartRight, 
+						mThresholdValue, 
+							style.thresholdPaint);
+	}
+
+
+	private void drawVerticalGrid(Canvas canvas){
 		
 		// Draw vertical grid lines
 		final ArrayList<Float> horPositions = mHorController.getLabelsPosition();
@@ -367,11 +399,12 @@ public abstract class ChartView extends View{
 								style.gridPaint);
 		}
 			
-		drawHorizontalGrid(canvas);
 	}
 	
+	
 	private void drawHorizontalGrid(Canvas canvas){
-		//Draw horizontal grid lines
+		
+		// Draw horizontal grid lines
 		final ArrayList<Float> verPositions = mVerController.getLabelsPosition();
 		for(int i = 0; i < verPositions.size(); i++){
 			canvas.drawLine(innerchartLeft, 
@@ -380,13 +413,22 @@ public abstract class ChartView extends View{
 							verPositions.get(i), 
 								style.gridPaint);
 		}
+		
+		// If there's no axis
+		if(!style.hasXAxis)
+			canvas.drawLine(innerchartLeft, 
+					innerchartBottom, 
+						innerchartRight, 
+							innerchartBottom, 
+								style.gridPaint);
 	}
 	
 	
 	
 	/*
-	 * Click handler
-	 * 
+	 * --------
+	 * Click Handler
+	 * --------
 	 */
 	
 	/**
@@ -432,10 +474,10 @@ public abstract class ChartView extends View{
 	
 	
 	/*
+	 * --------
 	 * Getters
-	 * 
+	 * --------
 	 */
-	
 	
 	/**
 	 * Inner Chart refers only to the area where chart data will be draw, 
@@ -476,6 +518,14 @@ public abstract class ChartView extends View{
 		return innerchartTop;
 	}
 	
+	/**
+	 * Get the step used between Y values
+	 * @return step
+	 */
+	protected int getStep(){
+		return mVerController.step;
+	}
+	
 	
 	/**
 	 * @return Border between left/right of the chart and the first/last label
@@ -487,13 +537,28 @@ public abstract class ChartView extends View{
 	
 	
 	/*
+	 * --------
 	 * Setters
-	 * 
+	 * --------
 	 */
-
 	
+	
+	/**
+	 * Show/Hide Y labels and respective axis
+	 * @param bool - if true Y label and axis won't be visible
+	 */
 	public ChartView setLabels(boolean bool){
 		mVerController.setLabels(bool);
+		return this;
+	}
+	
+	
+	/**
+	 * Show/Hide X axis
+	 * @param bool - if true axis won't be visible
+	 */
+	public ChartView setAxisX(boolean bool){
+		style.hasXAxis = bool;
 		return this;
 	}
 	
@@ -539,12 +604,6 @@ public abstract class ChartView extends View{
 	}
 
 	
-	public ChartView setAnimation(Animation anim){
-		mAnim = anim;
-		return this;
-	}
-
-	
 	/**
 	 * Register a listener to be called when the chart is clicked.
 	 * @param listener
@@ -581,52 +640,89 @@ public abstract class ChartView extends View{
     }
 	  
     
+	/**
+	 * @param spacing - Spacing between left/right of the chart and the 
+	 * first/last label
+	 */
 	public ChartView setBorderSpacing(float spacing){
 		mHorController.setBorderSpacing(spacing);
 		return this;
 	}
 	
 	
+	/**
+	 * @param spacing - Spacing between top of the chart and the first label
+	 */
 	public ChartView setTopSpacing(float spacing){
 		mVerController.setTopSpacing(spacing);
 		return this;
 	}
 	
-	
-	public ChartView setGrid(boolean bool){
-		style.hasGrid = bool;
-		return this;
-	}
-	
-	
-	public ChartView setHorizontalGrid(boolean bool){
-		style.hasHorizontalGrid = bool;
-		return this;
-	}
 
-	
-	public ChartView setGridDashed(boolean bool){
-		style.hasGridDashed = bool;
-		return this;
-	}
-	
-	
-	public ChartView setGridColor(int color){
-		style.gridColor = color;
-		return this;
-	}
-	
-	
-	public ChartView setGridStrokeThickness(int thickness){
-		
-		try{
-			if(thickness <= 0)
-				throw new ChartException("Grid thickness <= 0.");
-		}catch(ChartException e){
-			Log.e(TAG, "", e);
-			System.exit(1);
+	/**
+	 * Apply grid to chart
+	 * @param paint - The Paint instance that will be used to draw the grid. 
+	 * If null the grid won't be drawn.
+	 */
+	public ChartView setGrid(Paint paint){
+		if(paint != null){
+			style.hasVerticalGrid = true;
+			style.hasHorizontalGrid = true;
+		}else{
+			style.hasVerticalGrid = false;
+			style.hasHorizontalGrid = false;
 		}
-		style.gridThickness = thickness;
+		style.gridPaint = paint;
+		return this;
+	}
+	
+	
+	/**
+	 * Apply vertical grid to chart
+	 * @param paint - The Paint instance that will be used to draw the grid. 
+	 * If null the grid won't be drawn.
+	 */
+	public ChartView setVerticalGrid(Paint paint){
+		
+		if(paint != null)
+			style.hasVerticalGrid = true;
+		else{
+			style.hasHorizontalGrid = false;
+			style.hasVerticalGrid = false;
+		}
+		style.gridPaint = paint;
+		return this;
+	}
+	
+	
+	/**
+	 * Apply horizontal grid to chart
+	 * @param paint - The Paint instance that will be used to draw the grid. 
+	 * If null the grid won't be drawn.
+	 */
+	public ChartView setHorizontalGrid(Paint paint){
+		
+		if(paint != null)
+			style.hasHorizontalGrid = true;
+		else{
+			style.hasHorizontalGrid = false;
+			style.hasVerticalGrid = false;
+		}
+		style.gridPaint = paint;
+		return this;
+	}
+	
+	
+	/**
+	 * To set a threshold line to the chart.
+	 * @param value - Threshold value.
+	 * @param paint - The Paint instance that will be used to draw the grid. 
+	 * If null the grid won't be drawn.
+	 */
+	public ChartView setThresholdLine(float value, Paint paint){
+		
+		mThresholdValue = value;
+		style.thresholdPaint = paint;
 		return this;
 	}
 	
@@ -645,15 +741,18 @@ public abstract class ChartView extends View{
 		protected Paint chartPaint;
 		protected float axisThickness;
 		protected int axisColor;
+		protected boolean hasXAxis;
 		
 		
 		/** Grid */
 		protected Paint gridPaint;
-		protected int gridColor;
-		protected float gridThickness;
 		protected boolean hasGrid;
 		protected boolean hasHorizontalGrid;
-		protected boolean hasGridDashed;
+		protected boolean hasVerticalGrid;
+		
+		
+		/** Threshold Line **/
+		private Paint thresholdPaint;
 		
 		
 		/** Font */
@@ -667,10 +766,7 @@ public abstract class ChartView extends View{
 			
 			hasGrid = false;
 			hasHorizontalGrid = false;
-			hasGridDashed = false;
-			
-			gridColor = DEFAULT_COLOR;
-			gridThickness = (float) getResources().getDimension(R.dimen.axis_thickness);
+			hasVerticalGrid = false;
 			
 			axisColor = DEFAULT_COLOR;
 			axisThickness = (float) getResources().getDimension(R.dimen.grid_thickness);
@@ -681,19 +777,17 @@ public abstract class ChartView extends View{
 
 		protected Style(TypedArray attrs) {
 			
+			hasGrid = false;
+			hasHorizontalGrid = false;
+			hasVerticalGrid = false;
+			
 			mVerController.setLabels(attrs.getBoolean(
-										R.styleable.ChartAttrs_chart_label, 
+										R.styleable.ChartAttrs_chart_labels, 
 											false));
 			
-			hasGrid = attrs.getBoolean(
-					R.styleable.ChartAttrs_chart_grid, 
-					false);
-			hasHorizontalGrid = attrs.getBoolean(
-					R.styleable.ChartAttrs_chart_horizontalGrid, 
-					false);
-			hasGridDashed = attrs.getBoolean(
-					R.styleable.ChartAttrs_chart_gridDashed, 
-					false);
+			hasXAxis = attrs.getBoolean(
+					R.styleable.ChartAttrs_chart_axisX, 
+					true);
 			
 			axisColor = attrs.getColor(
 					R.styleable.ChartAttrs_chart_axisColor, 
@@ -701,12 +795,6 @@ public abstract class ChartView extends View{
 			axisThickness = attrs.getDimension(
 					R.styleable.ChartAttrs_chart_axisThickness, 
 						getResources().getDimension(R.dimen.axis_thickness));
-			
-			gridColor = attrs.getColor(
-					R.styleable.ChartAttrs_chart_gridColor, DEFAULT_COLOR);
-			gridThickness = attrs.getDimension(
-					R.styleable.ChartAttrs_chart_gridThickness, 
-						getResources().getDimension(R.dimen.grid_thickness));
 			
 			labelColor = attrs.getColor(
 					R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
@@ -724,8 +812,6 @@ public abstract class ChartView extends View{
 		
 		private void init(){
 			
-
-			
 			chartPaint = new Paint();
 			chartPaint.setColor(axisColor);
 			chartPaint.setStyle(Paint.Style.STROKE);
@@ -738,14 +824,6 @@ public abstract class ChartView extends View{
 			labelPaint.setAntiAlias(true);
 			labelPaint.setTextSize(fontSize);
 			labelPaint.setTypeface(typeface);
-			
-			gridPaint = new Paint();
-			gridPaint.setColor(gridColor);
-			gridPaint.setStyle(Paint.Style.STROKE);
-			gridPaint.setAntiAlias(true);
-			gridPaint.setStrokeWidth(1);
-			if(hasGridDashed)
-				gridPaint.setPathEffect(new DashPathEffect(new float[] {10,10}, 0));
 		}
 
 		
@@ -754,6 +832,7 @@ public abstract class ChartView extends View{
 			chartPaint = null;
 			labelPaint = null;
 			gridPaint = null;
+			thresholdPaint = null;
 		}
 	    
 	}

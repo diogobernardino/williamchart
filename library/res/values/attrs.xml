@@ -2,18 +2,13 @@
 <resources>
      <declare-styleable name="ChartAttrs">
          
+        <attr name="chart_axisX" format="boolean"/>
         <attr name="chart_axisThickness" format="dimension"/>
         <attr name="chart_axisColor" format="reference|color"/>
         <attr name="chart_axisBorderSpacing" format="dimension"/>
         <attr name="chart_axisTopSpacing" format="dimension"/>
         
-        <attr name="chart_grid" format="boolean"/>
-        <attr name="chart_horizontalGrid" format="boolean"/>
-        <attr name="chart_gridDashed" format="boolean"/>
-        <attr name="chart_gridThickness" format="dimension"/>
-        <attr name="chart_gridColor" format = "reference|color"/>
-        
-        <attr name="chart_label" format="boolean"/>
+        <attr name="chart_labels" format="boolean"/>
         <attr name="chart_labelColor" format = "reference|color"/>
         <attr name="chart_fontSize" format = "dimension"/>
         <attr name="chart_typeface" format="string"/>

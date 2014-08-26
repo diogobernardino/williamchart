@@ -6,18 +6,22 @@ WilliamChart is an Android Library based on Views to help the implementation of 
 At the moment it provides:
 
 * ``LineChartView``
+
 ![Demo Screenshot1][1]
 
 * ``BarChartView``
+
 ![Demo Screenshot2][2]
 
 * ``StackBarChartView``
+
 ![Demo Screenshot3][3]
 
 It has been tested in Android 2.2 and above.
 
 <a href="https://play.google.com/store/apps/details?id=com.db.williamchartdemo"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
 </a>
+
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-WilliamChart-lightgrey.svg?style=flat)](https://android-arsenal.com/details/1/769)
 
 Usage

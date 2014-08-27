@@ -168,13 +168,19 @@ public class BarChartView extends ChartView {
 	
 	
 	@Override
-	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
+	public void onPreDrawChart(ArrayList<ChartSet> data){
 		
 		// Doing calculations here to avoid doing several times while drawing
 		// in case of animation
 		calculateBarsWidth(data.size(), data.get(0).getEntry(0).getX(), 
 							data.get(0).getEntry(1).getX());
 		calculatePositionOffset(data.size());
+	}
+	
+	
+	
+	@Override
+	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
 		
 		// Define regions
 		

@@ -149,11 +149,18 @@ public class StackBarChartView extends BarChartView {
 	
 	
 	@Override
-	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
+	public void onPreDrawChart(ArrayList<ChartSet> data){
 		
+		// Doing calculations here to avoid doing several times while drawing
+		// in case of animation
 		calculateBarsWidth(data.get(0).getEntry(0).getX(), 
-							data.get(0).getEntry(1).getX());
-		
+				data.get(0).getEntry(1).getX());
+	}
+	
+	
+	
+	@Override
+	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
 		
 		// Define regions
 		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();

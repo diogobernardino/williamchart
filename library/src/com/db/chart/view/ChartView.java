@@ -137,7 +137,7 @@ public abstract class ChartView extends View{
 				
 			// Processes data to define screen positions
 			digestData();
-				
+			onPreDrawChart(data);
 			// Sets listener if needed
 			if(mEntryListener != null) 
 				mRegions = defineRegions(data);
@@ -248,11 +248,13 @@ public abstract class ChartView extends View{
 	abstract public void onDrawChart(Canvas canvas, ArrayList<ChartSet> set);
 	
 	
+	public void onPreDrawChart(ArrayList<ChartSet> set){}
+	
 	
 	/**
 	 * Convert chart points into screen points
 	 */
-	protected void digestData() {
+	public void digestData() {
 		
 		for(ChartSet s: data)
 			for (int i = 0; i < s.size(); i++){
@@ -458,7 +460,7 @@ public abstract class ChartView extends View{
 				
 				if(mChartListener != null)
 					mChartListener.onClick(this);
-				
+				try{
 				if(mEntryListener != null && 
 						mSetClicked != -1 && 
 							mIndexClicked != -1 &&
@@ -466,6 +468,11 @@ public abstract class ChartView extends View{
 								.contains((int)event.getX(), 
 											(int)event.getY())){
 					mEntryListener.onClick(mSetClicked, mIndexClicked);
+				}
+				}catch(Exception e){
+					System.out.println("Regions size"+ mRegions.size());
+					System.out.println("Set clicked "+mSetClicked);
+					System.out.println("index "+mIndexClicked);
 				}
 			}
 		return true;

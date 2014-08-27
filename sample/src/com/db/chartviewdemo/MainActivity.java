@@ -79,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
 					case 2: updateBarChart(randNumber(1, 3), randNumber(4, 6));break;
 					case 3: updateStackBarChart(randNumber(3, 5), randNumber(4, 6));updateIndex = 0;break;
 				}
-				updateIndex = 3;
+				updateIndex++;
 			}
 		});
 

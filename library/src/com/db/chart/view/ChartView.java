@@ -145,8 +145,9 @@ public abstract class ChartView extends View{
 			// Prepares the animation if needed and gets the first dump 
 			//of data to be drawn.
 			if(mAnim != null)
-				data = mAnim.prepareEnter(ChartView.this, 
-								mVerController.getInnerChartBottom(), data);
+				data = mAnim.prepareEnter(ChartView.this,
+								mVerController.getInnerChartBottom(), 
+									data);
 			
 			if (android.os.Build.VERSION.SDK_INT >= 
 					android.os.Build.VERSION_CODES.HONEYCOMB)
@@ -440,7 +441,7 @@ public abstract class ChartView extends View{
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if(mAnim != null && !mAnim.isPlaying())
+		if(mAnim == null || !mAnim.isPlaying())
 			if(event.getAction() == MotionEvent.ACTION_DOWN){
 				
 				if(mEntryListener != null && mRegions != null){

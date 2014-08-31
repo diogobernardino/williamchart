@@ -60,10 +60,16 @@ public class ChartEntry {
 	}
 
 
+	
 	/*
 	 * Setters
 	 * 
 	 */
+	
+	public void setValue(float value){
+		mValue = value;
+	}
+	
 	
 	/**
 	 * Set the parsed display coordinates
@@ -75,10 +81,12 @@ public class ChartEntry {
 		mY = y;
 	}
 	
+	
 	public void setY(float y) {
 		mY = y;
 	}
 
+	
 	public String toString(){
 		return "Label="+mLabel+" \n" +
 				"Value="+mValue+"\n" +

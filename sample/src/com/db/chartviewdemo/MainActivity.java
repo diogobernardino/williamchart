@@ -33,8 +33,6 @@ public class MainActivity extends ActionBarActivity {
 	private final static float MAX_VALUE = 9;
 	private final static float MIN_VALUE = 1;
 	
-	private static boolean highValue = true;
-	
 	private LineChartView mLineChart;
 	private BarChartView mBarChart;
 	private StackBarChartView mStackBarChart;
@@ -45,6 +43,9 @@ public class MainActivity extends ActionBarActivity {
 	private String[] mColors = {"#f36c60","#7986cb", "#4db6ac", "#aed581", "#ffb74d"};
 	private String[] mLabels = {"ANT", "GNU", "OWL", "APE", "COD","YAK", "RAM", "JAY"};
 	
+	private int mCurrLineSetSize;
+	private int mCurrBarSetSize;
+	private int mCurrStackBarSetSize;
 	
 	private Runnable mEndAction = new Runnable() {
         @Override
@@ -75,44 +76,22 @@ public class MainActivity extends ActionBarActivity {
 				mButton.setEnabled(false);
 				mTextView.setText("PLAYING");
 				switch(updateIndex){
-					case 1: updateLineChart(randNumber(1, 3), randNumber(5, 8));break;
-					case 2: updateBarChart(randNumber(1, 3), randNumber(4, 6));break;
-					case 3: updateStackBarChart(randNumber(3, 5), randNumber(4, 6));updateIndex = 0;break;
+					case 1: updateLineChart(randNumber(1, 3), mCurrLineSetSize = randNumber(5, 8));break;
+					case 2: updateBarChart(randNumber(1, 3), mCurrBarSetSize = randNumber(4, 6));break;
+					case 3: updateStackBarChart(randNumber(3, 5), mCurrStackBarSetSize = randNumber(4, 6));updateIndex = 0;break;
 				}
 				updateIndex++;
 			}
 		});
 
 		
-		OnEntryClickListener listener = new OnEntryClickListener(){
-			@Override
-			public void onClick(int setIndex, int entryIndex) {
-				mTextView.setText(mLabels[entryIndex]);
-			}
-		};
+		initLineChart();
+		initBarChart();
+		initStackBarChart();
 		
-		
-		// Init LineChartView
-		mLineChart = (LineChartView) findViewById(R.id.linechart);
-		mLineChart.setStep(2)
-			.setOnEntryClickListener(listener);
-		
-		// Init BarChartView
-		mBarChart = (BarChartView) findViewById(R.id.barchart);
-		mBarChart.setBorderSpacing(Tools.fromDpToPx(40))
-			.setOnEntryClickListener(listener);
-	
-		//Init StackBarView
-		mStackBarChart = (StackBarChartView) findViewById(R.id.stackbarchart);
-		mStackBarChart.setStep(4)
-			.setBorderSpacing(Tools.fromDpToPx(40))
-			.setOnEntryClickListener(listener);
-		
-		
-		updateLineChart(randNumber(1, 3), randNumber(4, 6));
-		updateBarChart(randNumber(1, 3), randNumber(4, 6));
-		updateStackBarChart(randNumber(1, 3), randNumber(4, 6));
-
+		updateLineChart(randNumber(1, 3), mCurrLineSetSize = randNumber(5, 8));
+		updateBarChart(randNumber(1, 3), mCurrBarSetSize = randNumber(4, 6));
+		updateStackBarChart(randNumber(3, 5), mCurrStackBarSetSize = randNumber(4, 5));
 	}
 	
 	
@@ -125,7 +104,7 @@ public class MainActivity extends ActionBarActivity {
 	public void updateLineChart(int nSets, int nPoints){
 		
 		mLineChart.reset();
-	
+		
 		for(int i = 0; i < nSets; i++){
 			
 			LineSet data = new LineSet();
@@ -149,12 +128,14 @@ public class MainActivity extends ActionBarActivity {
 		}
 		
 		mLineChart.setGrid(randPaint())
+			.setMaxAxisValue(10, 2)
 			//.setVerticalGrid(randPaint())
 			.setHorizontalGrid(randPaint())
 			//.setThresholdLine(2, randPaint())
-			//.setLabels(randBoolean())
-			.animate(randAnimation());
-			//.show();
+			//.setLabels(true)
+			.animate(randAnimation())
+			//.show()
+			;
 	}
 	
 	
@@ -189,8 +170,10 @@ public class MainActivity extends ActionBarActivity {
 			.setAxisX(randBoolean())
 			//.setThresholdLine(2, randPaint())
 			//.setLabels(randBoolean())
-			.animate(randAnimation());
-			//.show();
+			.setMaxAxisValue(10, 1)
+			.animate(randAnimation())
+			//.show()
+			;
 	}
 	
 	
@@ -224,10 +207,81 @@ public class MainActivity extends ActionBarActivity {
 			.setVerticalGrid(randPaint())
 			.setAxisX(randBoolean())
 			//.setLabels(true)
-			.animate(randAnimation());
-			//.show();
+			.setMaxAxisValue(30, 2)
+			.animate(randAnimation())
+			//.show()
+			;
 	}
 	
+	
+	
+	
+	/*---------------------*
+	 *       INITs         *       
+	 ----------------------*/
+	
+	private void initLineChart(){
+		
+		OnEntryClickListener lineListener = new OnEntryClickListener(){
+			@Override
+			public void onClick(int setIndex, int entryIndex) {
+				mTextView.setText(mLabels[entryIndex]);
+				
+				float[] newValues = new float[mCurrLineSetSize];
+				for(int i = 0; i < mCurrLineSetSize; i++)
+					newValues[i] = randValue();
+				
+				mLineChart.updateValues(setIndex, newValues);
+			}
+		};
+		
+		mLineChart = (LineChartView) findViewById(R.id.linechart);
+		mLineChart//.setStep(2)
+			.setOnEntryClickListener(lineListener);
+	}
+
+	
+	private void initBarChart(){
+		
+		OnEntryClickListener barListener = new OnEntryClickListener(){
+			@Override
+			public void onClick(int setIndex, int entryIndex) {
+				mTextView.setText(mLabels[entryIndex]);
+				
+				float[] newValues = new float[mCurrBarSetSize];
+				for(int i = 0; i < mCurrBarSetSize; i++)
+					newValues[i] = randValue();
+				
+				mBarChart.updateValues(setIndex, newValues);
+			}
+		};
+		
+		mBarChart = (BarChartView) findViewById(R.id.barchart);
+		mBarChart.setBorderSpacing(Tools.fromDpToPx(40))
+			.setOnEntryClickListener(barListener);
+	}
+
+	
+	private void initStackBarChart(){
+		
+		OnEntryClickListener stackBarListener = new OnEntryClickListener(){
+			@Override
+			public void onClick(int setIndex, int entryIndex) {
+				mTextView.setText(mLabels[entryIndex]);
+				
+				float[] newValues = new float[mCurrStackBarSetSize];
+				for(int i = 0; i < mCurrStackBarSetSize; i++)
+					newValues[i] = randValue();
+				
+				mStackBarChart.updateValues(setIndex, newValues);
+			}
+		};
+		
+		mStackBarChart = (StackBarChartView) findViewById(R.id.stackbarchart);
+		mStackBarChart.setStep(4)
+			.setBorderSpacing(Tools.fromDpToPx(40))
+			.setOnEntryClickListener(stackBarListener);
+	}
 	
 	
 	
@@ -255,12 +309,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 	private static float randValue() {
-		
-		highValue = !highValue;
-		if(highValue)
-			return  (new Random().nextFloat() * (MAX_VALUE - MIN_VALUE+2)) + MIN_VALUE+2;
-		else
-			return  (new Random().nextFloat() * (MAX_VALUE-2 - MIN_VALUE)) + MIN_VALUE;
+		return  (new Random().nextFloat() * (MAX_VALUE - MIN_VALUE)) + MIN_VALUE;
 	} 
 	
 	

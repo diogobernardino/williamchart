@@ -137,17 +137,21 @@ public abstract class ChartView extends View{
 				
 			// Processes data to define screen positions
 			digestData();
+			// Tells view to execute code before starting drawing
 			onPreDrawChart(data);
 			// Sets listener if needed
 			if(mEntryListener != null) 
 				mRegions = defineRegions(data);
+			
+
 				
 			// Prepares the animation if needed and gets the first dump 
-			//of data to be drawn.
-			if(mAnim != null)
+			// of data to be drawn
+			if(mAnim != null){
 				data = mAnim.prepareEnter(ChartView.this,
 								mVerController.getInnerChartBottom(), 
 									data);
+			}
 			
 			if (android.os.Build.VERSION.SDK_INT >= 
 					android.os.Build.VERSION_CODES.HONEYCOMB)
@@ -204,6 +208,7 @@ public abstract class ChartView extends View{
 
 
 	
+	
 	@Override
 	public void onAttachedToWindow(){
 		super.onAttachedToWindow();
@@ -222,11 +227,13 @@ public abstract class ChartView extends View{
 	
 
 	
+	
 	/*
 	 * --------
 	 * Methods to be overriden
 	 * --------
 	 */
+	
 	
 	/**
 	 * (Optional) To be overridden in order for each chart to define 
@@ -242,6 +249,7 @@ public abstract class ChartView extends View{
 	};
 	
 	
+	
 	/**
 	 * To be Overridden in order for each chart to customize visualization
 	 * @param screenPoints
@@ -249,20 +257,21 @@ public abstract class ChartView extends View{
 	abstract public void onDrawChart(Canvas canvas, ArrayList<ChartSet> set);
 	
 	
+	
 	public void onPreDrawChart(ArrayList<ChartSet> set){}
+	
 	
 	
 	/**
 	 * Convert chart points into screen points
 	 */
-	public void digestData() {
-		
-		for(ChartSet s: data)
-			for (int i = 0; i < s.size(); i++){
-				s.getEntry(i)
+	private void digestData() {
+		for(ChartSet set: data)
+			for (int i = 0; i < set.size(); i++){
+				set.getEntry(i)
 					.setDisplayCoordinates(mHorController.labelsPos.get(i), 
-									mVerController.parseYPos(s.getValue(i)));
-		}
+									mVerController.parseYPos(set.getValue(i)));
+			}
 	}
 	
 	
@@ -298,14 +307,17 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	/**
 	 * Starts the animation given as parameter
 	 * @param anim
 	 */
 	public void animate(Animation anim){
+		
 		mAnim = anim;
 		show();
 	}
+	
 	
 	
 	/**
@@ -320,11 +332,45 @@ public abstract class ChartView extends View{
 	
 	
 	/**
+	 * Update set values. Animation support in case previously added.
+	 * @param setIndex - Index of set to be updated
+	 * @param values - Array of new values. Array length must match current data.
+	 */
+	public void updateValues(int setIndex, float[] values){
+		
+		try{
+			if(values.length != data.get(setIndex).size())
+				throw new ChartException("Size doesn't match.");
+		}catch(ChartException e){
+			Log.e(TAG, "", e);
+			System.exit(1);
+		}
+		
+		ArrayList<float []> oldValues = new ArrayList<float[]>(data.size());
+		for(int i = 0; i < data.size(); i++)
+			oldValues.add(data.get(i).getYCoordinates());
+		
+		data.get(setIndex).updateValues(values);
+		
+		digestData();
+		mRegions = defineRegions(data);
+		if(mAnim != null)
+			data = mAnim.prepareEnter(ChartView.this,
+							oldValues, 
+								data);
+		
+		invalidate();
+	}
+	
+	
+	
+	/**
 	 * Asks the view if it is able to draw now
 	 */
 	public boolean canIPleaseAskYouToDraw(){
 		return !mIsDrawing;
 	}
+	
 	
 	
 	
@@ -334,7 +380,7 @@ public abstract class ChartView extends View{
 	 * -------------
 	 */
 
-	@SuppressLint("NewApi")
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		mIsDrawing = true;
@@ -366,6 +412,7 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	private void drawThresholdLine(Canvas canvas) {
 		
 		canvas.drawLine(innerchartLeft, 
@@ -376,6 +423,7 @@ public abstract class ChartView extends View{
 	}
 
 
+	
 	private void drawVerticalGrid(Canvas canvas){
 		
 		// Draw vertical grid lines
@@ -428,11 +476,13 @@ public abstract class ChartView extends View{
 	
 	
 	
+	
 	/*
-	 * --------
+	 * -------------
 	 * Click Handler
-	 * --------
+	 * -------------
 	 */
+	
 	
 	/**
 	 * The method listens chart clicks and checks whether it intercepts
@@ -443,17 +493,23 @@ public abstract class ChartView extends View{
 	public boolean onTouchEvent(MotionEvent event) {
 		if(mAnim == null || !mAnim.isPlaying())
 			if(event.getAction() == MotionEvent.ACTION_DOWN){
-				
+				System.out.println(event.getX()+" "+ 
+						event.getY());
 				if(mEntryListener != null && mRegions != null){
 					 //Check if ACTION_DOWN over any ScreenPoint region.
 						for(int i = 0; i < mRegions.size() ; i++){
-							for(int j = 0; j < mRegions.get(i).size(); j++)
+							for(int j = 0; j < mRegions.get(i).size(); j++){
+								System.out.println("top "+mRegions.get(i).get(j).getBounds().top);
+								System.out.println("right "+mRegions.get(i).get(j).getBounds().right);
+								System.out.println("left "+mRegions.get(i).get(j).getBounds().left);
+								System.out.println("bottom "+mRegions.get(i).get(j).getBounds().bottom);
 								if(mRegions.get(i).get(j)
 										.contains((int) event.getX(), 
 													(int) event.getY())){
 									mSetClicked = i;
 									mIndexClicked = j;
 								}
+							}
 						}
 				}
 				
@@ -461,7 +517,6 @@ public abstract class ChartView extends View{
 				
 				if(mChartListener != null)
 					mChartListener.onClick(this);
-				try{
 				if(mEntryListener != null && 
 						mSetClicked != -1 && 
 							mIndexClicked != -1 &&
@@ -470,14 +525,10 @@ public abstract class ChartView extends View{
 											(int)event.getY())){
 					mEntryListener.onClick(mSetClicked, mIndexClicked);
 				}
-				}catch(Exception e){
-					System.out.println("Regions size"+ mRegions.size());
-					System.out.println("Set clicked "+mSetClicked);
-					System.out.println("index "+mIndexClicked);
-				}
 			}
 		return true;
 	}
+	
 	
 	
 	
@@ -486,6 +537,7 @@ public abstract class ChartView extends View{
 	 * Getters
 	 * --------
 	 */
+	
 	
 	/**
 	 * Inner Chart refers only to the area where chart data will be draw, 
@@ -497,6 +549,7 @@ public abstract class ChartView extends View{
 	}
 
 	
+	
 	/**
 	 * Inner Chart refers only to the area where chart data will be draw, 
 	 * excluding labels, axis, etc.
@@ -505,6 +558,7 @@ public abstract class ChartView extends View{
 	protected float getInnerChartLeft(){
 		return innerchartLeft;
 	}
+	
 	
 	
 	/**
@@ -517,6 +571,7 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	/**
 	 * Inner Chart refers only to the area where chart data will be draw, 
 	 * excluding labels, axis, etc.
@@ -525,6 +580,8 @@ public abstract class ChartView extends View{
 	protected float getInnerChartTop(){
 		return innerchartTop;
 	}
+	
+	
 	
 	/**
 	 * Get the step used between Y values
@@ -535,12 +592,14 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	/**
 	 * @return Border between left/right of the chart and the first/last label
 	 */
 	public float getLabelBorderSpacing(){
 		return mHorController.getBorderSpacing();
 	}
+	
 	
 	
 	
@@ -553,12 +612,13 @@ public abstract class ChartView extends View{
 	
 	/**
 	 * Show/Hide Y labels and respective axis
-	 * @param bool - if true Y label and axis won't be visible
+	 * @param bool - if false Y label and axis won't be visible
 	 */
 	public ChartView setLabels(boolean bool){
 		mVerController.setLabels(bool);
 		return this;
 	}
+	
 	
 	
 	/**
@@ -569,6 +629,7 @@ public abstract class ChartView extends View{
 		style.hasXAxis = bool;
 		return this;
 	}
+	
 	
 	
 	/**
@@ -592,6 +653,7 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	/**
 	 * A step is seen as the step to be defined between 2 labels. 
 	 * As an example a step of 2 with a max label value of 6 will end 
@@ -612,6 +674,7 @@ public abstract class ChartView extends View{
 	}
 
 	
+	
 	/**
 	 * Register a listener to be called when the chart is clicked.
 	 * @param listener
@@ -619,6 +682,7 @@ public abstract class ChartView extends View{
 	public void setOnEntryClickListener(OnEntryClickListener listener){
 		this.mEntryListener = listener;
 	}
+	
 	
 	
 	/**
@@ -630,11 +694,13 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
     public ChartView setLabelColor(int color) {
     	style.labelColor = color;
     	return this;
     }
 
+    
     
     public ChartView setFontSize(int size) {
     	style.fontSize = size;
@@ -642,11 +708,13 @@ public abstract class ChartView extends View{
     }
     
     
+    
     public ChartView setTypeface(Typeface typeface) {
     	style.typeface = typeface;
     	return this;
     }
 	  
+    
     
 	/**
 	 * @param spacing - Spacing between left/right of the chart and the 
@@ -658,6 +726,7 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	/**
 	 * @param spacing - Spacing between top of the chart and the first label
 	 */
@@ -665,6 +734,7 @@ public abstract class ChartView extends View{
 		mVerController.setTopSpacing(spacing);
 		return this;
 	}
+	
 	
 
 	/**
@@ -685,6 +755,7 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	/**
 	 * Apply vertical grid to chart
 	 * @param paint - The Paint instance that will be used to draw the grid. 
@@ -701,6 +772,7 @@ public abstract class ChartView extends View{
 		style.gridPaint = paint;
 		return this;
 	}
+	
 	
 	
 	/**
@@ -721,6 +793,7 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	/**
 	 * To set a threshold line to the chart.
 	 * @param value - Threshold value.
@@ -736,6 +809,13 @@ public abstract class ChartView extends View{
 	
 	
 	
+	
+	/*
+	 * ------
+	 * Style
+	 * ------
+	 */
+
 	
 	/**
 	 * Class responsible to style the Graph!
@@ -845,5 +925,5 @@ public abstract class ChartView extends View{
 	    
 	}
 	
-	
+
 }

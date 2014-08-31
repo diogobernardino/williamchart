@@ -116,8 +116,7 @@ public class LineChartView extends ChartView {
 		}
 
 	}
-	
-	
+
 	
 	/**
 	 * Responsible for drawing points
@@ -129,10 +128,11 @@ public class LineChartView extends ChartView {
 		mStyle.mDotsStrokePaint.setColor(set.getDotsStrokeColor());
 		
 		Path path = new Path();
-		for(int i = 0; i < set.size(); i++)
+		for(int i = 0; i < set.size(); i++){
 			path.addCircle(set.getEntry(i).getX(), 
 							set.getEntry(i).getY(), 
 								set.getDotsRadius(), Path.Direction.CW);
+		}
 		
 		//Draw dots fill
 		canvas.drawPath(path, mStyle.mDotsPaint);
@@ -141,14 +141,13 @@ public class LineChartView extends ChartView {
 		if(set.hasDotsStroke())
 			canvas.drawPath(path, mStyle.mDotsStrokePaint);
 	}
-	
 
-	
+
+
 	/**
 	 * Responsible for drawing a (not smooth) line
 	 */
 	public void drawLine(Canvas canvas, LineSet set) {
-			
 		Path path = new Path();
 		Path bgPath = new Path();
 		for (int i = 0; i < set.size(); i++) {
@@ -221,7 +220,7 @@ public class LineChartView extends ChartView {
             path.cubicTo(firstControlX, firstControlY, 
             				secondControlX, secondControlY, 
             					nextPointX, nextPointY);
-	            
+	        
             //Define background
             bgPath.cubicTo(firstControlX, firstControlY, 
             				secondControlX, secondControlY, 
@@ -246,7 +245,6 @@ public class LineChartView extends ChartView {
 	
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
-		
 		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
 		for(ChartSet set: data){
 			final ArrayList<Region> regionSet = new ArrayList<Region>(set.size());

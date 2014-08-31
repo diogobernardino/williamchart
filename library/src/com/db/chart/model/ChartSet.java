@@ -52,6 +52,11 @@ public class ChartSet {
 	}
 	
 	
+	public void updateValues(float[] newValues){
+		for(int i = 0; i < mEntries.size(); i++)
+			setValue(i, newValues[i]);
+	}
+	
 	/*
 	 *Getters
 	 *
@@ -72,5 +77,25 @@ public class ChartSet {
 	public String getLabel(int i) {
 		return mEntries.get(i).getLabel();
 	}
-
+	
+	public float[] getYCoordinates(){
+		
+		float[] result = new float[size()];
+		for(int i = 0; i < result.length; i++)
+			result[i] = getEntries().get(i).getY();
+		
+		return result;
+	}
+	
+	
+	
+	/*
+	 * Setters
+	 * 
+	 */
+	
+	private void setValue(int i, float value){
+		mEntries.get(i).setValue(value);
+	}
+	
 }

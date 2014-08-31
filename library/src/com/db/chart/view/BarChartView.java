@@ -181,7 +181,6 @@ public class BarChartView extends ChartView {
 	
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
-		
 		// Define regions
 		
 		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
@@ -202,13 +201,11 @@ public class BarChartView extends ChartView {
 									(int) bar.getY(), 
 										(int) (drawingOffset += mBarWidth), 
 											(int)(this.getInnerChartBottom())));
-				
 				// If last bar of group no set spacing is necessary
 				if(j != data.size()-1)
 					drawingOffset += style.mSetSpacing;
 			}	
 		}
-		
 		return result;
 	}
 	

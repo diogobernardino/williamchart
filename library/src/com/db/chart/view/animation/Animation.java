@@ -149,7 +149,7 @@ public class Animation{
 	 * drawn.
 	 */
 	public ArrayList<ChartSet> prepareEnter(ChartView chartView, 
-			float startY, ArrayList<ChartSet> sets){
+			ArrayList<float[]> startingY, ArrayList<ChartSet> sets){
 		
 		mChartView = chartView;
 		mSets = sets;
@@ -166,7 +166,7 @@ public class Animation{
 		for(int i = 0; i < mSets.size(); i++){
 			for(int j = 0; j < mSets.get(i).size(); j++){
 				Path path = new Path();
-				path.moveTo(mSets.get(i).getEntry(j).getX(), startY);
+				path.moveTo(mSets.get(i).getEntry(j).getX(), startingY.get(i)[j]);
 				path.lineTo(mSets.get(i).getEntry(j).getX(), mSets.get(i).getEntry(j).getY());
 				mPathMeasures[i][j] = new PathMeasure(path, false);
 			}
@@ -188,6 +188,21 @@ public class Animation{
 	}
 	
 	
+	public ArrayList<ChartSet> prepareEnter(ChartView chartView, 
+			float startY, ArrayList<ChartSet> sets){
+		
+		ArrayList<float[]> startYValues = new ArrayList<float[]>(sets.size());
+		for(int i = 0; i < sets.size(); i++){
+			
+			float[] set = new float[sets.get(i).size()];
+			for(int j = 0; j < set.length; j++)
+				set[j] = startY;
+			startYValues.add(set);
+		}
+		
+		return prepareEnter(chartView, 
+				startYValues, sets);
+	}
 	
 	/**
 	 * Updates values, with the next interpolation, to be drawn next.
@@ -257,7 +272,9 @@ public class Animation{
 		float[] pos = new float[2];
 		if(mPathMeasures[i][j].getPosTan(mPathMeasures[i][j].getLength() * mEasing.next(normalizedTime), pos, null))
 			return pos[1];
-		return 0;
+		pos[0] = mSets.get(i).getEntry(j).getX();
+		pos[1] = mSets.get(i).getEntry(j).getY();
+		return pos[1];
 	}
 	
 	

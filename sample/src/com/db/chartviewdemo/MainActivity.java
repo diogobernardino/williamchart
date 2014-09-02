@@ -226,6 +226,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(int setIndex, int entryIndex) {
 				mTextView.setText(mLabels[entryIndex]);
+				mButton.setEnabled(false);
 				
 				float[] newValues = new float[mCurrLineSetSize];
 				for(int i = 0; i < mCurrLineSetSize; i++)
@@ -247,6 +248,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(int setIndex, int entryIndex) {
 				mTextView.setText(mLabels[entryIndex]);
+				mButton.setEnabled(false);
 				
 				float[] newValues = new float[mCurrBarSetSize];
 				for(int i = 0; i < mCurrBarSetSize; i++)
@@ -268,6 +270,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(int setIndex, int entryIndex) {
 				mTextView.setText(mLabels[entryIndex]);
+				mButton.setEnabled(false);
 				
 				float[] newValues = new float[mCurrStackBarSetSize];
 				for(int i = 0; i < mCurrStackBarSetSize; i++)

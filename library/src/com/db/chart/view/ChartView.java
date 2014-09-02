@@ -493,16 +493,10 @@ public abstract class ChartView extends View{
 	public boolean onTouchEvent(MotionEvent event) {
 		if(mAnim == null || !mAnim.isPlaying())
 			if(event.getAction() == MotionEvent.ACTION_DOWN){
-				System.out.println(event.getX()+" "+ 
-						event.getY());
 				if(mEntryListener != null && mRegions != null){
 					 //Check if ACTION_DOWN over any ScreenPoint region.
 						for(int i = 0; i < mRegions.size() ; i++){
 							for(int j = 0; j < mRegions.get(i).size(); j++){
-								System.out.println("top "+mRegions.get(i).get(j).getBounds().top);
-								System.out.println("right "+mRegions.get(i).get(j).getBounds().right);
-								System.out.println("left "+mRegions.get(i).get(j).getBounds().left);
-								System.out.println("bottom "+mRegions.get(i).get(j).getBounds().bottom);
 								if(mRegions.get(i).get(j)
 										.contains((int) event.getX(), 
 													(int) event.getY())){

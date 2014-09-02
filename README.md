@@ -74,6 +74,10 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     chart.setTopSpacing(dimen)
     chart.setBorderSpacing(dimen)
     chart.setAxisX(boolean)
+
+    chart.show()
+    
+    chart.updateValues(int, array)
 ```
 
 

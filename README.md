@@ -37,6 +37,20 @@ To install the sample application to your device run the following task:
 $ ./gradlew installDebug
 ```
 
+To deploy the library to your local Maven repository run the following task:
+
+```
+$ ./gradlew install
+```
+
+Then, to use the library in your project add the following to your `build.gradle`:
+
+```groovy
+dependencies {
+    compile 'com.db.williamchart:williamchart:1.0.0'
+}
+```
+
 
 Chart (Common customization)
 ----------------------

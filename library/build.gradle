@@ -1,4 +1,10 @@
 apply plugin: 'com.android.library'
+apply plugin: 'android-maven'
+
+version = "1.0.0"
+group = "com.db.williamchart"
+archivesBaseName = "williamchart"
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')

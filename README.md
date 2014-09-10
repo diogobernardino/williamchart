@@ -26,7 +26,16 @@ It has been tested in Android 2.2 and above.
 
 Usage
 -----
-Each chart type has common but also specific customization attributes. Add the View to your layout and configure it using styleable attributes or/and programmatically .
+Each chart type has common but also specific customization attributes. Add the View to your layout and configure it using styleable attributes or/and programmatically.
+
+
+### Gradle build
+
+To install the sample application to your device run the following task:
+
+```
+$ ./gradlew installDebug
+```
 
 
 Chart (Common customization)

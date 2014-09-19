@@ -48,6 +48,7 @@ public class LineChartView extends ChartView {
 
 	
 	
+	
 	public LineChartView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
@@ -65,6 +66,7 @@ public class LineChartView extends ChartView {
 	
 	
 	
+	
 	@Override
 	public void onAttachedToWindow(){
 		super.onAttachedToWindow();
@@ -72,11 +74,13 @@ public class LineChartView extends ChartView {
 	}
 	
 	
+	
 	@Override
 	public void onDetachedFromWindow(){
 		super.onDetachedFromWindow();
 		mStyle.clean();
 	}
+	
 	
 	
 	
@@ -118,6 +122,8 @@ public class LineChartView extends ChartView {
 	}
 
 	
+	
+	
 	/**
 	 * Responsible for drawing points
 	 */
@@ -144,6 +150,7 @@ public class LineChartView extends ChartView {
 
 
 
+	
 	/**
 	 * Responsible for drawing a (not smooth) line
 	 */
@@ -180,11 +187,25 @@ public class LineChartView extends ChartView {
 
 	
 
+
 	/**
 	 * Credits: http://www.jayway.com/author/andersericsson/
 	 * Method responsible to draw a smooth line with the parsed screen points.
 	 */
 	private void drawSmoothLine(Canvas canvas, LineSet set) {
+		
+		float thisPointX;
+		float thisPointY;
+		float nextPointX;
+		float nextPointY;
+		float startdiffX;
+		float startdiffY;
+		float endDiffX;
+		float endDiffY;
+		float firstControlX;
+		float firstControlY;
+		float secondControlX;
+		float secondControlY;
 		
 		Path path = new Path();
 		path.moveTo(set.getEntry(0).getX(),set.getEntry(0).getY());
@@ -194,27 +215,27 @@ public class LineChartView extends ChartView {
 			
 		for (int i = 0; i < set.size() - 1; i++) {
             
-			float thisPointX = set.getEntry(i).getX();
-            float thisPointY = set.getEntry(i).getY();
+			thisPointX = set.getEntry(i).getX();
+            thisPointY = set.getEntry(i).getY();
             
-            float nextPointX = set.getEntry(i+1).getX();
-            float nextPointY = set.getEntry(i+1).getY();
+            nextPointX = set.getEntry(i+1).getX();
+            nextPointY = set.getEntry(i+1).getY();
 	
-            float startdiffX = (nextPointX - set.getEntry(si(set.getEntries(), 
+            startdiffX = (nextPointX - set.getEntry(si(set.getEntries(), 
             													i - 1)).getX());
-            float startdiffY = (nextPointY - set.getEntry(si(set.getEntries(), 
+            startdiffY = (nextPointY - set.getEntry(si(set.getEntries(), 
             													i - 1)).getY());
 	            
-            float endDiffX = (set.getEntry(si(set.getEntries(), i + 2))
+            endDiffX = (set.getEntry(si(set.getEntries(), i + 2))
             											.getX() - thisPointX);
-            float endDiffY = (set.getEntry(si(set.getEntries(), i + 2))
+            endDiffY = (set.getEntry(si(set.getEntries(), i + 2))
             											.getY() - thisPointY);
 	
-            float firstControlX = thisPointX + (0.15f * startdiffX);
-            float firstControlY = thisPointY + (0.15f * startdiffY);
+            firstControlX = thisPointX + (0.15f * startdiffX);
+            firstControlY = thisPointY + (0.15f * startdiffY);
 	            
-            float secondControlX = nextPointX - (0.15f * endDiffX);
-            float secondControlY = nextPointY - (0.15f * endDiffY);
+            secondControlX = nextPointX - (0.15f * endDiffX);
+            secondControlY = nextPointY - (0.15f * endDiffY);
 	
             //Define outline
             path.cubicTo(firstControlX, firstControlY, 
@@ -243,6 +264,7 @@ public class LineChartView extends ChartView {
 	
 	
 	
+	
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
 		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
@@ -258,6 +280,7 @@ public class LineChartView extends ChartView {
 		
 		return result;
 	}
+	
 	
 	
 	
@@ -277,17 +300,21 @@ public class LineChartView extends ChartView {
     
     
     
+    
+    
 	/**
 	 * Class responsible to style the LineChart!
 	 * Can be instantiated with or without attributes.
 	 */
 	class Style {
 		
+		
 		/** Paint variables */
 		private Paint mDotsPaint;
 		private Paint mDotsStrokePaint;
 		private Paint mLinePaint;
 		private Paint mFillPaint;
+		
 		
 		/** Shadow variables */
 		private int mShadowColor;
@@ -296,14 +323,18 @@ public class LineChartView extends ChartView {
 		private float mShadowDy;
 		
 		
+		
 		protected Style() {
+			
 			mShadowRadius = getResources().getDimension(R.dimen.shadow_radius);
 	    	mShadowDx = getResources().getDimension(R.dimen.shadow_dx);
 	    	mShadowDy = getResources().getDimension(R.dimen.shadow_dy);
 			mShadowColor = 0;
 		}
 		
+		
 		protected Style(TypedArray attrs) {
+			
 			mShadowRadius = attrs.getDimension(
 					R.styleable.ChartAttrs_chart_shadowRadius, 
 						getResources().getDimension(R.dimen.shadow_radius));
@@ -345,12 +376,14 @@ public class LineChartView extends ChartView {
 	    }
 
 		
+		
 	    private void clean(){
 	    	
 	    	mLinePaint = null;
 	    	mFillPaint = null;
 	    	mDotsPaint = null;
 	    }
+	    
 	    
 	}
     

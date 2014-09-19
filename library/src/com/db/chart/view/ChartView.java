@@ -33,6 +33,7 @@ import android.graphics.Region;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver.OnPreDrawListener;
@@ -62,12 +63,17 @@ public abstract class ChartView extends View{
 	
 	
 	/** Horizontal and Vertical position controllers */
-	private XController mHorController;
-	private YController mVerController;
+	protected XController horController;
+	protected YController verController;
 	
 	
 	/** Chart data to be displayed */
 	protected ArrayList<ChartSet> data;
+	
+	
+	/** Style applied to chart */
+	protected Style style;
+	
 	
 	
 	/** Threshold limit line value */
@@ -94,14 +100,14 @@ public abstract class ChartView extends View{
 	
 	/** Drawing flag */
 	private boolean mIsDrawing;
-	
-	
-	/** Style applied to chart */
-	protected Style style;
 
 
 	/** Chart animation */
 	private Animation mAnim;
+	
+	
+	/** Keep record of data updates to be done */
+	private ArrayList<Pair<Integer, float []>> toUpdateValues;
 	
 	
 	/**
@@ -124,32 +130,31 @@ public abstract class ChartView extends View{
 			chartRight = getMeasuredWidth() - getPaddingRight();
 				
 			// Initialize controllers now that we have the measures
-			mVerController.init();	
-			mThresholdValue = mVerController.parseYPos(mThresholdValue);
+			verController.init();	
+			mThresholdValue = verController.parseYPos(mThresholdValue);
+			horController.init(verController.getInnerChartLeft());
 			
-			mHorController.init(mVerController.getInnerChartLeft());
-				
 			// Define the data chart frame. Exclude axis space.
 			innerchartTop = chartTop;
-			innerchartBottom = mVerController.getInnerChartBottom();
-			innerchartLeft = mVerController.getInnerChartLeft();
-			innerchartRight = mHorController.getInnerChartRight();
-				
+			innerchartBottom = verController.getInnerChartBottom();
+			innerchartLeft = verController.getInnerChartLeft();
+			innerchartRight = horController.getInnerChartRight();
+			
 			// Processes data to define screen positions
 			digestData();
+			
 			// Tells view to execute code before starting drawing
 			onPreDrawChart(data);
+			
 			// Sets listener if needed
 			if(mEntryListener != null) 
 				mRegions = defineRegions(data);
 			
-
-				
 			// Prepares the animation if needed and gets the first dump 
 			// of data to be drawn
 			if(mAnim != null){
 				data = mAnim.prepareEnter(ChartView.this,
-								mVerController.getInnerChartBottom(), 
+								verController.getInnerChartBottom(), 
 									data);
 			}
 			
@@ -164,13 +169,14 @@ public abstract class ChartView extends View{
 	
 	
 	
+	
 	public ChartView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
-		mHorController = new XController(this, 
+		horController = new XController(this, 
 				context.getTheme().obtainStyledAttributes(attrs, 
 						R.styleable.ChartAttrs, 0, 0));
-		mVerController = new YController(this, 
+		verController = new YController(this, 
 				context.getTheme().obtainStyledAttributes(attrs, 
 						R.styleable.ChartAttrs, 0, 0));
 		
@@ -184,8 +190,8 @@ public abstract class ChartView extends View{
 	public ChartView(Context context) {
 		super(context);
 		
-		mHorController = new XController(this);
-		mVerController = new YController(this);
+		horController = new XController(this);
+		verController = new YController(this);
 		
 		style = new Style();
 		
@@ -193,17 +199,18 @@ public abstract class ChartView extends View{
 	}
 	
 	
-
+	
+	
 	private void init(){
 		
 		mReadyToDraw = false;
 		mSetClicked = -1;
 		mIndexClicked = -1;
-		
 		mThresholdValue = 0;
-
 		mIsDrawing = false;
 		data = new ArrayList<ChartSet>();
+		mRegions = new ArrayList<ArrayList<Region>>();
+		toUpdateValues = new ArrayList<Pair<Integer,float[]>>();
 	}
 
 
@@ -228,11 +235,36 @@ public abstract class ChartView extends View{
 
 	
 	
+	
 	/*
-	 * --------
+	 * -----------------------
 	 * Methods to be overriden
-	 * --------
+	 * -----------------------
 	 */
+	
+	
+	/**
+	 * Convert chart points into screen points.
+	 */
+	private void digestData() {
+		for(ChartSet set: data){
+			for (int i = 0; i < set.size(); i++){
+				set.getEntry(i)
+					.setDisplayCoordinates(horController.labelsPos.get(i), 
+									verController.parseYPos(set.getValue(i)));
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * (Optional) To be overriden in case the view needs to execute some code before 
+	 * starting the drawing.
+	 * @param datasets
+	 */
+	public void onPreDrawChart(ArrayList<ChartSet> sets){}
+	
 	
 	
 	/**
@@ -240,9 +272,10 @@ public abstract class ChartView extends View{
 	 * its own clickable regions.
 	 * This way, classes extending ChartView will only define their 
 	 * clickable regions.
-	 * @return 
-	 * 	Important: the returned vector must match the order of the data passed 
-	 * 	by the user. This ensures that onTouchEvent will return the correct index.
+	 * @return ArrayList with regions where click should be detected.
+	 * 	
+	 * Important: the returned vector must match the order of the data passed 
+	 * by the user. This ensures that onTouchEvent will return the correct index.
 	 */
 	protected ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
 		return mRegions;
@@ -251,28 +284,12 @@ public abstract class ChartView extends View{
 	
 	
 	/**
-	 * To be Overridden in order for each chart to customize visualization
+	 * To be overridden in order for each chart to customize visualization.
 	 * @param screenPoints
 	 */
 	abstract public void onDrawChart(Canvas canvas, ArrayList<ChartSet> set);
 	
-	
-	
-	public void onPreDrawChart(ArrayList<ChartSet> set){}
-	
-	
-	
-	/**
-	 * Convert chart points into screen points
-	 */
-	private void digestData() {
-		for(ChartSet set: data)
-			for (int i = 0; i < set.size(); i++){
-				set.getEntry(i)
-					.setDisplayCoordinates(mHorController.labelsPos.get(i), 
-									mVerController.parseYPos(set.getValue(i)));
-			}
-	}
+
 	
 	
 	
@@ -290,6 +307,7 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	
 	public void addData(ArrayList<ChartSet> data){
 		this.data = data;
 	}
@@ -297,19 +315,7 @@ public abstract class ChartView extends View{
 	
 	
 	/**
-	 * Method not often expected to be used. More for testing.
-	 */
-	public void reset(){
-		data = new ArrayList<ChartSet>();
-		mVerController.reset();
-		style.thresholdPaint = null;
-		style.gridPaint = null;
-	}
-	
-	
-	
-	/**
-	 * Starts the animation given as parameter
+	 * Starts the animation given as parameter.
 	 * @param anim
 	 */
 	public void animate(Animation anim){
@@ -332,32 +338,61 @@ public abstract class ChartView extends View{
 	
 	
 	/**
-	 * Update set values. Animation support in case previously added.
-	 * @param setIndex - Index of set to be updated
-	 * @param values - Array of new values. Array length must match current data.
+	 * Method not expected to be used often. More for testing.
+	 * Resets chart state to insert new configuration.
 	 */
-	public void updateValues(int setIndex, float[] values){
+	public void reset(){
+		data.clear();
+		mRegions.clear();
+		toUpdateValues.clear();
+		verController.maxLabelValue = 0;
+		if(horController.mandatoryBorderSpacing != 0)
+			horController.mandatoryBorderSpacing = 1;
+		style.thresholdPaint = null;
+		style.gridPaint = null;
+	}
+	
+	
+	
+	public ChartView updateValues(int setIndex, float[] values){
 		
 		try{
 			if(values.length != data.get(setIndex).size())
-				throw new ChartException("Size doesn't match.");
+				throw new ChartException("New values size doesn't match " +
+						"current dataset size.");
 		}catch(ChartException e){
 			Log.e(TAG, "", e);
 			System.exit(1);
 		}
+		System.out.println("updateValues: "+setIndex);
+		toUpdateValues.add(new Pair<Integer, float[]>(setIndex, values));
 		
+		return this;
+	}
+	
+	
+	/**
+	 * Update set values. Animation support in case previously added.
+	 * @param setIndex - Index of set to be updated
+	 * @param values - Array of new values. Array length must match current data.
+	 */
+	public void notifyDataUpdate(){
+
 		ArrayList<float []> oldValues = new ArrayList<float[]>(data.size());
 		for(int i = 0; i < data.size(); i++)
 			oldValues.add(data.get(i).getYCoordinates());
 		
-		data.get(setIndex).updateValues(values);
+		System.out.println("notifyDataUpdate :"+ toUpdateValues.size());
+		for(int i = 0; i < toUpdateValues.size(); i++)
+			data.get(toUpdateValues.get(i).first).updateValues(toUpdateValues.get(i).second);
 		
 		digestData();
 		mRegions = defineRegions(data);
 		if(mAnim != null)
 			data = mAnim.prepareEnter(ChartView.this,
-							oldValues, 
-								data);
+										oldValues, 
+											data);
+		toUpdateValues.clear();
 		
 		invalidate();
 	}
@@ -365,11 +400,12 @@ public abstract class ChartView extends View{
 	
 	
 	/**
-	 * Asks the view if it is able to draw now
+	 * Asks the view if it is able to draw now.
 	 */
 	public boolean canIPleaseAskYouToDraw(){
 		return !mIsDrawing;
 	}
+	
 	
 	
 	
@@ -390,18 +426,20 @@ public abstract class ChartView extends View{
 		
 		if(mReadyToDraw){
 			
-			//draw grid
+			// Draw grid
 			if(style.hasVerticalGrid)
 				drawVerticalGrid(canvas);
 			if(style.hasHorizontalGrid)
 				drawHorizontalGrid(canvas);
 			
-			//draw data
+			// Draw Axis Y
+			verController.draw(canvas);
+			
+			// Draw data
 			onDrawChart(canvas, data);
 			
-			//draw axis
-			mVerController.draw(canvas);
-			mHorController.draw(canvas);
+			// Draw axis X
+			horController.draw(canvas);
 			
 			if(style.thresholdPaint != null)
 				drawThresholdLine(canvas);
@@ -416,10 +454,10 @@ public abstract class ChartView extends View{
 	private void drawThresholdLine(Canvas canvas) {
 		
 		canvas.drawLine(innerchartLeft, 
-				mThresholdValue, 
-					innerchartRight, 
-						mThresholdValue, 
-							style.thresholdPaint);
+							mThresholdValue, 
+								innerchartRight, 
+									mThresholdValue, 
+										style.thresholdPaint);
 	}
 
 
@@ -427,60 +465,63 @@ public abstract class ChartView extends View{
 	private void drawVerticalGrid(Canvas canvas){
 		
 		// Draw vertical grid lines
-		final ArrayList<Float> horPositions = mHorController.getLabelsPosition();
+		final ArrayList<Float> horPositions = horController.labelsPos;
 		for(int i = 0; i < horPositions.size(); i++){
 			canvas.drawLine(horPositions.get(i), 
-					innerchartBottom, 
-						horPositions.get(i), 
-							innerchartTop, 
-								style.gridPaint);
+								innerchartBottom, 
+									horPositions.get(i), 
+										innerchartTop, 
+											style.gridPaint);
 		}
 		
 		// If border diff than 0 inner chart sides must have lines
-		if(mHorController.horBorderSpacing != 0){
-			canvas.drawLine(innerchartLeft, 
-					innerchartBottom, 
-						innerchartLeft, 
-							innerchartTop, 
-								style.gridPaint);
+		if(horController.borderSpacing != 0 || horController.mandatoryBorderSpacing != 0){
+			if(!verController.hasLabels)
+				canvas.drawLine(innerchartLeft, 
+									innerchartBottom, 
+										innerchartLeft, 
+											innerchartTop, 
+												style.gridPaint);
 			canvas.drawLine(innerchartRight, 
-					innerchartBottom, 
-						innerchartRight, 
-							innerchartTop, 
-								style.gridPaint);
+								innerchartBottom, 
+									innerchartRight, 
+										innerchartTop, 
+											style.gridPaint);
 		}
 			
 	}
 	
 	
+	
 	private void drawHorizontalGrid(Canvas canvas){
 		
 		// Draw horizontal grid lines
-		final ArrayList<Float> verPositions = mVerController.getLabelsPosition();
+		final ArrayList<Float> verPositions = verController.labelsPos;
 		for(int i = 0; i < verPositions.size(); i++){
 			canvas.drawLine(innerchartLeft, 
-					verPositions.get(i), 
-						innerchartRight,
-							verPositions.get(i), 
-								style.gridPaint);
+								verPositions.get(i), 
+									innerchartRight,
+										verPositions.get(i), 
+											style.gridPaint);
 		}
 		
 		// If there's no axis
-		if(!style.hasXAxis)
+		if(!horController.hasAxis)
 			canvas.drawLine(innerchartLeft, 
-					innerchartBottom, 
-						innerchartRight, 
-							innerchartBottom, 
-								style.gridPaint);
+								innerchartBottom, 
+									innerchartRight, 
+										innerchartBottom, 
+											style.gridPaint);
 	}
 	
 	
 	
 	
+	
 	/*
-	 * -------------
+	 * --------------
 	 * Click Handler
-	 * -------------
+	 * --------------
 	 */
 	
 	
@@ -522,6 +563,7 @@ public abstract class ChartView extends View{
 			}
 		return true;
 	}
+	
 	
 	
 	
@@ -582,7 +624,7 @@ public abstract class ChartView extends View{
 	 * @return step
 	 */
 	protected int getStep(){
-		return mVerController.step;
+		return verController.step;
 	}
 	
 	
@@ -591,8 +633,9 @@ public abstract class ChartView extends View{
 	 * @return Border between left/right of the chart and the first/last label
 	 */
 	public float getLabelBorderSpacing(){
-		return mHorController.getBorderSpacing();
+		return horController.borderSpacing;
 	}
+	
 	
 	
 	
@@ -609,7 +652,7 @@ public abstract class ChartView extends View{
 	 * @param bool - if false Y label and axis won't be visible
 	 */
 	public ChartView setLabels(boolean bool){
-		mVerController.setLabels(bool);
+		verController.hasLabels = bool;
 		return this;
 	}
 	
@@ -620,7 +663,7 @@ public abstract class ChartView extends View{
 	 * @param bool - if true axis won't be visible
 	 */
 	public ChartView setAxisX(boolean bool){
-		style.hasXAxis = bool;
+		horController.hasAxis = bool;
 		return this;
 	}
 	
@@ -642,7 +685,9 @@ public abstract class ChartView extends View{
 			Log.e(TAG, "", e);
 			System.exit(1);
 		}
-		mVerController.setMaxAxisValue(maxAxisValue, step);
+		verController.maxLabelValue = maxAxisValue;
+		verController.step = step;
+		
 		return this;
 	}
 	
@@ -658,12 +703,13 @@ public abstract class ChartView extends View{
 		
 		try{
 			if(step <= 0)
-				throw new ChartException("Step less or equal to 0");
+				throw new ChartException("Step can't be lower or equal to 0");
 		}catch(ChartException e){
 			Log.e(TAG, "", e);
 			System.exit(1);
 		}
-		mVerController.setStep(step);
+		verController.step = step;
+		
 		return this;
 	}
 
@@ -715,7 +761,7 @@ public abstract class ChartView extends View{
 	 * first/last label
 	 */
 	public ChartView setBorderSpacing(float spacing){
-		mHorController.setBorderSpacing(spacing);
+		horController.borderSpacing = spacing;
 		return this;
 	}
 	
@@ -725,18 +771,19 @@ public abstract class ChartView extends View{
 	 * @param spacing - Spacing between top of the chart and the first label
 	 */
 	public ChartView setTopSpacing(float spacing){
-		mVerController.setTopSpacing(spacing);
+		verController.topSpacing = spacing;
 		return this;
 	}
 	
 	
 
 	/**
-	 * Apply grid to chart
+	 * Apply grid to chart.
 	 * @param paint - The Paint instance that will be used to draw the grid. 
 	 * If null the grid won't be drawn.
 	 */
 	public ChartView setGrid(Paint paint){
+		
 		if(paint != null){
 			style.hasVerticalGrid = true;
 			style.hasHorizontalGrid = true;
@@ -745,6 +792,7 @@ public abstract class ChartView extends View{
 			style.hasHorizontalGrid = false;
 		}
 		style.gridPaint = paint;
+		
 		return this;
 	}
 	
@@ -760,10 +808,11 @@ public abstract class ChartView extends View{
 		if(paint != null)
 			style.hasVerticalGrid = true;
 		else{
-			style.hasHorizontalGrid = false;
 			style.hasVerticalGrid = false;
+			style.hasHorizontalGrid = false;
 		}
 		style.gridPaint = paint;
+		
 		return this;
 	}
 	
@@ -802,12 +851,19 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	protected ChartView setMandatoryBorderSpacing(){
+		horController.mandatoryBorderSpacing = 1;
+		return this;
+	}
+	
+	
+	
 	
 	
 	/*
-	 * ------
-	 * Style
-	 * ------
+	 * -------------------------
+	 *          Style
+	 * -------------------------
 	 */
 
 	
@@ -819,11 +875,11 @@ public abstract class ChartView extends View{
 		
 		private int DEFAULT_COLOR = -16777216;
 		
+		
 		/** Chart */
 		protected Paint chartPaint;
 		protected float axisThickness;
 		protected int axisColor;
-		protected boolean hasXAxis;
 		
 		
 		/** Grid */
@@ -839,9 +895,10 @@ public abstract class ChartView extends View{
 		
 		/** Font */
 		protected Paint labelPaint;
-		protected float fontSize;
 		protected int labelColor;
+		protected float fontSize;
 		protected Typeface typeface;
+		
 		
 		
 		protected Style() {
@@ -857,19 +914,12 @@ public abstract class ChartView extends View{
 			fontSize = getResources().getDimension(R.dimen.font_size);
 		}
 
+		
 		protected Style(TypedArray attrs) {
 			
 			hasGrid = false;
 			hasHorizontalGrid = false;
 			hasVerticalGrid = false;
-			
-			mVerController.setLabels(attrs.getBoolean(
-										R.styleable.ChartAttrs_chart_labels, 
-											false));
-			
-			hasXAxis = attrs.getBoolean(
-					R.styleable.ChartAttrs_chart_axisX, 
-					true);
 			
 			axisColor = attrs.getColor(
 					R.styleable.ChartAttrs_chart_axisColor, 

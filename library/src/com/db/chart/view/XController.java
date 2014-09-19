@@ -33,11 +33,12 @@ import com.db.williamchart.R;
  */
 class XController{
 	
+	
 	/** Distance between label and axis. */
-	private static int sDistFromLabelToAxis;
+	private int mDistFromLabelToAxis;
 	
 	
-	/** Chartview object */ 
+	/** ChartView object */ 
 	private ChartView mChartView;
 	
 	
@@ -53,14 +54,24 @@ class XController{
 	private float mAxisBottom;
 	
 	
+	
 	/** Position of labels in chart */
-	protected ArrayList<Float>labelsPos;
+	protected ArrayList<Float> labelsPos;
 
 	
 	/** Horizontal border spacing for labels */
-	protected float horBorderSpacing;
+	protected float borderSpacing;
 
 
+	/** Mandatory horizontal border when necessary (ex: BarCharts) */
+	protected float mandatoryBorderSpacing;
+
+	
+	/** Whether the chart has X Axis or not */
+	protected boolean hasAxis;
+	
+
+	
 	
 	public XController(ChartView chartView) {
 		
@@ -68,63 +79,85 @@ class XController{
 		
 		//Initialize variables and set defaults
 		labelsPos = new ArrayList<Float>();
-		horBorderSpacing = mChartView.getResources()
-									.getDimension(R.dimen.axis_border_spacing);
-		mChartView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 
-													LayoutParams.WRAP_CONTENT));
+		mandatoryBorderSpacing = 0;
+		mChartView.setLayoutParams(
+						new LayoutParams(LayoutParams.MATCH_PARENT, 
+											LayoutParams.WRAP_CONTENT));
+		borderSpacing = mChartView.getResources()
+									.getDimension(R.dimen.axis_border_spacing);	
 	}
 
 	
 	public XController(ChartView chartView, TypedArray attrs) {
 		this(chartView);
-		horBorderSpacing = attrs.getDimension(
+		
+		hasAxis = attrs.getBoolean( R.styleable.ChartAttrs_chart_axisX, true);
+		borderSpacing = attrs.getDimension(
 							R.styleable.ChartAttrs_chart_axisBorderSpacing, 
-								horBorderSpacing);
+								borderSpacing);
 	}
+
 
 
 
 	protected void init(float innerChartLeft) {
 		
 		//Get system text top padding
-		Rect bounds = new Rect();
+		final Rect textBounds = new Rect();
 		mChartView.style.labelPaint
 							.getTextBounds(mChartView.data.get(0).getLabel(0), 
-												0, 
-													1, 
-														bounds);
-		mTextTopPadding = (mChartView.style.fontSize - bounds.height());
+											0, 
+												1, 
+													textBounds);
+		mTextTopPadding = (mChartView.style.fontSize - textBounds.height());
 		
-		sDistFromLabelToAxis = (int) (mChartView.getResources()
-									.getDimension(R.dimen.axis_dist_from_label));
+		mDistFromLabelToAxis = 
+				(int) (mChartView.getResources()
+							.getDimension(R.dimen.axis_dist_from_label));
+		
 		mAxisBottom = mChartView.chartBottom 
 				- (mChartView.style.fontSize - mTextTopPadding) 
-					- sDistFromLabelToAxis;
+					- mDistFromLabelToAxis;
+		
 		mInnerChartLeft = innerChartLeft;
 
+		// In case of mandatory border spacing (ex. BarChart)
+		if(mandatoryBorderSpacing == 1)
+			mandatoryBorderSpacing = 
+				(getInnerChartRight() - mInnerChartLeft - borderSpacing * 2) 
+					/ mChartView.data.get(0).size() / 2;
+		
 		labelsPos = calcLabelsPos(mChartView.data.get(0).size());
 	}
 
 	
 	
+
 	/**
 	 * Get labels position having into account the horizontal padding of text size.
 	 * @param nLabels- number of labels to display
 	 */
 	private ArrayList<Float> calcLabelsPos(int nLabels) {
 		
-		ArrayList<Float> result = new ArrayList<Float>();
-		final float screenStep = (getInnerChartRight()
+		final ArrayList<Float> result = new ArrayList<Float>();
+		
+		if(nLabels == 1)
+			result.add(mInnerChartLeft + (getInnerChartRight() - mInnerChartLeft)/2);
+		else{
+			final float screenStep = 
+					(getInnerChartRight()
 						- mInnerChartLeft 
 						- mChartView.style.axisThickness/2
 						//if 0 first label will be right at the beginning of the axis
-						- horBorderSpacing * 2
-					) / (nLabels-1);
+						- borderSpacing * 2
+						- mandatoryBorderSpacing * 2 ) 
+					/ (nLabels-1);
 
-		float pos = mInnerChartLeft + horBorderSpacing;
-		while(pos <= mChartView.chartRight - horBorderSpacing){
-			result.add(pos);
-			pos += screenStep;
+			float pos = mInnerChartLeft + borderSpacing + mandatoryBorderSpacing;
+			while(pos <= mChartView.chartRight - borderSpacing - mandatoryBorderSpacing){
+				result.add(pos);
+				pos += screenStep;
+			}
 		}
 		
 		return result;
@@ -132,44 +165,42 @@ class XController{
 
 	
 	
+
+	
 	/**
 	 * Method called from onDraw method to draw XController data
-	 * @param canvas
-	 * 		Canvas to use while drawing the data.
+	 * @param canvas - Canvas to use while drawing the data.
 	 */
 	protected void draw(Canvas canvas){
 		
 		mChartView.style.labelPaint.setTextAlign(Align.CENTER);
 		
-		//Draw axis
-		if(mChartView.style.hasXAxis)
+		// Draw axis
+		if(hasAxis)
 			canvas.drawLine(mInnerChartLeft, 
-				mAxisBottom, 
-					getInnerChartRight(), 
-						mAxisBottom, 
-							mChartView.style.chartPaint);
+								mAxisBottom, 
+									getInnerChartRight(), 
+										mAxisBottom, 
+											mChartView.style.chartPaint);
 		
-		//Draw labels
+		// Draw labels
 		for(int i = 0; i < mChartView.data.get(0).size(); i++){
 			canvas.drawText(mChartView.data.get(0).getLabel(i), 
-					labelsPos.get(i), 
-						mChartView.chartBottom, 
-							mChartView.style.labelPaint);
+								labelsPos.get(i), 
+									mChartView.chartBottom, 
+										mChartView.style.labelPaint);
 			
 		}
 	}	
 	
 	
 	
+	
 	/*
-	 * Getters
-	 * 
+	 * -----------------------
+	 * 		  Getters
+	 * -----------------------
 	 */
-	
-	
-	public ArrayList<Float> getLabelsPosition(){
-		return labelsPos;
-	}
 
 	
 	/**
@@ -178,34 +209,12 @@ class XController{
 	 * @return position of the inner right side of the chart
 	 */
 	public float getInnerChartRight(){
-		return mChartView.chartRight - 
-					mChartView.style.labelPaint
-										.measureText(mChartView.data.get(0).
-											getLabel(mChartView.data.get(0).
-												getEntries().size()-1))/2;
+		return mChartView.chartRight 
+				- mChartView.style.labelPaint
+								.measureText(mChartView.data.get(0).
+												getLabel(mChartView.data.get(0).
+															getEntries().size()-1))/2;
 	}
-	
-	
-	/**
-	 * @return Border between left/right of the chart and the first/last label
-	 */
-	public float getBorderSpacing(){
-		return horBorderSpacing;
-	}
-	
 
 	
-	/*
-	 * Setters
-	 */
-	
-	/**
-	 * @param spacing - Spacing between left/right of the chart and the 
-	 * first/last label
-	 */
-	public void setBorderSpacing(float spacing){
-		horBorderSpacing = spacing;
-	}
-	
-
 }

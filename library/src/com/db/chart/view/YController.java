@@ -44,23 +44,23 @@ class YController{
 	
 	
 	/** Distance between axis X and label X */
-	private static int sDistFromLabelX;
+	private int mDistFromLabelX;
 	
 	
 	/** Distance between axis Y and label Y */
-	private static int sDistFromLabel;
+	private int mDistFromLabel;
 	
 	
-	/** Chartview object */
+	/** ChartView object */
 	private ChartView mChartView;
 
 	
 	/** Vertical labels */
-	private ArrayList<Integer>mLabels;
+	private ArrayList<Integer> mLabels;
 	
 	
 	/** Labels position */
-	private ArrayList<Float>mLabelsPos;
+	protected ArrayList<Float> labelsPos;
 	
 	
 	/** Frame height available to draw the chart */
@@ -68,11 +68,19 @@ class YController{
 	
 	
 	/** Range of Y values from 0 to mMaxValue */
-	private int mMaxLabelValue;
+	protected int maxLabelValue;
 	
 	
-	/** Step between labels */
-	protected int step;
+	/** Screen step between labels */
+	private float mScreenStep;
+	
+	
+	/** Spacing for top label */
+	protected float topSpacing;
+
+	
+	/** Default system top padding while drawing text */
+	private float mTextTopPadding;
 
 	
 	/** Starting X point of the axis */
@@ -83,22 +91,16 @@ class YController{
 	private float mAxisBottom;
 	
 	
-	/** Screen step between labels */
-	private float mScreenStep;
 	
+	/** Step between labels */
+	protected int step;
 	
-	/** Spacing for top label */
-	private float mVerTopSpacing;
 
-	
-	/** Default system top padding while drawing text */
-	private float mTextTopPadding;
-
-	
 	/** Should the axis be drawn or only measures must be calculated */
-	protected boolean isDrawing;
+	protected boolean hasLabels;
 
 
+	
 
 	public YController(ChartView chartView) {
 		
@@ -106,23 +108,27 @@ class YController{
 		
 		//Set defaults
 		step = DEFAULT_STEP;
-		mVerTopSpacing = mChartView.getResources()
-									.getDimension(R.dimen.axis_top_spacing);;
+		topSpacing = mChartView.getResources()
+										.getDimension(R.dimen.axis_top_spacing);
 		mAxisHorPosition = 0;
-		mMaxLabelValue = 0;
-		isDrawing = false;
+		maxLabelValue = 0;
+		hasLabels = false;
 	}
-	
 	
 	
 	public YController(ChartView chartView, TypedArray attrs) {
 		this(chartView);
-		mVerTopSpacing = attrs.getDimension(
+		
+		hasLabels = attrs.getBoolean(
+							R.styleable.ChartAttrs_chart_labels, 
+								false);
+		topSpacing = attrs.getDimension(
 								R.styleable.ChartAttrs_chart_axisTopSpacing, 
-									mVerTopSpacing);
+									topSpacing);
 	}
 
 
+	
 
 	protected void init() {
 		
@@ -135,21 +141,23 @@ class YController{
 													textBounds);
 		mTextTopPadding = mChartView.style.fontSize - textBounds.height();
 		
-		sDistFromLabelX = (int) (mChartView.getResources()
+		mDistFromLabelX = (int) (mChartView.getResources()
 									.getDimension(R.dimen.axis_dist_from_label));
-		sDistFromLabel= (int) mChartView.getResources()
+		
+		mDistFromLabel= (int) mChartView.getResources()
 									.getDimension(R.dimen.axis_dist_from_label);
 		
 		mAxisBottom = mChartView.chartBottom 
 				- textBounds.height() 
-					- sDistFromLabelX; 
+					- mDistFromLabelX; 
+		
 		mFrameHeight = (int) mAxisBottom - mChartView.chartTop;
 		
 		mLabels = calcLabels();
 		mAxisHorPosition = calcAxisHorizontalPosition();
-		mLabelsPos = calcLabelsPos(mChartView.data.get(0).size());
+		labelsPos = calcLabelsPos(mChartView.data.get(0).size());
 		
-		if(mMaxLabelValue < calcMaxY()){
+		if(maxLabelValue < calcMaxY()){
 			try{
 				throw new ChartException("MaxAxisValue defined < than current max set value");
 			}catch(ChartException e){
@@ -157,8 +165,10 @@ class YController{
 				System.exit(1);
 			}	
 		}
+		
 	}
 
+	
 	
 	
 	/**
@@ -166,6 +176,7 @@ class YController{
 	 * @return max Y value.
 	 */
 	private double  calcMaxY() {
+		
 		double max = 0;
 		for(ChartSet s: mChartView.data){
 			for(ChartEntry e: s.getEntries()){
@@ -173,8 +184,10 @@ class YController{
 					max = e.getValue();
 			}
 		}
+		
 		return max;
 	}
+	
 	
 	
 	
@@ -185,30 +198,30 @@ class YController{
 	private ArrayList<Integer> calcLabels(){
 		
 		final double maxY;
-		if(mMaxLabelValue == 0){
+		if(maxLabelValue == 0){
 			maxY = calcMaxY();
 			
 			//Get the highest label based in maxY and step
-			mMaxLabelValue = (int) Math.ceil(maxY);
-			while(mMaxLabelValue % step != 0)
-				mMaxLabelValue += 1;
+			maxLabelValue = (int) Math.ceil(maxY);
+			while(maxLabelValue % step != 0)
+				maxLabelValue += 1;
 		}
 		
 		
 		final ArrayList<Integer> result = new ArrayList<Integer>();
-		int aux = step;
-		while(aux <= mMaxLabelValue){
-			result.add(aux);
-			aux += step;
+		int pos = step;
+		while(pos <= maxLabelValue){
+			result.add(pos);
+			pos += step;
 		}
 
 		//Set max Y axis label in case isn't already there
-		if(result.get(result.size()-1) < mMaxLabelValue)
-			result.add(mMaxLabelValue);
+		if(result.get(result.size()-1) < maxLabelValue)
+			result.add(maxLabelValue);
 		
 		return result;
-		
 	}
+	
 	
 	
 	
@@ -217,16 +230,20 @@ class YController{
 	 * @param nLabels
 	 */
 	private ArrayList<Float> calcLabelsPos(int nLabels) {
+		
 		final ArrayList<Float> result = new ArrayList<Float>();
 		
-		mScreenStep = (float) (mFrameHeight - mVerTopSpacing) / mLabels.size();
+		mScreenStep = (float) (mFrameHeight - topSpacing) / mLabels.size();
+		
 		float currPos = (float) (mAxisBottom - mScreenStep);
 		for(int i = 0; i < mLabels.size(); i++){
 			result.add(currPos);
 			currPos -= mScreenStep;
 		}
+		
 		return result;
 	}
+	
 	
 	
 	
@@ -235,7 +252,7 @@ class YController{
 	 */
 	protected float calcAxisHorizontalPosition(){
 		
-		if(isDrawing){ // In case axis Y needs to be drawn
+		if(hasLabels){ // In case axis Y needs to be drawn
 			float maxLenghtLabel = 0;
 			float aux = 0;
 			for(int i = 0; i < mLabels.size(); i++){
@@ -245,7 +262,7 @@ class YController{
 					maxLenghtLabel = aux;
 				}
 			}
-			return mChartView.chartLeft + maxLenghtLabel + sDistFromLabel;
+			return mChartView.chartLeft + maxLenghtLabel + mDistFromLabel;
 			
 		}else{
 			return mChartView.chartLeft 
@@ -254,6 +271,7 @@ class YController{
 		}
 	}
 
+	
 	
 	
 	/**
@@ -267,12 +285,15 @@ class YController{
 	
 	
 	
+	
+	
 	/**
 	 * Method called from onDraw method to draw YController data
 	 * @param canvas - Canvas to use while drawing the data.
 	 */
 	protected void draw(Canvas canvas){
-		if(isDrawing){
+		
+		if(hasLabels){
 			
 			//TODO isto left fica mais ou menos fixe
 			mChartView.style.labelPaint.setTextAlign(Align.LEFT);
@@ -280,9 +301,9 @@ class YController{
 			// Draw labels
 			for(int i = 0; i < mLabels.size(); i++){
 				canvas.drawText(Integer.toString(mLabels.get(i)), 
-								mChartView.chartLeft, 
-									(float) mLabelsPos.get(i) + mTextTopPadding, 
-										mChartView.style.labelPaint);
+									mChartView.chartLeft, 
+										(float) labelsPos.get(i) + mTextTopPadding, 
+											mChartView.style.labelPaint);
 			}
 			
 			// Draw axis line
@@ -292,29 +313,11 @@ class YController{
 										mAxisBottom + mChartView.style.axisThickness/2, 
 											mChartView.style.chartPaint);
 		}
-	}	
+	}
 
 	
 	
-	/**
-	 * Reset values in case new data will be added to the chart
-	 */
-	protected void reset() {
-		mMaxLabelValue = 0;
-	}
-	
-	
-	
-	/*
-	 * Getters
-	 * 
-	 */
-	
-	
-	public ArrayList<Float> getLabelsPosition(){
-		return mLabelsPos;
-	}
-	
+
 	
 	/**
 	 * Differentiates the inner left side of the chart depending 
@@ -325,12 +328,15 @@ class YController{
 	 * @return position of the inner left side of the chart
 	 */
 	public float getInnerChartLeft(){
-		if(isDrawing)
+		if(hasLabels)
 			return mAxisHorPosition + mChartView.style.axisThickness/2;
 		else
 			return mAxisHorPosition;
 	}
 	
+	
+	
+
 	
 	/**
 	 * Inner Chart refers only to the area where chart data will be draw, 
@@ -340,66 +346,7 @@ class YController{
 	public float getInnerChartBottom(){
 		return mAxisBottom - mChartView.style.axisThickness/2;
 	}
-	
-	
-	/**
-	 * @return Spacing between top of the chart and the first label
-	 */
-	public float getTopSpacing(){
-		return mVerTopSpacing;
-	}
-	
-	
-	public float getMaxAxisValue(){
-		return mMaxLabelValue;
-	}
-	
-	
-	
-	/*
-	 * Setters
-	 * 
-	 */
-	
-	
-	/**
-	 * @param spacing - Spacing between top of the chart and the first label
-	 */
-	public void setTopSpacing(float spacing){
-		mVerTopSpacing = spacing;
-	}
-	
-	
-	/**
-	 * @param bool - if Y axis must be, or not, drawn
-	 */
-	public void setLabels(boolean bool){
-		isDrawing = bool;
-	}
-	
-	
-	/**
-	 * A step is seen as the step to be defined between 2 labels. 
-	 * As an example a step of 2 with a max label value of 6 will end up 
-	 * with {0, 2, 4, 6} as labels.
-	 * @param step - (real) value distance from every label
-	 */
-	public void setStep(int s) {
-		step = s;
-	}
-	
-	
-	/**
-	 * A step is seen as the step to be defined between 2 labels. 
-	 * As an example a step of 2 with a maxAxisValue of 6 will end up 
-	 * with {0, 2, 4, 6} as labels.
-	 * @param maxAxisValue - the maximum value that Y axis will have as a label
-	 * @param step - step - (real) value distance from every label
-	 */
-	public void setMaxAxisValue(int maxAxisValue, int s) {
-		mMaxLabelValue = maxAxisValue;
-		step = s;
-	}
 
+	
 }
 

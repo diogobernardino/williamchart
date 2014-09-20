@@ -96,18 +96,27 @@ public class BarChartView extends ChartView {
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
 		
 		float drawingOffset;
+		BarSet barSet;
+		Bar bar;
+		
 		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
 			// Set first offset to draw a group of bars
 			drawingOffset = data.get(0).getEntry(i).getX() - mDrawingOffset;
 			
+			
 			for(int j = 0; j < data.size(); j++){
 				
-				BarSet barSet = (BarSet) data.get(j);
-				style.barPaint.setColor(barSet.getColor());
+				barSet = (BarSet) data.get(j);
+				bar = (Bar) barSet.getEntry(i);
 				
-				Bar bar = (Bar) barSet.getEntry(i);
+				
+				// If entry value is 0 it won't be drawn
+				if(bar.getValue() == 0)
+					continue;
+
+				style.barPaint.setColor(barSet.getColor());
 				style.barPaint.setColor(bar.getColor());
 				
 				// If bar needs background
@@ -129,7 +138,9 @@ public class BarChartView extends ChartView {
 				if(j != data.size()-1)
 					drawingOffset += style.mSetSpacing;
 			}	
+			
 		}
+		
 	}
 	
 	
@@ -190,7 +201,6 @@ public class BarChartView extends ChartView {
 		// in case of animation
 		// Bar distance based on bar spacing
 		if(data.get(0).size() == 1){
-			//mBarWidth = (innerchartRight - innerchartLeft - this.mHorController.borderSpacing); //TODO REMOVE
 			style.barSpacing = 0;
 			calculateBarsWidth(data.size(), 0, 
 					(innerchartRight - super.horController.borderSpacing - data.get(0).getEntry(0).getX()) * 2);
@@ -212,16 +222,20 @@ public class BarChartView extends ChartView {
 			result.add(new ArrayList<Region>());
 		
 		float drawingOffset;
+		BarSet barSet;
+		Bar bar;
+		
 		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
 			// Set first offset to draw a group of bars
 			drawingOffset = data.get(0).getEntry(i).getX() - mDrawingOffset;
 			
+			
 			for(int j = 0; j < data.size(); j++){
 				
-				BarSet barSet = (BarSet) data.get(j);
-				Bar bar = (Bar) barSet.getEntry(i);
+				barSet = (BarSet) data.get(j);
+				bar = (Bar) barSet.getEntry(i);
 				
 				result.get(j).add(new Region((int) drawingOffset, 
 									(int) bar.getY(), 
@@ -231,6 +245,7 @@ public class BarChartView extends ChartView {
 				if(j != data.size()-1)
 					drawingOffset += style.mSetSpacing;
 			}	
+			
 		}
 		
 		return result;
@@ -374,8 +389,6 @@ public class BarChartView extends ChartView {
 	    
 	    
 		private void init(){
-	    	
-	    	cornerRadius = 0;
 	    	
 	    	barPaint = new Paint();
 	    	barPaint.setStyle(Paint.Style.FILL);

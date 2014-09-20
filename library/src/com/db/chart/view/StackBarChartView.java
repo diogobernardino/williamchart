@@ -66,6 +66,11 @@ public class StackBarChartView extends BarChartView {
 		float verticalOffset;
 		float nextBottomY;
 		float dist;
+		int bottomSetIndex = 0;
+		int topSetIndex = 0;
+		BarSet barSet;
+		Bar bar;
+		
 		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
@@ -78,18 +83,28 @@ public class StackBarChartView extends BarChartView {
 			// Bottom of the next bar to be drawn
 			nextBottomY = this.getInnerChartBottom();
 			
+			// Unfortunatelly necessary to discover which set is the bottom and top
+			bottomSetIndex = discoverBottomSet(i, data);
+			topSetIndex = discoverTopSet(i, data);
+			
+			
 			for(int j = 0; j < data.size(); j++){
 				
-				BarSet barSet = (BarSet) data.get(j);
+				barSet = (BarSet) data.get(j);
+				bar = (Bar) barSet.getEntry(i);
+				
+				// If entry value is 0 it won't be drawn
+				if(bar.getValue() == 0)
+					continue;
+				
 				style.barPaint.setColor(barSet.getColor());
-				Bar bar = (Bar) barSet.getEntry(i);
 				style.barPaint.setColor(bar.getColor());
 				
 				// Distance from bottom to top of the bar
 				dist = this.getInnerChartBottom() - bar.getY();
 				
 				// Draw bar
-				if(j == 0){ // Bottom set
+				if(j == bottomSetIndex){ // Bottom set
 					canvas.drawRoundRect(new RectF((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
 									(int) (bar.getX() + barWidth/2),
@@ -106,7 +121,9 @@ public class StackBarChartView extends BarChartView {
 									(int) (this.getInnerChartBottom() - (dist + verticalOffset) + style.cornerRadius)),
 								style.barPaint);
 					
-				}else if(j == data.size()-1){ // Top set
+				}
+				
+				if(j == topSetIndex){ // Top set
 					canvas.drawRoundRect(new RectF((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
 									(int) (bar.getX() + barWidth/2),
@@ -121,7 +138,9 @@ public class StackBarChartView extends BarChartView {
 									(int) (nextBottomY)),
 								style.barPaint);
 				
-				}else{ // Middle sets
+				}
+				
+				if(j != bottomSetIndex && j != topSetIndex){ // Middle sets
 					canvas.drawRect(new Rect((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
 									(int) (bar.getX() + barWidth/2),
@@ -136,11 +155,40 @@ public class StackBarChartView extends BarChartView {
 					// Sum 2 to compensate the loss of precision in float
 					verticalOffset += dist + 2;
 			}
+			
 		}
+		
 	}
 	
 	
 	
+	
+	private int discoverBottomSet(int entryIndex, ArrayList<ChartSet> data){
+		
+		int index;
+		for(index = 0; index < data.size(); index++){
+			if(data.get(index).getEntry(entryIndex).getValue() == 0)
+				continue;
+			break;
+		}
+		return index;
+	}
+	
+	
+	
+	private int discoverTopSet(int entryIndex, ArrayList<ChartSet> data){
+		
+		int index;
+		for(index = data.size() - 1; index >= 0; index--){
+			if(data.get(index).getEntry(entryIndex).getValue() == 0)
+				continue;
+			break;
+		}
+		return index;
+	}
+
+	
+
 	
 	/**
 	 * Calculates Bar width based on the distance of two horizontal labels
@@ -170,25 +218,32 @@ public class StackBarChartView extends BarChartView {
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
 		
-		// Define regions
 		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
 		for(int i = 0; i < data.size(); i++)
 			result.add(new ArrayList<Region>());
 		
+		float verticalOffset;
+		float nextBottomY;
+		float dist;
+		BarSet barSet;
+		Bar bar;
+		
+		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
 			// Vertical offset to keep drawing bars on top of the others
-			float verticalOffset = 0;
+			verticalOffset = 0;
 			// Bottom of the next bar to be drawn
-			float nextBottomY = this.getInnerChartBottom();
+			nextBottomY = this.getInnerChartBottom();
+			
 			
 			for(int j = 0; j < data.size(); j++){
 				
-				BarSet barSet = (BarSet) data.get(j);
-				Bar bar = (Bar) barSet.getEntry(i);
+				barSet = (BarSet) data.get(j);
+				bar = (Bar) barSet.getEntry(i);
 				
 				// Distance from bottom to top of the bar
-				float dist = this.getInnerChartBottom() - bar.getY();
+				dist = this.getInnerChartBottom() - bar.getY();
 				
 				result.get(j).add(new Region(
 						(int) (bar.getX() - barWidth/2), 
@@ -209,14 +264,18 @@ public class StackBarChartView extends BarChartView {
 	
 	private void calculateMaxStackBarValue() {
 		
+		float stackValue;
+		BarSet barSet;
+		Bar bar;
 		int maxStackValue = 0;
+		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
-			float stackValue = 0;
+			stackValue = 0;
 			for(int j = 0; j < data.size(); j++){
 				
-				final BarSet barSet = (BarSet) data.get(j);
-				Bar bar = (Bar) barSet.getEntry(i);
+				barSet = (BarSet) data.get(j);
+				bar = (Bar) barSet.getEntry(i);
 				stackValue += bar.getValue();
 			}
 			

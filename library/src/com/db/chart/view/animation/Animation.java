@@ -31,6 +31,7 @@ import com.db.chart.view.animation.easing.quint.QuintEaseOut;
  */
 public class Animation{
 	
+	
 	/** The delay between data updates to be drawn in the screen */
 	private final static long DELAY_BETWEEN_UPDATES = 20;
 	
@@ -112,7 +113,7 @@ public class Animation{
 	 * Keeps the information regarding whether points will be animated 
 	 * in parallel or in sequence.
 	 */
-	private boolean mInSequence;
+	private float mOverlapingFactor;
 	
 	
 	
@@ -131,10 +132,11 @@ public class Animation{
 		mGlobalDuration = duration;
 		mCurrentGlobalDuration = 0;
 		mGlobalInitTime = 0;
+		mOverlapingFactor = 1;
 		mEasing = new QuintEaseOut();
-		mInSequence = false;
 		mPlaying = false;
 	}
+	
 	
 	
 	
@@ -158,10 +160,12 @@ public class Animation{
 		mInitTime = new long[mSets.get(0).size()];
 		mCurrentDuration = new long[mSets.get(0).size()];
 		
-		if(mInSequence) // Divide the duration between the points
-			mDuration = (int) mGlobalDuration / mSets.get(0).size();
-		else // Duration applied to all
-			mDuration = (int) mGlobalDuration;
+		// Calculates the expected duration as there was with no overlap (factor = 0)
+		float noOverlapDuration = mGlobalDuration / mSets.get(0).size();
+		// Adjust the duration to the overlap
+		mDuration = (int) (noOverlapDuration + (mGlobalDuration - noOverlapDuration) * mOverlapingFactor);
+		
+		//mDuration = (int) mGlobalDuration; //TODO remove
 		
 		for(int i = 0; i < mSets.size(); i++){
 			for(int j = 0; j < mSets.get(i).size(); j++){
@@ -176,16 +180,19 @@ public class Animation{
 		// Save initial time. Only executed the first time this method gets called.
 		if(mGlobalInitTime == 0){
 			mGlobalInitTime = System.currentTimeMillis();
+			long noOverlapInitTime;
 			for(int i = 0; i < mInitTime.length; i++){
-				if(mInSequence){
-					mInitTime[i] = mGlobalInitTime + i * mDuration;
-				}else
-					mInitTime[i] = mGlobalInitTime;
+				// Calculates the expected init time as there was with no overlap (factor = 0)
+				noOverlapInitTime = mGlobalInitTime + (i * (mGlobalDuration / mSets.get(0).size()));
+				// Adjust the init time to overlap
+				mInitTime[i] = (noOverlapInitTime - ((long) (mOverlapingFactor * (noOverlapInitTime - mGlobalInitTime))));
 			}
-		}	
+		}
 		
 		return getUpdate();
 	}
+	
+	
 	
 	
 	public ArrayList<ChartSet> prepareEnter(ChartView chartView, 
@@ -204,6 +211,9 @@ public class Animation{
 				startYValues, sets);
 	}
 	
+	
+	
+	
 	/**
 	 * Updates values, with the next interpolation, to be drawn next.
 	 * @return return the next interpolated values.
@@ -212,9 +222,10 @@ public class Animation{
 		
 		// Process current animation duration
 		long currentTime = System.currentTimeMillis();
+		long diff;
 		mCurrentGlobalDuration = currentTime - mGlobalInitTime;
 		for(int i = 0; i < mCurrentDuration.length; i++){
-			long diff = currentTime - mInitTime[i];
+			diff = currentTime - mInitTime[i];
 			if(diff < 0)
 				mCurrentDuration[i] = 0;
 			else
@@ -279,11 +290,13 @@ public class Animation{
 	
 	
 	
+	
 	/*
 	 * --------
 	 * Setters
 	 * --------
 	 */
+	
 	
 	public Animation setEasing(BaseEasingMethod easing){
 		mEasing = easing;
@@ -297,15 +310,22 @@ public class Animation{
 	}
 	
 	
-	public Animation setAnimateInSequence(boolean bool){
-		mInSequence = bool;
+	/**
+	 * Sets whether entries should be animated in sequence or paralell.
+	 * @param factor - value from 0 to 1 that tells how much will be the 
+	 * overlap of an entry's animation according to the previous one.
+	 * 0 - no overlap
+	 * 1 - all entries animate in paralell (default)
+	 */
+	public Animation setOverlap(float factor){
+		mOverlapingFactor = factor;
 		return this;
 	}
 	
 	
 	/**
+	 * Sets an action to be executed once the animation finishes.
 	 * @param runnable to be executed once the animation finishes.
-	 * @return this
 	 */
 	public Animation setEndAction(Runnable runnable){
 		mRunnable = runnable;

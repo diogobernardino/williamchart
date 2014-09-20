@@ -83,7 +83,7 @@ public class StackBarChartView extends BarChartView {
 			// Bottom of the next bar to be drawn
 			nextBottomY = this.getInnerChartBottom();
 			
-			// Unfortunatelly necessary to discover which set is the bottom and top
+			// Unfortunately necessary to discover which set is the bottom and top
 			bottomSetIndex = discoverBottomSet(i, data);
 			topSetIndex = discoverTopSet(i, data);
 			
@@ -104,7 +104,7 @@ public class StackBarChartView extends BarChartView {
 				dist = this.getInnerChartBottom() - bar.getY();
 				
 				// Draw bar
-				if(j == bottomSetIndex){ // Bottom set
+				if(j == bottomSetIndex){
 					canvas.drawRoundRect(new RectF((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
 									(int) (bar.getX() + barWidth/2),
@@ -113,17 +113,19 @@ public class StackBarChartView extends BarChartView {
 										style.cornerRadius,
 											style.barPaint);
 					
-					if(data.size() != 1)
+					if(bottomSetIndex != topSetIndex && style.cornerRadius != 0){
+						float cornersFix = (nextBottomY - (this.getInnerChartBottom() - (dist + verticalOffset)))/2;
 						// Fill top corners of bar
 						canvas.drawRect(new Rect((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
 								(int) (bar.getX() + barWidth/2),
-									(int) (this.getInnerChartBottom() - (dist + verticalOffset) + style.cornerRadius)),
+									(int) (this.getInnerChartBottom() - (dist + verticalOffset) + cornersFix)),
 								style.barPaint);
+					}
 					
 				}
 				
-				if(j == topSetIndex){ // Top set
+				if(j == topSetIndex){
 					canvas.drawRoundRect(new RectF((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
 									(int) (bar.getX() + barWidth/2),
@@ -132,8 +134,9 @@ public class StackBarChartView extends BarChartView {
 										style.cornerRadius,
 											style.barPaint);
 					// Fill bottom corners of bar
+					float cornersFix = (nextBottomY - (this.getInnerChartBottom() - (dist + verticalOffset)))/2;
 					canvas.drawRect(new Rect((int) (bar.getX() - barWidth/2), 
-							(int) (nextBottomY - style.cornerRadius), 
+							(int) (nextBottomY - cornersFix), 
 								(int) (bar.getX() + barWidth/2),
 									(int) (nextBottomY)),
 								style.barPaint);

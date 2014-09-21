@@ -30,7 +30,7 @@
    
     
     <!-- BarChartView -->
-    <dimen name="bar_spacing">10dp</dimen>
+    <dimen name="bar_spacing">6dp</dimen>
     <dimen name="set_spacing">3dp</dimen>
 
     

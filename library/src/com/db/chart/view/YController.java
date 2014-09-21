@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.db.williamchart.R;
 import com.db.chart.exception.ChartException;
-import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 
 /**
@@ -178,10 +177,12 @@ class YController{
 	private double  calcMaxY() {
 		
 		double max = 0;
-		for(ChartSet s: mChartView.data){
-			for(ChartEntry e: s.getEntries()){
-				if(e.getValue() >= max)
-					max = e.getValue();
+		ChartSet set;
+		for(int i = 0; i < mChartView.data.size(); i++){
+			set = mChartView.data.get(i);
+			for(int j = 0; j < set.size(); j++){
+				if(set.getValue(j) >= max)
+					max = set.getValue(j);
 			}
 		}
 		

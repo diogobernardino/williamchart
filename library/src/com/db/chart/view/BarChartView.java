@@ -111,7 +111,6 @@ public class BarChartView extends ChartView {
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
 				
-				
 				// If entry value is 0 it won't be drawn
 				if(bar.getValue() == 0)
 					continue;

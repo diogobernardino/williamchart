@@ -212,8 +212,8 @@ class XController{
 		return mChartView.chartRight 
 				- mChartView.style.labelPaint
 								.measureText(mChartView.data.get(0).
-												getLabel(mChartView.data.get(0).
-															getEntries().size()-1))/2;
+												getLabel(mChartView.data.get(0)
+																.size()-1))/2;
 	}
 
 	

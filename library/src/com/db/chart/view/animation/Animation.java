@@ -367,7 +367,7 @@ public class Animation{
 	
 	
 	/**
-	 * Sets whether entries should be animated in sequence or paralell.
+	 * Sets whether entries should be animate in sequence or paralell.
 	 * @param factor - value from 0 to 1 that tells how much will be the 
 	 * overlap of an entry's animation according to the previous one.
 	 * 0 - no overlap
@@ -389,6 +389,13 @@ public class Animation{
 	}
 	
 	
+	/**
+	 * Sets the starting point for the animation.
+	 * @param xFactor - horizontal factor between 0 and 1
+	 * @param yFactor - vertical factor between 0 and 1
+	 * Eg. xFactor=0; yFactor=0; starts the animation on the bottom left 
+	 * corner of the inner chart area.
+	 */
 	public Animation setStartPoint(float xFactor, float yFactor){
 		mStartXFactor = xFactor;
 		mStartYFactor = yFactor;

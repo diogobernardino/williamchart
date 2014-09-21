@@ -296,13 +296,12 @@ class YController{
 		
 		if(hasLabels){
 			
-			//TODO isto left fica mais ou menos fixe
-			mChartView.style.labelPaint.setTextAlign(Align.LEFT);
+			mChartView.style.labelPaint.setTextAlign(Align.RIGHT);
 
 			// Draw labels
 			for(int i = 0; i < mLabels.size(); i++){
 				canvas.drawText(Integer.toString(mLabels.get(i)), 
-									mChartView.chartLeft, 
+									mAxisHorPosition - mChartView.style.axisThickness/2 - mDistFromLabel, 
 										(float) labelsPos.get(i) + mTextTopPadding, 
 											mChartView.style.labelPaint);
 			}

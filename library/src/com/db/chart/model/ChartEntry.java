@@ -33,28 +33,36 @@ public class ChartEntry {
 	
 	
 	
+	
 	public ChartEntry(String label, float value){
 		mLabel = label;
 		mValue = value;
 	}
 
 	
+	
+	
 	/*
 	 * Getters
 	 * 
 	 */
+	
+	
 	public String getLabel() {
 		return mLabel;
 	}
+	
 
 	public float getValue() {
 		return mValue;
 	}
 
+	
 	public float getX() {
 		return mX;
 	}
 
+	
 	public float getY() {
 		return mY;
 	}
@@ -66,6 +74,7 @@ public class ChartEntry {
 	 * 
 	 */
 	
+	
 	public void setValue(float value){
 		mValue = value;
 	}
@@ -76,13 +85,8 @@ public class ChartEntry {
 	 * @param x
 	 * @param y
 	 */
-	public void setDisplayCoordinates(float x, float y){
+	public void setCoordinates(float x, float y){
 		mX = x;
-		mY = y;
-	}
-	
-	
-	public void setY(float y) {
 		mY = y;
 	}
 

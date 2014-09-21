@@ -26,6 +26,7 @@ import com.db.chart.view.ChartView;
 import com.db.chart.view.animation.easing.BaseEasingMethod;
 import com.db.chart.view.animation.easing.quint.QuintEaseOut;
 
+
 /**
  * Controls the whole animation process.
  */
@@ -116,6 +117,15 @@ public class Animation{
 	private float mOverlapingFactor;
 	
 	
+	/**
+	 * Factor from 0 to 1 to specify where does the animation starts 
+	 * according innerchart area.
+	 */
+	private float mStartXFactor;
+	private float mStartYFactor;
+	
+	
+	
 	
 	public Animation(){
 		init(DEFAULT_DURATION);
@@ -128,14 +138,19 @@ public class Animation{
 	
 	
 	
+	
 	private void init(int duration){
+		
 		mGlobalDuration = duration;
 		mCurrentGlobalDuration = 0;
 		mGlobalInitTime = 0;
 		mOverlapingFactor = 1;
 		mEasing = new QuintEaseOut();
 		mPlaying = false;
+		mStartXFactor = -1;
+		mStartYFactor = -1;
 	}
+	
 	
 	
 	
@@ -150,7 +165,7 @@ public class Animation{
 	 * @return Array of {@link ChartSet} containing the first values to be 
 	 * drawn.
 	 */
-	public ArrayList<ChartSet> prepareEnter(ChartView chartView, 
+	public ArrayList<ChartSet> prepareEnter(ChartView chartView, ArrayList<float[]> startingX,
 			ArrayList<float[]> startingY, ArrayList<ChartSet> sets){
 		
 		mChartView = chartView;
@@ -165,51 +180,80 @@ public class Animation{
 		// Adjust the duration to the overlap
 		mDuration = (int) (noOverlapDuration + (mGlobalDuration - noOverlapDuration) * mOverlapingFactor);
 		
-		//mDuration = (int) mGlobalDuration; //TODO remove
-		
+		// Define animation paths for each entry
 		for(int i = 0; i < mSets.size(); i++){
 			for(int j = 0; j < mSets.get(i).size(); j++){
 				Path path = new Path();
-				path.moveTo(mSets.get(i).getEntry(j).getX(), startingY.get(i)[j]);
+				path.moveTo(startingX.get(i)[j], startingY.get(i)[j]);
 				path.lineTo(mSets.get(i).getEntry(j).getX(), mSets.get(i).getEntry(j).getY());
 				mPathMeasures[i][j] = new PathMeasure(path, false);
 			}
 		}
-		mPlaying = true;
 		
-		// Save initial time. Only executed the first time this method gets called.
-		if(mGlobalInitTime == 0){
-			mGlobalInitTime = System.currentTimeMillis();
-			long noOverlapInitTime;
-			for(int i = 0; i < mInitTime.length; i++){
-				// Calculates the expected init time as there was with no overlap (factor = 0)
-				noOverlapInitTime = mGlobalInitTime + (i * (mGlobalDuration / mSets.get(0).size()));
-				// Adjust the init time to overlap
-				mInitTime[i] = (noOverlapInitTime - ((long) (mOverlapingFactor * (noOverlapInitTime - mGlobalInitTime))));
-			}
+		// Define initial time for each entry
+		mGlobalInitTime = System.currentTimeMillis();
+		long noOverlapInitTime;
+		for(int i = 0; i < mInitTime.length; i++){
+			// Calculates the expected init time as there was with no overlap (factor = 0)
+			noOverlapInitTime = mGlobalInitTime + (i * (mGlobalDuration / mSets.get(0).size()));
+			// Adjust the init time to overlap
+			mInitTime[i] = (noOverlapInitTime - ((long) (mOverlapingFactor * (noOverlapInitTime - mGlobalInitTime))));
 		}
 		
+		mPlaying = true;
 		return getUpdate();
 	}
 	
 	
 	
 	
-	public ArrayList<ChartSet> prepareEnter(ChartView chartView, 
-			float startY, ArrayList<ChartSet> sets){
+	
+	public ArrayList<ChartSet> prepareEnter(ChartView chartView, ArrayList<ChartSet> sets){
 		
+		float x = 0;
+		if(mStartXFactor != -1)
+			x = chartView.getInnerChartLeft() 
+				+ (chartView.getInnerChartRight() - chartView.getInnerChartLeft()) 
+					* mStartXFactor;
+		
+		float y = 0;
+		if(mStartYFactor != -1)
+			y = chartView.getInnerChartBottom() 
+				- (chartView.getInnerChartBottom() - chartView.getInnerChartTop()) 
+					* mStartYFactor;
+		else
+			y = chartView.getInnerChartBottom();
+			
+		
+		ArrayList<float[]> startXValues = new ArrayList<float[]>(sets.size());
 		ArrayList<float[]> startYValues = new ArrayList<float[]>(sets.size());
+		float[] Xset;
+		float[] Yset;
 		for(int i = 0; i < sets.size(); i++){
 			
-			float[] set = new float[sets.get(i).size()];
-			for(int j = 0; j < set.length; j++)
-				set[j] = startY;
-			startYValues.add(set);
+			Xset = new float[sets.get(i).size()];
+			Yset = new float[sets.get(i).size()];
+			
+			for(int j = 0; j < sets.get(i).size(); j++){
+				if(mStartXFactor == -1)
+					Xset[j] = sets.get(i).getEntry(j).getX();
+				else
+					Xset[j] = x;
+				Yset[j] = y;
+			}
+			
+			startXValues.add(Xset);
+			startYValues.add(Yset);
+			
 		}
 		
-		return prepareEnter(chartView, 
+		mStartXFactor = -1;
+		mStartYFactor = -1;
+		
+		return prepareEnter(chartView, startXValues,
 				startYValues, sets);
 	}
+	
 	
 	
 	
@@ -221,8 +265,8 @@ public class Animation{
 	private ArrayList<ChartSet> getUpdate(){
 		
 		// Process current animation duration
-		long currentTime = System.currentTimeMillis();
 		long diff;
+		long currentTime = System.currentTimeMillis();
 		mCurrentGlobalDuration = currentTime - mGlobalInitTime;
 		for(int i = 0; i < mCurrentDuration.length; i++){
 			diff = currentTime - mInitTime[i];
@@ -238,10 +282,11 @@ public class Animation{
 			mCurrentGlobalDuration = mGlobalDuration;
 		
 		// Update next values to be drawn
+		float[] posUpdate;
 		for(int i = 0; i < mSets.size(); i++)
 			for(int j = 0; j < mSets.get(i).size(); j++){
-				mSets.get(i).getEntry(j)
-					.setY(getEntryUpdate(i, j, normalizeTime(j)));
+				posUpdate = getEntryUpdate(i, j, normalizeTime(j));
+				mSets.get(i).getEntry(j).setCoordinates(posUpdate[0], posUpdate[1]);
 			}
 		
 		// Sets the next update or finishes the animation
@@ -261,6 +306,7 @@ public class Animation{
 	
 	
 	
+	
 	/**
 	 * Normalize time to a 0-1 relation.
 	 * @param currentTime - value from 0 to 1 representing the current time 
@@ -272,21 +318,31 @@ public class Animation{
 	}
 	
 	
+	
+	
 	/**
-	 * Gets the next position value of a point
+	 * Gets the next position coordinate of a point
 	 * @param i - set index
 	 * @param j - point index
 	 * @param normalizedTime
 	 * @return x display value where point will be drawn
 	 */
-	private float getEntryUpdate(int i, int j, float normalizedTime){
+	private float[] getEntryUpdate(int i, int j, float normalizedTime){
 		float[] pos = new float[2];
 		if(mPathMeasures[i][j].getPosTan(mPathMeasures[i][j].getLength() * mEasing.next(normalizedTime), pos, null))
-			return pos[1];
+			return pos;
 		pos[0] = mSets.get(i).getEntry(j).getX();
 		pos[1] = mSets.get(i).getEntry(j).getY();
-		return pos[1];
+		return pos;
 	}
+	
+	
+	
+	
+	public boolean isPlaying(){
+		return mPlaying;
+	}
+	
 	
 	
 	
@@ -333,8 +389,10 @@ public class Animation{
 	}
 	
 	
-	public boolean isPlaying(){
-		return mPlaying;
+	public Animation setStartPoint(float xFactor, float yFactor){
+		mStartXFactor = xFactor;
+		mStartYFactor = yFactor;
+		return this;
 	}
 	
 }

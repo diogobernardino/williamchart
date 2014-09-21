@@ -28,47 +28,57 @@ public class ChartSet {
 	private ArrayList<ChartEntry> mEntries;
 
 	
+	
+	
 	public ChartSet(){
 		mEntries = new ArrayList<ChartEntry>();
 	}
+	
+	
 	
 	
 	public void addEntry(String label, float value){
 		mEntries.add(new ChartEntry(label, value));
 	}
 
+	
+	
 	public void addEntry(ChartEntry e){
 		mEntries.add(e);
 	}
-	
 
-	public int size() {
-		return mEntries.size();
-	}
 	
 	
-	public String toString(){
-		return mEntries.toString();
-	}
-	
-	
-	public void updateValues(float[] newValues){
-		for(int i = 0; i < mEntries.size(); i++)
+	/**
+	 * Updates set values.
+	 * @param newValues
+	 * @return float[] with Y coordinates of old values
+	 */
+	public float[] updateValues(float[] newValues){
+		float[] result = new float[size()];
+		for(int i = 0; i < size(); i++){
+			result[i] = getEntry(i).getY();
 			setValue(i, newValues[i]);
+		}
+		return result;
 	}
+	
+	
+	
 	
 	/*
 	 *Getters
 	 *
 	 */
 	
-	public ArrayList<ChartEntry> getEntries(){
-		return mEntries;
-	}
+	
+	
+	
 	
 	public ChartEntry getEntry(int i) {
 		return mEntries.get(i);
 	}
+	
 	
 	public float getValue(int i){
 		return mEntries.get(i).getValue();
@@ -78,11 +88,20 @@ public class ChartSet {
 		return mEntries.get(i).getLabel();
 	}
 	
+	public float[] getXCoordinates(){
+		
+		float[] result = new float[size()];
+		for(int i = 0; i < result.length; i++)
+			result[i] = getEntry(i).getX();
+		
+		return result;
+	}
+	
 	public float[] getYCoordinates(){
 		
 		float[] result = new float[size()];
 		for(int i = 0; i < result.length; i++)
-			result[i] = getEntries().get(i).getY();
+			result[i] = getEntry(i).getY();
 		
 		return result;
 	}
@@ -96,6 +115,17 @@ public class ChartSet {
 	
 	private void setValue(int i, float value){
 		mEntries.get(i).setValue(value);
+	}
+	
+	
+	
+	public String toString(){
+		return mEntries.toString();
+	}
+	
+	
+	public int size() {
+		return mEntries.size();
 	}
 	
 }

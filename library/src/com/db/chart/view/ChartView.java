@@ -154,8 +154,7 @@ public abstract class ChartView extends View{
 			// of data to be drawn
 			if(mAnim != null){
 				data = mAnim.prepareEnter(ChartView.this,
-								verController.getInnerChartBottom(), 
-									data);
+											data);
 			}
 			
 			if (android.os.Build.VERSION.SDK_INT >= 
@@ -250,7 +249,7 @@ public abstract class ChartView extends View{
 		for(ChartSet set: data){
 			for (int i = 0; i < set.size(); i++){
 				set.getEntry(i)
-					.setDisplayCoordinates(horController.labelsPos.get(i), 
+					.setCoordinates(horController.labelsPos.get(i), 
 									verController.parseYPos(set.getValue(i)));
 			}
 		}
@@ -364,7 +363,6 @@ public abstract class ChartView extends View{
 			Log.e(TAG, "", e);
 			System.exit(1);
 		}
-		System.out.println("updateValues: "+setIndex);
 		toUpdateValues.add(new Pair<Integer, float[]>(setIndex, values));
 		
 		return this;
@@ -379,19 +377,19 @@ public abstract class ChartView extends View{
 	public void notifyDataUpdate(){
 
 		ArrayList<float []> oldValues = new ArrayList<float[]>(data.size());
-		for(int i = 0; i < data.size(); i++)
-			oldValues.add(data.get(i).getYCoordinates());
-		
-		System.out.println("notifyDataUpdate :"+ toUpdateValues.size());
-		for(int i = 0; i < toUpdateValues.size(); i++)
-			data.get(toUpdateValues.get(i).first).updateValues(toUpdateValues.get(i).second);
+		ArrayList<float []> xValues = new ArrayList<float[]>(data.size());
+		for(int i = 0; i < toUpdateValues.size(); i++){
+			oldValues.add(data.get(toUpdateValues.get(i).first).updateValues(toUpdateValues.get(i).second));
+			xValues.add(data.get(i).getXCoordinates());
+		}
 		
 		digestData();
 		mRegions = defineRegions(data);
 		if(mAnim != null)
-			data = mAnim.prepareEnter(ChartView.this,
-										oldValues, 
-											data);
+			data = mAnim.prepareEnter(ChartView.this, 
+										xValues,
+											oldValues, 
+												data);
 		toUpdateValues.clear();
 		
 		invalidate();
@@ -580,7 +578,7 @@ public abstract class ChartView extends View{
 	 * excluding labels, axis, etc.
 	 * @return position of the inner bottom side of the chart
 	 */
-	protected float getInnerChartBottom(){
+	public float getInnerChartBottom(){
 		return innerchartBottom;
 	}
 
@@ -591,7 +589,7 @@ public abstract class ChartView extends View{
 	 * excluding labels, axis, etc.
 	 * @return position of the inner left side of the chart
 	 */
-	protected float getInnerChartLeft(){
+	public float getInnerChartLeft(){
 		return innerchartLeft;
 	}
 	
@@ -602,7 +600,7 @@ public abstract class ChartView extends View{
 	 * excluding labels, axis, etc.
 	 * @return position of the inner right side of the chart
 	 */
-	protected float getInnerChartRight(){
+	public float getInnerChartRight(){
 		return innerchartRight;
 	}
 	
@@ -613,7 +611,7 @@ public abstract class ChartView extends View{
 	 * excluding labels, axis, etc.
 	 * @return position of the inner top side of the chart
 	 */
-	protected float getInnerChartTop(){
+	public float getInnerChartTop(){
 		return innerchartTop;
 	}
 	
@@ -635,7 +633,6 @@ public abstract class ChartView extends View{
 	public float getLabelBorderSpacing(){
 		return horController.borderSpacing;
 	}
-	
 	
 	
 	

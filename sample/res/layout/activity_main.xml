@@ -5,22 +5,13 @@
     android:gravity="center_horizontal"
     android:background="#eceff1">
     
-    <TextView
-   	    android:id="@+id/text"
-   	    android:layout_width="wrap_content"
-   	    android:layout_height="wrap_content"
-   	    android:textSize="20dp"
-   	    android:text="onPointClick"
-   	    android:textColor="@color/text_view"
-   	    />
-    
 	<com.db.chart.view.LineChartView
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/linechart"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_weight="1"
-	    android:paddingTop="10dp"
+	    android:paddingTop="15dp"
 	    android:paddingBottom="5dp"
 	    android:paddingLeft="10dp"
 	    android:paddingRight="10dp"
@@ -53,7 +44,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_weight="1"
 	    android:paddingTop="10dp"
-	    android:paddingBottom="5dp"
+	    android:paddingBottom="10dp"
 	    android:paddingLeft="10dp"
 	    android:paddingRight="10dp"
 	    chart:chart_axisColor="#455a64"
@@ -66,7 +57,7 @@
    	    android:id="@+id/button"
    	    android:layout_width="match_parent"
    	    android:layout_height="wrap_content"
-   	    android:text="PLAY"
+   	    android:text="PLAY ME"
    	    android:textSize="25dp"
    	    android:textColor="#ffffff"
    	    android:background="@drawable/button"/>

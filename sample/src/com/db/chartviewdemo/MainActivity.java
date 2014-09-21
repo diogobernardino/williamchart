@@ -1,8 +1,5 @@
 package com.db.chartviewdemo;
 
-import java.util.Random;
-
-import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
@@ -11,59 +8,58 @@ import com.db.chart.model.LineSet;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.StackBarChartView;
-import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.bounce.BounceEaseOut;
-import com.db.chart.view.animation.easing.elastic.ElasticEaseOut;
-import com.db.chart.view.animation.easing.quint.QuintEaseOut;
 import com.db.williamchartdemo.R;
 
 import android.os.Bundle;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TextView;
+
+import com.db.chartviewdemo.DataRetriever;
 
 public class MainActivity extends ActionBarActivity {
 	
-	private final static float MAX_VALUE = 9;
-	private final static float MIN_VALUE = 1;
 	
-	private LineChartView mLineChart;
-	private BarChartView mBarChart;
-	private StackBarChartView mStackBarChart;
+	private final static float MAX = 10;
+	private final static float MIN = 1;
+	private final static String[] mLabels = {"ANT", "GNU", "OWL", "APE", "COD","YAK", "RAM", "JAY"};
 	
-	private TextView mTextView;
-	private Button mButton;
 	
-	private String[] mColors = {"#f36c60","#7986cb", "#4db6ac", "#aed581", "#ffb74d"};
-	private String[] mLabels = {"ANT", "GNU", "OWL", "APE", "COD","YAK", "RAM", "JAY"};
+	private static LineChartView mLineChart;
+	private static BarChartView mBarChart;
+	private static StackBarChartView mStackBarChart;
 	
-	private int mCurrLineSetSize;
-	private int mCurrBarSetSize;
-	private int mCurrStackBarSetSize;
+	private static Button mButton;
 	
-	private Runnable mEndAction = new Runnable() {
+	
+	private static int mCurrLineEntriesSize;
+	private static int mCurrBarEntriesSize;
+	private static int mCurrStackBarEntriesSize;
+	
+	private static int mCurrLineSetSize;
+	private static int mCurrBarSetSize;
+	private static int mCurrStackBarSetSize;
+	
+	
+	private static Runnable mEndAction = new Runnable() {
         @Override
         public void run() {
         	mButton.setEnabled(true);
-        	mTextView.setText("onPointClick");
+        	mButton.setText("PLAY ME");
         }
 	};
+
 	
 
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        
-        mTextView = (TextView) findViewById(R.id.text);
-        mTextView.setTypeface(Typeface.createFromAsset(getAssets(),"Roboto-Regular.ttf"));
         
         
 		mButton = (Button) findViewById(R.id.button);
@@ -73,13 +69,23 @@ public class MainActivity extends ActionBarActivity {
 			private int updateIndex = 1;
 			@Override
 			public void onClick(View v) {
+
 				mButton.setEnabled(false);
-				mTextView.setText("PLAYING");
+				mButton.setText("I'M PLAYING...");
+				
 				switch(updateIndex){
-					case 1: updateLineChart(randNumber(1, 3), mCurrLineSetSize = randNumber(5, 8));break;
-					case 2: updateBarChart(randNumber(1, 3), mCurrBarSetSize = randNumber(4, 6));break;
-					case 3: updateStackBarChart(randNumber(3, 5), mCurrStackBarSetSize = randNumber(4, 6));updateIndex = 0;break;
+					case 1: updateLineChart( mCurrLineSetSize = DataRetriever.randNumber(1, 3), 
+								mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
+							break;
+					case 2: updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
+								mCurrBarEntriesSize = DataRetriever.randNumber(4, 6));
+							break;
+					case 3: updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 3), 
+								mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 7));
+							updateIndex = 0;
+							break;
 				}
+				
 				updateIndex++;
 			}
 		});
@@ -89,10 +95,16 @@ public class MainActivity extends ActionBarActivity {
 		initBarChart();
 		initStackBarChart();
 		
-		updateLineChart(randNumber(1, 3), mCurrLineSetSize = randNumber(5, 8));
-		updateBarChart(randNumber(1, 3), mCurrBarSetSize = randNumber(4, 6));
-		updateStackBarChart(randNumber(3, 5), mCurrStackBarSetSize = randNumber(4, 5));
+		updateLineChart( mCurrLineSetSize = DataRetriever.randNumber(1, 3), 
+							mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
+		updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
+							mCurrBarEntriesSize = DataRetriever.randNumber(4, 6));
+		updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 4), 
+							mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 7));
+		
 	}
+	
+	
 	
 	
 	
@@ -100,6 +112,23 @@ public class MainActivity extends ActionBarActivity {
 	/*------------------------------------*
 	 *              LINECHART             *
 	 *------------------------------------*/
+	
+	private void initLineChart(){
+		
+		OnEntryClickListener lineListener = new OnEntryClickListener(){
+			@Override
+			public void onClick(int setIndex, int entryIndex) {
+				abstractOnClick(entryIndex, mCurrLineSetSize, mCurrLineEntriesSize);
+			}
+		};
+		
+		mLineChart = (LineChartView) findViewById(R.id.linechart);
+		mLineChart//.setStep(2)
+			.setOnEntryClickListener(lineListener)
+			;
+	}
+	
+	
 	
 	public void updateLineChart(int nSets, int nPoints){
 		
@@ -109,34 +138,39 @@ public class MainActivity extends ActionBarActivity {
 			
 			LineSet data = new LineSet();
 			for(int j = 0; j < nPoints; j++)
-				data.addPoint(new Point(mLabels[j], randValue()));
+				data.addPoint(new Point(mLabels[j], DataRetriever.randValue(MIN, MAX)));
 
-			data.setDots(randBoolean())
-				.setDotsColor(Color.parseColor(getColor(randNumber(0,2))))
-				.setDotsRadius(randDimen(4,8))
-				.setLineThickness(randDimen(3,9))
-				.setLineColor(Color.parseColor(getColor(i)))
-				.setFill(hasFill(i))
+			data.setDots(DataRetriever.randBoolean())
+				.setDotsColor(Color.parseColor(DataRetriever.getColor(DataRetriever.randNumber(0,2))))
+				.setDotsRadius(DataRetriever.randDimen(4,7))
+				.setLineThickness(DataRetriever.randDimen(3,8))
+				.setLineColor(Color.parseColor(DataRetriever.getColor(i)))
+				.setFill(DataRetriever.hasFill(i))
 				.setFillColor(Color.parseColor("#3388c6c3"))
-				.setDashed(randBoolean())
-				.setSmooth(randBoolean());
-			if(randBoolean())
-				data.setDotsStrokeThickness(randDimen(1,4))
-				.setDotsStrokeColor(Color.parseColor(getColor(randNumber(0,2))));
+				.setDashed(DataRetriever.randBoolean())
+				.setSmooth(DataRetriever.randBoolean())
+				;
+			if(DataRetriever.randBoolean())
+				data.setDotsStrokeThickness(DataRetriever.randDimen(1,4))
+				.setDotsStrokeColor(Color.parseColor(DataRetriever.getColor(DataRetriever.randNumber(0,2))))
+				;
 
 			mLineChart.addData(data);
 		}
 		
-		mLineChart.setGrid(randPaint())
-			.setMaxAxisValue(10, 2)
+		mLineChart.setGrid(DataRetriever.randPaint())
 			//.setVerticalGrid(randPaint())
-			.setHorizontalGrid(randPaint())
+			.setHorizontalGrid(DataRetriever.randPaint())
 			//.setThresholdLine(2, randPaint())
-			//.setLabels(true)
-			.animate(randAnimation())
+			//.setLabels(DataRetriever.randBoolean())
+			.setMaxAxisValue(10, 2)
+			.animate(DataRetriever.randAnimation(mEndAction))
 			//.show()
 			;
+		
 	}
+	
+	
 	
 	
 	
@@ -145,36 +179,60 @@ public class MainActivity extends ActionBarActivity {
 	 *              BARCHART              *
 	 *------------------------------------*/
 	
+	private void initBarChart(){
+		
+		OnEntryClickListener barListener = new OnEntryClickListener(){
+			@Override
+			public void onClick(int setIndex, int entryIndex) {
+				abstractOnClick(entryIndex, mCurrBarSetSize, mCurrBarEntriesSize);
+			}
+		};
+		
+		mBarChart = (BarChartView) findViewById(R.id.barchart);
+		mBarChart.setOnEntryClickListener(barListener);
+	}
+	
+	
+	
 	public void updateBarChart(int nSets, int nPoints){
 		
 		mBarChart.reset();
 		
 		for(int i = 0; i < nSets; i++){
+			
 			BarSet data = new BarSet();
 			for(int j = 0; j <nPoints; j++){
-				Bar bar = new Bar(mLabels[j], randValue());
+				
+				Bar bar = new Bar(mLabels[j], DataRetriever.randValue(MIN, MAX));
+				//bar.setColor(Color.parseColor(getColor(j)));
 				data.addBar(bar);
 			}
-			data.setColor(Color.parseColor(getColor(i)));
+			
+			data.setColor(Color.parseColor(DataRetriever.getColor(i)));
 			mBarChart.addData(data);
 		}
 		
-		mBarChart.setBarSpacing(randDimen(13, 28));
-		mBarChart.setSetSpacing(randDimen(2, 7));
-		mBarChart.setBarBackground(randBoolean());
+		mBarChart.setBarSpacing(DataRetriever.randDimen(13, 28));
+		mBarChart.setSetSpacing(DataRetriever.randDimen(2, 7));
+		mBarChart.setBarBackground(DataRetriever.randBoolean());
 		mBarChart.setBarBackgroundColor(Color.parseColor("#37474f"));
-		mBarChart.setRoundCorners(randDimen(0,6));
-		mBarChart.setGrid(randPaint())
-			.setHorizontalGrid(randPaint())
-			.setVerticalGrid(randPaint())
-			.setAxisX(randBoolean())
+		mBarChart.setRoundCorners(DataRetriever.randDimen(0,6));
+		
+		mBarChart.setBorderSpacing(DataRetriever.randDimen(5,15))
+			.setGrid(DataRetriever.randPaint())
+			.setHorizontalGrid(DataRetriever.randPaint())
+			.setVerticalGrid(DataRetriever.randPaint())
+			.setAxisX(DataRetriever.randBoolean())
 			//.setThresholdLine(2, randPaint())
-			//.setLabels(randBoolean())
-			.setMaxAxisValue(10, 1)
-			.animate(randAnimation())
+			//.setLabels(DataRetriever.randBoolean())
+			.setMaxAxisValue(10, 2)
+			.animate(DataRetriever.randAnimation(mEndAction))
 			//.show()
 			;
+		
 	}
+	
+	
 	
 	
 	
@@ -183,32 +241,52 @@ public class MainActivity extends ActionBarActivity {
 	 *           STACKBARCHART            *
 	 *------------------------------------*/
 	
+	private void initStackBarChart(){
+		
+		OnEntryClickListener stackBarListener = new OnEntryClickListener(){
+			@Override
+			public void onClick(int setIndex, int entryIndex) {
+				abstractOnClick(entryIndex, mCurrStackBarSetSize, mCurrStackBarEntriesSize);
+			}
+		};
+		
+		mStackBarChart = (StackBarChartView) findViewById(R.id.stackbarchart);
+		mStackBarChart.setStep(4)
+			.setOnEntryClickListener(stackBarListener);
+	}
+	
+	
+	
 	public void updateStackBarChart(int nSets, int nPoints){
 		
 		mStackBarChart.reset();
 		
 		for(int i = 0; i < nSets; i++){
+			
 			BarSet data = new BarSet();
 			for(int j = 0; j <nPoints; j++){
-				Bar bar = new Bar(mLabels[j], randValue());
+				Bar bar = new Bar(mLabels[j], DataRetriever.randValue(MIN, MAX));
 				data.addBar(bar);
 			}
-			data.setColor(Color.parseColor(getColor(i)));
+			
+			data.setColor(Color.parseColor(DataRetriever.getColor(i)));
 			mStackBarChart.addData(data);
 		}
 		
-		mStackBarChart.setBarSpacing(randDimen(12, 27));
-		mStackBarChart.setBarBackground(randBoolean());
+		mStackBarChart.setBarSpacing(DataRetriever.randDimen(12, 27));
+		mStackBarChart.setBarBackground(DataRetriever.randBoolean());
 		mStackBarChart.setBarBackgroundColor(Color.parseColor("#37474f"));
-		mStackBarChart.setRoundCorners(randDimen(0,3));
+		mStackBarChart.setRoundCorners(DataRetriever.randDimen(0,6));
 		
-		mStackBarChart.setGrid(randPaint())
-			.setHorizontalGrid(randPaint())
-			.setVerticalGrid(randPaint())
-			.setAxisX(randBoolean())
-			//.setLabels(true)
-			.setMaxAxisValue(30, 2)
-			.animate(randAnimation())
+		mStackBarChart.setBorderSpacing(DataRetriever.randDimen(5,15))
+			.setGrid(DataRetriever.randPaint())
+			.setHorizontalGrid(DataRetriever.randPaint())
+			.setVerticalGrid(DataRetriever.randPaint())
+			.setAxisX(DataRetriever.randBoolean())
+			//.setThresholdLine(2, randPaint())
+			//.setLabels(DataRetriever.randBoolean())
+			.setMaxAxisValue(30, 5)
+			.animate(DataRetriever.randAnimation(mEndAction))
 			//.show()
 			;
 	}
@@ -216,165 +294,25 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 	
-	/*---------------------*
-	 *       INITs         *       
-	 ----------------------*/
 	
-	private void initLineChart(){
+	
+	
+	private void abstractOnClick(int clickedEntry, int setsSize, int entriesSize){
 		
-		OnEntryClickListener lineListener = new OnEntryClickListener(){
-			@Override
-			public void onClick(int setIndex, int entryIndex) {
-				mTextView.setText(mLabels[entryIndex]);
-				mButton.setEnabled(false);
-				
-				float[] newValues = new float[mCurrLineSetSize];
-				for(int i = 0; i < mCurrLineSetSize; i++)
-					newValues[i] = randValue();
-				
-				mLineChart.updateValues(setIndex, newValues);
-			}
-		};
-		
-		mLineChart = (LineChartView) findViewById(R.id.linechart);
-		mLineChart//.setStep(2)
-			.setOnEntryClickListener(lineListener);
-	}
-
-	
-	private void initBarChart(){
-		
-		OnEntryClickListener barListener = new OnEntryClickListener(){
-			@Override
-			public void onClick(int setIndex, int entryIndex) {
-				mTextView.setText(mLabels[entryIndex]);
-				mButton.setEnabled(false);
-				
-				float[] newValues = new float[mCurrBarSetSize];
-				for(int i = 0; i < mCurrBarSetSize; i++)
-					newValues[i] = randValue();
-				
-				mBarChart.updateValues(setIndex, newValues);
-			}
-		};
-		
-		mBarChart = (BarChartView) findViewById(R.id.barchart);
-		mBarChart.setBorderSpacing(Tools.fromDpToPx(40))
-			.setOnEntryClickListener(barListener);
-	}
-
-	
-	private void initStackBarChart(){
-		
-		OnEntryClickListener stackBarListener = new OnEntryClickListener(){
-			@Override
-			public void onClick(int setIndex, int entryIndex) {
-				mTextView.setText(mLabels[entryIndex]);
-				mButton.setEnabled(false);
-				
-				float[] newValues = new float[mCurrStackBarSetSize];
-				for(int i = 0; i < mCurrStackBarSetSize; i++)
-					newValues[i] = randValue();
-				
-				mStackBarChart.updateValues(setIndex, newValues);
-			}
-		};
-		
-		mStackBarChart = (StackBarChartView) findViewById(R.id.stackbarchart);
-		mStackBarChart.setStep(4)
-			.setBorderSpacing(Tools.fromDpToPx(40))
-			.setOnEntryClickListener(stackBarListener);
-	}
-	
-	
-	
-	/*------------------------*
-	 *						  * 
-	 * Random data generation *
-	 * 						  *
-	 -------------------------*/
-	
-	
-	private static boolean randBoolean(){
-		return Math.random() < 0.5;
-	}
-	
-	
-	private static int randNumber(int min, int max) {
-	    return new Random().nextInt((max - min) + 1) + min;
-	} 
-	
-	
-	private static float randDimen(float min, float max){
-		float ya = (new Random().nextFloat() * (max - min)) + min;
-	    return  Tools.fromDpToPx(ya);
-	}
-	
-	
-	private static float randValue() {
-		return  (new Random().nextFloat() * (MAX_VALUE - MIN_VALUE)) + MIN_VALUE;
-	} 
-	
-	
-	private static Paint randPaint() {
-		
-		if(randBoolean()){
-			Paint paint = new Paint();
-			paint.setColor(Color.parseColor("#b0bec5"));
-			paint.setStyle(Paint.Style.STROKE);
-			paint.setAntiAlias(true);
-			paint.setStrokeWidth(Tools.fromDpToPx(1));
-			if(randBoolean())
-				paint.setPathEffect(new DashPathEffect(new float[] {10,10}, 0));
-			return paint;
+		mButton.setText(mLabels[clickedEntry]);
+		mButton.setEnabled(false);
+		float[] newValues;
+		for(int i = 0; i < setsSize; i++){
+			
+			newValues = new float[entriesSize];
+			for(int j = 0; j < entriesSize; j++)
+				newValues[j] = DataRetriever.randValue(MIN, MAX);
+			
+			mStackBarChart.updateValues(i, newValues);
 		}
-		return null;
-	}
-	
-	
-	private static boolean hasFill(int index){
-		return (index == 2) ? true : false;
-	}
-	
-	
-	private Animation randAnimation(){
 		
-		switch (new Random().nextInt(3)){
-			case 0:
-				return new Animation()
-					.setEasing(new QuintEaseOut())
-						.setEndAction(mEndAction);
-			case 1:
-				return new Animation()
-				.setEasing(new BounceEaseOut())
-					.setEndAction(mEndAction);
-			default:
-				return new Animation()
-				.setAnimateInSequence(randBoolean())
-				.setEasing(new ElasticEaseOut())
-					.setEndAction(mEndAction);
-		}
+		mStackBarChart.notifyDataUpdate();
 	}
-
-	
-	private String getColor(int index){
-		
-		switch (index){
-			case 0:
-				return mColors[0];
-			case 1:
-				return mColors[1];
-			case 2:
-				return mColors[2];
-			case 3:
-				return mColors[0];
-			case 4:
-				return mColors[1];
-			default:
-				return mColors[2];
-		}
-	}
-	
 
 	
 }

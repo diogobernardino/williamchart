@@ -6,6 +6,7 @@ import com.db.chart.model.BarSet;
 import com.db.chart.model.Point;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.BarChartView;
+import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.StackBarChartView;
 import com.db.williamchartdemo.R;
@@ -118,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
 		OnEntryClickListener lineListener = new OnEntryClickListener(){
 			@Override
 			public void onClick(int setIndex, int entryIndex) {
-				abstractOnClick(entryIndex, mCurrLineSetSize, mCurrLineEntriesSize);
+				abstractOnClick(mLineChart, entryIndex, mCurrLineSetSize, mCurrLineEntriesSize);
 			}
 		};
 		
@@ -184,7 +185,7 @@ public class MainActivity extends ActionBarActivity {
 		OnEntryClickListener barListener = new OnEntryClickListener(){
 			@Override
 			public void onClick(int setIndex, int entryIndex) {
-				abstractOnClick(entryIndex, mCurrBarSetSize, mCurrBarEntriesSize);
+				abstractOnClick(mBarChart, entryIndex, mCurrBarSetSize, mCurrBarEntriesSize);
 			}
 		};
 		
@@ -246,7 +247,7 @@ public class MainActivity extends ActionBarActivity {
 		OnEntryClickListener stackBarListener = new OnEntryClickListener(){
 			@Override
 			public void onClick(int setIndex, int entryIndex) {
-				abstractOnClick(entryIndex, mCurrStackBarSetSize, mCurrStackBarEntriesSize);
+				abstractOnClick(mStackBarChart, entryIndex, mCurrStackBarSetSize, mCurrStackBarEntriesSize);
 			}
 		};
 		
@@ -297,7 +298,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 	
-	private void abstractOnClick(int clickedEntry, int setsSize, int entriesSize){
+	private void abstractOnClick(ChartView chartView, int clickedEntry, int setsSize, int entriesSize){
 		
 		mButton.setText(mLabels[clickedEntry]);
 		mButton.setEnabled(false);
@@ -308,10 +309,10 @@ public class MainActivity extends ActionBarActivity {
 			for(int j = 0; j < entriesSize; j++)
 				newValues[j] = DataRetriever.randValue(MIN, MAX);
 			
-			mStackBarChart.updateValues(i, newValues);
+			chartView.updateValues(i, newValues);
 		}
 		
-		mStackBarChart.notifyDataUpdate();
+		chartView.notifyDataUpdate();
 	}
 
 	

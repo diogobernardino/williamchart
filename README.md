@@ -78,6 +78,7 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     chart.show()
     
     chart.updateValues(int, array)
+    chart.notifyDataUpdate()
 ```
 
 
@@ -91,10 +92,10 @@ LineChart
 ```
 
 ```java
-    LineChartView chartView= new LineChartView();
+    LineChartView chartView= new LineChartView()
 
-    LineSet lineSet = new LineSet();
-    lineSet.addPoint(new Point(string, float);
+    LineSet lineSet = new LineSet()
+    lineSet.addPoint(new Point(string, float)
     
     // Style dots
     lineSet.setDots(boolean)
@@ -113,7 +114,7 @@ LineChart
     
     // Style type
     lineSet.setDashed(boolean)
-    lineSet.setSmooth(boolean);
+    lineSet.setSmooth(boolean)
 
     chartView.addData(lineSet)
 ```
@@ -131,17 +132,17 @@ BarChart & StackBarChart
 ```
 
 ```java
-    BarChartView chartView = new BarcChartView();
-    barChart.setBarSpacing(dimen);
-    barChart.setSetSpacing(dimen);
-    barChart.setBarBackground(boolean);
-    barChart.setBarBackgroundColor(color);
-    barChart.setRoundCorners(dimen);
+    BarChartView chartView = new BarcChartView()
+    barChart.setBarSpacing(dimen)
+    barChart.setSetSpacing(dimen)
+    barChart.setBarBackground(boolean)
+    barChart.setBarBackgroundColor(color)
+    barChart.setRoundCorners(dimen)
 
-    BarSet barSet = new BarSet();
-    Bar bar = new Bar(string, float);
-    bar.setColor(color);
-    barSet.addBar(bar);
+    BarSet barSet = new BarSet()
+    Bar bar = new Bar(string, float)
+    bar.setColor(color)
+    barSet.addBar(bar)
 
     chartView.addData(barSet)
 ```
@@ -165,15 +166,19 @@ Animation
 ---------
 
 ```java
-    Animation anim = new Animation();
+    Animation anim = new Animation()
 
-    anim.setDuration(integer);
-    anim.setEasing(easingFunction);
-    anim.setEndAction(runnable);
-    anim.setAnimateInSequence();
+    anim.setDuration(integer)
+    anim.setEasing(easingFunction)
+    anim.setEndAction(runnable)
     
-    // Starts immediately the animation
-    chart.animate(animation);
+    // Animation overlap between entries
+    anim.setOverlap(float)
+    // Animation starting point
+    anim.setStartPoint(float, float)
+    
+    // Starts animation
+    chart.animate(animation)
 ```
 
 Implementing the interface ``BaseEasingMethod`` you can create your own easing function. I've implemented a few (credits to [Jesus Gollonet](http://jesusgollonet.com/)):
@@ -189,11 +194,6 @@ Implementing the interface ``BaseEasingMethod`` you can create your own easing f
 * ``QuintEaseOut``
 * ``SineEaseOut``
 
-TODO
--------
-* Pie Chart
-* View reaction to click/select
-* Whatever you feel like contributing...
 
 License
 -------

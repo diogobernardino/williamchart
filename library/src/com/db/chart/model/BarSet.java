@@ -56,9 +56,8 @@ public class BarSet extends ChartSet{
 	 */
 	
 	public BarSet setColor(int color){
-		for(ChartEntry bar : this.getEntries()){
-			((Bar) bar).setColor(color);
-		}
+		for(int i = 0; i < size(); i++)
+			((Bar) getEntry(i)).setColor(color);
 		return this;
 	}
 }

@@ -86,7 +86,7 @@ public class StackBarChartView extends BarChartView {
 			// Unfortunately necessary to discover which set is the bottom and top
 			bottomSetIndex = discoverBottomSet(i, data);
 			topSetIndex = discoverTopSet(i, data);
-			
+			System.out.println(bottomSetIndex+" "+topSetIndex);
 			
 			for(int j = 0; j < data.size(); j++){
 				
@@ -94,8 +94,10 @@ public class StackBarChartView extends BarChartView {
 				bar = (Bar) barSet.getEntry(i);
 				
 				// If entry value is 0 it won't be drawn
-				if(bar.getValue() == 0)
+				if(bar.getValue() == 0){
+					System.out.println(j);
 					continue;
+				}
 				
 				style.barPaint.setColor(barSet.getColor());
 				style.barPaint.setColor(bar.getColor());
@@ -123,9 +125,7 @@ public class StackBarChartView extends BarChartView {
 								style.barPaint);
 					}
 					
-				}
-				
-				if(j == topSetIndex){
+				}else if(j == topSetIndex){
 					canvas.drawRoundRect(new RectF((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
 									(int) (bar.getX() + barWidth/2),
@@ -141,9 +141,7 @@ public class StackBarChartView extends BarChartView {
 									(int) (nextBottomY)),
 								style.barPaint);
 				
-				}
-				
-				if(j != bottomSetIndex && j != topSetIndex){ // Middle sets
+				}else{// if(j != bottomSetIndex && j != topSetIndex){ // Middle sets
 					canvas.drawRect(new Rect((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
 									(int) (bar.getX() + barWidth/2),

@@ -86,7 +86,6 @@ public class StackBarChartView extends BarChartView {
 			// Unfortunately necessary to discover which set is the bottom and top
 			bottomSetIndex = discoverBottomSet(i, data);
 			topSetIndex = discoverTopSet(i, data);
-			System.out.println(bottomSetIndex+" "+topSetIndex);
 			
 			for(int j = 0; j < data.size(); j++){
 				
@@ -94,10 +93,8 @@ public class StackBarChartView extends BarChartView {
 				bar = (Bar) barSet.getEntry(i);
 				
 				// If entry value is 0 it won't be drawn
-				if(bar.getValue() == 0){
-					System.out.println(j);
+				if(bar.getValue() == 0)
 					continue;
-				}
 				
 				style.barPaint.setColor(barSet.getColor());
 				style.barPaint.setColor(bar.getColor());

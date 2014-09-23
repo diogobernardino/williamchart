@@ -100,7 +100,7 @@ public class MainActivity extends ActionBarActivity {
 							mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
 		updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
 							mCurrBarEntriesSize = DataRetriever.randNumber(4, 6));
-		updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 4), 
+		updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 3), 
 							mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 7));
 		
 	}

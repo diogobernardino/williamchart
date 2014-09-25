@@ -26,11 +26,12 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
 import android.util.AttributeSet;
-
+import android.graphics.Shader;
 
 /**
  * Implements a line chart extending {@link ChartView}
@@ -92,14 +93,13 @@ public class LineChartView extends ChartView {
 	 */
 	@Override
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
-
+		
 		LineSet lineSet;
 		for(int i = 0; i < data.size(); i++){
 			lineSet = (LineSet) data.get(i);
 			
 			mStyle.mLinePaint.setColor(lineSet.getLineColor());
-			mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());
-			mStyle.mFillPaint.setColor(lineSet.getFillColor());
+			mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());	
 			
 			if(lineSet.isDashed())
 				mStyle.mLinePaint
@@ -151,12 +151,20 @@ public class LineChartView extends ChartView {
 
 	
 	/**
-	 * Responsible for drawing a (not smooth) line
+	 * Responsible for drawing a (non smooth) line
 	 */
 	public void drawLine(Canvas canvas, LineSet set) {
+		
+		float minY = this.getInnerChartBottom();
+		
 		Path path = new Path();
 		Path bgPath = new Path();
 		for (int i = 0; i < set.size(); i++) {
+			
+			// Get minimum display Y to optimize gradient
+			if(set.getEntry(i).getY() < minY)
+				minY = set.getEntry(i).getY();
+			
 			if (i == 0){
 				//Defining outline
 				path.moveTo(set.getEntry(i).getX(), set.getEntry(i).getY());
@@ -171,14 +179,8 @@ public class LineChartView extends ChartView {
 		}
 		
 		//Draw background
-		if(set.hasFill()){
-			bgPath.lineTo(set.getEntry(set.size() - 1).getX(), 
-							this.getInnerChartBottom());
-			bgPath.lineTo(set.getEntry(0).getX(), 
-							this.getInnerChartBottom());
-			bgPath.close();
-			canvas.drawPath(bgPath, mStyle.mFillPaint);
-		}
+		if(set.hasFill() || set.hasGradientFill())
+			drawBackground(canvas, bgPath, set, minY);
 		
 		//Draw line
 		canvas.drawPath(path, mStyle.mLinePaint);
@@ -192,6 +194,8 @@ public class LineChartView extends ChartView {
 	 * Method responsible to draw a smooth line with the parsed screen points.
 	 */
 	private void drawSmoothLine(Canvas canvas, LineSet set) {
+		
+		float minY = this.getInnerChartBottom();
 		
 		float thisPointX;
 		float thisPointY;
@@ -214,6 +218,10 @@ public class LineChartView extends ChartView {
 			
 		for (int i = 0; i < set.size() - 1; i++) {
             
+			// Get minimum display Y to optimize gradient
+			if(set.getEntry(i).getY() < minY)
+				minY = set.getEntry(i).getY();
+			
 			thisPointX = set.getEntry(i).getX();
             thisPointY = set.getEntry(i).getY();
             
@@ -249,18 +257,39 @@ public class LineChartView extends ChartView {
 		}
 		
 		//Draw background
-		if(set.hasFill()){
-			bgPath.lineTo(set.getEntry(set.size()-1).getX(), this.getInnerChartBottom());
-			bgPath.lineTo(set.getEntry(0).getX(), this.getInnerChartBottom());
-			bgPath.close();
-			canvas.drawPath(bgPath, mStyle.mFillPaint);
-		}
+		if(set.hasFill() || set.hasGradientFill())
+			drawBackground(canvas, bgPath, set, minY);
 		
 		//Draw outline
 		canvas.drawPath(path, mStyle.mLinePaint);
 
 	}
 	
+	
+	
+	
+	/**
+	 * Responsible for drawing line background
+	 */
+	private void drawBackground(Canvas canvas, Path path, LineSet set, float minDisplayY){
+		if(set.hasFill())
+			mStyle.mFillPaint.setColor(set.getFillColor());
+		if(set.hasGradientFill())
+			mStyle.mFillPaint.setShader(
+					new LinearGradient(
+							super.getInnerChartLeft(), 
+								minDisplayY, 
+									super.getInnerChartLeft(), 
+										super.getInnerChartBottom(), 
+											set.getGradientColors(), 
+												set.getGradientPositions(), 
+													Shader.TileMode.MIRROR));
+		
+		path.lineTo(set.getEntry(set.size()-1).getX(), this.getInnerChartBottom());
+		path.lineTo(set.getEntry(0).getX(), this.getInnerChartBottom());
+		path.close();
+		canvas.drawPath(path, mStyle.mFillPaint);
+	}
 	
 	
 	
@@ -378,6 +407,7 @@ public class LineChartView extends ChartView {
 			mFillPaint = new Paint();
 			mFillPaint.setStyle(Paint.Style.FILL);
 			mFillPaint.setAlpha(128);
+			
 	    }
 
 		

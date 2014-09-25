@@ -58,6 +58,11 @@ public class LineSet extends ChartSet{
 	private boolean mHasFill;
 	private int mFillColor;
 	
+	/** gradient background fill variables */
+	private boolean mHasGradientFill;
+	private int[] mGradientColors;
+	private float[] mGradientPositions;
+	
 	
 	
 	public LineSet(){
@@ -80,6 +85,10 @@ public class LineSet extends ChartSet{
 		
 		mHasFill = false;
 		mFillColor = DEFAULT_COLOR;
+		
+		mHasGradientFill = false;
+		mGradientColors = null;
+		mGradientPositions = null;
 		
 	}
 
@@ -158,8 +167,23 @@ public class LineSet extends ChartSet{
 	}
 	
 	
+	public int[] getGradientColors(){
+		return mGradientColors;
+	}
+	
+	
+	public float[] getGradientPositions(){
+		return mGradientPositions;
+	}
+	
+	
 	public boolean hasFill() {
 		return mHasFill;
+	}
+	
+	
+	public boolean hasGradientFill(){
+		return mHasGradientFill;
 	}
 	
 	
@@ -257,8 +281,23 @@ public class LineSet extends ChartSet{
 	}
 	
 	
-	public LineSet setFillColor(int color){
+	public LineSet setFill(int color){
+		mHasFill = true;
 		mFillColor = color;
+		return this;
+	}
+	
+	
+	/**
+	 * 
+	 * @param colors - The colors to be distributed among gradient
+	 * @param positions - 
+	 * @return
+	 */
+	public LineSet setGradientFill(int colors[], float[] positions){
+		mHasGradientFill = true;
+		mGradientColors = colors;
+		mGradientPositions = positions;
 		return this;
 	}
 	

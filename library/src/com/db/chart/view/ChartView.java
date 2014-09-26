@@ -31,7 +31,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Region;
 import android.graphics.Typeface;
-import android.graphics.Paint.Align;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -876,7 +875,7 @@ public abstract class ChartView extends View{
 	 */
 	class Style {
 		
-		private int DEFAULT_COLOR = -16777216;
+		private final static int DEFAULT_COLOR = -16777216;
 		
 		
 		/** Chart */

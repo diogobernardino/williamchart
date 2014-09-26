@@ -72,7 +72,9 @@ public class ChartSet {
 	 */
 	
 	
-	
+	public ArrayList<ChartEntry> getEntries(){
+		return mEntries;
+	}
 	
 	
 	public ChartEntry getEntry(int i) {
@@ -84,9 +86,11 @@ public class ChartSet {
 		return mEntries.get(i).getValue();
 	}
 	
+	
 	public String getLabel(int i) {
 		return mEntries.get(i).getLabel();
 	}
+	
 	
 	public float[] getXCoordinates(){
 		
@@ -96,6 +100,7 @@ public class ChartSet {
 		
 		return result;
 	}
+	
 	
 	public float[] getYCoordinates(){
 		
@@ -108,10 +113,12 @@ public class ChartSet {
 	
 	
 	
+	
 	/*
 	 * Setters
 	 * 
 	 */
+	
 	
 	private void setValue(int i, float value){
 		mEntries.get(i).setValue(value);

@@ -105,14 +105,13 @@ public class BarChartView extends ChartView {
 			// Set first offset to draw a group of bars
 			drawingOffset = data.get(0).getEntry(i).getX() - mDrawingOffset;
 			
-			
 			for(int j = 0; j < data.size(); j++){
 				
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
 				
 				// If entry value is 0 it won't be drawn
-				if(bar.getValue() == 0)
+				if(bar.getValue() <= 0)
 					continue;
 
 				style.barPaint.setColor(barSet.getColor());
@@ -224,7 +223,6 @@ public class BarChartView extends ChartView {
 		BarSet barSet;
 		Bar bar;
 		
-		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
 			// Set first offset to draw a group of bars
@@ -315,7 +313,7 @@ public class BarChartView extends ChartView {
 	public class Style{
 		
 		
-		private int DEFAULT_COLOR = -16777216;
+		private static final int DEFAULT_COLOR = -16777216;
 		
 		
 		/** Bars fill variables */

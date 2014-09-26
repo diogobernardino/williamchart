@@ -19,6 +19,7 @@ package com.db.chart.view;
 import java.util.ArrayList;
 
 import com.db.williamchart.R;
+import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
 
@@ -133,11 +134,9 @@ public class LineChartView extends ChartView {
 		mStyle.mDotsStrokePaint.setColor(set.getDotsStrokeColor());
 		
 		Path path = new Path();
-		for(int i = 0; i < set.size(); i++){
-			path.addCircle(set.getEntry(i).getX(), 
-							set.getEntry(i).getY(), 
-								set.getDotsRadius(), Path.Direction.CW);
-		}
+		for(ChartEntry e : set.getEntries())
+			path.addCircle(e.getX(), e.getY(), 
+					set.getDotsRadius(), Path.Direction.CW);
 		
 		//Draw dots fill
 		canvas.drawPath(path, mStyle.mDotsPaint);
@@ -228,15 +227,13 @@ public class LineChartView extends ChartView {
             nextPointX = set.getEntry(i+1).getX();
             nextPointY = set.getEntry(i+1).getY();
 	
-            startdiffX = (nextPointX - set.getEntry(si(set.size(), 
-            													i - 1)).getX());
-            startdiffY = (nextPointY - set.getEntry(si(set.size(), 
-            													i - 1)).getY());
+            startdiffX = (nextPointX - set.getEntry(
+            								si(set.size(), i - 1)).getX());
+            startdiffY = (nextPointY - set.getEntry(
+            								si(set.size(), i - 1)).getY());
 	            
-            endDiffX = (set.getEntry(si(set.size(), i + 2))
-            											.getX() - thisPointX);
-            endDiffY = (set.getEntry(si(set.size(), i + 2))
-            											.getY() - thisPointY);
+            endDiffX = (set.getEntry(si(set.size(), i + 2)).getX() - thisPointX);
+            endDiffY = (set.getEntry(si(set.size(), i + 2)).getY() - thisPointY);
 	
             firstControlX = thisPointX + (0.15f * startdiffX);
             firstControlY = thisPointY + (0.15f * startdiffY);
@@ -298,17 +295,15 @@ public class LineChartView extends ChartView {
 		
 		ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
 		ArrayList<Region> regionSet;
-		ChartSet set;
 		
-		for(int i = 0; i < data.size(); i++){
-			regionSet = new ArrayList<Region>(data.get(i).size());
-			set = data.get(i);
+		for(ChartSet set : data){
+			regionSet = new ArrayList<Region>(set.size());
 			
-			for(int j = 0; j < set.size(); j++)
-				regionSet.add(new Region((int)(set.getEntry(j).getX() - sRegionRadius), 
-										(int)(set.getEntry(j).getY() - sRegionRadius), 
-											(int)(set.getEntry(j).getX() + sRegionRadius), 
-												(int)(set.getEntry(j).getY() + sRegionRadius)));
+			for(ChartEntry e : set.getEntries())
+				regionSet.add(new Region((int)(e.getX() - sRegionRadius), 
+										(int)(e.getY() - sRegionRadius), 
+											(int)(e.getX() + sRegionRadius), 
+												(int)(e.getY() + sRegionRadius)));
 			result.add(regionSet);
 		}
 		
@@ -323,7 +318,7 @@ public class LineChartView extends ChartView {
      * Given an index in points, it will make sure the the returned index is
      * within the array.
      */
-    private int si(int setSize, int i) {
+    private static int si(int setSize, int i) {
     	
         if (i > setSize - 1)
             return setSize - 1;
@@ -351,10 +346,10 @@ public class LineChartView extends ChartView {
 		
 		
 		/** Shadow variables */
-		private int mShadowColor;
-		private float mShadowRadius;
-		private float mShadowDx;
-		private float mShadowDy;
+		private final int mShadowColor;
+		private final float mShadowRadius;
+		private final float mShadowDx;
+		private final float mShadowDy;
 		
 		
 		

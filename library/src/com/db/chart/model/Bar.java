@@ -37,22 +37,24 @@ public class Bar extends ChartEntry{
 	}
 
 	
+	
+	
 	/*
 	 * Getters
 	 * 
 	 */
-	
 	
 	public int getColor() {
 		return mColor;
 	}
 
 	
+	
+	
 	/*
 	 * Setters
 	 * 
 	 */
-	
 	
 	public void setColor(int mColor) {
 		this.mColor = mColor;

@@ -31,6 +31,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Region;
 import android.graphics.Typeface;
+import android.graphics.Paint.Align;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -648,8 +649,13 @@ public abstract class ChartView extends View{
 	 * Show/Hide Y labels and respective axis
 	 * @param bool - if false Y label and axis won't be visible
 	 */
-	public ChartView setLabels(boolean bool){
-		verController.hasLabels = bool;
+	public ChartView setLabels(int position){
+
+		if(position == YController.NONE)
+			verController.hasLabels = false;
+		else
+			style.labelPosition = position;
+
 		return this;
 	}
 	
@@ -895,7 +901,7 @@ public abstract class ChartView extends View{
 		protected int labelColor;
 		protected float fontSize;
 		protected Typeface typeface;
-		
+		protected int labelPosition;
 		
 		
 		protected Style() {
@@ -909,6 +915,7 @@ public abstract class ChartView extends View{
 			
 			labelColor = DEFAULT_COLOR;
 			fontSize = getResources().getDimension(R.dimen.font_size);
+			labelPosition = YController.OUTSIDE;
 		}
 
 		
@@ -936,6 +943,7 @@ public abstract class ChartView extends View{
 			if (typefaceName != null)
 				typeface = Typeface.createFromAsset(getResources().
 												getAssets(), typefaceName);
+			labelPosition = YController.OUTSIDE;
 		}
 		
 		

@@ -32,10 +32,15 @@ import com.db.chart.model.ChartSet;
  * Class responsible to control vertical measures, positions, yadda yadda. 
  * If the drawing is requested it will also take care of it.
  */
-class YController{
+public class YController{
 	
 	
 	private static final String TAG = "com.db.chart.view.YController";
+	
+	
+	public static final int NONE = 0;
+	public static final int OUTSIDE = 1;
+	public static final int INSIDE = 2;
 	
 	
 	/** Default step between labels */
@@ -58,16 +63,8 @@ class YController{
 	private ArrayList<Integer> mLabels;
 	
 	
-	/** Labels position */
-	protected ArrayList<Float> labelsPos;
-	
-	
 	/** Frame height available to draw the chart */
 	private int mFrameHeight;
-	
-	
-	/** Range of Y values from 0 to mMaxValue */
-	protected int maxLabelValue;
 	
 	
 	/** Screen step between labels */
@@ -89,7 +86,14 @@ class YController{
 	/** Starting Y point of the axis */
 	private float mAxisBottom;
 	
+
+	/** Range of Y values from 0 to mMaxValue */
+	protected int maxLabelValue;
+
 	
+	/** Labels position */
+	protected ArrayList<Float> labelsPos;
+
 	
 	/** Step between labels */
 	protected int step;
@@ -111,7 +115,7 @@ class YController{
 										.getDimension(R.dimen.axis_top_spacing);
 		mAxisHorPosition = 0;
 		maxLabelValue = 0;
-		hasLabels = false;
+		hasLabels = true;
 	}
 	
 	
@@ -120,7 +124,7 @@ class YController{
 		
 		hasLabels = attrs.getBoolean(
 							R.styleable.ChartAttrs_chart_labels, 
-								false);
+								true);
 		topSpacing = attrs.getDimension(
 								R.styleable.ChartAttrs_chart_axisTopSpacing, 
 									topSpacing);
@@ -253,7 +257,8 @@ class YController{
 	 */
 	protected float calcAxisHorizontalPosition(){
 		
-		if(hasLabels){ // In case axis Y needs to be drawn
+		// In case labels Y needs to be drawn
+		if(hasLabels && mChartView.style.labelPosition == YController.OUTSIDE){
 			float maxLenghtLabel = 0;
 			float aux = 0;
 			for(int i = 0; i < mLabels.size(); i++){
@@ -266,6 +271,7 @@ class YController{
 			return mChartView.chartLeft + maxLenghtLabel + mDistFromLabel;
 			
 		}else{
+			mDistFromLabel *= -1; 
 			return mChartView.chartLeft 
 					+ mChartView.style.labelPaint
 							.measureText(mChartView.data.get(0).getLabel(0))/2;
@@ -296,8 +302,10 @@ class YController{
 		
 		if(hasLabels){
 			
-			mChartView.style.labelPaint.setTextAlign(Align.RIGHT);
-
+			mChartView.style.labelPaint.setTextAlign(
+					(mChartView.style.labelPosition == YController.OUTSIDE) 
+						? Align.RIGHT : Align.LEFT);
+			
 			// Draw labels
 			for(int i = 0; i < mLabels.size(); i++){
 				canvas.drawText(Integer.toString(mLabels.get(i)), 

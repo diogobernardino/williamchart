@@ -26,7 +26,7 @@
     
     <!-- LineChartView -->
     <!-- Dot region radius used on click -->
-    <dimen name="dot_region_radius">10dp</dimen>
+    <dimen name="dot_region_radius">15dp</dimen>
    
     
     <!-- BarChartView -->

@@ -18,11 +18,6 @@
     <!-- Grid thickness-->
     <dimen name="grid_thickness">1dp</dimen>
     
-    <!-- Shadow dimensions -->
-    <dimen name="shadow_radius">1dp</dimen>
-    <dimen name="shadow_dx">0dp</dimen>
-    <dimen name="shadow_dy">1dp</dimen>
-    
     
     <!-- LineChartView -->
     <!-- Dot region radius used on click -->

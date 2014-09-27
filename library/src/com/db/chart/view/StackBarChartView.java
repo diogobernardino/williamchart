@@ -98,6 +98,7 @@ public class StackBarChartView extends BarChartView {
 				
 				style.barPaint.setColor(barSet.getColor());
 				style.barPaint.setColor(bar.getColor());
+				super.handleAlpha(style.barPaint, barSet.getAlpha());
 				
 				// Distance from bottom to top of the bar
 				dist = this.getInnerChartBottom() - bar.getY();

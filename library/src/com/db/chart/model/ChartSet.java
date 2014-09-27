@@ -28,10 +28,14 @@ public class ChartSet {
 	private ArrayList<ChartEntry> mEntries;
 
 	
+	/** Paint alpha value from 0 to 1 */
+	private float mAlpha;
+	
 	
 	
 	public ChartSet(){
 		mEntries = new ArrayList<ChartEntry>();
+		mAlpha = 1;
 	}
 	
 	
@@ -112,6 +116,11 @@ public class ChartSet {
 	}
 	
 	
+	public float getAlpha(){
+		return mAlpha;
+	}
+	
+	
 	
 	
 	/*
@@ -122,6 +131,11 @@ public class ChartSet {
 	
 	private void setValue(int i, float value){
 		mEntries.get(i).setValue(value);
+	}
+	
+	
+	public void setAlpha(float alpha){
+		mAlpha = (alpha < 1) ? alpha : 1;
 	}
 	
 	

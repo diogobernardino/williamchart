@@ -125,6 +125,9 @@ public class Animation{
 	private float mStartYFactor;
 	
 	
+	/** Alpha speed to include in animation */
+	private int mAlphaSpeed;
+	
 	
 	
 	public Animation(){
@@ -144,11 +147,12 @@ public class Animation{
 		mGlobalDuration = duration;
 		mCurrentGlobalDuration = 0;
 		mGlobalInitTime = 0;
-		mOverlapingFactor = 1;
+		mOverlapingFactor = 1f;
 		mEasing = new QuintEaseOut();
 		mPlaying = false;
-		mStartXFactor = -1;
-		mStartYFactor = -1;
+		mStartXFactor = -1f;
+		mStartYFactor = -1f;
+		mAlphaSpeed = -1;
 	}
 	
 	
@@ -182,10 +186,13 @@ public class Animation{
 		
 		// Define animation paths for each entry
 		for(int i = 0; i < mSets.size(); i++){
+			
 			for(int j = 0; j < mSets.get(i).size(); j++){
+				
 				Path path = new Path();
 				path.moveTo(startingX.get(i)[j], startingY.get(i)[j]);
 				path.lineTo(mSets.get(i).getEntry(j).getX(), mSets.get(i).getEntry(j).getY());
+				
 				mPathMeasures[i][j] = new PathMeasure(path, false);
 			}
 		}
@@ -283,12 +290,16 @@ public class Animation{
 		
 		// Update next values to be drawn
 		float[] posUpdate;
+		float timeNormalized = 1;
 		for(int i = 0; i < mSets.size(); i++)
 			for(int j = 0; j < mSets.get(i).size(); j++){
-				posUpdate = getEntryUpdate(i, j, normalizeTime(j));
+				timeNormalized = normalizeTime(j);
+				if(mAlphaSpeed != -1)
+					mSets.get(i).setAlpha(timeNormalized * mAlphaSpeed);
+				posUpdate = getEntryUpdate(i, j, timeNormalized);
 				mSets.get(i).getEntry(j).setCoordinates(posUpdate[0], posUpdate[1]);
 			}
-		
+
 		// Sets the next update or finishes the animation
 		if(mCurrentGlobalDuration < mGlobalDuration){
 			mChartView.postDelayed(mAnimator, DELAY_BETWEEN_UPDATES);
@@ -299,6 +310,7 @@ public class Animation{
 			if(mRunnable != null)
 				mRunnable.run();
 			mPlaying = false;
+			mAlphaSpeed = -1;
 		}
 		
 		return mSets; 
@@ -399,6 +411,18 @@ public class Animation{
 	public Animation setStartPoint(float xFactor, float yFactor){
 		mStartXFactor = xFactor;
 		mStartYFactor = yFactor;
+		return this;
+	}
+	
+	
+	/**
+	 * Sets an alpha speed to animation.
+	 * @param speed - speed of alpha animation values according with translation.
+	 * To disable alpha set it to -1.
+	 * Eg. If speed 2 alpha goes twice faster than translation.
+	 */
+	public Animation setAlpha(int speed){
+		mAlphaSpeed = speed;
 		return this;
 	}
 	

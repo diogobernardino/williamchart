@@ -26,6 +26,7 @@ import com.db.chart.model.LineSet;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
@@ -97,10 +98,13 @@ public class LineChartView extends ChartView {
 		
 		LineSet lineSet;
 		for(int i = 0; i < data.size(); i++){
+			
 			lineSet = (LineSet) data.get(i);
 			
 			mStyle.mLinePaint.setColor(lineSet.getLineColor());
-			mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());	
+			mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());
+			handleAlpha(mStyle.mLinePaint, lineSet.getAlpha());
+			
 			
 			if(lineSet.isDashed())
 				mStyle.mLinePaint
@@ -130,8 +134,13 @@ public class LineChartView extends ChartView {
 	private void drawPoints(Canvas canvas, LineSet set) {
 		
 		mStyle.mDotsPaint.setColor(set.getDotsColor());
+		mStyle.mDotsPaint.setAlpha((set.getAlpha() < 1) ? (int)(set.getAlpha() * 255) : 255);
+		handleAlpha(mStyle.mDotsPaint, set.getAlpha());
 		mStyle.mDotsStrokePaint.setStrokeWidth(set.getDotsStrokeThickness());
 		mStyle.mDotsStrokePaint.setColor(set.getDotsStrokeColor());
+		handleAlpha(mStyle.mDotsStrokePaint, set.getAlpha());
+		
+		
 		
 		Path path = new Path();
 		for(ChartEntry e : set.getEntries())
@@ -269,6 +278,9 @@ public class LineChartView extends ChartView {
 	 * Responsible for drawing line background
 	 */
 	private void drawBackground(Canvas canvas, Path path, LineSet set, float minDisplayY){
+		
+		mStyle.mFillPaint.setAlpha((int)(set.getAlpha() * 255));
+		
 		if(set.hasFill())
 			mStyle.mFillPaint.setColor(set.getFillColor());
 		if(set.hasGradientFill())
@@ -313,7 +325,24 @@ public class LineChartView extends ChartView {
 	
 	
 	
-    /**
+    private void handleAlpha(Paint paint, float alpha){
+    	
+		paint.setAlpha((int)(alpha * 255));
+		paint.setShadowLayer(
+				mStyle.mShadowRadius, 
+					mStyle.mShadowDx, 
+						mStyle.mShadowDy, 
+							Color.argb(((int)(alpha * 255) < mStyle.mAlpha) 
+							? (int)(alpha * 255) 
+							: mStyle.mAlpha, 
+								mStyle.mRed, 
+									mStyle.mGreen, 
+										mStyle.mBlue));	
+    }
+	
+	
+	
+	/**
      * Credits: http://www.jayway.com/author/andersericsson/
      * Given an index in points, it will make sure the the returned index is
      * within the array.
@@ -351,13 +380,18 @@ public class LineChartView extends ChartView {
 		private final float mShadowDx;
 		private final float mShadowDy;
 		
-		
+		/** Shadow color */
+		private int mAlpha;
+		private int mRed;
+		private int mBlue;
+		private int mGreen;
+
 		
 		protected Style() {
 			
-			mShadowRadius = getResources().getDimension(R.dimen.shadow_radius);
-	    	mShadowDx = getResources().getDimension(R.dimen.shadow_dx);
-	    	mShadowDy = getResources().getDimension(R.dimen.shadow_dy);
+			mShadowRadius = 0;
+	    	mShadowDx = 0;
+	    	mShadowDy = 0;
 			mShadowColor = 0;
 		}
 		
@@ -365,14 +399,11 @@ public class LineChartView extends ChartView {
 		protected Style(TypedArray attrs) {
 			
 			mShadowRadius = attrs.getDimension(
-					R.styleable.ChartAttrs_chart_shadowRadius, 
-						getResources().getDimension(R.dimen.shadow_radius));
+					R.styleable.ChartAttrs_chart_shadowRadius, 0);
 	    	mShadowDx = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowDx, 
-	    				getResources().getDimension(R.dimen.shadow_dx));
+	    			R.styleable.ChartAttrs_chart_shadowDx, 0);
 	    	mShadowDy = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowDy, 
-	    				getResources().getDimension(R.dimen.shadow_dy));
+	    			R.styleable.ChartAttrs_chart_shadowDy, 0);
 			mShadowColor = attrs.getColor(
 					R.styleable.ChartAttrs_chart_shadowColor, 0);
 	    }
@@ -381,23 +412,23 @@ public class LineChartView extends ChartView {
 		
 		private void init(){
 	    	
+			mAlpha = Color.alpha(mShadowColor);
+			mRed = Color.red(mShadowColor);
+			mBlue = Color.blue(mShadowColor);
+			mGreen = Color.green(mShadowColor);
+			
 			mDotsPaint = new Paint();
 			mDotsPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 			mDotsPaint.setAntiAlias(true);
-			mDotsPaint.setShadowLayer(mShadowRadius, mShadowDx, 
-										mShadowDy, mShadowColor);
+
 			
 			mDotsStrokePaint = new Paint();
 			mDotsStrokePaint.setStyle(Paint.Style.STROKE);
 			mDotsStrokePaint.setAntiAlias(true);
-			mDotsStrokePaint.setShadowLayer(mShadowRadius, mShadowDx, 
-												mShadowDy, mShadowColor);
 			
 			mLinePaint = new Paint();
 			mLinePaint.setStyle(Paint.Style.STROKE);
 			mLinePaint.setAntiAlias(true);
-			mLinePaint.setShadowLayer(mShadowRadius, mShadowDx, 
-										mShadowDy, mShadowColor);
 			
 			mFillPaint = new Paint();
 			mFillPaint.setStyle(Paint.Style.FILL);

@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -37,12 +38,13 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver.OnPreDrawListener;
+import android.widget.RelativeLayout;
 
 
 /**
  * Abstract class to be extend to define any chart that implies axis.
  */
-public abstract class ChartView extends View{
+public abstract class ChartView extends RelativeLayout{
 	
 	
 	private static final String TAG = "com.db.chart.view.ChartView";
@@ -153,8 +155,7 @@ public abstract class ChartView extends View{
 			// Prepares the animation if needed and gets the first dump 
 			// of data to be drawn
 			if(mAnim != null){
-				data = mAnim.prepareEnter(ChartView.this,
-											data);
+				data = mAnim.prepareEnter(ChartView.this, data);
 			}
 			
 			if (android.os.Build.VERSION.SDK_INT >= 
@@ -398,6 +399,58 @@ public abstract class ChartView extends View{
 	
 	
 	/**
+	 * Adds a tooltip to ChartView. If is not the case already, 
+	 * the whole tooltip is forced to be inside ChartView bounds.
+	 * @param tooltip - tooltip view to be added.
+	 * @param boolean - false if the tooltip should not be forced to be inside 
+	 * ChartView. You may want to take care of it.
+	 */
+	public void showTooltip(View tooltip, boolean bool){
+		
+		if(bool){
+			LayoutParams layoutParams = (LayoutParams) tooltip.getLayoutParams();
+			
+			if(layoutParams.leftMargin < chartLeft - getPaddingLeft())
+				layoutParams.leftMargin = (int) chartLeft - getPaddingLeft();
+			if(layoutParams.topMargin < chartTop - getPaddingTop())
+				layoutParams.topMargin = (int) chartTop - getPaddingTop();
+			if(layoutParams.leftMargin + layoutParams.width > chartRight - getPaddingRight())
+				layoutParams.leftMargin -= layoutParams.width - (chartRight - getPaddingRight() - layoutParams.leftMargin);
+			if(layoutParams.topMargin + layoutParams.height > getInnerChartBottom() - getPaddingBottom())
+				layoutParams.topMargin -= layoutParams.height - (getInnerChartBottom() - getPaddingBottom() - layoutParams.topMargin);
+			
+			tooltip.setLayoutParams(layoutParams);
+		}
+		this.addView(tooltip);
+	}
+	
+	
+	/**
+	 * Adds a tooltip to ChartView. If is not the case already, 
+	 * the whole tooltip is forced to be inside ChartView bounds.
+	 * @param tooltip - tooltip view to be added.
+	 */
+	public void showTooltip(View tooltip){
+		showTooltip(tooltip, true);
+	}
+	
+	
+	/**
+	 * Removes tooltip from ChartView.
+	 * @param tooltip - view to be removed.
+	 */
+	public void dismissTooltip(View tooltip){
+		this.removeView(tooltip);
+	}
+	
+
+	public void dismissAllTooltips(){
+		this.removeAllViews();
+	}
+	
+	
+	
+	/**
 	 * Asks the view if it is able to draw now.
 	 */
 	public boolean canIPleaseAskYouToDraw(){
@@ -530,9 +583,12 @@ public abstract class ChartView extends View{
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		
 		if(mAnim == null || !mAnim.isPlaying())
-			if(event.getAction() == MotionEvent.ACTION_DOWN){
-				if(mEntryListener != null && mRegions != null){
+			
+			if(event.getAction() == MotionEvent.ACTION_DOWN &&
+					mEntryListener != null && mRegions != null){
+				
 					 //Check if ACTION_DOWN over any ScreenPoint region.
 						for(int i = 0; i < mRegions.size() ; i++){
 							for(int j = 0; j < mRegions.get(i).size(); j++){
@@ -544,19 +600,27 @@ public abstract class ChartView extends View{
 								}
 							}
 						}
-				}
+			
 				
 			}else if(event.getAction() == MotionEvent.ACTION_UP){
-				
-				if(mChartListener != null)
-					mChartListener.onClick(this);
+	
 				if(mEntryListener != null && 
 						mSetClicked != -1 && 
 							mIndexClicked != -1 &&
 								mRegions.get(mSetClicked).get(mIndexClicked)
 								.contains((int)event.getX(), 
 											(int)event.getY())){
-					mEntryListener.onClick(mSetClicked, mIndexClicked);
+					
+					mEntryListener.onClick(mSetClicked, 
+								mIndexClicked, 
+									new Rect(mRegions.get(mSetClicked).get(mIndexClicked).getBounds().left - getPaddingLeft(),
+											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().top - getPaddingTop(),
+											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().right - getPaddingLeft(),
+											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().bottom - getPaddingTop()));
+				
+				}else if(mChartListener != null){
+					
+					mChartListener.onClick(this);
 				}
 			}
 		return true;
@@ -731,7 +795,8 @@ public abstract class ChartView extends View{
 	 * Register a listener to be called when the chart is clicked.
 	 * @param listener
 	 */
-	public void setOnChartClickListener(OnClickListener listener){
+	@Override
+	public void setOnClickListener(OnClickListener listener){
 		this.mChartListener = listener;
 	}
 	

@@ -432,8 +432,6 @@ public class LineChartView extends ChartView {
 			
 			mFillPaint = new Paint();
 			mFillPaint.setStyle(Paint.Style.FILL);
-			mFillPaint.setAlpha(128);
-			
 	    }
 
 		

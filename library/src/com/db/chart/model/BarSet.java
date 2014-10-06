@@ -40,8 +40,9 @@ public class BarSet extends ChartSet{
 	
 	
 	/*
+	 * --------
 	 * Getters
-	 * 
+	 * --------
 	 */
 	
 	public int getColor(){
@@ -51,8 +52,9 @@ public class BarSet extends ChartSet{
 	
 	
 	/*
+	 * -------------
 	 * Setters
-	 * 
+	 * -------------
 	 */
 	
 	public BarSet setColor(int color){
@@ -60,4 +62,5 @@ public class BarSet extends ChartSet{
 			((Bar) getEntry(i)).setColor(color);
 		return this;
 	}
+	
 }

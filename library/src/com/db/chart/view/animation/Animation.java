@@ -232,8 +232,8 @@ public class Animation{
 			y = chartView.getInnerChartBottom();
 			
 		
-		ArrayList<float[]> startXValues = new ArrayList<float[]>(sets.size());
-		ArrayList<float[]> startYValues = new ArrayList<float[]>(sets.size());
+		final ArrayList<float[]> startXValues = new ArrayList<float[]>(sets.size());
+		final ArrayList<float[]> startYValues = new ArrayList<float[]>(sets.size());
 		float[] Xset;
 		float[] Yset;
 		for(int i = 0; i < sets.size(); i++){
@@ -251,7 +251,6 @@ public class Animation{
 			
 			startXValues.add(Xset);
 			startYValues.add(Yset);
-			
 		}
 		
 		mStartXFactor = -1;
@@ -273,7 +272,7 @@ public class Animation{
 		
 		// Process current animation duration
 		long diff;
-		long currentTime = System.currentTimeMillis();
+		final long currentTime = System.currentTimeMillis();
 		mCurrentGlobalDuration = currentTime - mGlobalInitTime;
 		for(int i = 0; i < mCurrentDuration.length; i++){
 			diff = currentTime - mInitTime[i];
@@ -292,10 +291,14 @@ public class Animation{
 		float[] posUpdate;
 		float timeNormalized = 1;
 		for(int i = 0; i < mSets.size(); i++)
+			
 			for(int j = 0; j < mSets.get(i).size(); j++){
+				
 				timeNormalized = normalizeTime(j);
+				
 				if(mAlphaSpeed != -1)
 					mSets.get(i).setAlpha(timeNormalized * mAlphaSpeed);
+				
 				posUpdate = getEntryUpdate(i, j, timeNormalized);
 				mSets.get(i).getEntry(j).setCoordinates(posUpdate[0], posUpdate[1]);
 			}
@@ -340,11 +343,13 @@ public class Animation{
 	 * @return x display value where point will be drawn
 	 */
 	private float[] getEntryUpdate(int i, int j, float normalizedTime){
-		float[] pos = new float[2];
+		
+		final float[] pos = new float[2];
 		if(mPathMeasures[i][j].getPosTan(mPathMeasures[i][j].getLength() * mEasing.next(normalizedTime), pos, null))
 			return pos;
 		pos[0] = mSets.get(i).getEntry(j).getX();
 		pos[1] = mSets.get(i).getEntry(j).getY();
+		
 		return pos;
 	}
 	

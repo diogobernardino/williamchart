@@ -100,7 +100,6 @@ public class BarChartView extends ChartView {
 		BarSet barSet;
 		Bar bar;
 		
-		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
 			// Set first offset to draw a group of bars
@@ -115,7 +114,6 @@ public class BarChartView extends ChartView {
 				if(bar.getValue() <= 0)
 					continue;
 
-				style.barPaint.setColor(barSet.getColor());
 				style.barPaint.setColor(bar.getColor());
 				handleAlpha(style.barPaint, barSet.getAlpha());
 				
@@ -137,10 +135,8 @@ public class BarChartView extends ChartView {
 				// If last bar of group no set spacing is necessary
 				if(j != data.size()-1)
 					drawingOffset += style.mSetSpacing;
-			}	
-			
+			}		
 		}
-		
 	}
 	
 	
@@ -180,11 +176,11 @@ public class BarChartView extends ChartView {
 	 * @param n - Number of sets
 	 */
 	private void calculatePositionOffset(int n){
-		if(n % 2 == 0){
+		
+		if(n % 2 == 0)
 			mDrawingOffset = n*barWidth/2 + (n-1)*(style.mSetSpacing/2);
-		}else{
+		else
 			mDrawingOffset = n*barWidth/2 + ((n-1)/2)*style.mSetSpacing;
-		}
 	}
 	
 	
@@ -361,6 +357,7 @@ public class BarChartView extends ChartView {
 		private final float mShadowDx;
 		private final float mShadowDy;
 		private final int mShadowColor;
+		
 		
 		/** Shadow color */
 		private int mAlpha;

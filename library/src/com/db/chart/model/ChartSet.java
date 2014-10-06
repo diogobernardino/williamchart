@@ -71,8 +71,9 @@ public class ChartSet {
 	
 	
 	/*
-	 *Getters
-	 *
+	 * --------
+	 * Getters
+	 * --------
 	 */
 	
 	
@@ -124,8 +125,9 @@ public class ChartSet {
 	
 	
 	/*
+	 * --------
 	 * Setters
-	 * 
+	 * --------
 	 */
 	
 	

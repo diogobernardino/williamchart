@@ -182,9 +182,12 @@ public class YController{
 		
 		double max = 0;
 		ChartSet set;
+		
 		for(int i = 0; i < mChartView.data.size(); i++){
+			
 			set = mChartView.data.get(i);
 			for(int j = 0; j < set.size(); j++){
+				
 				if(set.getValue(j) >= max)
 					max = set.getValue(j);
 			}
@@ -336,6 +339,7 @@ public class YController{
 	 * @return position of the inner left side of the chart
 	 */
 	public float getInnerChartLeft(){
+		
 		if(hasLabels)
 			return mAxisHorPosition + mChartView.style.axisThickness/2;
 		else

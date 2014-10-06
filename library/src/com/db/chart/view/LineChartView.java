@@ -142,7 +142,7 @@ public class LineChartView extends ChartView {
 		
 		
 		
-		Path path = new Path();
+		final Path path = new Path();
 		for(ChartEntry e : set.getEntries())
 			path.addCircle(e.getX(), e.getY(), 
 					set.getDotsRadius(), Path.Direction.CW);
@@ -165,8 +165,8 @@ public class LineChartView extends ChartView {
 		
 		float minY = this.getInnerChartBottom();
 		
-		Path path = new Path();
-		Path bgPath = new Path();
+		final Path path = new Path();
+		final Path bgPath = new Path();
 		for (int i = 0; i < set.size(); i++) {
 			
 			// Get minimum display Y to optimize gradient
@@ -218,10 +218,10 @@ public class LineChartView extends ChartView {
 		float secondControlX;
 		float secondControlY;
 		
-		Path path = new Path();
+		final Path path = new Path();
 		path.moveTo(set.getEntry(0).getX(),set.getEntry(0).getY());
 		
-		Path bgPath= new Path();
+		final Path bgPath= new Path();
 		bgPath.moveTo(set.getEntry(0).getX(), set.getEntry(0).getY());
 			
 		for (int i = 0; i < set.size() - 1; i++) {
@@ -249,7 +249,7 @@ public class LineChartView extends ChartView {
 	            
             secondControlX = nextPointX - (0.15f * endDiffX);
             secondControlY = nextPointY - (0.15f * endDiffY);
-	
+            
             //Define outline
             path.cubicTo(firstControlX, firstControlY, 
             				secondControlX, secondControlY, 
@@ -305,7 +305,7 @@ public class LineChartView extends ChartView {
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
 		
-		ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
+		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
 		ArrayList<Region> regionSet;
 		
 		for(ChartSet set : data){

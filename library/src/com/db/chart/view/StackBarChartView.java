@@ -68,6 +68,7 @@ public class StackBarChartView extends BarChartView {
 		float dist;
 		int bottomSetIndex = 0;
 		int topSetIndex = 0;
+		float cornersFix;
 		BarSet barSet;
 		Bar bar;
 		
@@ -96,12 +97,11 @@ public class StackBarChartView extends BarChartView {
 				if(bar.getValue() <= 0)
 					continue;
 				
-				style.barPaint.setColor(barSet.getColor());
 				style.barPaint.setColor(bar.getColor());
 				super.handleAlpha(style.barPaint, barSet.getAlpha());
 				
 				// Distance from bottom to top of the bar
-				dist = this.getInnerChartBottom() - bar.getY();
+				dist = super.getInnerChartBottom() - bar.getY();
 				
 				// Draw bar
 				if(j == bottomSetIndex){
@@ -114,7 +114,7 @@ public class StackBarChartView extends BarChartView {
 											style.barPaint);
 					
 					if(bottomSetIndex != topSetIndex && style.cornerRadius != 0){
-						float cornersFix = (nextBottomY - (this.getInnerChartBottom() - (dist + verticalOffset)))/2;
+						cornersFix = (nextBottomY - (this.getInnerChartBottom() - (dist + verticalOffset)))/2;
 						// Fill top corners of bar
 						canvas.drawRect(new Rect((int) (bar.getX() - barWidth/2), 
 							(int) (this.getInnerChartBottom() - (dist + verticalOffset)), 
@@ -132,7 +132,7 @@ public class StackBarChartView extends BarChartView {
 										style.cornerRadius,
 											style.barPaint);
 					// Fill bottom corners of bar
-					float cornersFix = (nextBottomY - (this.getInnerChartBottom() - (dist + verticalOffset)))/2;
+					cornersFix = (nextBottomY - (this.getInnerChartBottom() - (dist + verticalOffset)))/2;
 					canvas.drawRect(new Rect((int) (bar.getX() - barWidth/2), 
 							(int) (nextBottomY - cornersFix), 
 								(int) (bar.getX() + barWidth/2),
@@ -226,7 +226,6 @@ public class StackBarChartView extends BarChartView {
 		float dist;
 		BarSet barSet;
 		Bar bar;
-		
 		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			

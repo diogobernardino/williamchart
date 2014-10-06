@@ -112,6 +112,9 @@ public abstract class ChartView extends RelativeLayout{
 	private ArrayList<Pair<Integer, float []>> toUpdateValues;
 	
 	
+	private View mEntryView;
+	
+	
 	/**
 	 * Executed only before the chart is drawn for the first time.
 	 * . borders are defined
@@ -154,9 +157,8 @@ public abstract class ChartView extends RelativeLayout{
 			
 			// Prepares the animation if needed and gets the first dump 
 			// of data to be drawn
-			if(mAnim != null){
+			if(mAnim != null)
 				data = mAnim.prepareEnter(ChartView.this, data);
-			}
 			
 			if (android.os.Build.VERSION.SDK_INT >= 
 					android.os.Build.VERSION_CODES.HONEYCOMB)
@@ -164,7 +166,6 @@ public abstract class ChartView extends RelativeLayout{
 				
 			return mReadyToDraw = true;
 		}
-		
 	};
 	
 	
@@ -247,6 +248,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Convert chart points into screen points.
 	 */
 	private void digestData() {
+		
 		for(ChartSet set: data){
 			for (int i = 0; i < set.size(); i++){
 				set.getEntry(i)
@@ -342,6 +344,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Resets chart state to insert new configuration.
 	 */
 	public void reset(){
+		
 		data.clear();
 		mRegions.clear();
 		toUpdateValues.clear();
@@ -377,10 +380,11 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public void notifyDataUpdate(){
 
-		ArrayList<float []> oldValues = new ArrayList<float[]>(data.size());
-		ArrayList<float []> xValues = new ArrayList<float[]>(data.size());
+		final ArrayList<float []> oldValues = new ArrayList<float[]>(data.size());
+		final ArrayList<float []> xValues = new ArrayList<float[]>(data.size());
 		for(int i = 0; i < toUpdateValues.size(); i++){
-			oldValues.add(data.get(toUpdateValues.get(i).first).updateValues(toUpdateValues.get(i).second));
+			oldValues.add(data.get(toUpdateValues.get(i).first)
+									.updateValues(toUpdateValues.get(i).second));
 			xValues.add(data.get(i).getXCoordinates());
 		}
 		
@@ -408,19 +412,24 @@ public abstract class ChartView extends RelativeLayout{
 	public void showTooltip(View tooltip, boolean bool){
 		
 		if(bool){
-			LayoutParams layoutParams = (LayoutParams) tooltip.getLayoutParams();
+			final LayoutParams layoutParams = (LayoutParams) tooltip.getLayoutParams();
 			
 			if(layoutParams.leftMargin < chartLeft - getPaddingLeft())
 				layoutParams.leftMargin = (int) chartLeft - getPaddingLeft();
 			if(layoutParams.topMargin < chartTop - getPaddingTop())
 				layoutParams.topMargin = (int) chartTop - getPaddingTop();
-			if(layoutParams.leftMargin + layoutParams.width > chartRight - getPaddingRight())
-				layoutParams.leftMargin -= layoutParams.width - (chartRight - getPaddingRight() - layoutParams.leftMargin);
-			if(layoutParams.topMargin + layoutParams.height > getInnerChartBottom() - getPaddingBottom())
-				layoutParams.topMargin -= layoutParams.height - (getInnerChartBottom() - getPaddingBottom() - layoutParams.topMargin);
+			if(layoutParams.leftMargin + layoutParams.width 
+					> chartRight - getPaddingRight())
+				layoutParams.leftMargin -= layoutParams.width 
+						- (chartRight - getPaddingRight() - layoutParams.leftMargin);
+			if(layoutParams.topMargin + layoutParams.height 
+					> getInnerChartBottom() - getPaddingBottom())
+				layoutParams.topMargin -= layoutParams.height 
+						- (getInnerChartBottom() - getPaddingBottom() - layoutParams.topMargin);
 			
 			tooltip.setLayoutParams(layoutParams);
 		}
+		
 		this.addView(tooltip);
 	}
 	
@@ -496,6 +505,7 @@ public abstract class ChartView extends RelativeLayout{
 				drawThresholdLine(canvas);
 			
 		}
+		
 		//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
 		mIsDrawing = false;
 	}
@@ -516,11 +526,10 @@ public abstract class ChartView extends RelativeLayout{
 	private void drawVerticalGrid(Canvas canvas){
 		
 		// Draw vertical grid lines
-		final ArrayList<Float> horPositions = horController.labelsPos;
-		for(int i = 0; i < horPositions.size(); i++){
-			canvas.drawLine(horPositions.get(i), 
+		for(int i = 0; i < horController.labelsPos.size(); i++){
+			canvas.drawLine(horController.labelsPos.get(i), 
 								innerchartBottom, 
-									horPositions.get(i), 
+									horController.labelsPos.get(i), 
 										innerchartTop, 
 											style.gridPaint);
 		}
@@ -539,7 +548,6 @@ public abstract class ChartView extends RelativeLayout{
 										innerchartTop, 
 											style.gridPaint);
 		}
-			
 	}
 	
 	
@@ -547,12 +555,11 @@ public abstract class ChartView extends RelativeLayout{
 	private void drawHorizontalGrid(Canvas canvas){
 		
 		// Draw horizontal grid lines
-		final ArrayList<Float> verPositions = verController.labelsPos;
-		for(int i = 0; i < verPositions.size(); i++){
+		for(int i = 0; i < verController.labelsPos.size(); i++){
 			canvas.drawLine(innerchartLeft, 
-								verPositions.get(i), 
+								verController.labelsPos.get(i), 
 									innerchartRight,
-										verPositions.get(i), 
+										verController.labelsPos.get(i), 
 											style.gridPaint);
 		}
 		
@@ -591,7 +598,9 @@ public abstract class ChartView extends RelativeLayout{
 				
 					 //Check if ACTION_DOWN over any ScreenPoint region.
 						for(int i = 0; i < mRegions.size() ; i++){
+							
 							for(int j = 0; j < mRegions.get(i).size(); j++){
+								
 								if(mRegions.get(i).get(j)
 										.contains((int) event.getX(), 
 													(int) event.getY())){
@@ -619,10 +628,10 @@ public abstract class ChartView extends RelativeLayout{
 											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().bottom - getPaddingTop()));
 				
 				}else if(mChartListener != null){
-					
 					mChartListener.onClick(this);
 				}
 			}
+		
 		return true;
 	}
 	
@@ -899,6 +908,7 @@ public abstract class ChartView extends RelativeLayout{
 			style.hasVerticalGrid = false;
 		}
 		style.gridPaint = paint;
+		
 		return this;
 	}
 	
@@ -923,6 +933,11 @@ public abstract class ChartView extends RelativeLayout{
 		return this;
 	}
 	
+	
+	public ChartView setEntryBehaviour(View view){
+		mEntryView = view;
+		return this;
+	}
 	
 	
 	
@@ -1002,7 +1017,7 @@ public abstract class ChartView extends RelativeLayout{
 	    			R.styleable.ChartAttrs_chart_fontSize, 
 	    				getResources().getDimension(R.dimen.font_size));
 			
-	    	String typefaceName = attrs.getString(
+	    	final String typefaceName = attrs.getString(
 	    			R.styleable.ChartAttrs_chart_typeface);
 			if (typefaceName != null)
 				typeface = Typeface.createFromAsset(getResources().
@@ -1035,7 +1050,7 @@ public abstract class ChartView extends RelativeLayout{
 			gridPaint = null;
 			thresholdPaint = null;
 		}
-	    
+	
 	}
 	
 

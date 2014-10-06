@@ -1,7 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
     android:background="#eceff1">
     
@@ -9,8 +8,8 @@
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/linechart"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
+	    android:layout_height="150dp"
+	    android:layout_alignParentTop="true"
 	    android:paddingTop="15dp"
 	    android:paddingBottom="5dp"
 	    android:paddingLeft="10dp"
@@ -20,15 +19,15 @@
 	    chart:chart_shadowColor="#80000000"
 	    chart:chart_axisColor="@color/axis"
 	    chart:chart_typeface="Roboto-Regular.ttf"
-	    chart:chart_axisBorderSpacing="0dp"
-	/>
+	    chart:chart_axisBorderSpacing="0dp">
+	</com.db.chart.view.LineChartView>
 	
 	<com.db.chart.view.BarChartView
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/barchart"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
+	    android:layout_height="150dp"
+	    android:layout_below="@id/linechart"
 	    android:paddingTop="10dp"
 	    android:paddingBottom="5dp"
 	    android:paddingLeft="10dp"
@@ -41,8 +40,8 @@
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/stackbarchart"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
+	    android:layout_height="150dp"
+	    android:layout_below="@id/barchart"
 	    android:paddingTop="10dp"
 	    android:paddingBottom="10dp"
 	    android:paddingLeft="10dp"
@@ -56,10 +55,12 @@
 	<Button
    	    android:id="@+id/button"
    	    android:layout_width="match_parent"
-   	    android:layout_height="wrap_content"
+   	    android:layout_height="match_parent"
+   	    android:layout_below="@id/stackbarchart"
+   	    android:layout_alignParentBottom="true"
    	    android:text="PLAY ME"
    	    android:textSize="25dp"
    	    android:textColor="#ffffff"
    	    android:background="@drawable/button"/>
 	
-</LinearLayout>
+</RelativeLayout>

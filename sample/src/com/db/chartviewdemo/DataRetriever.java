@@ -67,11 +67,13 @@ public class DataRetriever {
 				return new Animation()
 					.setEasing(new QuintEaseOut())
 					.setOverlap(randValue(0.5f, 1f))
+					.setAlpha(randNumber(3,6))
 					.setEndAction(endAction);
 			case 1:
 				return new Animation()
 					.setEasing(new QuintEaseOut())
 					.setStartPoint(0f, 0f)
+					.setAlpha(randNumber(3,6))
 					.setEndAction(endAction);
 			case 2:
 				return new Animation()

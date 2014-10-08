@@ -32,29 +32,37 @@ import android.widget.TextView;
 import com.db.chartviewdemo.DataRetriever;
 
 public class MainActivity extends ActionBarActivity {
+
 	
-	
-	private final static float MAX = 10;
-	private final static float MIN = 1;
 	private final static String[] mLabels = {"ANT", "GNU", "OWL", "APE", "COD","YAK", "RAM", "JAY"};
+	private final TimeInterpolator enterInterpolator = new DecelerateInterpolator(1.5f);
+	private final TimeInterpolator exitInterpolator = new AccelerateInterpolator();
 	
-	
+	private final static float LINE_MAX = 10;
+	private final static float LINE_MIN = 1;
 	private static LineChartView mLineChart;
-	private static BarChartView mBarChart;
-	private static StackBarChartView mStackBarChart;
-	
-	private static Button mButton;
-	
-	
+	private TextView mLineTooltip;
 	private static int mCurrLineEntriesSize;
-	private static int mCurrBarEntriesSize;
-	private static int mCurrStackBarEntriesSize;
-	
 	private static int mCurrLineSetSize;
+
+	private final static float BAR_MAX = 10;
+	private final static float BAR_MIN = 2;
+	private static BarChartView mBarChart;
+	private TextView mBarTooltip;
+	private static int mCurrBarEntriesSize;
 	private static int mCurrBarSetSize;
+
+	private final static float STACKBAR_MAX = 10;
+	private final static float STACKBAR_MIN = 4.8f;
+	private static StackBarChartView mStackBarChart;
+	private TextView mStackBarTooltip;
+	private static int mCurrStackBarEntriesSize;
 	private static int mCurrStackBarSetSize;
 	
 	
+	private static Button mButton;
+
+
 	private static Runnable mEndAction = new Runnable() {
         @Override
         public void run() {
@@ -64,9 +72,7 @@ public class MainActivity extends ActionBarActivity {
 	};
 
 	
-	private TextView mTooltip;
-	private final TimeInterpolator enterInterpolator = new DecelerateInterpolator(1.5f);
-	private final TimeInterpolator exitInterpolator = new AccelerateInterpolator();
+
 	
 	
 	
@@ -86,9 +92,11 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				
 				mLineChart.dismissAllTooltips();
+				mLineTooltip = null;
 				mBarChart.dismissAllTooltips();
+				mBarTooltip = null;
 				mStackBarChart.dismissAllTooltips();
-				mTooltip = null;
+				mStackBarTooltip = null;
 				
 				mButton.setEnabled(false);
 				mButton.setText("I'M PLAYING...");
@@ -104,14 +112,14 @@ public class MainActivity extends ActionBarActivity {
 					case 2: 
 						if(newInstance)
 							updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
-								mCurrBarEntriesSize = DataRetriever.randNumber(4, 6));
+								mCurrBarEntriesSize = DataRetriever.randNumber(3, 4));
 						else
 							updateValues(mBarChart, mCurrBarSetSize, mCurrBarEntriesSize);
 						break;
 					case 3: 
 						if(newInstance)
 							updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 3), 
-								mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 7));
+								mCurrStackBarEntriesSize = DataRetriever.randNumber(3, 6));
 						else
 							updateValues(mStackBarChart, mCurrStackBarSetSize, mCurrStackBarEntriesSize);
 						updateIndex = 0;
@@ -130,9 +138,9 @@ public class MainActivity extends ActionBarActivity {
 		updateLineChart( mCurrLineSetSize = DataRetriever.randNumber(1, 3), 
 							mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
 		updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
-							mCurrBarEntriesSize = DataRetriever.randNumber(4, 6));
-		updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 4), 
-							mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 7));
+							mCurrBarEntriesSize = DataRetriever.randNumber(3, 4));
+		updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 3), 
+							mCurrStackBarEntriesSize = DataRetriever.randNumber(3, 6));
 		
 	}
 	
@@ -150,10 +158,10 @@ public class MainActivity extends ActionBarActivity {
 		final OnEntryClickListener lineEntryListener = new OnEntryClickListener(){
 			@Override
 			public void onClick(int setIndex, int entryIndex, Rect rect) {
-				if(mTooltip == null)
-					showLineTooltip(mLineChart, entryIndex, rect);
+				if(mLineTooltip == null)
+					showLineTooltip(entryIndex, rect);
 				else
-					dismissLineTooltip(mLineChart);
+					dismissLineTooltip(entryIndex, rect);
 			}
 		};
 		
@@ -161,8 +169,8 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				if(mTooltip != null)
-					dismissLineTooltip(mLineChart);
+				if(mLineTooltip != null)
+					dismissLineTooltip(-1, null);
 			}
 		};
 		
@@ -183,7 +191,7 @@ public class MainActivity extends ActionBarActivity {
 			
 			data = new LineSet();
 			for(int j = 0; j < nPoints; j++)
-				data.addPoint(new Point(mLabels[j], DataRetriever.randValue(MIN, MAX)));
+				data.addPoint(new Point(mLabels[j], DataRetriever.randValue(LINE_MIN, LINE_MAX)));
 
 			data.setDots(DataRetriever.randBoolean())
 				.setDotsColor(Color.parseColor(DataRetriever.getColor(DataRetriever.randNumber(0,2))))
@@ -221,23 +229,23 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 	@SuppressLint("NewApi")
-	private void showLineTooltip(ChartView chartView, int index, Rect rect){
+	private void showLineTooltip(int index, Rect rect){
 		
-		mTooltip = (TextView) getLayoutInflater().inflate(R.layout.circular_tooltip, null);
-		mTooltip.setText(mLabels[index]);
+		mLineTooltip = (TextView) getLayoutInflater().inflate(R.layout.circular_tooltip, null);
+		mLineTooltip.setText(mLabels[index]);
 		
         LayoutParams layoutParams = new LayoutParams((int)Tools.fromDpToPx(40), (int)Tools.fromDpToPx(40));
         layoutParams.leftMargin = rect.centerX() - layoutParams.width/2;
         layoutParams.topMargin = rect.centerY() - layoutParams.height/2;
-        mTooltip.setLayoutParams(layoutParams);
+        mLineTooltip.setLayoutParams(layoutParams);
         
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1){
-        	mTooltip.setPivotX(layoutParams.width/2);
-        	mTooltip.setPivotY(layoutParams.height/2);
-        	mTooltip.setAlpha(0);
-        	mTooltip.setScaleX(0);
-        	mTooltip.setScaleY(0);
-        	mTooltip.animate()
+        	mLineTooltip.setPivotX(layoutParams.width/2);
+        	mLineTooltip.setPivotY(layoutParams.height/2);
+        	mLineTooltip.setAlpha(0);
+        	mLineTooltip.setScaleX(0);
+        	mLineTooltip.setScaleY(0);
+        	mLineTooltip.animate()
 	        	.setDuration(150)
 	        	.alpha(1)
 	        	.scaleX(1).scaleY(1)
@@ -245,16 +253,16 @@ public class MainActivity extends ActionBarActivity {
 	        	.setInterpolator(enterInterpolator);
         }
         
-        chartView.showTooltip(mTooltip);
+        mLineChart.showTooltip(mLineTooltip);
 	}
 	
 	
-
+	
 	@SuppressLint("NewApi")
-	private void dismissLineTooltip(final ChartView chartView){
+	private void dismissLineTooltip(final int index, final Rect rect){
 		
 		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
-			mTooltip.animate()
+			mLineTooltip.animate()
 			.setDuration(100)
 	    	.scaleX(0).scaleY(0)
 	    	.alpha(0)
@@ -262,15 +270,20 @@ public class MainActivity extends ActionBarActivity {
 	    	.setInterpolator(exitInterpolator).withEndAction(new Runnable(){
 				@Override
 				public void run() {
-					chartView.removeView(mTooltip);
-					mTooltip = null;
+					mLineChart.removeView(mLineTooltip);
+					mLineTooltip = null;
+					if(index != -1)
+						showLineTooltip(index, rect);
 				}
 	    	});
 		}else{
-			chartView.dismissTooltip(mTooltip);
-			mTooltip = null;
+			mLineChart.dismissTooltip(mLineTooltip);
+			mLineTooltip = null;
+			if(index != -1)
+				showLineTooltip(index, rect);
 		}
 	}
+	
 	
 	
 	
@@ -287,10 +300,10 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(int setIndex, int entryIndex, Rect rect) {
 				
-				if(mTooltip == null)
-					showBarTooltip(mBarChart, entryIndex, rect);
+				if(mBarTooltip == null)
+					showBarTooltip(entryIndex, rect);
 				else
-					dismissBarTooltip(mBarChart);
+					dismissBarTooltip(entryIndex, rect);
 			}
 		};
 		
@@ -298,8 +311,8 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				if(mTooltip != null)
-					dismissBarTooltip(mBarChart);
+				if(mBarTooltip != null)
+					dismissBarTooltip(-1, null);
 			}
 		};
 		
@@ -321,7 +334,7 @@ public class MainActivity extends ActionBarActivity {
 			data = new BarSet();
 			for(int j = 0; j <nPoints; j++){
 				
-				bar = new Bar(mLabels[j], DataRetriever.randValue(MIN, MAX));
+				bar = new Bar(mLabels[j], DataRetriever.randValue(BAR_MIN, BAR_MAX));
 				//bar.setColor(Color.parseColor(getColor(j)));
 				data.addBar(bar);
 			}
@@ -343,12 +356,62 @@ public class MainActivity extends ActionBarActivity {
 			.setAxisX(DataRetriever.randBoolean())
 			//.setThresholdLine(2, randPaint())
 			.setLabels(YController.NONE)
-			.setMaxAxisValue(10, 2)
+			.setMaxAxisValue((int)BAR_MAX, 2)
 			.animate(DataRetriever.randAnimation(mEndAction))
 			//.show()
 			;	
 	}
 	
+	
+	@SuppressLint("NewApi")
+	private void showBarTooltip(int index, Rect rect){
+
+		mBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.tooltip, null);
+		mBarTooltip.setText(""+mLabels[index].charAt(0));
+		
+		LayoutParams layoutParams = new LayoutParams(rect.width(), rect.height());	
+		layoutParams.leftMargin = rect.left;
+		layoutParams.topMargin = rect.top;
+		mBarTooltip.setLayoutParams(layoutParams);
+        
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1){
+        	mBarTooltip.setAlpha(0);
+        	mBarTooltip.setScaleY(0);
+        	mBarTooltip.animate()
+	        	.setDuration(200)
+	        	.alpha(1)
+	        	.scaleY(1)
+	        	.setInterpolator(enterInterpolator);
+        }
+        
+        mBarChart.showTooltip(mBarTooltip);
+	}
+	
+
+	@SuppressLint("NewApi")
+	private void dismissBarTooltip(final int index, final Rect rect){
+		
+		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+			mBarTooltip.animate()
+			.setDuration(100)
+	    	.scaleY(0)
+	    	.alpha(0)
+	    	.setInterpolator(exitInterpolator).withEndAction(new Runnable(){
+				@Override
+				public void run() {
+					mBarChart.removeView(mBarTooltip);
+					mBarTooltip = null;
+					if(index != -1)
+						showBarTooltip(index, rect);
+				}
+	    	});
+		}else{
+			mBarChart.dismissTooltip(mBarTooltip);
+			mBarTooltip = null;
+			if(index != -1)
+				showBarTooltip(index, rect);
+		}
+	}
 	
 	
 	
@@ -365,10 +428,10 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(int setIndex, int entryIndex, Rect rect) {
 				
-				if(mTooltip == null)
-					showBarTooltip(mStackBarChart, entryIndex, rect);
+				if(mStackBarTooltip == null)
+					showStackBarTooltip(entryIndex, rect);
 				else
-					dismissBarTooltip(mStackBarChart);
+					dismissStackBarTooltip(entryIndex, rect);
 			}
 		};
 		
@@ -376,8 +439,8 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				if(mTooltip != null)
-					dismissBarTooltip(mStackBarChart);
+				if(mStackBarTooltip != null)
+					dismissStackBarTooltip(-1, null);
 			}
 		};
 		
@@ -386,7 +449,6 @@ public class MainActivity extends ActionBarActivity {
 		mStackBarChart.setOnEntryClickListener(stackBarEntryListener);
 		mStackBarChart.setOnClickListener(stackBarClickListener);
 	}
-	
 	
 	
 	public void updateStackBarChart(int nSets, int nPoints){
@@ -399,7 +461,7 @@ public class MainActivity extends ActionBarActivity {
 			
 			data = new BarSet();
 			for(int j = 0; j <nPoints; j++){
-				bar = new Bar(mLabels[j], DataRetriever.randValue(MIN, MAX));
+				bar = new Bar(mLabels[j], DataRetriever.randValue(STACKBAR_MIN, STACKBAR_MAX));
 				data.addBar(bar);
 			}
 			
@@ -427,56 +489,57 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 	
-	
 	@SuppressLint("NewApi")
-	private void showBarTooltip(ChartView chartView, int index, Rect rect){
+	private void showStackBarTooltip(int index, Rect rect){
 		
-		mTooltip = (TextView) getLayoutInflater().inflate(R.layout.tooltip, null);
-		mTooltip.setText(mLabels[index]);
+		mStackBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.tooltip, null);
+		mStackBarTooltip.setText(""+mLabels[index].charAt(0));
 		
-		LayoutParams layoutParams = new LayoutParams((int)Tools.fromDpToPx(50), (int)Tools.fromDpToPx(20));	
-		layoutParams.leftMargin = rect.centerX();
-		layoutParams.topMargin = rect.centerY();
-		mTooltip.setLayoutParams(layoutParams);
+		LayoutParams layoutParams = new LayoutParams(rect.width(), rect.height());	
+		layoutParams.leftMargin = rect.left;
+		layoutParams.topMargin = rect.top;
+		mStackBarTooltip.setLayoutParams(layoutParams);
         
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1){
-        	mTooltip.setPivotX(0);
-        	mTooltip.setPivotY(layoutParams.height/2);
-        	mTooltip.setRotation(-90);
-        	mTooltip.setAlpha(0);
-        	mTooltip.setScaleX(0);
-        	mTooltip.animate()
-	        	.setDuration(150)
+        	mStackBarTooltip.setPivotX(0);
+        	mStackBarTooltip.setAlpha(0);
+        	mStackBarTooltip.setScaleX(0);
+        	mStackBarTooltip.animate()
+	        	.setDuration(200)
 	        	.alpha(1)
 	        	.scaleX(1)
-	        	.translationX(0)
 	        	.setInterpolator(enterInterpolator);
         }
         
-        chartView.showTooltip(mTooltip, false);
+        mStackBarChart.showTooltip(mStackBarTooltip);
 	}
 	
 
 	@SuppressLint("NewApi")
-	private void dismissBarTooltip(final ChartView chartView){
+	private void dismissStackBarTooltip(final int index, final Rect rect){
 		
 		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
-			mTooltip.animate()
+			mStackBarTooltip.animate()
 			.setDuration(100)
 	    	.scaleX(0)
 	    	.alpha(0)
 	    	.setInterpolator(exitInterpolator).withEndAction(new Runnable(){
 				@Override
 				public void run() {
-					chartView.removeView(mTooltip);
-					mTooltip = null;
+					mStackBarChart.removeView(mStackBarTooltip);
+					mStackBarTooltip = null;
+					if(index != -1)
+						showStackBarTooltip(index, rect);
 				}
 	    	});
 		}else{
-			chartView.dismissTooltip(mTooltip);
-			mTooltip = null;
+			mStackBarChart.dismissTooltip(mStackBarTooltip);
+			mStackBarTooltip = null;
+			if(index != -1)
+				showStackBarTooltip(index, rect);
 		}
 	}
+
 	
 	
 	
@@ -489,7 +552,7 @@ public class MainActivity extends ActionBarActivity {
 			
 			newValues = new float[entriesSize];
 			for(int j = 0; j < entriesSize; j++)
-				newValues[j] = DataRetriever.randValue(MIN, MAX);
+				newValues[j] = DataRetriever.randValue(STACKBAR_MIN, STACKBAR_MAX);
 			
 			chartView.updateValues(i, newValues);
 		}

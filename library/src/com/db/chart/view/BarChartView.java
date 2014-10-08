@@ -26,6 +26,7 @@ import com.db.chart.model.ChartSet;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Region;
@@ -99,12 +100,10 @@ public class BarChartView extends ChartView {
 		BarSet barSet;
 		Bar bar;
 		
-		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
 			// Set first offset to draw a group of bars
 			drawingOffset = data.get(0).getEntry(i).getX() - mDrawingOffset;
-			
 			
 			for(int j = 0; j < data.size(); j++){
 				
@@ -112,11 +111,11 @@ public class BarChartView extends ChartView {
 				bar = (Bar) barSet.getEntry(i);
 				
 				// If entry value is 0 it won't be drawn
-				if(bar.getValue() == 0)
+				if(bar.getValue() <= 0)
 					continue;
 
-				style.barPaint.setColor(barSet.getColor());
 				style.barPaint.setColor(bar.getColor());
+				handleAlpha(style.barPaint, barSet.getAlpha());
 				
 				// If bar needs background
 				if(style.hasBarBackground)
@@ -136,16 +135,15 @@ public class BarChartView extends ChartView {
 				// If last bar of group no set spacing is necessary
 				if(j != data.size()-1)
 					drawingOffset += style.mSetSpacing;
-			}	
-			
+			}		
 		}
-		
 	}
 	
 	
 	
 	
 	protected void drawBarBackground(Canvas canvas, float horizontalOffset) {
+		
 		canvas.drawRoundRect(new RectF((int) horizontalOffset, 
 				(int) this.innerchartTop, 
 					(int) (horizontalOffset + barWidth),
@@ -178,11 +176,11 @@ public class BarChartView extends ChartView {
 	 * @param n - Number of sets
 	 */
 	private void calculatePositionOffset(int n){
-		if(n % 2 == 0){
+		
+		if(n % 2 == 0)
 			mDrawingOffset = n*barWidth/2 + (n-1)*(style.mSetSpacing/2);
-		}else{
+		else
 			mDrawingOffset = n*barWidth/2 + ((n-1)/2)*style.mSetSpacing;
-		}
 	}
 	
 	
@@ -224,7 +222,6 @@ public class BarChartView extends ChartView {
 		BarSet barSet;
 		Bar bar;
 		
-		
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
 			// Set first offset to draw a group of bars
@@ -253,7 +250,25 @@ public class BarChartView extends ChartView {
 	
 	
 	
-	/*
+    protected void handleAlpha(Paint paint, float alpha){
+    	
+		paint.setAlpha((int)(alpha * 255));
+		paint.setShadowLayer(
+				style.mShadowRadius, 
+					style.mShadowDx, 
+						style.mShadowDy, 
+							Color.argb(((int)(alpha * 255) < style.mAlpha) 
+							? (int)(alpha * 255) 
+							: style.mAlpha, 
+								style.mRed, 
+									style.mGreen, 
+										style.mBlue));	
+    }
+	
+	
+	
+	
+    /*
 	 * --------
 	 * Setters
 	 * --------
@@ -315,7 +330,7 @@ public class BarChartView extends ChartView {
 	public class Style{
 		
 		
-		private int DEFAULT_COLOR = -16777216;
+		private static final int DEFAULT_COLOR = -16777216;
 		
 		
 		/** Bars fill variables */
@@ -344,6 +359,12 @@ public class BarChartView extends ChartView {
 		private final int mShadowColor;
 		
 		
+		/** Shadow color */
+		private int mAlpha;
+		private int mRed;
+		private int mBlue;
+		private int mGreen;
+		
 		
 	    protected Style() {
 	    	
@@ -353,9 +374,9 @@ public class BarChartView extends ChartView {
 	    	barSpacing = (float) getResources().getDimension(R.dimen.bar_spacing);
 	    	mSetSpacing = (float) getResources().getDimension(R.dimen.set_spacing);
 	    	
-	    	mShadowRadius = getResources().getDimension(R.dimen.shadow_radius);
-	    	mShadowDx = getResources().getDimension(R.dimen.shadow_dx);
-	    	mShadowDy = getResources().getDimension(R.dimen.shadow_dy);
+	    	mShadowRadius = 0;
+	    	mShadowDx = 0;
+	    	mShadowDy = 0;
 	    	mShadowColor = DEFAULT_COLOR;
 	    }
 	    
@@ -373,14 +394,11 @@ public class BarChartView extends ChartView {
 	    				getResources().getDimension(R.dimen.set_spacing));
 	    	
 	    	mShadowRadius = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowRadius, 
-	    				getResources().getDimension(R.dimen.shadow_radius));
+	    			R.styleable.ChartAttrs_chart_shadowRadius, 0);
 	    	mShadowDx = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowDx, 
-	    				getResources().getDimension(R.dimen.shadow_dx));
+	    			R.styleable.ChartAttrs_chart_shadowDx, 0);
 	    	mShadowDy = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowDy, 
-	    				getResources().getDimension(R.dimen.shadow_dy));
+	    			R.styleable.ChartAttrs_chart_shadowDy, 0);
 	    	mShadowColor = attrs.getColor(
 	    			R.styleable.ChartAttrs_chart_shadowColor, 0);
 	    }	
@@ -389,6 +407,12 @@ public class BarChartView extends ChartView {
 	    
 		private void init(){
 	    	
+			mAlpha = Color.alpha(mShadowColor);
+			mRed = Color.red(mShadowColor);
+			mBlue = Color.blue(mShadowColor);
+			mGreen = Color.green(mShadowColor);
+			
+			
 	    	barPaint = new Paint();
 	    	barPaint.setStyle(Paint.Style.FILL);
 	    	barPaint.setShadowLayer(mShadowRadius, mShadowDx, 

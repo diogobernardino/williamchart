@@ -2,15 +2,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:background="#eceff1">
     
 	<com.db.chart.view.LineChartView
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/linechart"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
+	    android:layout_height="0dp"
+	    android:layout_weight=".30"
 	    android:paddingTop="15dp"
 	    android:paddingBottom="5dp"
 	    android:paddingLeft="10dp"
@@ -20,15 +19,15 @@
 	    chart:chart_shadowColor="#80000000"
 	    chart:chart_axisColor="@color/axis"
 	    chart:chart_typeface="Roboto-Regular.ttf"
-	    chart:chart_axisBorderSpacing="0dp"
-	/>
+	    chart:chart_axisBorderSpacing="0dp">
+	</com.db.chart.view.LineChartView>
 	
 	<com.db.chart.view.BarChartView
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/barchart"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
+	    android:layout_height="0dp"
+	    android:layout_weight=".30"
 	    android:paddingTop="10dp"
 	    android:paddingBottom="5dp"
 	    android:paddingLeft="10dp"
@@ -41,8 +40,8 @@
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
 		android:id="@+id/stackbarchart"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_weight="1"
+	    android:layout_height="0dp"
+	    android:layout_weight=".30"
 	    android:paddingTop="10dp"
 	    android:paddingBottom="10dp"
 	    android:paddingLeft="10dp"
@@ -56,7 +55,8 @@
 	<Button
    	    android:id="@+id/button"
    	    android:layout_width="match_parent"
-   	    android:layout_height="wrap_content"
+   	    android:layout_height="0dp"
+   	    android:layout_weight=".10"
    	    android:text="PLAY ME"
    	    android:textSize="25dp"
    	    android:textColor="#ffffff"

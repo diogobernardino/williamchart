@@ -26,22 +26,23 @@ import com.db.chart.exception.ChartException;
  */
 public class LineSet extends ChartSet{
 
-	private static final String TAG = "com.db.chart.model.ChartSet";
+	
+	private static final String TAG = "com.db.chart.model.LineChartSet";
 
 	
-	/** default style */
+	/** Defaults */
 	private static final float LINE_THICKNESS = 4;
 	private static final float DOTS_THICKNESS = 4;
 	private static final float DOTS_RADIUS = 1;
 	private static final int DEFAULT_COLOR = -16777216;
 	
 	
-	/** line variables */
+	/** Line variables */
 	private float mLineThickness;
 	private int mLineColor;
 
 	
-	/** dot variables */
+	/** Dot variables */
 	private boolean mHasDots;
 	private int mDotsColor;
 	private float mDotsRadius;
@@ -50,13 +51,20 @@ public class LineSet extends ChartSet{
 	private int mDotsStrokeColor;
 	
 	
-	/** line type */
+	/** Line type */
 	private boolean mIsDashed;
 	private boolean mIsSmooth;
 	
-	/** background fill variables */
+	
+	/** Background fill variables */
 	private boolean mHasFill;
 	private int mFillColor;
+	
+	
+	/** Gradient background fill variables */
+	private boolean mHasGradientFill;
+	private int[] mGradientColors;
+	private float[] mGradientPositions;
 	
 	
 	
@@ -81,6 +89,9 @@ public class LineSet extends ChartSet{
 		mHasFill = false;
 		mFillColor = DEFAULT_COLOR;
 		
+		mHasGradientFill = false;
+		mGradientColors = null;
+		mGradientPositions = null;
 	}
 
 	
@@ -118,8 +129,9 @@ public class LineSet extends ChartSet{
 	
 	
 	/*
-	 *Getters
-	 *
+	 * --------
+	 * Getters
+	 * --------
 	 */
 	
 	
@@ -158,15 +170,31 @@ public class LineSet extends ChartSet{
 	}
 	
 	
+	public int[] getGradientColors(){
+		return mGradientColors;
+	}
+	
+	
+	public float[] getGradientPositions(){
+		return mGradientPositions;
+	}
+	
+	
 	public boolean hasFill() {
 		return mHasFill;
 	}
 	
 	
+	public boolean hasGradientFill(){
+		return mHasGradientFill;
+	}
+	
+	
 	
 	/*
+	 * --------
 	 * Setters
-	 * 
+	 * --------
 	 */
 
 	
@@ -221,6 +249,7 @@ public class LineSet extends ChartSet{
 		mDotsRadius = radius;
 		return this;
 	}
+	
 
 	/**
 	 * @param thickness - grid thickness. Can't be equal or less than 0.
@@ -257,8 +286,22 @@ public class LineSet extends ChartSet{
 	}
 	
 	
-	public LineSet setFillColor(int color){
+	public LineSet setFill(int color){
+		mHasFill = true;
 		mFillColor = color;
+		return this;
+	}
+	
+	
+	/**
+	 * @param colors - The colors to be distributed among gradient
+	 * @param positions - 
+	 * @return
+	 */
+	public LineSet setGradientFill(int colors[], float[] positions){
+		mHasGradientFill = true;
+		mGradientColors = colors;
+		mGradientPositions = positions;
 		return this;
 	}
 	

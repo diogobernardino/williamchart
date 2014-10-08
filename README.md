@@ -82,14 +82,18 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
 ```
 
 ```java
-    chart.setLabels(boolean)
+    // Customize labels
+    chart.setLabels(NONE/OUTSIDE/INSIDE)
     chart.setLabelColor(color)
     chart.setFontSize(integer)
     chart.setTypeface(typeface)
     
+    // Define grid
     chart.setGrid(paint)
     chart.setHorizontalGrid(paint)
     chart.setVerticalGrid(paint)
+    
+    // Show threshold line
     chart.setThresholdLine(float, paint)
 
     chart.setMaxAxisValue(integer, integer)
@@ -100,8 +104,14 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
 
     chart.show()
     
+    // Update values of a given set
     chart.updateValues(int, array)
+    // Notify chart about updated values
     chart.notifyDataUpdate()
+
+    // Tooltip support
+    chart.showTooltip(view)
+    chart.dismissTooltip(view)
 ```
 
 
@@ -178,7 +188,7 @@ Listener
 ```java
     chart.setOnEntryClickListener(new OnEntryClickListener(){
         @Override
-        public void onClick(int setIndex, int entryIndex) {
+        public void onClick(int setIndex, int entryIndex, Rect entryRect) {
             //Do things
         }
     });
@@ -199,6 +209,8 @@ Animation
     anim.setOverlap(float)
     // Animation starting point
     anim.setStartPoint(float, float)
+    // Include alpha transition
+    anim.setAlpha(int)
     
     // Starts animation
     chart.animate(animation)

@@ -22,6 +22,7 @@ package com.db.chart.model;
  */
 public class Bar extends ChartEntry{
 
+	
 	/** Default bar color */
 	private static final int DEFAULT_COLOR = -16777216;
 	
@@ -37,22 +38,26 @@ public class Bar extends ChartEntry{
 	}
 
 	
-	/*
-	 * Getters
-	 * 
-	 */
 	
+	
+	/*
+	 * --------
+	 * Getters
+	 * --------
+	 */
 	
 	public int getColor() {
 		return mColor;
 	}
 
 	
-	/*
-	 * Setters
-	 * 
-	 */
 	
+	
+	/*
+	 * --------
+	 * Setters
+	 * --------
+	 */
 	
 	public void setColor(int mColor) {
 		this.mColor = mColor;

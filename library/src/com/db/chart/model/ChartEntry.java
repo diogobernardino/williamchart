@@ -43,8 +43,9 @@ public class ChartEntry {
 	
 	
 	/*
+	 * --------
 	 * Getters
-	 * 
+	 * --------
 	 */
 	
 	
@@ -67,14 +68,20 @@ public class ChartEntry {
 		return mY;
 	}
 
+	
 
 	
 	/*
+	 * --------
 	 * Setters
-	 * 
+	 * --------
 	 */
 	
 	
+	/**
+	 * Set new entry value.
+	 * @param value - new value
+	 */
 	public void setValue(float value){
 		mValue = value;
 	}
@@ -92,10 +99,8 @@ public class ChartEntry {
 
 	
 	public String toString(){
-		return "Label="+mLabel+" \n" +
-				"Value="+mValue+"\n" +
-				"X = "+mX+"\n" +
-				"Y = "+mY;
+		return "Label="+mLabel+" \n" + "Value="+mValue+"\n" +
+				"X = "+mX+"\n" + "Y = "+mY;
 	}
 		
 }

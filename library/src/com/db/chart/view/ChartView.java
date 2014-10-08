@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -37,12 +38,13 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver.OnPreDrawListener;
+import android.widget.RelativeLayout;
 
 
 /**
  * Abstract class to be extend to define any chart that implies axis.
  */
-public abstract class ChartView extends View{
+public abstract class ChartView extends RelativeLayout{
 	
 	
 	private static final String TAG = "com.db.chart.view.ChartView";
@@ -110,6 +112,9 @@ public abstract class ChartView extends View{
 	private ArrayList<Pair<Integer, float []>> toUpdateValues;
 	
 	
+	private View mEntryView;
+	
+	
 	/**
 	 * Executed only before the chart is drawn for the first time.
 	 * . borders are defined
@@ -152,10 +157,8 @@ public abstract class ChartView extends View{
 			
 			// Prepares the animation if needed and gets the first dump 
 			// of data to be drawn
-			if(mAnim != null){
-				data = mAnim.prepareEnter(ChartView.this,
-											data);
-			}
+			if(mAnim != null)
+				data = mAnim.prepareEnter(ChartView.this, data);
 			
 			if (android.os.Build.VERSION.SDK_INT >= 
 					android.os.Build.VERSION_CODES.HONEYCOMB)
@@ -163,7 +166,6 @@ public abstract class ChartView extends View{
 				
 			return mReadyToDraw = true;
 		}
-		
 	};
 	
 	
@@ -246,6 +248,7 @@ public abstract class ChartView extends View{
 	 * Convert chart points into screen points.
 	 */
 	private void digestData() {
+		
 		for(ChartSet set: data){
 			for (int i = 0; i < set.size(); i++){
 				set.getEntry(i)
@@ -341,6 +344,7 @@ public abstract class ChartView extends View{
 	 * Resets chart state to insert new configuration.
 	 */
 	public void reset(){
+		
 		data.clear();
 		mRegions.clear();
 		toUpdateValues.clear();
@@ -376,10 +380,11 @@ public abstract class ChartView extends View{
 	 */
 	public void notifyDataUpdate(){
 
-		ArrayList<float []> oldValues = new ArrayList<float[]>(data.size());
-		ArrayList<float []> xValues = new ArrayList<float[]>(data.size());
+		final ArrayList<float []> oldValues = new ArrayList<float[]>(data.size());
+		final ArrayList<float []> xValues = new ArrayList<float[]>(data.size());
 		for(int i = 0; i < toUpdateValues.size(); i++){
-			oldValues.add(data.get(toUpdateValues.get(i).first).updateValues(toUpdateValues.get(i).second));
+			oldValues.add(data.get(toUpdateValues.get(i).first)
+									.updateValues(toUpdateValues.get(i).second));
 			xValues.add(data.get(i).getXCoordinates());
 		}
 		
@@ -393,6 +398,63 @@ public abstract class ChartView extends View{
 		toUpdateValues.clear();
 		
 		invalidate();
+	}
+	
+	
+	
+	/**
+	 * Adds a tooltip to ChartView. If is not the case already, 
+	 * the whole tooltip is forced to be inside ChartView bounds.
+	 * @param tooltip - tooltip view to be added.
+	 * @param boolean - false if the tooltip should not be forced to be inside 
+	 * ChartView. You may want to take care of it.
+	 */
+	public void showTooltip(View tooltip, boolean bool){
+		
+		if(bool){
+			final LayoutParams layoutParams = (LayoutParams) tooltip.getLayoutParams();
+			
+			if(layoutParams.leftMargin < chartLeft - getPaddingLeft())
+				layoutParams.leftMargin = (int) chartLeft - getPaddingLeft();
+			if(layoutParams.topMargin < chartTop - getPaddingTop())
+				layoutParams.topMargin = (int) chartTop - getPaddingTop();
+			if(layoutParams.leftMargin + layoutParams.width 
+					> chartRight - getPaddingRight())
+				layoutParams.leftMargin -= layoutParams.width 
+						- (chartRight - getPaddingRight() - layoutParams.leftMargin);
+			if(layoutParams.topMargin + layoutParams.height 
+					> getInnerChartBottom() - getPaddingBottom())
+				layoutParams.topMargin -= layoutParams.height 
+						- (getInnerChartBottom() - getPaddingBottom() - layoutParams.topMargin);
+			
+			tooltip.setLayoutParams(layoutParams);
+		}
+		
+		this.addView(tooltip);
+	}
+	
+	
+	/**
+	 * Adds a tooltip to ChartView. If is not the case already, 
+	 * the whole tooltip is forced to be inside ChartView bounds.
+	 * @param tooltip - tooltip view to be added.
+	 */
+	public void showTooltip(View tooltip){
+		showTooltip(tooltip, true);
+	}
+	
+	
+	/**
+	 * Removes tooltip from ChartView.
+	 * @param tooltip - view to be removed.
+	 */
+	public void dismissTooltip(View tooltip){
+		this.removeView(tooltip);
+	}
+	
+
+	public void dismissAllTooltips(){
+		this.removeAllViews();
 	}
 	
 	
@@ -443,6 +505,7 @@ public abstract class ChartView extends View{
 				drawThresholdLine(canvas);
 			
 		}
+		
 		//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
 		mIsDrawing = false;
 	}
@@ -463,11 +526,10 @@ public abstract class ChartView extends View{
 	private void drawVerticalGrid(Canvas canvas){
 		
 		// Draw vertical grid lines
-		final ArrayList<Float> horPositions = horController.labelsPos;
-		for(int i = 0; i < horPositions.size(); i++){
-			canvas.drawLine(horPositions.get(i), 
+		for(int i = 0; i < horController.labelsPos.size(); i++){
+			canvas.drawLine(horController.labelsPos.get(i), 
 								innerchartBottom, 
-									horPositions.get(i), 
+									horController.labelsPos.get(i), 
 										innerchartTop, 
 											style.gridPaint);
 		}
@@ -486,7 +548,6 @@ public abstract class ChartView extends View{
 										innerchartTop, 
 											style.gridPaint);
 		}
-			
 	}
 	
 	
@@ -494,12 +555,11 @@ public abstract class ChartView extends View{
 	private void drawHorizontalGrid(Canvas canvas){
 		
 		// Draw horizontal grid lines
-		final ArrayList<Float> verPositions = verController.labelsPos;
-		for(int i = 0; i < verPositions.size(); i++){
+		for(int i = 0; i < verController.labelsPos.size(); i++){
 			canvas.drawLine(innerchartLeft, 
-								verPositions.get(i), 
+								verController.labelsPos.get(i), 
 									innerchartRight,
-										verPositions.get(i), 
+										verController.labelsPos.get(i), 
 											style.gridPaint);
 		}
 		
@@ -530,12 +590,17 @@ public abstract class ChartView extends View{
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		
 		if(mAnim == null || !mAnim.isPlaying())
-			if(event.getAction() == MotionEvent.ACTION_DOWN){
-				if(mEntryListener != null && mRegions != null){
+			
+			if(event.getAction() == MotionEvent.ACTION_DOWN &&
+					mEntryListener != null && mRegions != null){
+				
 					 //Check if ACTION_DOWN over any ScreenPoint region.
 						for(int i = 0; i < mRegions.size() ; i++){
+							
 							for(int j = 0; j < mRegions.get(i).size(); j++){
+								
 								if(mRegions.get(i).get(j)
 										.contains((int) event.getX(), 
 													(int) event.getY())){
@@ -544,21 +609,29 @@ public abstract class ChartView extends View{
 								}
 							}
 						}
-				}
+			
 				
 			}else if(event.getAction() == MotionEvent.ACTION_UP){
-				
-				if(mChartListener != null)
-					mChartListener.onClick(this);
+	
 				if(mEntryListener != null && 
 						mSetClicked != -1 && 
 							mIndexClicked != -1 &&
 								mRegions.get(mSetClicked).get(mIndexClicked)
 								.contains((int)event.getX(), 
 											(int)event.getY())){
-					mEntryListener.onClick(mSetClicked, mIndexClicked);
+					
+					mEntryListener.onClick(mSetClicked, 
+								mIndexClicked, 
+									new Rect(mRegions.get(mSetClicked).get(mIndexClicked).getBounds().left - getPaddingLeft(),
+											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().top - getPaddingTop(),
+											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().right - getPaddingLeft(),
+											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().bottom - getPaddingTop()));
+				
+				}else if(mChartListener != null){
+					mChartListener.onClick(this);
 				}
 			}
+		
 		return true;
 	}
 	
@@ -648,8 +721,13 @@ public abstract class ChartView extends View{
 	 * Show/Hide Y labels and respective axis
 	 * @param bool - if false Y label and axis won't be visible
 	 */
-	public ChartView setLabels(boolean bool){
-		verController.hasLabels = bool;
+	public ChartView setLabels(int position){
+
+		if(position == YController.NONE)
+			verController.hasLabels = false;
+		else
+			style.labelPosition = position;
+
 		return this;
 	}
 	
@@ -726,7 +804,8 @@ public abstract class ChartView extends View{
 	 * Register a listener to be called when the chart is clicked.
 	 * @param listener
 	 */
-	public void setOnChartClickListener(OnClickListener listener){
+	@Override
+	public void setOnClickListener(OnClickListener listener){
 		this.mChartListener = listener;
 	}
 	
@@ -829,6 +908,7 @@ public abstract class ChartView extends View{
 			style.hasVerticalGrid = false;
 		}
 		style.gridPaint = paint;
+		
 		return this;
 	}
 	
@@ -854,6 +934,11 @@ public abstract class ChartView extends View{
 	}
 	
 	
+	public ChartView setEntryBehaviour(View view){
+		mEntryView = view;
+		return this;
+	}
+	
 	
 	
 	
@@ -870,7 +955,7 @@ public abstract class ChartView extends View{
 	 */
 	class Style {
 		
-		private int DEFAULT_COLOR = -16777216;
+		private final static int DEFAULT_COLOR = -16777216;
 		
 		
 		/** Chart */
@@ -895,7 +980,7 @@ public abstract class ChartView extends View{
 		protected int labelColor;
 		protected float fontSize;
 		protected Typeface typeface;
-		
+		protected int labelPosition;
 		
 		
 		protected Style() {
@@ -909,6 +994,7 @@ public abstract class ChartView extends View{
 			
 			labelColor = DEFAULT_COLOR;
 			fontSize = getResources().getDimension(R.dimen.font_size);
+			labelPosition = YController.OUTSIDE;
 		}
 
 		
@@ -931,11 +1017,12 @@ public abstract class ChartView extends View{
 	    			R.styleable.ChartAttrs_chart_fontSize, 
 	    				getResources().getDimension(R.dimen.font_size));
 			
-	    	String typefaceName = attrs.getString(
+	    	final String typefaceName = attrs.getString(
 	    			R.styleable.ChartAttrs_chart_typeface);
 			if (typefaceName != null)
 				typeface = Typeface.createFromAsset(getResources().
 												getAssets(), typefaceName);
+			labelPosition = YController.OUTSIDE;
 		}
 		
 		
@@ -963,7 +1050,7 @@ public abstract class ChartView extends View{
 			gridPaint = null;
 			thresholdPaint = null;
 		}
-	    
+	
 	}
 	
 

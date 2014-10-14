@@ -184,6 +184,8 @@ Animation
     
     // Animation overlap between entries
     anim.setOverlap(float)
+    // Animation overlap between entries in a specific order
+    anim.setOverlap(float,int[])
     // Animation starting point
     anim.setStartPoint(float, float)
     // Include alpha transition

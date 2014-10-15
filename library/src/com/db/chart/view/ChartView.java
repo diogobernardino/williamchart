@@ -612,21 +612,22 @@ public abstract class ChartView extends RelativeLayout{
 			
 				
 			}else if(event.getAction() == MotionEvent.ACTION_UP){
-	
 				if(mEntryListener != null && 
 						mSetClicked != -1 && 
-							mIndexClicked != -1 &&
-								mRegions.get(mSetClicked).get(mIndexClicked)
+							mIndexClicked != -1){
+					if(mRegions.get(mSetClicked).get(mIndexClicked)
 								.contains((int)event.getX(), 
 											(int)event.getY())){
 					
-					mEntryListener.onClick(mSetClicked, 
+						mEntryListener.onClick(mSetClicked, 
 								mIndexClicked, 
 									new Rect(mRegions.get(mSetClicked).get(mIndexClicked).getBounds().left - getPaddingLeft(),
 											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().top - getPaddingTop(),
 											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().right - getPaddingLeft(),
 											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().bottom - getPaddingTop()));
-				
+					}
+					mSetClicked = -1;
+					mIndexClicked = -1;
 				}else if(mChartListener != null){
 					mChartListener.onClick(this);
 				}

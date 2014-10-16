@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.util.Log;
 
@@ -279,17 +278,16 @@ public class YController{
 			for(int i = 0; i < mLabels.size(); i++){
 				canvas.drawText(Integer.toString(mLabels.get(i)), 
 									mAxisHorPosition - mChartView.style.axisThickness/2 - mDistLabelToAxis, 
-										(float) labelsPos.get(i) + mChartView.style.getTextBounds().height()/2, 
+										(float) labelsPos.get(i) + mChartView.style.getTextHeightBounds("0")/2, 
 											mChartView.style.labelPaint);
 			}
-			mChartView.style.chartPaint.setColor(Color.GREEN);
+
 			// Draw axis line
 			canvas.drawLine(mAxisHorPosition, 
 								mChartView.chartTop, 
 									mAxisHorPosition, 
 										mChartView.horController.getAxisVerticalPosition() + mChartView.style.axisThickness/2, 
 											mChartView.style.chartPaint);
-			mChartView.style.chartPaint.setColor(Color.RED);
 		}
 	}
 

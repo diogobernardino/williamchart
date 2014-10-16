@@ -191,7 +191,7 @@ class XController{
 	
 	protected float getAxisVerticalPosition(){
 		return mChartView.chartBottom 
-					- mChartView.style.getTextBounds().height() 
+					- mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(0))
 						- mDistLabelToAxis; 
 	}
 	

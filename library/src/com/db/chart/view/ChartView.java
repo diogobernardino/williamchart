@@ -1042,14 +1042,17 @@ public abstract class ChartView extends RelativeLayout{
 		}
 	
 		
-		protected Rect getTextBounds(){
-			final Rect bounds = new Rect();
-			style.labelPaint
-					.getTextBounds(ChartView.this.data.get(0).getLabel(0), 
+		protected int getTextHeightBounds(String character){
+			if(character != ""){
+				final Rect bounds = new Rect();
+				style.labelPaint
+					.getTextBounds(character, 
 							0, 
 								1, 
 									bounds);
-			return bounds;
+				return bounds.height();
+			}
+			return 0;
 		}
 		
 	}

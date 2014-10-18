@@ -736,7 +736,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Show/Hide X axis
 	 * @param bool - if true axis won't be visible
 	 */
-	public ChartView setAxisX(boolean bool){
+	public ChartView setXAxis(boolean bool){
 		horController.hasAxis = bool;
 		return this;
 	}
@@ -746,7 +746,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Show/Hide Y axis
 	 * @param bool - if true axis won't be visible
 	 */
-	public ChartView setAxisY(boolean bool){
+	public ChartView setYAxis(boolean bool){
 		verController.hasAxis = bool;
 		return this;
 	}

@@ -61,13 +61,13 @@ public class YController{
 	/** Screen step between labels */
 	private float mScreenStep;
 	
+
+	/** Starting X point of the axis */
+	private float mAxisHorPosition;
+
 	
 	/** Spacing for top label */
 	protected float topSpacing;
-
-	
-	/** Starting X point of the axis */
-	private float mAxisHorPosition;
 	
 
 	/** Range of Y values from 0 to mMaxValue */
@@ -80,13 +80,17 @@ public class YController{
 	
 	/** Step between labels */
 	protected int step;
-	
-
-	/** Should the axis be drawn or only measures must be calculated */
-	protected boolean hasLabels;
 
 	
+	/** Whether the chart has Y Axis or not */
+	protected boolean hasAxis;
+	
+	
+	/** none/inside/outside */
+	protected LabelPosition labelsPositioning;
+	
 
+	
 	public YController(ChartView chartView) {
 		
 		mChartView = chartView;
@@ -97,16 +101,14 @@ public class YController{
 										.getDimension(R.dimen.axis_top_spacing);
 		mAxisHorPosition = 0;
 		maxLabelValue = 0;
-		hasLabels = true;
+		labelsPositioning = LabelPosition.OUTSIDE;
+		hasAxis = true;
 	}
 	
 	
 	public YController(ChartView chartView, TypedArray attrs) {
 		this(chartView);
 		
-		hasLabels = attrs.getBoolean(
-							R.styleable.ChartAttrs_chart_labels, 
-								true);
 		topSpacing = attrs.getDimension(
 								R.styleable.ChartAttrs_chart_axisTopSpacing, 
 									topSpacing);
@@ -119,7 +121,9 @@ public class YController{
 		
 		mDistLabelToAxis= (int) mChartView.getResources()
 									.getDimension(R.dimen.axis_dist_from_label);
-		
+		if(labelsPositioning == LabelPosition.INSIDE)
+			mDistLabelToAxis *= -1;
+			
 		mLabels = calcLabels();
 		mAxisHorPosition = calcAxisHorizontalPosition();
 		labelsPos = calcLabelsPos(mChartView.data.get(0).size());
@@ -226,20 +230,20 @@ public class YController{
 	protected float calcAxisHorizontalPosition(){
 		
 		// In case labels Y needs to be drawn
-		if(hasLabels && mChartView.style.labelPosition == LabelPosition.OUTSIDE){
+		if(labelsPositioning == LabelPosition.OUTSIDE){ //TODO estes casos estao estranhos
+			
 			float maxLenghtLabel = 0;
 			float aux = 0;
 			for(int i = 0; i < mLabels.size(); i++){
-				aux = mChartView.style.labelPaint
-								.measureText(Integer.toString(mLabels.get(i)));
-				if(aux > maxLenghtLabel){
+
+				aux = mChartView.style.labelPaint.measureText(Integer.toString(mLabels.get(i)));
+				if(aux > maxLenghtLabel)
 					maxLenghtLabel = aux;
-				}
+
 			}
 			return mChartView.chartLeft + maxLenghtLabel + mDistLabelToAxis;
 			
 		}else{
-			mDistLabelToAxis *= -1; 
 			return mChartView.chartLeft 
 					+ mChartView.style.labelPaint
 							.measureText(mChartView.data.get(0).getLabel(0))/2;
@@ -268,10 +272,18 @@ public class YController{
 	 */
 	protected void draw(Canvas canvas){
 		
-		if(hasLabels){
+		if(hasAxis)
+			// Draw axis line
+			canvas.drawLine(mAxisHorPosition, 
+								mChartView.chartTop, 
+									mAxisHorPosition, 
+										mChartView.horController.getAxisVerticalPosition() + mChartView.style.axisThickness/2, 
+											mChartView.style.chartPaint);
+		
+		if(labelsPositioning != LabelPosition.NONE){
 			
 			mChartView.style.labelPaint.setTextAlign(
-					(mChartView.style.labelPosition == YController.LabelPosition.OUTSIDE) 
+					(labelsPositioning == LabelPosition.OUTSIDE) 
 						? Align.RIGHT : Align.LEFT);
 			
 			// Draw labels
@@ -281,13 +293,6 @@ public class YController{
 										(float) labelsPos.get(i) + mChartView.style.getTextHeightBounds("0")/2, 
 											mChartView.style.labelPaint);
 			}
-
-			// Draw axis line
-			canvas.drawLine(mAxisHorPosition, 
-								mChartView.chartTop, 
-									mAxisHorPosition, 
-										mChartView.horController.getAxisVerticalPosition() + mChartView.style.axisThickness/2, 
-											mChartView.style.chartPaint);
 		}
 	}
 
@@ -305,7 +310,7 @@ public class YController{
 	 */
 	public float getInnerChartLeft(){
 		
-		if(hasLabels)
+		if(labelsPositioning == LabelPosition.NONE)
 			return mAxisHorPosition + mChartView.style.axisThickness/2;
 		else
 			return mAxisHorPosition;

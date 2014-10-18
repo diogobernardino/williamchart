@@ -2,7 +2,6 @@
 <resources>
      <declare-styleable name="ChartAttrs">
          
-        <attr name="chart_axisX" format="boolean"/>
         <attr name="chart_axisThickness" format="dimension"/>
         <attr name="chart_axisColor" format="reference|color"/>
         <attr name="chart_axisBorderSpacing" format="dimension"/>

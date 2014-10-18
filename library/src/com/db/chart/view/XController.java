@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.db.williamchart.R;
 
@@ -30,10 +29,15 @@ import com.db.williamchart.R;
  * Class responsible to control horizontal measures, positions, yadda yadda.  
  * If the drawing is requested it will also take care of it.
  */
-class XController{
+public class XController{
 	
 	
 	private static final String TAG = "com.db.chart.view.XController";
+	
+	
+	public static enum LabelPosition {
+		NONE, OUTSIDE, INSIDE
+    }
 	
 	
 	/** Distance between label and axis. */
@@ -42,6 +46,10 @@ class XController{
 	
 	/** ChartView object */ 
 	private ChartView mChartView;
+	
+	
+	/** Vertical coordinate where label will be drawn */
+	private int mLabelVerCoord;
 	
 	
 	/** Position of labels in chart */
@@ -59,6 +67,10 @@ class XController{
 	/** Whether the chart has X Axis or not */
 	protected boolean hasAxis;
 	
+	
+	/** none/inside/outside */
+	protected LabelPosition labelsPositioning;
+	
 
 	
 	
@@ -67,25 +79,24 @@ class XController{
 		mChartView = chartView;
 		
 		//Initialize variables and set defaults
-		labelsPos = new ArrayList<Float>();
+		mDistLabelToAxis = (int) (mChartView.getResources()
+				.getDimension(R.dimen.axis_dist_from_label));
 		mandatoryBorderSpacing = 0;
-		mChartView.setLayoutParams(
-						new LayoutParams(LayoutParams.MATCH_PARENT, 
-											LayoutParams.WRAP_CONTENT));
+		hasAxis = true;
+		labelsPos = new ArrayList<Float>();
+		labelsPositioning = LabelPosition.OUTSIDE;
 		borderSpacing = mChartView.getResources()
 									.getDimension(R.dimen.axis_border_spacing);	
+		
 	}
 
 	
 	public XController(ChartView chartView, TypedArray attrs) {
 		this(chartView);
 		
-		hasAxis = attrs.getBoolean( R.styleable.ChartAttrs_chart_axisX, true);
 		borderSpacing = attrs.getDimension(
 							R.styleable.ChartAttrs_chart_axisBorderSpacing, 
 								borderSpacing);
-		mDistLabelToAxis = (int) (mChartView.getResources()
-							.getDimension(R.dimen.axis_dist_from_label));
 	}
 
 
@@ -93,6 +104,11 @@ class XController{
 
 	protected void init() {
 
+		// Set the vertical display coordinate
+		mLabelVerCoord = mChartView.chartBottom;
+		if(labelsPositioning == LabelPosition.INSIDE)
+			mLabelVerCoord -= mDistLabelToAxis;
+		
 		// In case of mandatory border spacing (ex. BarChart)
 		if(mandatoryBorderSpacing == 1)
 			mandatoryBorderSpacing = 
@@ -145,23 +161,25 @@ class XController{
 	 */
 	protected void draw(Canvas canvas){
 		
-		mChartView.style.labelPaint.setTextAlign(Align.CENTER);
-		
 		// Draw axis
 		if(hasAxis)
-			canvas.drawLine(mChartView.getInnerChartLeft(), 
-								getAxisVerticalPosition(), 
-									getInnerChartRight(), 
-										getAxisVerticalPosition(), 
+			canvas.drawLine(mChartView.getInnerChartLeft(),
+								getAxisVerticalPosition(),
+									getInnerChartRight(),
+										getAxisVerticalPosition(),
 											mChartView.style.chartPaint);
 		
 		// Draw labels
-		for(int i = 0; i < mChartView.data.get(0).size(); i++){
-			canvas.drawText(mChartView.data.get(0).getLabel(i), 
+		if(labelsPositioning != LabelPosition.NONE){
+			
+			mChartView.style.labelPaint.setTextAlign(Align.CENTER);
+			for(int i = 0; i < mChartView.data.get(0).size(); i++){
+				canvas.drawText(mChartView.data.get(0).getLabel(i), 
 								labelsPos.get(i), 
-									mChartView.chartBottom, 
+									mLabelVerCoord, 
 										mChartView.style.labelPaint);
 			
+			}
 		}
 	}	
 	
@@ -190,6 +208,10 @@ class XController{
 
 	
 	protected float getAxisVerticalPosition(){
+		
+		if(labelsPositioning != LabelPosition.OUTSIDE)
+			return mChartView.chartBottom;
+		
 		return mChartView.chartBottom 
 					- mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(0))
 						- mDistLabelToAxis; 

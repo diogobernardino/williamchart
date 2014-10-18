@@ -22,7 +22,6 @@ import com.db.williamchart.R;
 import com.db.chart.exception.ChartException;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.ChartSet;
-import com.db.chart.view.YController.LabelPosition;
 import com.db.chart.view.animation.Animation;
 
 import android.annotation.SuppressLint;
@@ -127,7 +126,7 @@ public abstract class ChartView extends RelativeLayout{
 			chartBottom = getMeasuredHeight() - getPaddingBottom();
 			chartLeft = getPaddingLeft();
 			chartRight = getMeasuredWidth() - getPaddingRight();
-				
+	
 			// Initialize controllers now that we have the measures
 			verController.init();	
 			mThresholdValue = verController.parseYPos(mThresholdValue);
@@ -525,7 +524,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		// If border diff than 0 inner chart sides must have lines
 		if(horController.borderSpacing != 0 || horController.mandatoryBorderSpacing != 0){
-			if(!verController.hasLabels)
+			if(verController.labelsPositioning == YController.LabelPosition.NONE)
 				canvas.drawLine(getInnerChartLeft(), 
 									getInnerChartBottom(), 
 										getInnerChartLeft(), 
@@ -709,18 +708,28 @@ public abstract class ChartView extends RelativeLayout{
 	
 	/**
 	 * Show/Hide Y labels and respective axis
-	 * @param bool - if false Y label and axis won't be visible
+	 * @param YController.LabelPosition
+	 * 	NONE - No labels
+	 *  OUTSIDE - Labels will be positioned outside the chart
+	 *  INSIDE - Labels will be positioned inside the chart
 	 */
-	public ChartView setLabels(LabelPosition config){
-
-		if(config == YController.LabelPosition.NONE)
-			verController.hasLabels = false;
-		else
-			style.labelPosition = config;
-
+	public ChartView setYLabels(YController.LabelPosition position){
+		verController.labelsPositioning = position;
 		return this;
 	}
 	
+	
+	/**
+	 * Show/Hide X labels and respective axis
+	 * @param XController.LabelPosition
+	 * 	NONE - No labels
+	 *  OUTSIDE - Labels will be positioned outside the chart
+	 *  INSIDE - Labels will be positioned inside the chart
+	 */
+	public ChartView setXLabels(XController.LabelPosition position){
+		horController.labelsPositioning = position;
+		return this;
+	}
 	
 	
 	/**
@@ -729,6 +738,16 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public ChartView setAxisX(boolean bool){
 		horController.hasAxis = bool;
+		return this;
+	}
+	
+	
+	/**
+	 * Show/Hide Y axis
+	 * @param bool - if true axis won't be visible
+	 */
+	public ChartView setAxisY(boolean bool){
+		verController.hasAxis = bool;
 		return this;
 	}
 	
@@ -970,7 +989,6 @@ public abstract class ChartView extends RelativeLayout{
 		protected int labelColor;
 		protected float fontSize;
 		protected Typeface typeface;
-		protected YController.LabelPosition labelPosition;
 		
 		
 		protected Style() {
@@ -984,7 +1002,6 @@ public abstract class ChartView extends RelativeLayout{
 			
 			labelColor = DEFAULT_COLOR;
 			fontSize = getResources().getDimension(R.dimen.font_size);
-			labelPosition = YController.LabelPosition.OUTSIDE;
 		}
 
 		
@@ -1012,7 +1029,6 @@ public abstract class ChartView extends RelativeLayout{
 			if (typefaceName != null)
 				typeface = Typeface.createFromAsset(getResources().
 												getAssets(), typefaceName);
-			labelPosition = YController.LabelPosition.OUTSIDE;
 		}
 		
 		

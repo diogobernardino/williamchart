@@ -203,7 +203,7 @@ public class Animation{
 				
 				path = new Path();
 				path.moveTo(startingX.get(i)[j], startingY.get(i)[j]);
-				path.lineTo(mSets.get(i).getEntry(j).getX(), mSets.get(i).getEntry(j).getY());//aqui usar o setOrder array como j
+				path.lineTo(mSets.get(i).getEntry(j).getX(), mSets.get(i).getEntry(j).getY());
 				
 				mPathMeasures[i][j] = new PathMeasure(path, false);
 			}

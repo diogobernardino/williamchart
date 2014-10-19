@@ -129,6 +129,10 @@ public class Animation{
 	private int mAlphaSpeed;
 	
 	
+	/** Animation order */
+	private int[] mOrder;
+	
+	
 	
 	public Animation(){
 		init(DEFAULT_DURATION);
@@ -179,17 +183,25 @@ public class Animation{
 		mInitTime = new long[mSets.get(0).size()];
 		mCurrentDuration = new long[mSets.get(0).size()];
 		
+		// Set the animation order if not defined already
+		if(mOrder == null){
+			mOrder = new int[mSets.get(0).size()];
+			for(int i = 0; i < mOrder.length; i++)
+				mOrder[i] = i;
+		}
+		
 		// Calculates the expected duration as there was with no overlap (factor = 0)
 		float noOverlapDuration = mGlobalDuration / mSets.get(0).size();
 		// Adjust the duration to the overlap
 		mDuration = (int) (noOverlapDuration + (mGlobalDuration - noOverlapDuration) * mOverlapingFactor);
 		
 		// Define animation paths for each entry
+		Path path;
 		for(int i = 0; i < mSets.size(); i++){
 			
 			for(int j = 0; j < mSets.get(i).size(); j++){
 				
-				Path path = new Path();
+				path = new Path();
 				path.moveTo(startingX.get(i)[j], startingY.get(i)[j]);
 				path.lineTo(mSets.get(i).getEntry(j).getX(), mSets.get(i).getEntry(j).getY());
 				
@@ -204,8 +216,10 @@ public class Animation{
 			// Calculates the expected init time as there was with no overlap (factor = 0)
 			noOverlapInitTime = mGlobalInitTime + (i * (mGlobalDuration / mSets.get(0).size()));
 			// Adjust the init time to overlap
-			mInitTime[i] = (noOverlapInitTime - ((long) (mOverlapingFactor * (noOverlapInitTime - mGlobalInitTime))));
+			mInitTime[mOrder[i]] = (noOverlapInitTime - ((long) (mOverlapingFactor * (noOverlapInitTime - mGlobalInitTime))));
 		}
+		
+		
 		
 		mPlaying = true;
 		return getUpdate();
@@ -397,6 +411,22 @@ public class Animation{
 	
 	
 	/**
+	 * Sets whether entries should be animate in sequence or paralell.
+	 * @param factor - value from 0 to 1 that tells how much will be the 
+	 * overlap of an entry's animation according to the previous one.
+	 * 0 - no overlap
+	 * 1 - all entries animate in paralell (default)
+	 * @param order - order from which the entries will be animated.
+	 * { 0, 1, 2, 3, ...} - default order
+	 */
+	public Animation setOverlap(float factor, int[] order){
+		mOverlapingFactor = factor;
+		mOrder = order;
+		return this;
+	}
+	
+	
+	/**
 	 * Sets an action to be executed once the animation finishes.
 	 * @param runnable to be executed once the animation finishes.
 	 */
@@ -430,5 +460,6 @@ public class Animation{
 		mAlphaSpeed = speed;
 		return this;
 	}
+	
 	
 }

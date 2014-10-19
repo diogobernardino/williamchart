@@ -206,7 +206,7 @@ public class StackBarChartView extends BarChartView {
 		// Doing calculations here to avoid doing several times while drawing
 		// in case of animation
 		if(data.get(0).size() == 1)
-			barWidth = (innerchartRight - innerchartLeft - this.horController.borderSpacing);
+			barWidth = (this.getInnerChartRight() - this.getInnerChartLeft() - this.horController.borderSpacing);
 		else
 			calculateBarsWidth(data.get(0).getEntry(0).getX(), 
 				data.get(0).getEntry(1).getX());

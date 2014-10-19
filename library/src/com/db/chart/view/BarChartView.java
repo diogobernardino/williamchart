@@ -145,7 +145,7 @@ public class BarChartView extends ChartView {
 	protected void drawBarBackground(Canvas canvas, float horizontalOffset) {
 		
 		canvas.drawRoundRect(new RectF((int) horizontalOffset, 
-				(int) this.innerchartTop, 
+				(int) this.getInnerChartTop(), 
 					(int) (horizontalOffset + barWidth),
 						(int) this.getInnerChartBottom()),
 					style.cornerRadius,
@@ -200,7 +200,7 @@ public class BarChartView extends ChartView {
 		if(data.get(0).size() == 1){
 			style.barSpacing = 0;
 			calculateBarsWidth(data.size(), 0, 
-					(innerchartRight - super.horController.borderSpacing - data.get(0).getEntry(0).getX()) * 2);
+					(this.getInnerChartRight() - super.horController.borderSpacing - data.get(0).getEntry(0).getX()) * 2);
 		}else
 			calculateBarsWidth(data.size(), data.get(0).getEntry(0).getX(), 
 							data.get(0).getEntry(1).getX());

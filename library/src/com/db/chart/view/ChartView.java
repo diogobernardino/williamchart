@@ -57,13 +57,6 @@ public abstract class ChartView extends RelativeLayout{
 	protected int chartRight;
 	
 	
-	/** Innerchart borders */
-	protected float innerchartTop;
-	protected float innerchartBottom;
-	protected float innerchartLeft;
-	protected float innerchartRight;
-	
-	
 	/** Horizontal and Vertical position controllers */
 	protected XController horController;
 	protected YController verController;
@@ -133,17 +126,12 @@ public abstract class ChartView extends RelativeLayout{
 			chartBottom = getMeasuredHeight() - getPaddingBottom();
 			chartLeft = getPaddingLeft();
 			chartRight = getMeasuredWidth() - getPaddingRight();
-				
+	
 			// Initialize controllers now that we have the measures
 			verController.init();	
 			mThresholdValue = verController.parseYPos(mThresholdValue);
-			horController.init(verController.getInnerChartLeft());
-			
-			// Define the data chart frame. Exclude axis space.
-			innerchartTop = chartTop;
-			innerchartBottom = verController.getInnerChartBottom();
-			innerchartLeft = verController.getInnerChartLeft();
-			innerchartRight = horController.getInnerChartRight();
+			// Mandatory: X axis after Y axis!
+			horController.init();
 			
 			// Processes data to define screen positions
 			digestData();
@@ -514,9 +502,9 @@ public abstract class ChartView extends RelativeLayout{
 	
 	private void drawThresholdLine(Canvas canvas) {
 		
-		canvas.drawLine(innerchartLeft, 
+		canvas.drawLine(getInnerChartLeft(), 
 							mThresholdValue, 
-								innerchartRight, 
+								getInnerChartRight(), 
 									mThresholdValue, 
 										style.thresholdPaint);
 	}
@@ -528,24 +516,24 @@ public abstract class ChartView extends RelativeLayout{
 		// Draw vertical grid lines
 		for(int i = 0; i < horController.labelsPos.size(); i++){
 			canvas.drawLine(horController.labelsPos.get(i), 
-								innerchartBottom, 
+								getInnerChartBottom(), 
 									horController.labelsPos.get(i), 
-										innerchartTop, 
+										getInnerChartTop(), 
 											style.gridPaint);
 		}
 		
 		// If border diff than 0 inner chart sides must have lines
 		if(horController.borderSpacing != 0 || horController.mandatoryBorderSpacing != 0){
-			if(!verController.hasLabels)
-				canvas.drawLine(innerchartLeft, 
-									innerchartBottom, 
-										innerchartLeft, 
-											innerchartTop, 
+			if(verController.labelsPositioning == YController.LabelPosition.NONE)
+				canvas.drawLine(getInnerChartLeft(), 
+									getInnerChartBottom(), 
+										getInnerChartLeft(), 
+											getInnerChartTop(), 
 												style.gridPaint);
-			canvas.drawLine(innerchartRight, 
-								innerchartBottom, 
-									innerchartRight, 
-										innerchartTop, 
+			canvas.drawLine(getInnerChartRight(), 
+								getInnerChartBottom(), 
+									getInnerChartRight(), 
+										getInnerChartTop(), 
 											style.gridPaint);
 		}
 	}
@@ -556,19 +544,19 @@ public abstract class ChartView extends RelativeLayout{
 		
 		// Draw horizontal grid lines
 		for(int i = 0; i < verController.labelsPos.size(); i++){
-			canvas.drawLine(innerchartLeft, 
+			canvas.drawLine(getInnerChartLeft(), 
 								verController.labelsPos.get(i), 
-									innerchartRight,
+									getInnerChartRight(),
 										verController.labelsPos.get(i), 
 											style.gridPaint);
 		}
 		
 		// If there's no axis
 		if(!horController.hasAxis)
-			canvas.drawLine(innerchartLeft, 
-								innerchartBottom, 
-									innerchartRight, 
-										innerchartBottom, 
+			canvas.drawLine(getInnerChartLeft(), 
+								getInnerChartBottom(), 
+									getInnerChartRight(), 
+										getInnerChartBottom(), 
 											style.gridPaint);
 	}
 	
@@ -612,21 +600,22 @@ public abstract class ChartView extends RelativeLayout{
 			
 				
 			}else if(event.getAction() == MotionEvent.ACTION_UP){
-	
 				if(mEntryListener != null && 
 						mSetClicked != -1 && 
-							mIndexClicked != -1 &&
-								mRegions.get(mSetClicked).get(mIndexClicked)
+							mIndexClicked != -1){
+					if(mRegions.get(mSetClicked).get(mIndexClicked)
 								.contains((int)event.getX(), 
 											(int)event.getY())){
 					
-					mEntryListener.onClick(mSetClicked, 
+						mEntryListener.onClick(mSetClicked, 
 								mIndexClicked, 
 									new Rect(mRegions.get(mSetClicked).get(mIndexClicked).getBounds().left - getPaddingLeft(),
 											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().top - getPaddingTop(),
 											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().right - getPaddingLeft(),
 											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().bottom - getPaddingTop()));
-				
+					}
+					mSetClicked = -1;
+					mIndexClicked = -1;
 				}else if(mChartListener != null){
 					mChartListener.onClick(this);
 				}
@@ -652,7 +641,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return position of the inner bottom side of the chart
 	 */
 	public float getInnerChartBottom(){
-		return innerchartBottom;
+		return verController.getInnerChartBottom();
 	}
 
 	
@@ -663,7 +652,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return position of the inner left side of the chart
 	 */
 	public float getInnerChartLeft(){
-		return innerchartLeft;
+		return verController.getInnerChartLeft();
 	}
 	
 	
@@ -674,7 +663,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return position of the inner right side of the chart
 	 */
 	public float getInnerChartRight(){
-		return innerchartRight;
+		return horController.getInnerChartRight();
 	}
 	
 	
@@ -685,7 +674,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return position of the inner top side of the chart
 	 */
 	public float getInnerChartTop(){
-		return innerchartTop;
+		return chartTop;
 	}
 	
 	
@@ -719,26 +708,46 @@ public abstract class ChartView extends RelativeLayout{
 	
 	/**
 	 * Show/Hide Y labels and respective axis
-	 * @param bool - if false Y label and axis won't be visible
+	 * @param YController.LabelPosition
+	 * 	NONE - No labels
+	 *  OUTSIDE - Labels will be positioned outside the chart
+	 *  INSIDE - Labels will be positioned inside the chart
 	 */
-	public ChartView setLabels(int position){
-
-		if(position == YController.NONE)
-			verController.hasLabels = false;
-		else
-			style.labelPosition = position;
-
+	public ChartView setYLabels(YController.LabelPosition position){
+		verController.labelsPositioning = position;
 		return this;
 	}
 	
+	
+	/**
+	 * Show/Hide X labels and respective axis
+	 * @param XController.LabelPosition
+	 * 	NONE - No labels
+	 *  OUTSIDE - Labels will be positioned outside the chart
+	 *  INSIDE - Labels will be positioned inside the chart
+	 */
+	public ChartView setXLabels(XController.LabelPosition position){
+		horController.labelsPositioning = position;
+		return this;
+	}
 	
 	
 	/**
 	 * Show/Hide X axis
 	 * @param bool - if true axis won't be visible
 	 */
-	public ChartView setAxisX(boolean bool){
+	public ChartView setXAxis(boolean bool){
 		horController.hasAxis = bool;
+		return this;
+	}
+	
+	
+	/**
+	 * Show/Hide Y axis
+	 * @param bool - if true axis won't be visible
+	 */
+	public ChartView setYAxis(boolean bool){
+		verController.hasAxis = bool;
 		return this;
 	}
 	
@@ -980,7 +989,6 @@ public abstract class ChartView extends RelativeLayout{
 		protected int labelColor;
 		protected float fontSize;
 		protected Typeface typeface;
-		protected int labelPosition;
 		
 		
 		protected Style() {
@@ -994,7 +1002,6 @@ public abstract class ChartView extends RelativeLayout{
 			
 			labelColor = DEFAULT_COLOR;
 			fontSize = getResources().getDimension(R.dimen.font_size);
-			labelPosition = YController.OUTSIDE;
 		}
 
 		
@@ -1022,7 +1029,6 @@ public abstract class ChartView extends RelativeLayout{
 			if (typefaceName != null)
 				typeface = Typeface.createFromAsset(getResources().
 												getAssets(), typefaceName);
-			labelPosition = YController.OUTSIDE;
 		}
 		
 		
@@ -1051,6 +1057,20 @@ public abstract class ChartView extends RelativeLayout{
 			thresholdPaint = null;
 		}
 	
+		
+		protected int getTextHeightBounds(String character){
+			if(character != ""){
+				final Rect bounds = new Rect();
+				style.labelPaint
+					.getTextBounds(character, 
+							0, 
+								1, 
+									bounds);
+				return bounds.height();
+			}
+			return 0;
+		}
+		
 	}
 	
 

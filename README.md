@@ -74,8 +74,6 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
         chart:chart_axisThickness="dp"
         chart:chart_axisTopSpacing="dp"
         chart:chart_axisColor="color"
-        chart:chart_axisX="boolean"
-        chart:chart_label="boolean"
         chart:chart_labelColor="color"
     />
 
@@ -83,11 +81,12 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
 
 ```java
     // Customize labels
-    chart.setLabels(NONE/OUTSIDE/INSIDE)
+    chart.setYLabels(NONE/OUTSIDE/INSIDE)
+    chart.setXLabels(NONE/OUTSIDE/INSIDE)
     chart.setLabelColor(color)
     chart.setFontSize(integer)
     chart.setTypeface(typeface)
-    
+
     // Define grid
     chart.setGrid(paint)
     chart.setHorizontalGrid(paint)
@@ -101,6 +100,7 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     chart.setTopSpacing(dimen)
     chart.setBorderSpacing(dimen)
     chart.setAxisX(boolean)
+    chart.setAxisY(boolean)
 
     chart.show()
     
@@ -207,6 +207,8 @@ Animation
     
     // Animation overlap between entries
     anim.setOverlap(float)
+    // Animation overlap between entries in a specific order
+    anim.setOverlap(float,int[])
     // Animation starting point
     anim.setStartPoint(float, float)
     // Include alpha transition

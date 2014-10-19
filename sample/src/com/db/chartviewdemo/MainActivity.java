@@ -11,6 +11,7 @@ import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.StackBarChartView;
 import com.db.chart.view.YController;
+import com.db.chart.view.XController;
 import com.db.williamchartdemo.R;
 
 import android.os.Build;
@@ -105,21 +106,21 @@ public class MainActivity extends ActionBarActivity {
 					case 1: 
 						if(newInstance)
 							updateLineChart( mCurrLineSetSize = DataRetriever.randNumber(1, 3), 
-								mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
+												mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
 						else
 							updateValues(mLineChart, mCurrLineSetSize, mCurrLineEntriesSize);
 						break;
 					case 2: 
 						if(newInstance)
 							updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
-								mCurrBarEntriesSize = DataRetriever.randNumber(3, 4));
+												mCurrBarEntriesSize = DataRetriever.randNumber(4, 5));
 						else
 							updateValues(mBarChart, mCurrBarSetSize, mCurrBarEntriesSize);
 						break;
 					case 3: 
 						if(newInstance)
-							updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 3), 
-								mCurrStackBarEntriesSize = DataRetriever.randNumber(3, 6));
+							updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(3, 4), 
+													mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 6));
 						else
 							updateValues(mStackBarChart, mCurrStackBarSetSize, mCurrStackBarEntriesSize);
 						updateIndex = 0;
@@ -137,11 +138,10 @@ public class MainActivity extends ActionBarActivity {
 		
 		updateLineChart( mCurrLineSetSize = DataRetriever.randNumber(1, 3), 
 							mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
-		updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3),
-							mCurrBarEntriesSize = DataRetriever.randNumber(3, 4));
-		updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(2, 3), 
-							mCurrStackBarEntriesSize = DataRetriever.randNumber(3, 6));
-
+		updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
+							mCurrBarEntriesSize = DataRetriever.randNumber(4, 5));
+		updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(3, 4), 
+							mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 6));
 		
 	}
 	
@@ -218,12 +218,15 @@ public class MainActivity extends ActionBarActivity {
 		}
 		
 		mLineChart.setGrid(DataRetriever.randPaint())
-			//.setVerticalGrid(randPaint())
+			.setVerticalGrid(DataRetriever.randPaint())
 			.setHorizontalGrid(DataRetriever.randPaint())
 			//.setThresholdLine(2, randPaint())
-			.setLabels(YController.NONE)
+			.setYLabels(YController.LabelPosition.NONE)
+			.setYAxis(false)
+			.setXLabels(DataRetriever.getXPosition())
+			.setXAxis(DataRetriever.randBoolean())
 			.setMaxAxisValue(10, 2)
-			.animate(DataRetriever.randAnimation(mEndAction))
+			.animate(DataRetriever.randAnimation(mEndAction, nPoints))
 			//.show()
 			;
 	}
@@ -333,7 +336,7 @@ public class MainActivity extends ActionBarActivity {
 		for(int i = 0; i < nSets; i++){
 			
 			data = new BarSet();
-			for(int j = 0; j <nPoints; j++){
+			for(int j = 0; j < nPoints; j++){
 				
 				bar = new Bar(mLabels[j], DataRetriever.randValue(BAR_MIN, BAR_MAX));
 				//bar.setColor(Color.parseColor(getColor(j)));
@@ -349,16 +352,18 @@ public class MainActivity extends ActionBarActivity {
 		mBarChart.setBarBackground(DataRetriever.randBoolean());
 		mBarChart.setBarBackgroundColor(Color.parseColor("#37474f"));
 		mBarChart.setRoundCorners(DataRetriever.randDimen(0,6));
-		
+
 		mBarChart.setBorderSpacing(DataRetriever.randDimen(5,15))
 			.setGrid(DataRetriever.randPaint())
 			.setHorizontalGrid(DataRetriever.randPaint())
 			.setVerticalGrid(DataRetriever.randPaint())
-			.setAxisX(DataRetriever.randBoolean())
+			.setYLabels(YController.LabelPosition.NONE)
+			.setYAxis(false)
+			.setXLabels(XController.LabelPosition.OUTSIDE)
+			.setXAxis(DataRetriever.randBoolean())
 			//.setThresholdLine(2, randPaint())
-			.setLabels(YController.NONE)
 			.setMaxAxisValue((int)BAR_MAX, 2)
-			.animate(DataRetriever.randAnimation(mEndAction))
+			.animate(DataRetriever.randAnimation(mEndAction, nPoints))
 			//.show()
 			;	
 	}
@@ -479,11 +484,13 @@ public class MainActivity extends ActionBarActivity {
 			.setGrid(DataRetriever.randPaint())
 			.setHorizontalGrid(DataRetriever.randPaint())
 			.setVerticalGrid(DataRetriever.randPaint())
-			.setAxisX(DataRetriever.randBoolean())
+			.setYLabels(YController.LabelPosition.NONE)
+			.setYAxis(false)
+			.setXLabels(DataRetriever.getXPosition())
+			.setXAxis(DataRetriever.randBoolean())
 			//.setThresholdLine(2, randPaint())
-			.setLabels(YController.NONE)
 			.setMaxAxisValue(10*nSets, 5)
-			.animate(DataRetriever.randAnimation(mEndAction))
+			.animate(DataRetriever.randAnimation(mEndAction, nPoints))
 			//.show()
 			;
 	}

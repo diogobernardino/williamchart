@@ -336,6 +336,7 @@ public abstract class ChartView extends RelativeLayout{
 		data.clear();
 		mRegions.clear();
 		toUpdateValues.clear();
+		verController.minLabelValue = 0;
 		verController.maxLabelValue = 0;
 		if(horController.mandatoryBorderSpacing != 0)
 			horController.mandatoryBorderSpacing = 1;
@@ -482,16 +483,14 @@ public abstract class ChartView extends RelativeLayout{
 			
 			// Draw Axis Y
 			verController.draw(canvas);
-			
+			// Draw axis X
+			horController.draw(canvas);
+						
 			// Draw data
 			onDrawChart(canvas, data);
 			
-			// Draw axis X
-			horController.draw(canvas);
-			
 			if(style.thresholdPaint != null)
 				drawThresholdLine(canvas);
-			
 		}
 		
 		//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
@@ -760,16 +759,17 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param maxAxisValue - the maximum value that Y axis will have as a label
 	 * @param step - step - (real) value distance from every label
 	 */
-	public ChartView setMaxAxisValue(int maxAxisValue, int step){
+	public ChartView setAxisBorderValues(int minValue, int maxValue, int step){
 		
 		try{
-			if(maxAxisValue % step != 0)
-				throw new ChartException("Step value must be a divisor of maxAxisValue");
+			if((maxValue - minValue) % step != 0)
+				throw new ChartException("Step value must be a divisor of distance between minValue and maxValue");
 		}catch(ChartException e){
 			Log.e(TAG, "", e);
 			System.exit(1);
 		}
-		verController.maxLabelValue = maxAxisValue;
+		verController.maxLabelValue = maxValue;
+		verController.minLabelValue = minValue;
 		verController.step = step;
 		
 		return this;

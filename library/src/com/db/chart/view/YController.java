@@ -70,9 +70,17 @@ public class YController{
 	protected float topSpacing;
 	
 
-	/** Range of Y values from 0 to mMaxValue */
+	/** Range of Y labels from minLabelValue to maxLabelValue */
 	protected int maxLabelValue;
-
+	protected int minLabelValue;
+	
+	
+	/** Max value that needs to be displayed */ 
+	private float maxValue;
+	
+	
+	/** Min value that nees to be displayed */
+	private float minValue;
 	
 	/** Labels position */
 	protected ArrayList<Float> labelsPos;
@@ -100,6 +108,7 @@ public class YController{
 		topSpacing = mChartView.getResources()
 										.getDimension(R.dimen.axis_top_spacing);
 		mAxisHorPosition = 0;
+		minLabelValue = 0;
 		maxLabelValue = 0;
 		labelsPositioning = LabelPosition.OUTSIDE;
 		hasAxis = true;
@@ -127,16 +136,7 @@ public class YController{
 		mLabels = calcLabels();
 		mAxisHorPosition = calcAxisHorizontalPosition();
 		labelsPos = calcLabelsPos(mChartView.data.get(0).size());
-		
-		if(maxLabelValue < calcMaxY()){
-			try{
-				throw new ChartException("MaxAxisValue defined < than current max set value");
-			}catch(ChartException e){
-				Log.e(TAG, "", e);
-				System.exit(1);
-			}	
-		}
-		
+	
 	}
 
 	
@@ -146,9 +146,10 @@ public class YController{
 	 * Calculates the max Y value.
 	 * @return max Y value.
 	 */
-	private double  calcMaxY() {
+	private float[]  calcBorderValues() {
 		
-		double max = 0;
+		float max = Integer.MIN_VALUE;
+		float min = Integer.MAX_VALUE;
 		ChartSet set;
 		
 		for(int i = 0; i < mChartView.data.size(); i++){
@@ -158,10 +159,13 @@ public class YController{
 				
 				if(set.getValue(j) >= max)
 					max = set.getValue(j);
+				if(set.getValue(j) <= min)
+					min = set.getValue(j);
 			}
 		}
-		
-		return max;
+
+		final float[] result = {min, max};
+		return result;
 	}
 	
 	
@@ -173,19 +177,35 @@ public class YController{
 	 */
 	private ArrayList<Integer> calcLabels(){
 		
-		final double maxY;
-		if(maxLabelValue == 0){
-			maxY = calcMaxY();
+		final float[] borderValues = calcBorderValues();
+		minValue = borderValues[0];
+		maxValue = borderValues[1];
+		
+		//If not specified then calculate border labels
+		if(minLabelValue == 0 && maxLabelValue == 0){
+			maxLabelValue = (int) Math.ceil(maxValue);
+			if(minValue > 0)
+				minLabelValue = 0;
+			else
+				minLabelValue = (int) Math.floor(minValue);
 			
-			//Get the highest label based in maxY and step
-			maxLabelValue = (int) Math.ceil(maxY);
-			while(maxLabelValue % step != 0)
+			while((maxLabelValue - minLabelValue) % step != 0)
 				maxLabelValue += 1;
 		}
 		
+		if(minValue < minLabelValue || maxValue > maxLabelValue){
+			System.out.println(minValue+" "+maxValue);
+			System.out.println(minLabelValue+" "+maxLabelValue);
+			try{
+				throw new ChartException("Label borders defined out of the range of values define in datasets");
+			}catch(ChartException e){
+				Log.e(TAG, "", e);
+				System.exit(1);
+			}	
+		}
 		
 		final ArrayList<Integer> result = new ArrayList<Integer>();
-		int pos = step;
+		int pos = minLabelValue;
 		while(pos <= maxLabelValue){
 			result.add(pos);
 			pos += step;
@@ -210,9 +230,9 @@ public class YController{
 		final ArrayList<Float> result = new ArrayList<Float>();
 		
 		final int frameHeight = (int) mChartView.horController.getAxisVerticalPosition() - mChartView.chartTop;
-		mScreenStep = (float) (frameHeight - topSpacing) / mLabels.size();
+		mScreenStep = (float) (frameHeight - topSpacing) / (mLabels.size() - 1);
 		
-		float currPos = (float) (mChartView.horController.getAxisVerticalPosition() - mScreenStep);
+		float currPos = (float) (mChartView.horController.getAxisVerticalPosition());
 		for(int i = 0; i < mLabels.size(); i++){
 			result.add(currPos);
 			currPos -= mScreenStep;
@@ -230,7 +250,7 @@ public class YController{
 	protected float calcAxisHorizontalPosition(){
 		
 		// In case labels Y needs to be drawn
-		if(labelsPositioning == LabelPosition.OUTSIDE){ //TODO estes casos estao estranhos
+		if(labelsPositioning == LabelPosition.OUTSIDE){
 			
 			float maxLenghtLabel = 0;
 			float aux = 0;
@@ -259,7 +279,8 @@ public class YController{
 	 * @return point
 	 */
 	protected float parseYPos(double value){
-		return (float) ( mChartView.horController.getAxisVerticalPosition() - ( ( value * mScreenStep) / mLabels.get(0)));
+		return (float) ( mChartView.horController.getAxisVerticalPosition() - 
+							(((value+Math.abs(minLabelValue)) * mScreenStep) / (mLabels.get(1)+Math.abs(minLabelValue))));
 	}
 	
 	

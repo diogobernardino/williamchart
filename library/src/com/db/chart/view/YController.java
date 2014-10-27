@@ -183,7 +183,12 @@ public class YController{
 		
 		//If not specified then calculate border labels
 		if(minLabelValue == 0 && maxLabelValue == 0){
-			maxLabelValue = (int) Math.ceil(maxValue);
+			
+			if(maxValue < 0)
+				maxLabelValue = 0;
+			else
+				maxLabelValue = (int) Math.ceil(maxValue);
+			
 			if(minValue > 0)
 				minLabelValue = 0;
 			else
@@ -194,8 +199,6 @@ public class YController{
 		}
 		
 		if(minValue < minLabelValue || maxValue > maxLabelValue){
-			System.out.println(minValue+" "+maxValue);
-			System.out.println(minLabelValue+" "+maxLabelValue);
 			try{
 				throw new ChartException("Label borders defined out of the range of values define in datasets");
 			}catch(ChartException e){
@@ -259,8 +262,8 @@ public class YController{
 				aux = mChartView.style.labelPaint.measureText(Integer.toString(mLabels.get(i)));
 				if(aux > maxLenghtLabel)
 					maxLenghtLabel = aux;
-
 			}
+			
 			return mChartView.chartLeft + maxLenghtLabel + mDistLabelToAxis;
 			
 		}else{

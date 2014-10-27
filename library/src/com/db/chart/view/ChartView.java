@@ -679,6 +679,16 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	/**
+	 * Returns the position of 0 value on chart.
+	 * @return position of 0 value on chart
+	 */
+	public float getZeroPosition(){
+		return verController.parseYPos(0);
+	}
+	
+	
+	
+	/**
 	 * Get the step used between Y values
 	 * @return step
 	 */

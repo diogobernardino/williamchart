@@ -243,7 +243,7 @@ public class Animation{
 				- (chartView.getInnerChartBottom() - chartView.getInnerChartTop()) 
 					* mStartYFactor;
 		else
-			y = chartView.getInnerChartBottom();
+			y = chartView.getZeroPosition();
 			
 		
 		final ArrayList<float[]> startXValues = new ArrayList<float[]>(sets.size());

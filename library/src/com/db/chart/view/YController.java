@@ -97,7 +97,11 @@ public class YController{
 	/** none/inside/outside */
 	protected LabelPosition labelsPositioning;
 	
+	
+	/** Labels Metric to draw together with labels */
+	protected String labelMetric;
 
+	
 	
 	public YController(ChartView chartView) {
 		
@@ -112,6 +116,7 @@ public class YController{
 		maxLabelValue = 0;
 		labelsPositioning = LabelPosition.OUTSIDE;
 		hasAxis = true;
+		labelMetric = "";
 	}
 	
 	
@@ -259,7 +264,7 @@ public class YController{
 			float aux = 0;
 			for(int i = 0; i < mLabels.size(); i++){
 
-				aux = mChartView.style.labelPaint.measureText(Integer.toString(mLabels.get(i)));
+				aux = mChartView.style.labelPaint.measureText(Integer.toString(mLabels.get(i)) + labelMetric);
 				if(aux > maxLenghtLabel)
 					maxLenghtLabel = aux;
 			}
@@ -312,7 +317,7 @@ public class YController{
 			
 			// Draw labels
 			for(int i = 0; i < mLabels.size(); i++){
-				canvas.drawText(Integer.toString(mLabels.get(i)), 
+				canvas.drawText(Integer.toString(mLabels.get(i)) + labelMetric, 
 									mAxisHorPosition - mChartView.style.axisThickness/2 - mDistLabelToAxis, 
 										(float) labelsPos.get(i) + mChartView.style.getTextHeightBounds("0")/2, 
 											mChartView.style.labelPaint);

@@ -61,6 +61,7 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     chart.setYLabels(NONE/OUTSIDE/INSIDE)
     chart.setXLabels(NONE/OUTSIDE/INSIDE)
     chart.setLabelColor(color)
+    chart.setLabelsMetric(string)
     chart.setFontSize(integer)
     chart.setTypeface(typeface)
 
@@ -72,7 +73,7 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     // Show threshold line
     chart.setThresholdLine(float, paint)
 
-    chart.setMaxAxisValue(integer, integer)
+    chart.setAxisBorderValues(integer, integer, integer)
     chart.setStep(integer)
     chart.setTopSpacing(dimen)
     chart.setBorderSpacing(dimen)

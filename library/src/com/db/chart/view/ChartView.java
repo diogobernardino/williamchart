@@ -105,9 +105,6 @@ public abstract class ChartView extends RelativeLayout{
 	private ArrayList<Pair<Integer, float []>> toUpdateValues;
 	
 	
-	private View mEntryView;
-	
-	
 	/**
 	 * Executed only before the chart is drawn for the first time.
 	 * . borders are defined
@@ -483,11 +480,12 @@ public abstract class ChartView extends RelativeLayout{
 			
 			// Draw Axis Y
 			verController.draw(canvas);
-			// Draw axis X
-			horController.draw(canvas);
 						
 			// Draw data
 			onDrawChart(canvas, data);
+			
+			// Draw axis X
+			horController.draw(canvas);
 			
 			if(style.thresholdPaint != null)
 				drawThresholdLine(canvas);
@@ -947,18 +945,22 @@ public abstract class ChartView extends RelativeLayout{
 	}
 	
 	
+	
 	protected ChartView setMandatoryBorderSpacing(){
 		horController.mandatoryBorderSpacing = 1;
 		return this;
 	}
 	
 	
-	public ChartView setEntryBehaviour(View view){
-		mEntryView = view;
+	
+	/**
+	 * Set the metric to be added to Y labels.
+	 * @param metric to be used.
+	 */
+	public ChartView setLabelsMetric(String metric){
+		verController.labelMetric = metric;
 		return this;
 	}
-	
-	
 	
 	
 	/*

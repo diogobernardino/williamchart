@@ -156,14 +156,18 @@ public class XController{
 	
 	
 	
-	private int calcLabelHeight(){
-		int result = 0;
-		for(int i = 0; i < mChartView.data.get(0).size(); i++){
-			result = mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(i));
-			if(result != 0)
-				break;
+	protected int getLabelHeight(){
+		if(mLabelHeight == -1){
+			int result = 0;
+			for(int i = 0; i < mChartView.data.get(0).size(); i++){
+				result = mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(i));
+				if(result != 0)
+					break;
+			}
+			mLabelHeight = result;
 		}
-		return result;
+			
+		return mLabelHeight;
 	}
 	
 
@@ -212,11 +216,17 @@ public class XController{
 	 * @return position of the inner right side of the chart
 	 */
 	public float getInnerChartRight(){
-		return mChartView.chartRight 
-				- mChartView.style.labelPaint
-								.measureText(mChartView.data.get(0).
-												getLabel(mChartView.data.get(0)
-																.size()-1))/2;
+		
+		float lastLabelWidth = mChartView.style.labelPaint
+								.measureText(mChartView.data.get(0)
+										.getLabel(mChartView.data.get(0)
+												.size()-1));
+		float rightBorder = 0;
+		if(borderSpacing + mandatoryBorderSpacing < lastLabelWidth / 2)
+			rightBorder = lastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);
+	
+		return mChartView.chartRight - rightBorder;
+		
 	}
 
 	
@@ -225,12 +235,8 @@ public class XController{
 		if(labelsPositioning != LabelPosition.OUTSIDE)
 			return mChartView.chartBottom;
 		
-		// Set height of labels
-		if(mLabelHeight == -1)
-			mLabelHeight = calcLabelHeight();
-			
 		return mChartView.chartBottom 
-					- mLabelHeight
+					- getLabelHeight()
 						- mDistLabelToAxis; 
 	}
 	

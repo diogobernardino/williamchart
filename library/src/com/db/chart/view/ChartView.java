@@ -119,7 +119,7 @@ public abstract class ChartView extends RelativeLayout{
 			ChartView.this.getViewTreeObserver().removeOnPreDrawListener(this);
 			
 			// Define chart frame
-			chartTop = getPaddingTop();
+			chartTop = getPaddingTop() + verController.getLabelHeight()/2;
 			chartBottom = getMeasuredHeight() - getPaddingBottom();
 			chartLeft = getPaddingLeft();
 			chartRight = getMeasuredWidth() - getPaddingRight();
@@ -288,8 +288,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		if(!data.isEmpty() && set.size() != data.get(0).size())
 			Log.e(TAG, "", 
-					new ChartException("The number of labels between " +
-							"sets doesn't match."));
+					new ChartException("The number of labels between sets doesn't match."));
 		data.add(set);
 	}
 	

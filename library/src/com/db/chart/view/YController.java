@@ -102,6 +102,7 @@ public class YController{
 	protected String labelMetric;
 
 	
+	private int mLabelHeight;
 	
 	public YController(ChartView chartView) {
 		
@@ -117,6 +118,7 @@ public class YController{
 		labelsPositioning = LabelPosition.OUTSIDE;
 		hasAxis = true;
 		labelMetric = "";
+		mLabelHeight = -1;
 	}
 	
 	
@@ -203,15 +205,6 @@ public class YController{
 				maxLabelValue += 1;
 		}
 		
-		if(minValue < minLabelValue || maxValue > maxLabelValue){
-			try{
-				throw new ChartException("Label borders defined out of the range of values define in datasets");
-			}catch(ChartException e){
-				Log.e(TAG, "", e);
-				System.exit(1);
-			}	
-		}
-		
 		final ArrayList<Integer> result = new ArrayList<Integer>();
 		int pos = minLabelValue;
 		while(pos <= maxLabelValue){
@@ -272,9 +265,7 @@ public class YController{
 			return mChartView.chartLeft + maxLenghtLabel + mDistLabelToAxis;
 			
 		}else{
-			return mChartView.chartLeft 
-					+ mChartView.style.labelPaint
-							.measureText(mChartView.data.get(0).getLabel(0))/2;
+			return mChartView.chartLeft;
 		}
 	}
 
@@ -339,12 +330,11 @@ public class YController{
 	 */
 	public float getInnerChartLeft(){
 		
-		if(labelsPositioning == LabelPosition.NONE)
+		if(hasAxis)
 			return mAxisHorPosition + mChartView.style.axisThickness/2;
 		else
 			return mAxisHorPosition;
 	}
-	
 	
 	
 
@@ -358,6 +348,22 @@ public class YController{
 		return mChartView.horController.getAxisVerticalPosition() - mChartView.style.axisThickness/2;
 	}
 
+	
+	
+	
+	protected int getLabelHeight(){
+		if(mLabelHeight == -1){
+			int result = 0;
+			for(int i = 0; i < mChartView.data.get(0).size(); i++){
+				result = mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(i));
+				if(result != 0)
+					break;
+			}
+			mLabelHeight = result;
+		}
+			
+		return mLabelHeight;
+	}
 	
 }
 

@@ -106,6 +106,19 @@ public class LineSet extends ChartSet{
 	}
 	
 	
+	public void addPoints(String[] labels, float[] values){
+		try{
+			if(labels.length != values.length)
+				throw new ChartException("Arrays size doesn't match.");
+		}catch(ChartException e){
+			Log.e(TAG, "", e);
+			System.exit(1);
+		}
+		for(int i = 0; i < labels.length; i++)
+			addPoint(labels[i], values[i]);
+	}
+	
+	
 	
 	public boolean hasDots() {
 		return mHasDots;

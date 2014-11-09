@@ -16,10 +16,17 @@
 
 package com.db.chart.model;
 
+import android.util.Log;
+
+import com.db.chart.exception.ChartException;
+
 /**
  * Data model containing a set of {@link Bar} to be used by {@link BarChartView}.
  */
 public class BarSet extends ChartSet{
+	
+	
+	private static final String TAG = "com.db.chart.model.BarSet";
 	
 	
 	public BarSet(){
@@ -35,6 +42,19 @@ public class BarSet extends ChartSet{
 	
 	public void addBar(Bar point){
 		this.addEntry(point);
+	}
+	
+	
+	public void addBars(String[] labels, float[] values){
+		try{
+			if(labels.length != values.length)
+				throw new ChartException("Arrays size doesn't match.");
+		}catch(ChartException e){
+			Log.e(TAG, "", e);
+			System.exit(1);
+		}
+		for(int i = 0; i < labels.length; i++)
+			addBar(labels[i], values[i]);
 	}
 	
 	

@@ -21,10 +21,8 @@ import java.util.ArrayList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
-import android.util.Log;
 
 import com.db.williamchart.R;
-import com.db.chart.exception.ChartException;
 import com.db.chart.model.ChartSet;
 
 /**

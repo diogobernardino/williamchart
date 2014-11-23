@@ -284,7 +284,7 @@ public class StackBarChartView extends BarChartView {
 		while(maxStackValue % this.getStep() != 0)
 			maxStackValue += 1;
 		
-		super.setMaxAxisValue(maxStackValue, this.getStep());
+		super.setAxisBorderValues(0, maxStackValue, this.getStep());
 	}
 	
 	
@@ -296,9 +296,9 @@ public class StackBarChartView extends BarChartView {
 	 */
 	
 	@Override
-	public ChartView setMaxAxisValue(int maxAxisValue, int step){
+	public ChartView setAxisBorderValues(int minValue, int maxValue, int step){
 		mCalcMaxValue = false;
-		return super.setMaxAxisValue(maxAxisValue, step);
+		return super.setAxisBorderValues(minValue, maxValue, step);
 	}
 
 	

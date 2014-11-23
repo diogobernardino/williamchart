@@ -97,10 +97,10 @@ public class LineChartView extends ChartView {
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
 		
 		LineSet lineSet;
+		
 		for(int i = 0; i < data.size(); i++){
 			
 			lineSet = (LineSet) data.get(i);
-			
 			mStyle.mLinePaint.setColor(lineSet.getLineColor());
 			mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());
 			handleAlpha(mStyle.mLinePaint, lineSet.getAlpha());
@@ -134,7 +134,6 @@ public class LineChartView extends ChartView {
 	private void drawPoints(Canvas canvas, LineSet set) {
 		
 		mStyle.mDotsPaint.setColor(set.getDotsColor());
-		mStyle.mDotsPaint.setAlpha((set.getAlpha() < 1) ? (int)(set.getAlpha() * 255) : 255);
 		handleAlpha(mStyle.mDotsPaint, set.getAlpha());
 		mStyle.mDotsStrokePaint.setStrokeWidth(set.getDotsStrokeThickness());
 		mStyle.mDotsStrokePaint.setColor(set.getDotsStrokeColor());

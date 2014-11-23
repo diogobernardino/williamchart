@@ -84,6 +84,7 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     chart.setYLabels(NONE/OUTSIDE/INSIDE)
     chart.setXLabels(NONE/OUTSIDE/INSIDE)
     chart.setLabelColor(color)
+    chart.setLabelsMetric(string)
     chart.setFontSize(integer)
     chart.setTypeface(typeface)
 
@@ -95,7 +96,7 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     // Show threshold line
     chart.setThresholdLine(float, paint)
 
-    chart.setMaxAxisValue(integer, integer)
+    chart.setAxisBorderValues(integer, integer, integer)
     chart.setStep(integer)
     chart.setTopSpacing(dimen)
     chart.setBorderSpacing(dimen)
@@ -129,6 +130,8 @@ LineChart
 
     LineSet lineSet = new LineSet()
     lineSet.addPoint(new Point(string, float)
+    lineSet.addPoint(string, float)
+    lineSet.addPoints(string[], float[])
     
     // Style dots
     lineSet.setDots(boolean)
@@ -173,6 +176,9 @@ BarChart & StackBarChart
     barChart.setRoundCorners(dimen)
 
     BarSet barSet = new BarSet()
+    barSet.addBar(string, float)
+    barSet.addBars(string[], float[])
+
     Bar bar = new Bar(string, float)
     bar.setColor(color)
     barSet.addBar(bar)

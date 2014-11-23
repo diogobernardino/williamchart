@@ -111,7 +111,7 @@ public class BarChartView extends ChartView {
 				bar = (Bar) barSet.getEntry(i);
 				
 				// If entry value is 0 it won't be drawn
-				if(bar.getValue() <= 0)
+				if(bar.getValue() == 0)
 					continue;
 
 				style.barPaint.setColor(bar.getColor());
@@ -122,14 +122,23 @@ public class BarChartView extends ChartView {
 					drawBarBackground(canvas, drawingOffset);			
 				
 				// Draw bar
-				canvas.drawRoundRect(new RectF((int) drawingOffset, 
+				if(bar.getValue() > 0)
+					canvas.drawRoundRect(new RectF((int) drawingOffset, 
 						(int) bar.getY(), 
 							(int) (drawingOffset + barWidth),
-								(int) this.getInnerChartBottom()), 
+								(int) this.verController.parseYPos(0)), 
 							style.cornerRadius,
 								style.cornerRadius,
 									style.barPaint);
-
+				else
+					canvas.drawRoundRect(new RectF((int) drawingOffset, 
+							(int) this.verController.parseYPos(0), 
+								(int) (drawingOffset + barWidth),
+									(int) bar.getY()), 
+								style.cornerRadius,
+									style.cornerRadius,
+										style.barPaint);
+				
 				drawingOffset += barWidth;
 				
 				// If last bar of group no set spacing is necessary
@@ -233,10 +242,17 @@ public class BarChartView extends ChartView {
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
 				
-				result.get(j).add(new Region((int) drawingOffset, 
+				if(bar.getValue() > 0)
+					result.get(j).add(new Region((int) drawingOffset, 
 									(int) bar.getY(), 
 										(int) (drawingOffset += barWidth), 
-											(int)(this.getInnerChartBottom())));
+											(int) this.getZeroPosition()));
+				else
+					result.get(j).add(new Region((int) drawingOffset, 
+							(int) this.getZeroPosition(), 
+								(int) (drawingOffset += barWidth), 
+									(int) bar.getY()));
+				
 				// If last bar of group no set spacing is necessary
 				if(j != data.size()-1)
 					drawingOffset += style.mSetSpacing;

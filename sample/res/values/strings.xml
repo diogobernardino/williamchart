@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">WilliamChart</string>
+	
+	<string name="alpha_str">alpha animation button</string>
+	<string name="ease_str">ease animation button</string>
+	<string name="order_str">order animation button</string>
+	<string name="enter_str">enter animation button</string>
+	<string name="play_str">play animation button</string>
+	
+	<string name="github_str">Github</string>
+	<string name="gplay_str">Google Play</string>
 </resources>

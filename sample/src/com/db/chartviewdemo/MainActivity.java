@@ -4,76 +4,191 @@ import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
-import com.db.chart.model.Point;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.BarChartView;
-import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.StackBarChartView;
 import com.db.chart.view.YController;
 import com.db.chart.view.XController;
+import com.db.chart.view.animation.Animation;
+import com.db.chart.view.animation.easing.BaseEasingMethod;
+import com.db.chart.view.animation.easing.bounce.BounceEaseOut;
+import com.db.chart.view.animation.easing.cubic.CubicEaseOut;
+import com.db.chart.view.animation.easing.elastic.ElasticEaseOut;
+import com.db.chart.view.animation.easing.quint.QuintEaseOut;
 import com.db.williamchartdemo.R;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.animation.TimeInterpolator;
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.db.chartviewdemo.DataRetriever;
 
 public class MainActivity extends ActionBarActivity {
 
 	
-	private final static String[] mLabels = {"ANT", "GNU", "OWL", "APE", "COD","YAK", "RAM", "JAY"};
 	private final TimeInterpolator enterInterpolator = new DecelerateInterpolator(1.5f);
 	private final TimeInterpolator exitInterpolator = new AccelerateInterpolator();
 	
-	private final static float LINE_MAX = 10;
-	private final static float LINE_MIN = 1;
+	
+	/**
+	 * Play
+	 */
+	private static ImageButton mPlayBtn;
+	
+	
+	/**
+	 * Order
+	 */
+	private static ImageButton mOrderBtn;
+	private final static int[] beginOrder = {0, 1, 2, 3, 4, 5, 6};
+	private final static int[] middleOrder = {3, 2, 4, 1, 5, 0, 6};
+	private final static int[] endOrder = {6, 5, 4, 3, 2, 1, 0};
+	private static float mCurrOverlapFactor;
+	private static int[] mCurrOverlapOrder;
+	
+	
+	/**
+	 * Ease
+	 */
+	private static ImageButton mEaseBtn;
+	private static BaseEasingMethod mCurrEasing;
+	
+	
+	/**
+	 * Enter
+	 */
+	private static ImageButton mEnterBtn;
+	private static float mCurrStartX;
+	private static float mCurrStartY;
+	
+	
+	/**
+	 * Alpha
+	 */
+	private static ImageButton mAlphaBtn;
+	private static int mCurrAlpha;
+	
+	
+	/**
+	 * Line
+	 */
+	private final static int LINE_MAX = 10;
+	private final static int LINE_MIN = -10;
+	private final static String[] lineLabels = {"", "ANT", "GNU", "OWL", "APE", "JAY", ""};
+	private final static float[][] lineValues = { {-5f, 6f, 2f, 9f, 0f, -2f, 5f}, 
+													{-9f, -2f, -4f, -3f, -7f, -5f, -3f}};
 	private static LineChartView mLineChart;
+	private Paint mLineGridPaint;
 	private TextView mLineTooltip;
-	private static int mCurrLineEntriesSize;
-	private static int mCurrLineSetSize;
-
-	private final static float BAR_MAX = 10;
-	private final static float BAR_MIN = 2;
-	private static BarChartView mBarChart;
-	private TextView mBarTooltip;
-	private static int mCurrBarEntriesSize;
-	private static int mCurrBarSetSize;
-
-	private final static float STACKBAR_MAX = 10;
-	private final static float STACKBAR_MIN = 4.8f;
-	private static StackBarChartView mStackBarChart;
-	private TextView mStackBarTooltip;
-	private static int mCurrStackBarEntriesSize;
-	private static int mCurrStackBarSetSize;
 	
-	
-	private static Button mButton;
-
-
-	private static Runnable mEndAction = new Runnable() {
+	private Runnable mLineEndAction = new Runnable() {
         @Override
         public void run() {
-        	mButton.setEnabled(true);
-        	mButton.setText("PLAY ME");
+        	mPlayBtn.setEnabled(true);
         }
+	};
+	
+	private final OnEntryClickListener lineEntryListener = new OnEntryClickListener(){
+		@Override
+		public void onClick(int setIndex, int entryIndex, Rect rect) {
+			if(mLineTooltip == null)
+				showLineTooltip(setIndex, entryIndex, rect);
+			else
+				dismissLineTooltip(setIndex, entryIndex, rect);
+		}
+	};
+	
+	private final OnClickListener lineClickListener = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			if(mLineTooltip != null)
+				dismissLineTooltip(-1, -1, null);
+		}
+	};
+	
+	
+	/**
+	 * Bar
+	 */
+	private final static int BAR_MAX = 10;
+	private final static int BAR_MIN = 0;
+	private final static String[] barLabels = {"YAK", "ANT", "GNU", "OWL", "APE", "JAY", "COD"};
+	private final static float [][] barValues = { {5f, 6f, 2f, 2f, 9f, 3f, 4f}, 
+													{8f, 2f, 4f, 3f, 7f, 5f, 4f} };
+	private static BarChartView mBarChart;
+	private Paint mBarGridPaint;
+	private TextView mBarTooltip;
+	
+	private final OnEntryClickListener barEntryListener = new OnEntryClickListener(){
+		@Override
+		public void onClick(int setIndex, int entryIndex, Rect rect) {
+			if(mBarTooltip == null)
+				showBarTooltip(setIndex, entryIndex, rect);
+			else
+				dismissBarTooltip(setIndex, entryIndex, rect);
+		}
+	};
+	
+	private final OnClickListener barClickListener = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			if(mBarTooltip != null)
+				dismissBarTooltip(-1, -1, null);
+		}
+	};
+	
+	
+	/**
+	 * StackBar
+	 */
+	private final static int STACKBAR_MAX = 100;
+	private final static int STACKBAR_MIN = 0;
+	private final static String[] stackBarLabels = {"YAK", "ANT", "GNU", "OWL", "APE", "JAY", "COD"};
+	private final static float [][] stackBarValues = {{40f, 60f, 20f, 20f, 50f, 20f, 20f}, 
+														{20f, 20f, 20f, 40f, 20f, 40f, 40f},
+															{20f, 20f, 20f, 30f, 20f, 20f, 30f} };
+	private static StackBarChartView mStackBarChart;
+	private Paint mStackBarThresholdPaint; 
+	private TextView mStackBarTooltip;
+	
+	private final OnEntryClickListener stackBarEntryListener = new OnEntryClickListener(){
+		@Override
+		public void onClick(int setIndex, int entryIndex, Rect rect) {
+			if(mStackBarTooltip == null)
+				showStackBarTooltip(setIndex, entryIndex, rect);
+			else
+				dismissStackBarTooltip(setIndex, entryIndex, rect);
+		}
+	};
+	
+	private final OnClickListener stackBarClickListener = new OnClickListener(){
+		@Override
+		public void onClick(View v) {
+			if(mStackBarTooltip != null)
+				dismissStackBarTooltip(-1, -1, null);
+		}
 	};
 
 	
-
+	private boolean mNewInstance;
 	
 	
 	
@@ -81,71 +196,25 @@ public class MainActivity extends ActionBarActivity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-     
-        
-		mButton = (Button) findViewById(R.id.button);
-		mButton.setTypeface(Typeface.createFromAsset(getAssets(),"Roboto-Regular.ttf"));
 		
-		mButton.setOnClickListener(new OnClickListener(){
-			private int updateIndex = 1;
-			private boolean newInstance = true;
-			@Override
-			public void onClick(View v) {
-				
-				mLineChart.dismissAllTooltips();
-				mLineTooltip = null;
-				mBarChart.dismissAllTooltips();
-				mBarTooltip = null;
-				mStackBarChart.dismissAllTooltips();
-				mStackBarTooltip = null;
-				
-				mButton.setEnabled(false);
-				mButton.setText("I'M PLAYING...");
-				
-				switch(updateIndex){
-					case 1: 
-						if(newInstance)
-							updateLineChart( mCurrLineSetSize = DataRetriever.randNumber(1, 3), 
-												mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
-						else
-							updateValues(mLineChart, mCurrLineSetSize, mCurrLineEntriesSize);
-						break;
-					case 2: 
-						if(newInstance)
-							updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
-												mCurrBarEntriesSize = DataRetriever.randNumber(4, 5));
-						else
-							updateValues(mBarChart, mCurrBarSetSize, mCurrBarEntriesSize);
-						break;
-					case 3: 
-						if(newInstance)
-							updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(3, 4), 
-													mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 6));
-						else
-							updateValues(mStackBarChart, mCurrStackBarSetSize, mCurrStackBarEntriesSize);
-						updateIndex = 0;
-						break;
-				}
-				newInstance = !newInstance;
-				updateIndex++;
-			}
-		});
-
+        mNewInstance = false;
+		mCurrOverlapFactor = 1;
+		mCurrEasing = new QuintEaseOut();
+		mCurrStartX = -1;
+		mCurrStartY = 0;	
+		mCurrAlpha = -1;
+		
+		initMenu();
 		
 		initLineChart();
 		initBarChart();
 		initStackBarChart();
 		
-		updateLineChart( mCurrLineSetSize = DataRetriever.randNumber(1, 3), 
-							mCurrLineEntriesSize = DataRetriever.randNumber(5, 8));
-		updateBarChart( mCurrBarSetSize = DataRetriever.randNumber(1, 3), 
-							mCurrBarEntriesSize = DataRetriever.randNumber(4, 5));
-		updateStackBarChart( mCurrStackBarSetSize = DataRetriever.randNumber(3, 4), 
-							mCurrStackBarEntriesSize = DataRetriever.randNumber(4, 6));
-		
+		updateLineChart();
+		updateBarChart();
+		updateStackBarChart();	
+
 	}
-	
-	
 	
 	
 	
@@ -156,89 +225,61 @@ public class MainActivity extends ActionBarActivity {
 	
 	private void initLineChart(){
 		
-		final OnEntryClickListener lineEntryListener = new OnEntryClickListener(){
-			@Override
-			public void onClick(int setIndex, int entryIndex, Rect rect) {
-				if(mLineTooltip == null)
-					showLineTooltip(entryIndex, rect);
-				else
-					dismissLineTooltip(entryIndex, rect);
-			}
-		};
-		
-		final OnClickListener lineClickListener = new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				if(mLineTooltip != null)
-					dismissLineTooltip(-1, null);
-			}
-		};
-		
 		mLineChart = (LineChartView) findViewById(R.id.linechart);
-		//mLineChart.setStep(2)
 		mLineChart.setOnEntryClickListener(lineEntryListener);
 		mLineChart.setOnClickListener(lineClickListener);
+		
+		mLineGridPaint = new Paint();
+		mLineGridPaint.setColor(this.getResources().getColor(R.color.line_grid));
+		mLineGridPaint.setPathEffect(new DashPathEffect(new float[] {5,5}, 0));
+		mLineGridPaint.setStyle(Paint.Style.STROKE);
+		mLineGridPaint.setAntiAlias(true);
+		mLineGridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
 	}
 	
-	
-	
-	public void updateLineChart(int nSets, int nPoints){
+	private void updateLineChart(){
 		
-		LineSet data;
 		mLineChart.reset();
 		
-		for(int i = 0; i < nSets; i++){
-			
-			data = new LineSet();
-			for(int j = 0; j < nPoints; j++)
-				data.addPoint(new Point(mLabels[j], DataRetriever.randValue(LINE_MIN, LINE_MAX)));
-
-			data.setDots(DataRetriever.randBoolean())
-				.setDotsColor(Color.parseColor(DataRetriever.getColor(DataRetriever.randNumber(0,2))))
-				.setDotsRadius(DataRetriever.randDimen(4,7))
-				.setLineThickness(DataRetriever.randDimen(3,8))
-				.setLineColor(Color.parseColor(DataRetriever.getColor(i)))
-				.setDashed(DataRetriever.randBoolean())
-				.setSmooth(DataRetriever.randBoolean())
-				;
-			
-			if(i == 2){
-				//data.setFill(Color.parseColor("#3388c6c3"));
-				int[] colors = {Color.parseColor("#3388c6c3"), Color.TRANSPARENT};
-				data.setGradientFill(colors, null);
-			}
-			
-			if(DataRetriever.randBoolean())
-				data.setDotsStrokeThickness(DataRetriever.randDimen(1,4))
-				.setDotsStrokeColor(Color.parseColor(DataRetriever.getColor(DataRetriever.randNumber(0,2))))
-				;
-
-			mLineChart.addData(data);
-		}
+		LineSet dataSet = new LineSet();
+		dataSet.addPoints(lineLabels, lineValues[0]);
+		dataSet.setDots(true)
+			.setDotsColor(this.getResources().getColor(R.color.line_bg))
+			.setDotsRadius(Tools.fromDpToPx(5))
+			.setDotsStrokeThickness(Tools.fromDpToPx(2))
+			.setDotsStrokeColor(this.getResources().getColor(R.color.line))
+			.setLineColor(this.getResources().getColor(R.color.line))
+			.setLineThickness(Tools.fromDpToPx(3));
+		mLineChart.addData(dataSet);
 		
-		mLineChart.setGrid(DataRetriever.randPaint())
-			.setVerticalGrid(DataRetriever.randPaint())
-			.setHorizontalGrid(DataRetriever.randPaint())
-			//.setThresholdLine(2, randPaint())
-			.setYLabels(YController.LabelPosition.NONE)
+		dataSet = new LineSet();
+		dataSet.addPoints(lineLabels, lineValues[1]);
+		dataSet.setLineColor(this.getResources().getColor(R.color.line))
+			.setLineThickness(Tools.fromDpToPx(3))
+			.setSmooth(true);
+		mLineChart.addData(dataSet);
+		
+		mLineChart.setBorderSpacing(Tools.fromDpToPx(4))
+			.setHorizontalGrid(mLineGridPaint)
+			.setXAxis(false)
+			.setXLabels(XController.LabelPosition.OUTSIDE)
 			.setYAxis(false)
-			.setXLabels(DataRetriever.getXPosition())
-			.setXAxis(DataRetriever.randBoolean())
-			.setMaxAxisValue(10, 2)
-			.animate(DataRetriever.randAnimation(mEndAction, nPoints))
+			.setYLabels(YController.LabelPosition.OUTSIDE)
+			.setAxisBorderValues(LINE_MIN, LINE_MAX, 5)
+			.setLabelsMetric("u")
+			.animate(getAnimation())
 			//.show()
 			;
 	}
 	
 	
 	@SuppressLint("NewApi")
-	private void showLineTooltip(int index, Rect rect){
+	private void showLineTooltip(int setIndex, int entryIndex, Rect rect){
 		
 		mLineTooltip = (TextView) getLayoutInflater().inflate(R.layout.circular_tooltip, null);
-		mLineTooltip.setText(mLabels[index]);
+		mLineTooltip.setText(Integer.toString((int)lineValues[setIndex][entryIndex]));
 		
-        LayoutParams layoutParams = new LayoutParams((int)Tools.fromDpToPx(40), (int)Tools.fromDpToPx(40));
+        LayoutParams layoutParams = new LayoutParams((int)Tools.fromDpToPx(30), (int)Tools.fromDpToPx(30));
         layoutParams.leftMargin = rect.centerX() - layoutParams.width/2;
         layoutParams.topMargin = rect.centerY() - layoutParams.height/2;
         mLineTooltip.setLayoutParams(layoutParams);
@@ -261,34 +302,38 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	
-	
 	@SuppressLint("NewApi")
-	private void dismissLineTooltip(final int index, final Rect rect){
+	private void dismissLineTooltip(final int setIndex, final int entryIndex, final Rect rect){
 		
 		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 			mLineTooltip.animate()
 			.setDuration(100)
 	    	.scaleX(0).scaleY(0)
 	    	.alpha(0)
-	    	.rotation(-360)
 	    	.setInterpolator(exitInterpolator).withEndAction(new Runnable(){
 				@Override
 				public void run() {
 					mLineChart.removeView(mLineTooltip);
 					mLineTooltip = null;
-					if(index != -1)
-						showLineTooltip(index, rect);
+					if(entryIndex != -1)
+						showLineTooltip(setIndex, entryIndex, rect);
 				}
 	    	});
 		}else{
 			mLineChart.dismissTooltip(mLineTooltip);
 			mLineTooltip = null;
-			if(index != -1)
-				showLineTooltip(index, rect);
+			if(entryIndex != -1)
+				showLineTooltip(setIndex, entryIndex, rect);
 		}
 	}
 	
 	
+	private void updateValues(LineChartView chartView){
+		
+		chartView.updateValues(0, lineValues[1]);
+		chartView.updateValues(1, lineValues[0]);
+		chartView.notifyDataUpdate();
+	}
 	
 	
 	
@@ -299,81 +344,57 @@ public class MainActivity extends ActionBarActivity {
 	
 	private void initBarChart(){
 		
-		final OnEntryClickListener barEntryListener = new OnEntryClickListener(){
-			
-			@Override
-			public void onClick(int setIndex, int entryIndex, Rect rect) {
-				
-				if(mBarTooltip == null)
-					showBarTooltip(entryIndex, rect);
-				else
-					dismissBarTooltip(entryIndex, rect);
-			}
-		};
-		
-		final OnClickListener barClickListener = new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				if(mBarTooltip != null)
-					dismissBarTooltip(-1, null);
-			}
-		};
-		
 		mBarChart = (BarChartView) findViewById(R.id.barchart);
 		mBarChart.setOnEntryClickListener(barEntryListener);
 		mBarChart.setOnClickListener(barClickListener);
+		
+		mBarGridPaint = new Paint();
+		mBarGridPaint.setColor(this.getResources().getColor(R.color.bar_grid));
+		mBarGridPaint.setStyle(Paint.Style.STROKE);
+		mBarGridPaint.setAntiAlias(true);
+		mBarGridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
 	}
 	
-	
-	
-	public void updateBarChart(int nSets, int nPoints){
+	private void updateBarChart(){
 		
-		BarSet data;
-		Bar bar;
 		mBarChart.reset();
 		
-		for(int i = 0; i < nSets; i++){
-			
-			data = new BarSet();
-			for(int j = 0; j < nPoints; j++){
-				
-				bar = new Bar(mLabels[j], DataRetriever.randValue(BAR_MIN, BAR_MAX));
-				//bar.setColor(Color.parseColor(getColor(j)));
-				data.addBar(bar);
-			}
-			
-			data.setColor(Color.parseColor(DataRetriever.getColor(i)));
-			mBarChart.addData(data);
+		BarSet barSet = new BarSet();
+		Bar bar;
+		for(int i = 0; i < 7; i++){
+			bar = new Bar(barLabels[i], barValues[0][i]);
+			if(i == 4)
+				bar.setColor(this.getResources().getColor(R.color.bar_highest));
+			else
+				bar.setColor(this.getResources().getColor(R.color.bar_fill1));
+			barSet.addBar(bar);
 		}
+		mBarChart.addData(barSet);
 		
-		mBarChart.setBarSpacing(DataRetriever.randDimen(13, 28));
-		mBarChart.setSetSpacing(DataRetriever.randDimen(2, 7));
-		mBarChart.setBarBackground(DataRetriever.randBoolean());
-		mBarChart.setBarBackgroundColor(Color.parseColor("#37474f"));
-		mBarChart.setRoundCorners(DataRetriever.randDimen(0,6));
-
-		mBarChart.setBorderSpacing(DataRetriever.randDimen(5,15))
-			.setGrid(DataRetriever.randPaint())
-			.setHorizontalGrid(DataRetriever.randPaint())
-			.setVerticalGrid(DataRetriever.randPaint())
-			.setYLabels(YController.LabelPosition.NONE)
+		barSet = new BarSet();
+		barSet.addBars(barLabels, barValues[1]);
+		barSet.setColor(this.getResources().getColor(R.color.bar_fill2));
+		mBarChart.addData(barSet);
+		
+		mBarChart.setSetSpacing(Tools.fromDpToPx(1));
+		
+		mBarChart.setBorderSpacing(0)
+			.setAxisBorderValues(BAR_MIN, BAR_MAX, 2)
+			.setGrid(mBarGridPaint)
 			.setYAxis(false)
 			.setXLabels(XController.LabelPosition.OUTSIDE)
-			.setXAxis(DataRetriever.randBoolean())
-			//.setThresholdLine(2, randPaint())
-			.setMaxAxisValue((int)BAR_MAX, 2)
-			.animate(DataRetriever.randAnimation(mEndAction, nPoints))
+			.setYLabels(YController.LabelPosition.NONE)
+			.animate(getAnimation())
 			//.show()
 			;	
 	}
 	
 	
 	@SuppressLint("NewApi")
-	private void showBarTooltip(int index, Rect rect){
+	private void showBarTooltip(int setIndex, int entryIndex, Rect rect){
 
-		mBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.tooltip, null);
-		mBarTooltip.setText(""+mLabels[index].charAt(0));
+		mBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.bar_tooltip, null);
+		mBarTooltip.setText(Integer.toString((int) barValues[setIndex][entryIndex]));
 		
 		LayoutParams layoutParams = new LayoutParams(rect.width(), rect.height());	
 		layoutParams.leftMargin = rect.left;
@@ -395,7 +416,7 @@ public class MainActivity extends ActionBarActivity {
 	
 
 	@SuppressLint("NewApi")
-	private void dismissBarTooltip(final int index, final Rect rect){
+	private void dismissBarTooltip(final int setIndex, final int entryIndex, final Rect rect){
 		
 		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 			mBarTooltip.animate()
@@ -407,18 +428,25 @@ public class MainActivity extends ActionBarActivity {
 				public void run() {
 					mBarChart.removeView(mBarTooltip);
 					mBarTooltip = null;
-					if(index != -1)
-						showBarTooltip(index, rect);
+					if(entryIndex != -1)
+						showBarTooltip(setIndex, entryIndex, rect);
 				}
 	    	});
 		}else{
 			mBarChart.dismissTooltip(mBarTooltip);
 			mBarTooltip = null;
-			if(index != -1)
-				showBarTooltip(index, rect);
+			if(entryIndex != -1)
+				showBarTooltip(setIndex, entryIndex, rect);
 		}
 	}
 	
+	
+	private void updateValues(BarChartView chartView){
+		
+		chartView.updateValues(0, barValues[1]);
+		chartView.updateValues(1, barValues[0]);
+		chartView.notifyDataUpdate();
+	}
 	
 	
 	
@@ -429,68 +457,69 @@ public class MainActivity extends ActionBarActivity {
 	
 	private void initStackBarChart(){
 		
-		final OnEntryClickListener stackBarEntryListener = new OnEntryClickListener(){
-			
-			@Override
-			public void onClick(int setIndex, int entryIndex, Rect rect) {
-				
-				if(mStackBarTooltip == null)
-					showStackBarTooltip(entryIndex, rect);
-				else
-					dismissStackBarTooltip(entryIndex, rect);
-			}
-		};
-		
-		final OnClickListener stackBarClickListener = new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				if(mStackBarTooltip != null)
-					dismissStackBarTooltip(-1, null);
-			}
-		};
-		
 		mStackBarChart = (StackBarChartView) findViewById(R.id.stackbarchart);
-		mStackBarChart.setStep(4);
 		mStackBarChart.setOnEntryClickListener(stackBarEntryListener);
 		mStackBarChart.setOnClickListener(stackBarClickListener);
+		
+		mStackBarThresholdPaint = new Paint();
+		mStackBarThresholdPaint.setColor(this.getResources().getColor(R.color.stackbar_line));
+		mStackBarThresholdPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
+		mStackBarThresholdPaint.setStyle(Paint.Style.STROKE);
+		mStackBarThresholdPaint.setAntiAlias(true);
+		mStackBarThresholdPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
 	}
 	
-	
-	public void updateStackBarChart(int nSets, int nPoints){
+	private void updateStackBarChart(){
 		
-		BarSet data;
-		Bar bar;
 		mStackBarChart.reset();
 		
-		for(int i = 0; i < nSets; i++){
-			
-			data = new BarSet();
-			for(int j = 0; j <nPoints; j++){
-				bar = new Bar(mLabels[j], DataRetriever.randValue(STACKBAR_MIN, STACKBAR_MAX));
-				data.addBar(bar);
-			}
-			
-			data.setColor(Color.parseColor(DataRetriever.getColor(i)));
-			mStackBarChart.addData(data);
+		BarSet stackBarSet = new BarSet();
+		Bar bar;
+		for(int i = 0; i < 7; i++){
+			bar = new Bar(stackBarLabels[i], stackBarValues[0][i]);
+			if(i == 2)
+				bar.setColor(this.getResources().getColor(R.color.stackbar_fill1_h));
+			else
+				bar.setColor(this.getResources().getColor(R.color.stackbar_fill1));
+			stackBarSet.addBar(bar);
 		}
+		mStackBarChart.addData(stackBarSet);
 		
-		mStackBarChart.setBarSpacing(DataRetriever.randDimen(12, 27));
-		mStackBarChart.setBarBackground(DataRetriever.randBoolean());
-		mStackBarChart.setBarBackgroundColor(Color.parseColor("#37474f"));
-		mStackBarChart.setRoundCorners(DataRetriever.randDimen(0,6));
+		stackBarSet = new BarSet();
+		for(int i = 0; i < 7; i++){
+			bar = new Bar(stackBarLabels[i], stackBarValues[1][i]);
+			if(i == 2)
+				bar.setColor(this.getResources().getColor(R.color.stackbar_fill2_h));
+			else
+				bar.setColor(this.getResources().getColor(R.color.stackbar_fill2));
+			stackBarSet.addBar(bar);
+		}
+		mStackBarChart.addData(stackBarSet);
 		
-		mStackBarChart.setBorderSpacing(DataRetriever.randDimen(5,15))
-			.setGrid(DataRetriever.randPaint())
-			.setHorizontalGrid(DataRetriever.randPaint())
-			.setVerticalGrid(DataRetriever.randPaint())
-			.setYLabels(YController.LabelPosition.NONE)
-			.setYAxis(false)
-			.setXLabels(DataRetriever.getXPosition())
-			.setXAxis(DataRetriever.randBoolean())
-			//.setThresholdLine(2, randPaint())
-			.setMaxAxisValue(10*nSets, 5)
-			.animate(DataRetriever.randAnimation(mEndAction, nPoints))
+		stackBarSet = new BarSet();
+		for(int i = 0; i < 7; i++){
+			bar = new Bar(stackBarLabels[i], stackBarValues[2][i]);
+			if(i == 2)
+				bar.setColor(this.getResources().getColor(R.color.stackbar_fill3_h));
+			else
+				bar.setColor(this.getResources().getColor(R.color.stackbar_fill3));
+			stackBarSet.addBar(bar);
+		}
+		mStackBarChart.addData(stackBarSet);
+		
+		mStackBarChart.setBarSpacing(Tools.fromDpToPx(20));
+		mStackBarChart.setRoundCorners(Tools.fromDpToPx(1));
+		
+		mStackBarChart.setStep(4)
+			.setBorderSpacing(Tools.fromDpToPx(5))
+			.setAxisBorderValues(STACKBAR_MIN, STACKBAR_MAX, 20)
+			.setXAxis(false)
+			.setXLabels(XController.LabelPosition.OUTSIDE)
+			.setYAxis(true)
+			.setYLabels(YController.LabelPosition.OUTSIDE)
+			.setThresholdLine(89, mStackBarThresholdPaint)
+			.setLabelsMetric(" %")
+			.animate(getAnimation())
 			//.show()
 			;
 	}
@@ -498,10 +527,10 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 	@SuppressLint("NewApi")
-	private void showStackBarTooltip(int index, Rect rect){
+	private void showStackBarTooltip(int setIndex, int entryIndex, Rect rect){
 		
-		mStackBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.tooltip, null);
-		mStackBarTooltip.setText(""+mLabels[index].charAt(0));
+		mStackBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.stackbar_tooltip, null);
+		mStackBarTooltip.setText(""+barLabels[entryIndex].charAt(setIndex));
 		
 		LayoutParams layoutParams = new LayoutParams(rect.width(), rect.height());	
 		layoutParams.leftMargin = rect.left;
@@ -524,7 +553,7 @@ public class MainActivity extends ActionBarActivity {
 	
 
 	@SuppressLint("NewApi")
-	private void dismissStackBarTooltip(final int index, final Rect rect){
+	private void dismissStackBarTooltip(final int setIndex, final int entryIndex, final Rect rect){
 		
 		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 			mStackBarTooltip.animate()
@@ -536,37 +565,300 @@ public class MainActivity extends ActionBarActivity {
 				public void run() {
 					mStackBarChart.removeView(mStackBarTooltip);
 					mStackBarTooltip = null;
-					if(index != -1)
-						showStackBarTooltip(index, rect);
+					if(entryIndex != -1)
+						showStackBarTooltip(setIndex, entryIndex, rect);
 				}
 	    	});
 		}else{
 			mStackBarChart.dismissTooltip(mStackBarTooltip);
 			mStackBarTooltip = null;
-			if(index != -1)
-				showStackBarTooltip(index, rect);
+			if(entryIndex != -1)
+				showStackBarTooltip(setIndex, entryIndex, rect);
 		}
 	}
 
 	
-	
-	
-	
-	private void updateValues(ChartView chartView, int setsSize, int entriesSize){
-		
-		mButton.setEnabled(false);
-		float[] newValues;
-		for(int i = 0; i < setsSize; i++){
-			
-			newValues = new float[entriesSize];
-			for(int j = 0; j < entriesSize; j++)
-				newValues[j] = DataRetriever.randValue(STACKBAR_MIN, STACKBAR_MAX);
-			
-			chartView.updateValues(i, newValues);
-		}
-		
+	private void updateValues(StackBarChartView chartView){
+
+		chartView.updateValues(0, stackBarValues[2]);
+		chartView.updateValues(1, stackBarValues[0]);
+		chartView.updateValues(2, stackBarValues[1]);
 		chartView.notifyDataUpdate();
 	}
-
+	
+	
+	
+	
+	/*------------------------------------*
+	 *                MENU                *
+	 *------------------------------------*/
+	
+	private void initMenu(){
+		
+        mPlayBtn = (ImageButton) findViewById(R.id.play);
+        mPlayBtn.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				mPlayBtn.setImageResource(R.drawable.play);
+				mPlayBtn.setBackgroundResource(R.drawable.button);
+				mPlayBtn.setEnabled(false);
+				
+				mLineChart.dismissAllTooltips();
+				mLineTooltip = null;
+				mBarChart.dismissAllTooltips();
+				mBarTooltip = null;
+				mStackBarChart.dismissAllTooltips();
+				mStackBarTooltip = null;
+				
+				if(mNewInstance){
+					updateLineChart();
+					updateBarChart();
+					updateStackBarChart();
+				}else{
+					updateValues(mLineChart);
+					updateValues(mBarChart);
+					updateValues(mStackBarChart);
+				}
+				mNewInstance = !mNewInstance;
+			}
+		});
+		
+        
+        mOrderBtn = (ImageButton) findViewById(R.id.order);
+        mOrderBtn.setOnClickListener(new OnClickListener(){
+        	private int index = 1;
+        	@Override
+			public void onClick(View v) {
+				mPlayBtn.setBackgroundResource(R.color.button_hey);
+				setOverlap(index++);
+				if(index >= 4)
+					index = 0;
+				mNewInstance = true;
+			}
+		});
+		
+        
+		mEaseBtn = (ImageButton) findViewById(R.id.ease);
+		mEaseBtn.setOnClickListener(new OnClickListener(){
+			private int index = 1;
+			@Override
+			public void onClick(View v) {
+				mPlayBtn.setBackgroundResource(R.color.button_hey);
+				setEasing(index++);
+				if(index >= 4)
+					index = 0;
+				mNewInstance = true;
+			}
+		});
+		
+		
+		mEnterBtn = (ImageButton) findViewById(R.id.enter);
+		mEnterBtn.setOnClickListener(new OnClickListener(){
+			private int index = 1;
+			@Override
+			public void onClick(View v) {
+				mPlayBtn.setBackgroundResource(R.color.button_hey);
+				setEnterPosition(index++);
+				if(index >= 9)
+					index = 0;
+				mNewInstance = true;
+			}
+		});
+		
+		
+		mAlphaBtn = (ImageButton) findViewById(R.id.alpha);
+		mAlphaBtn.setOnClickListener(new OnClickListener(){
+			private int index = 1;
+			@Override
+			public void onClick(View v) {
+				mPlayBtn.setBackgroundResource(R.color.button_hey);
+				setAlpha(index++);
+				if(index >= 3)
+					index = 0;
+				mNewInstance = true;
+			}
+		});
+	}
+	
+	
+	
+	
+	/*------------------------------------*
+	 *               SETTERS              *
+	 *------------------------------------*/
+	
+	private void setOverlap(int index){
+		switch(index){
+			case 0:
+				mCurrOverlapFactor = 1;
+				mCurrOverlapOrder = beginOrder;
+				mOrderBtn.setImageResource(R.drawable.ordere);
+				break;
+			case 1:
+				mCurrOverlapFactor = .5f;
+				mCurrOverlapOrder = beginOrder;
+				mOrderBtn.setImageResource(R.drawable.orderf);
+				break;
+			case 2:
+				mCurrOverlapFactor = .5f;
+				mCurrOverlapOrder = endOrder;
+				mOrderBtn.setImageResource(R.drawable.orderl);
+				break;
+			case 3:
+				mCurrOverlapFactor = .5f;
+				mCurrOverlapOrder = middleOrder;
+				mOrderBtn.setImageResource(R.drawable.orderm);
+				break;
+			default:
+				
+		}
+	}
+	
+	private void setEasing(int index){
+		switch(index){
+			case 0:
+				mCurrEasing = new CubicEaseOut();
+				mEaseBtn.setImageResource(R.drawable.ease_cubic);
+				break;
+			case 1:
+				mCurrEasing = new QuintEaseOut();
+				mEaseBtn.setImageResource(R.drawable.ease_quint);
+				break;
+			case 2:
+				mCurrEasing = new BounceEaseOut();
+				mEaseBtn.setImageResource(R.drawable.ease_bounce);
+				break;
+			case 3:
+				mCurrEasing = new ElasticEaseOut();
+				mEaseBtn.setImageResource(R.drawable.ease_elastic);
+			default:
+				
+		}
+	}
+	
+	private void setEnterPosition(int index){
+		
+		switch(index){
+			case 0:
+				mCurrStartX = -1f;
+				mCurrStartY = 0f;
+				mEnterBtn.setImageResource(R.drawable.enterb);
+				break;
+			case 1:
+				mCurrStartX = 0f;
+				mCurrStartY = 0f;
+				mEnterBtn.setImageResource(R.drawable.enterbl);
+				break;
+			case 2:
+				mCurrStartX = 0f;
+				mCurrStartY = -1f;
+				mEnterBtn.setImageResource(R.drawable.enterl);
+				break;
+			case 3:
+				mCurrStartX = 0f;
+				mCurrStartY = 1f;
+				mEnterBtn.setImageResource(R.drawable.entertl);
+				break;
+			case 4:
+				mCurrStartX = -1f;
+				mCurrStartY = 1f;
+				mEnterBtn.setImageResource(R.drawable.entert);
+				break;
+			case 5:
+				mCurrStartX = 1f;
+				mCurrStartY = 1f;
+				mEnterBtn.setImageResource(R.drawable.entertr);
+				break;
+			case 6:
+				mCurrStartX = 1f;
+				mCurrStartY = -1f;
+				mEnterBtn.setImageResource(R.drawable.enterr);
+				break;
+			case 7:
+				mCurrStartX = 1f;
+				mCurrStartY = 0f;
+				mEnterBtn.setImageResource(R.drawable.enterbr);
+				break;
+			case 8:
+				mCurrStartX = .5f;
+				mCurrStartY = .5f;
+				mEnterBtn.setImageResource(R.drawable.enterc);
+				break;
+			default:
+				
+		}
+	}
+	
+	
+	@SuppressLint("NewApi")
+	private void setAlpha(int index){
+		switch(index){
+			case 0:
+				mCurrAlpha = -1;
+				if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
+					mAlphaBtn.setImageAlpha(255);
+				else if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
+					mAlphaBtn.setAlpha(1f);
+				break;
+			case 1:
+				mCurrAlpha = 2;
+				if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
+					mAlphaBtn.setImageAlpha(115);
+				else if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
+					mAlphaBtn.setAlpha(.6f);
+				break;
+			case 2:
+				mCurrAlpha = 1;
+				if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN)
+					mAlphaBtn.setImageAlpha(55);
+				else if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
+					mAlphaBtn.setAlpha(.3f);
+				break;
+			default:
+		}
+	}
+	
+	
+	
+	private Animation getAnimation(){
+		return new Animation()
+					.setAlpha(mCurrAlpha)
+					.setEasing(mCurrEasing)
+					.setOverlap(mCurrOverlapFactor, mCurrOverlapOrder)
+					.setStartPoint(mCurrStartX, mCurrStartY)
+					.setEndAction(mLineEndAction);
+	}
+	
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
+	}
+	
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.github:
+	             startActivity(new Intent("android.intent.action.VIEW", 
+	            		 			Uri.parse("https://github.com/diogobernardino/WilliamChart")));
+	            return true;
+	        case R.id.play:
+	        	try { 
+	        		startActivity(new Intent(Intent.ACTION_VIEW, 
+							Uri.parse("market://details?id=" 
+									+ this.getApplicationContext().getPackageName())));
+	        	} catch (ActivityNotFoundException e) {
+	        		startActivity(new Intent(Intent.ACTION_VIEW, 
+	        								Uri.parse("http://play.google.com/store/apps/details?id=" 
+	        											+ this.getApplicationContext().getPackageName())));
+	        	} 
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 	
 }

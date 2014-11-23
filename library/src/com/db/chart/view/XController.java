@@ -72,6 +72,9 @@ public class XController{
 	protected LabelPosition labelsPositioning;
 	
 
+	/** Max height of labels */
+	private int mLabelHeight;
+	
 	
 	
 	public XController(ChartView chartView) {
@@ -87,7 +90,7 @@ public class XController{
 		labelsPositioning = LabelPosition.OUTSIDE;
 		borderSpacing = mChartView.getResources()
 									.getDimension(R.dimen.axis_border_spacing);	
-		
+		mLabelHeight = -1;
 	}
 
 	
@@ -101,9 +104,8 @@ public class XController{
 
 
 
-
 	protected void init() {
-
+		
 		// Set the vertical display coordinate
 		mLabelVerCoord = mChartView.chartBottom;
 		if(labelsPositioning == LabelPosition.INSIDE)
@@ -153,6 +155,21 @@ public class XController{
 
 	
 	
+	
+	protected int getLabelHeight(){
+		if(mLabelHeight == -1){
+			int result = 0;
+			for(int i = 0; i < mChartView.data.get(0).size(); i++){
+				result = mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(i));
+				if(result != 0)
+					break;
+			}
+			mLabelHeight = result;
+		}
+			
+		return mLabelHeight;
+	}
+	
 
 	
 	/**
@@ -199,11 +216,17 @@ public class XController{
 	 * @return position of the inner right side of the chart
 	 */
 	public float getInnerChartRight(){
-		return mChartView.chartRight 
-				- mChartView.style.labelPaint
-								.measureText(mChartView.data.get(0).
-												getLabel(mChartView.data.get(0)
-																.size()-1))/2;
+		
+		float lastLabelWidth = mChartView.style.labelPaint
+								.measureText(mChartView.data.get(0)
+										.getLabel(mChartView.data.get(0)
+												.size()-1));
+		float rightBorder = 0;
+		if(borderSpacing + mandatoryBorderSpacing < lastLabelWidth / 2)
+			rightBorder = lastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);
+	
+		return mChartView.chartRight - rightBorder;
+		
 	}
 
 	
@@ -213,7 +236,7 @@ public class XController{
 			return mChartView.chartBottom;
 		
 		return mChartView.chartBottom 
-					- mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(0))
+					- getLabelHeight()
 						- mDistLabelToAxis; 
 	}
 	

@@ -7,6 +7,11 @@
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="background">@color/actionbar</item>
+        <item name="titleTextStyle">@style/MyActionBarTitleText</item>
+    </style>
+    
+	<style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/text</item>
     </style>
     
 </resources>

@@ -18,11 +18,18 @@ package com.db.chart.model;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
+import com.db.chart.exception.ChartException;
+
 /**
  * Data model containing {@link ChartEntry} elements to be used by {@link ChartView}.
  */
 public class ChartSet {
 
+	
+	private static final String TAG = "com.db.chart.model.ChartSet";
+	
 	
 	/** Set with entries */
 	private ArrayList<ChartEntry> mEntries;
@@ -41,13 +48,13 @@ public class ChartSet {
 	
 	
 	
-	public void addEntry(String label, float value){
+	protected void addEntry(String label, float value){
 		mEntries.add(new ChartEntry(label, value));
 	}
 
 	
 	
-	public void addEntry(ChartEntry e){
+	protected void addEntry(ChartEntry e){
 		mEntries.add(e);
 	}
 

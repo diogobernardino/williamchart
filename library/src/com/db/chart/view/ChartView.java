@@ -105,9 +105,6 @@ public abstract class ChartView extends RelativeLayout{
 	private ArrayList<Pair<Integer, float []>> toUpdateValues;
 	
 	
-	private View mEntryView;
-	
-	
 	/**
 	 * Executed only before the chart is drawn for the first time.
 	 * . borders are defined
@@ -122,7 +119,7 @@ public abstract class ChartView extends RelativeLayout{
 			ChartView.this.getViewTreeObserver().removeOnPreDrawListener(this);
 			
 			// Define chart frame
-			chartTop = getPaddingTop();
+			chartTop = getPaddingTop() + verController.getLabelHeight()/2;
 			chartBottom = getMeasuredHeight() - getPaddingBottom();
 			chartLeft = getPaddingLeft();
 			chartRight = getMeasuredWidth() - getPaddingRight();
@@ -291,8 +288,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		if(!data.isEmpty() && set.size() != data.get(0).size())
 			Log.e(TAG, "", 
-					new ChartException("The number of labels between " +
-							"sets doesn't match."));
+					new ChartException("The number of labels between sets doesn't match."));
 		data.add(set);
 	}
 	
@@ -336,6 +332,7 @@ public abstract class ChartView extends RelativeLayout{
 		data.clear();
 		mRegions.clear();
 		toUpdateValues.clear();
+		verController.minLabelValue = 0;
 		verController.maxLabelValue = 0;
 		if(horController.mandatoryBorderSpacing != 0)
 			horController.mandatoryBorderSpacing = 1;
@@ -482,7 +479,7 @@ public abstract class ChartView extends RelativeLayout{
 			
 			// Draw Axis Y
 			verController.draw(canvas);
-			
+						
 			// Draw data
 			onDrawChart(canvas, data);
 			
@@ -491,7 +488,6 @@ public abstract class ChartView extends RelativeLayout{
 			
 			if(style.thresholdPaint != null)
 				drawThresholdLine(canvas);
-			
 		}
 		
 		//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
@@ -680,6 +676,16 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	/**
+	 * Returns the position of 0 value on chart.
+	 * @return position of 0 value on chart
+	 */
+	public float getZeroPosition(){
+		return verController.parseYPos(0);
+	}
+	
+	
+	
+	/**
 	 * Get the step used between Y values
 	 * @return step
 	 */
@@ -760,16 +766,17 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param maxAxisValue - the maximum value that Y axis will have as a label
 	 * @param step - step - (real) value distance from every label
 	 */
-	public ChartView setMaxAxisValue(int maxAxisValue, int step){
+	public ChartView setAxisBorderValues(int minValue, int maxValue, int step){
 		
 		try{
-			if(maxAxisValue % step != 0)
-				throw new ChartException("Step value must be a divisor of maxAxisValue");
+			if((maxValue - minValue) % step != 0)
+				throw new ChartException("Step value must be a divisor of distance between minValue and maxValue");
 		}catch(ChartException e){
 			Log.e(TAG, "", e);
 			System.exit(1);
 		}
-		verController.maxLabelValue = maxAxisValue;
+		verController.maxLabelValue = maxValue;
+		verController.minLabelValue = minValue;
 		verController.step = step;
 		
 		return this;
@@ -937,18 +944,22 @@ public abstract class ChartView extends RelativeLayout{
 	}
 	
 	
+	
 	protected ChartView setMandatoryBorderSpacing(){
 		horController.mandatoryBorderSpacing = 1;
 		return this;
 	}
 	
 	
-	public ChartView setEntryBehaviour(View view){
-		mEntryView = view;
+	
+	/**
+	 * Set the metric to be added to Y labels.
+	 * @param metric to be used.
+	 */
+	public ChartView setLabelsMetric(String metric){
+		verController.labelMetric = metric;
 		return this;
 	}
-	
-	
 	
 	
 	/*

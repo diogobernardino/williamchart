@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="axis">#37474f</color>
-    <color name="grid">#b0bec5</color>
-    <color name="text_view">#455a64</color>
-    <color name="button_pressed">#607d8b</color>
-    <color name="button_disabled">#b0bec5</color>
-    <color name="button_default">#37474f</color>
-    <color name="app_background">#e0e0e0</color>
-    <color name="actionbar">#607d8b</color>
+    
+    <color name="text">#ffffff</color>
+    <color name="button_hey">#2d474a</color>
+    <color name="button_pressed">#dbe1e7</color>
+    <color name="button_disabled">#dbe1e7</color>
+    <color name="button_default">#3c5e62</color>
+    <color name="app_background">#eaedf1</color>
+    <color name="actionbar">#1f3133</color>
+    
+    <color name="axis">#ffffff</color>
+    <color name="label">#ffffff</color>
+    
+    <color name="line_bg">#00bba7</color>
+    <color name="line_grid">#00a694</color>
+    <color name="line">#ffffff</color>
+    <color name="line_fill">#30ffffff</color>
+    <color name="line_tooltip">#ffffff</color>
+    
+    <color name="bar_bg">#f67743</color>
+    <color name="bar_bgbar">#d96739</color>
+    <color name="bar_fill1">#fed4c2</color>
+    <color name="bar_fill2">#ffc2a9</color>
+    <color name="bar_highest">#ffffff</color>
+    <color name="bar_grid">#1Aaa3302</color>
+    <color name="bar_tooltip">#aa3302</color>
+    
+    <color name="stackbar_bg">#0091EA</color>
+    <color name="stackbar_line">#8002889a</color>
+    <color name="stackbar_fill1">#109bae</color>
+    <color name="stackbar_fill2">#33a3b3</color>
+    <color name="stackbar_fill3 ">#47b7c7</color>
+    <color name="stackbar_fill1_h">#05d6f1</color>
+    <color name="stackbar_fill2_h">#4fdcf0</color>
+    <color name="stackbar_fill3_h">#8fe5f1</color>
+    <color name="stackbar_tooltip">#ffffff</color>
+    
 </resources>

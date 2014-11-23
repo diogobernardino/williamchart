@@ -107,6 +107,8 @@ LineChart
 
     LineSet lineSet = new LineSet()
     lineSet.addPoint(new Point(string, float)
+    lineSet.addPoint(string, float)
+    lineSet.addPoints(string[], float[])
     
     // Style dots
     lineSet.setDots(boolean)
@@ -151,6 +153,9 @@ BarChart & StackBarChart
     barChart.setRoundCorners(dimen)
 
     BarSet barSet = new BarSet()
+    barSet.addBar(string, float)
+    barSet.addBars(string[], float[])
+
     Bar bar = new Bar(string, float)
     bar.setColor(color)
     barSet.addBar(bar)

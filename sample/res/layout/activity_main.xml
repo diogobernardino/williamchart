@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#eceff1">
+    android:background="@color/app_background">
     
 	<com.db.chart.view.LineChartView
 		xmlns:chart="http://schemas.android.com/apk/res-auto"
@@ -10,15 +10,18 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="0dp"
 	    android:layout_weight=".30"
-	    android:paddingTop="15dp"
-	    android:paddingBottom="5dp"
+	    android:layout_marginTop="7dp"
+	    android:layout_marginLeft="7dp"
+	    android:layout_marginRight="7dp"
+	    android:layout_marginBottom="2dp"
+	    android:paddingTop="10dp"
+	    android:paddingBottom="10dp"
 	    android:paddingLeft="10dp"
 	    android:paddingRight="10dp"
-	    chart:chart_shadowDy="1dp"
-	    chart:chart_shadowRadius="1dp"
-	    chart:chart_shadowColor="#80000000"
+	    android:background="#00BBA7"
 	    chart:chart_axisColor="@color/axis"
 	    chart:chart_typeface="Roboto-Regular.ttf"
+	    chart:chart_labelColor="@color/label"
 	    chart:chart_axisBorderSpacing="0dp">
 	</com.db.chart.view.LineChartView>
 	
@@ -28,12 +31,18 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="0dp"
 	    android:layout_weight=".30"
+	    android:layout_marginTop="2dp"
+	    android:layout_marginLeft="7dp"
+	    android:layout_marginRight="7dp"
+	    android:layout_marginBottom="2dp"
 	    android:paddingTop="10dp"
-	    android:paddingBottom="5dp"
+	    android:paddingBottom="10dp"
 	    android:paddingLeft="10dp"
 	    android:paddingRight="10dp"
-	    chart:chart_axisColor="#455a64"
+	    android:background="#F67743"
+	    chart:chart_axisColor="@color/axis"
 	    chart:chart_typeface="Roboto-Regular.ttf"
+	    chart:chart_labelColor="@color/label"
 	    chart:chart_axisBorderSpacing="25dp"
 	/>
 	<com.db.chart.view.StackBarChartView
@@ -42,24 +51,78 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="0dp"
 	    android:layout_weight=".30"
+	   	android:layout_marginTop="2dp"
+	    android:layout_marginLeft="7dp"
+	    android:layout_marginRight="7dp"
+	    android:layout_marginBottom="7dp"
 	    android:paddingTop="10dp"
 	    android:paddingBottom="10dp"
 	    android:paddingLeft="10dp"
 	    android:paddingRight="10dp"
-	    chart:chart_axisColor="#455a64"
+	    android:background="#00BAD3"
+	    chart:chart_axisColor="@color/axis"
 	    chart:chart_typeface="Roboto-Regular.ttf"
+	    chart:chart_labelColor="@color/label"
 	    chart:chart_axisBorderSpacing="25dp"
 	/>
 
-	
-	<Button
-   	    android:id="@+id/button"
-   	    android:layout_width="match_parent"
-   	    android:layout_height="0dp"
+	<LinearLayout 
+	   	android:layout_width="match_parent"
+    	android:layout_height="0dp"
    	    android:layout_weight=".10"
-   	    android:text="PLAY ME"
-   	    android:textSize="25dp"
-   	    android:textColor="#ffffff"
-   	    android:background="@drawable/button"/>
+    	android:orientation="horizontal" >
+		<ImageButton
+   	    	android:id="@+id/alpha"
+   	    	android:layout_width="0dp"
+   	    	android:layout_height="match_parent"
+   	    	android:layout_weight=".17"
+   	    	android:src="@drawable/alpha"
+   	    	android:background="@drawable/button"
+   	    	android:contentDescription="@string/alpha_str"/>
+		<View android:layout_width=".5dp"
+		    android:layout_height="match_parent"
+		    android:background="#1f3133"/>
+		<ImageButton
+   	    	android:id="@+id/enter"
+   	    	android:layout_width="0dp"
+   	    	android:layout_height="match_parent"
+   	    	android:layout_weight=".17"
+   	    	android:src="@drawable/enterb"
+   	    	android:background="@drawable/button"
+   	    	android:contentDescription="@string/enter_str"/>
+		<View android:layout_width=".5dp"
+		    android:layout_height="match_parent"
+		    android:background="#1f3133"/>
+		<ImageButton
+   	    	android:id="@+id/order"
+   	    	android:layout_width="0dp"
+   	    	android:layout_height="match_parent"
+   	    	android:layout_weight=".17"
+   	    	android:src="@drawable/ordere"
+   	    	android:background="@drawable/button"
+   	    	android:contentDescription="@string/order_str"/>
+		<View android:layout_width=".5dp"
+		    android:layout_height="match_parent"
+		    android:background="#1f3133"/>
+		<ImageButton
+   	    	android:id="@+id/ease"
+   	    	android:layout_width="0dp"
+   	    	android:layout_height="match_parent"
+   	    	android:layout_weight=".17"
+   	    	android:src="@drawable/ease_cubic"
+   	    	android:background="@drawable/button"
+   	    	android:contentDescription="@string/ease_str"/>
+		<View android:layout_width=".5dp"
+		    android:layout_height="match_parent"
+		    android:background="#1f3133"/>
+		<ImageButton
+   	    	android:id="@+id/play"
+   	    	android:layout_width="0dp"
+   	    	android:layout_height="match_parent"
+   	    	android:layout_weight=".30"
+   	    	android:src="@drawable/play"
+   	    	android:background="@color/button_hey"
+   	    	android:contentDescription="@string/play_str"/>
+	</LinearLayout>
 	
 </LinearLayout>

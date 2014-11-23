@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.db.williamchartdemo"
     android:versionCode="8"
-    android:versionName="1.4.0" >
+    android:versionName="1.5.0" >
 
 
     <uses-sdk

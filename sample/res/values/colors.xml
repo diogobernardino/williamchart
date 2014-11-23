@@ -2,7 +2,7 @@
 <resources>
     
     <color name="text">#ffffff</color>
-    <color name="button_hey">#2d474a</color>
+    <color name="button_hey">#6eabb2</color>
     <color name="button_pressed">#dbe1e7</color>
     <color name="button_disabled">#dbe1e7</color>
     <color name="button_default">#3c5e62</color>

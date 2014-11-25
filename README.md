@@ -4,20 +4,15 @@ WilliamChart
 WilliamChart is an Android Library based on Views to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional charts but instead everything that could be pleasant and intuitive to represent and visualize data. I would prefer to keep charts simple and clean rather than overfeatured.
 
 At the moment it provides:
-
 * ``LineChartView``
-
-![Demo Screenshot1][1]
-
 * ``BarChartView``
-
-![Demo Screenshot2][2]
-
 * ``StackBarChartView``
 
-![Demo Screenshot3][3]
+
 
 It has been tested in Android 2.2 and above.
+
+![Demo2][1]
 
 <a href="https://play.google.com/store/apps/details?id=com.db.williamchartdemo"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
 </a>
@@ -257,6 +252,4 @@ License
 
 
 
-[1]: ./art/linechart.gif
-[2]: ./art/barchart.gif
-[3]: ./art/stackbarchart.gif
+[1]: ./art/demo2.gif

@@ -21,6 +21,7 @@ import com.db.williamchartdemo.R;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.animation.TimeInterpolator;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
@@ -63,6 +64,8 @@ public class MainActivity extends ActionBarActivity {
 	private final static int[] endOrder = {6, 5, 4, 3, 2, 1, 0};
 	private static float mCurrOverlapFactor;
 	private static int[] mCurrOverlapOrder;
+	private static float mOldOverlapFactor;
+	private static int[] mOldOverlapOrder;	
 	
 	
 	/**
@@ -70,6 +73,7 @@ public class MainActivity extends ActionBarActivity {
 	 */
 	private static ImageButton mEaseBtn;
 	private static BaseEasingMethod mCurrEasing;
+	private static BaseEasingMethod mOldEasing;
 	
 	
 	/**
@@ -78,6 +82,8 @@ public class MainActivity extends ActionBarActivity {
 	private static ImageButton mEnterBtn;
 	private static float mCurrStartX;
 	private static float mCurrStartY;
+	private static float mOldStartX;
+	private static float mOldStartY;
 	
 	
 	/**
@@ -85,6 +91,38 @@ public class MainActivity extends ActionBarActivity {
 	 */
 	private static ImageButton mAlphaBtn;
 	private static int mCurrAlpha;
+	private static int mOldAlpha;
+	
+	
+	private Handler mHandler;
+	
+	private final Runnable mEnterEndAction = new Runnable() {
+        @Override
+        public void run() {
+        	mPlayBtn.setEnabled(true);
+        }
+	};
+	
+	private final Runnable mExitEndAction = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.postDelayed(new Runnable() { 
+                public void run() {
+            		mOldOverlapFactor = mCurrOverlapFactor;
+            		mOldEasing = mCurrEasing;
+            		mOldStartX = mCurrStartX;
+            		mOldStartY = mCurrStartY;	
+            		mOldAlpha = mCurrAlpha;
+                	updateLineChart();
+                	updateBarChart();
+                	updateStackBarChart();
+                }  
+           }, 500);  
+        }
+	};
+	
+	private boolean mNewInstance;
+	
 	
 	
 	/**
@@ -98,13 +136,6 @@ public class MainActivity extends ActionBarActivity {
 	private static LineChartView mLineChart;
 	private Paint mLineGridPaint;
 	private TextView mLineTooltip;
-	
-	private Runnable mLineEndAction = new Runnable() {
-        @Override
-        public void run() {
-        	mPlayBtn.setEnabled(true);
-        }
-	};
 	
 	private final OnEntryClickListener lineEntryListener = new OnEntryClickListener(){
 		@Override
@@ -123,6 +154,7 @@ public class MainActivity extends ActionBarActivity {
 				dismissLineTooltip(-1, -1, null);
 		}
 	};
+	
 	
 	
 	/**
@@ -154,6 +186,7 @@ public class MainActivity extends ActionBarActivity {
 				dismissBarTooltip(-1, -1, null);
 		}
 	};
+	
 	
 	
 	/**
@@ -188,9 +221,7 @@ public class MainActivity extends ActionBarActivity {
 	};
 
 	
-	private boolean mNewInstance;
-	
-	
+
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -203,6 +234,14 @@ public class MainActivity extends ActionBarActivity {
 		mCurrStartX = -1;
 		mCurrStartY = 0;	
 		mCurrAlpha = -1;
+		
+		mOldOverlapFactor = 1;
+		mOldEasing = new QuintEaseOut();
+		mOldStartX = -1;
+		mOldStartY = 0;	
+		mOldAlpha = -1;
+		
+		mHandler = new Handler();
 		
 		initMenu();
 		
@@ -237,6 +276,7 @@ public class MainActivity extends ActionBarActivity {
 		mLineGridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
 	}
 	
+	
 	private void updateLineChart(){
 		
 		mLineChart.reset();
@@ -267,7 +307,7 @@ public class MainActivity extends ActionBarActivity {
 			.setYLabels(YController.LabelPosition.OUTSIDE)
 			.setAxisBorderValues(LINE_MIN, LINE_MAX, 5)
 			.setLabelsMetric("u")
-			.animate(getAnimation())
+			.show(getAnimation(true).setEndAction(mEnterEndAction))
 			//.show()
 			;
 	}
@@ -279,7 +319,7 @@ public class MainActivity extends ActionBarActivity {
 		mLineTooltip = (TextView) getLayoutInflater().inflate(R.layout.circular_tooltip, null);
 		mLineTooltip.setText(Integer.toString((int)lineValues[setIndex][entryIndex]));
 		
-        LayoutParams layoutParams = new LayoutParams((int)Tools.fromDpToPx(30), (int)Tools.fromDpToPx(30));
+        LayoutParams layoutParams = new LayoutParams((int)Tools.fromDpToPx(35), (int)Tools.fromDpToPx(35));
         layoutParams.leftMargin = rect.centerX() - layoutParams.width/2;
         layoutParams.topMargin = rect.centerY() - layoutParams.height/2;
         mLineTooltip.setLayoutParams(layoutParams);
@@ -355,6 +395,7 @@ public class MainActivity extends ActionBarActivity {
 		mBarGridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
 	}
 	
+	
 	private void updateBarChart(){
 		
 		mBarChart.reset();
@@ -384,7 +425,7 @@ public class MainActivity extends ActionBarActivity {
 			.setYAxis(false)
 			.setXLabels(XController.LabelPosition.OUTSIDE)
 			.setYLabels(YController.LabelPosition.NONE)
-			.animate(getAnimation())
+			.show(getAnimation(true).setEndAction(mEnterEndAction))
 			//.show()
 			;	
 	}
@@ -469,6 +510,7 @@ public class MainActivity extends ActionBarActivity {
 		mStackBarThresholdPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
 	}
 	
+	
 	private void updateStackBarChart(){
 		
 		mStackBarChart.reset();
@@ -519,11 +561,10 @@ public class MainActivity extends ActionBarActivity {
 			.setYLabels(YController.LabelPosition.OUTSIDE)
 			.setThresholdLine(89, mStackBarThresholdPaint)
 			.setLabelsMetric(" %")
-			.animate(getAnimation())
+			.show(getAnimation(true).setEndAction(mEnterEndAction))
 			//.show()
 			;
 	}
-	
 	
 	
 	@SuppressLint("NewApi")
@@ -553,7 +594,8 @@ public class MainActivity extends ActionBarActivity {
 	
 
 	@SuppressLint("NewApi")
-	private void dismissStackBarTooltip(final int setIndex, final int entryIndex, final Rect rect){
+	private void dismissStackBarTooltip(final int setIndex, 
+			final int entryIndex, final Rect rect){
 		
 		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 			mStackBarTooltip.animate()
@@ -611,9 +653,9 @@ public class MainActivity extends ActionBarActivity {
 				mStackBarTooltip = null;
 				
 				if(mNewInstance){
-					updateLineChart();
-					updateBarChart();
-					updateStackBarChart();
+					mLineChart.dismiss(getAnimation(false).setEndAction(null));
+					mBarChart.dismiss(getAnimation(false).setEndAction(null));
+					mStackBarChart.dismiss(getAnimation(false).setEndAction(mExitEndAction));
 				}else{
 					updateValues(mLineChart);
 					updateValues(mBarChart);
@@ -629,11 +671,8 @@ public class MainActivity extends ActionBarActivity {
         	private int index = 1;
         	@Override
 			public void onClick(View v) {
-				mPlayBtn.setBackgroundResource(R.color.button_hey);
 				setOverlap(index++);
-				if(index >= 4)
-					index = 0;
-				mNewInstance = true;
+				index = onClickChange(index, 4);
 			}
 		});
 		
@@ -643,11 +682,8 @@ public class MainActivity extends ActionBarActivity {
 			private int index = 1;
 			@Override
 			public void onClick(View v) {
-				mPlayBtn.setBackgroundResource(R.color.button_hey);
 				setEasing(index++);
-				if(index >= 4)
-					index = 0;
-				mNewInstance = true;
+				index = onClickChange(index, 4);
 			}
 		});
 		
@@ -657,11 +693,8 @@ public class MainActivity extends ActionBarActivity {
 			private int index = 1;
 			@Override
 			public void onClick(View v) {
-				mPlayBtn.setBackgroundResource(R.color.button_hey);
 				setEnterPosition(index++);
-				if(index >= 9)
-					index = 0;
-				mNewInstance = true;
+				index= onClickChange(index, 9);
 			}
 		});
 		
@@ -671,15 +704,20 @@ public class MainActivity extends ActionBarActivity {
 			private int index = 1;
 			@Override
 			public void onClick(View v) {
-				mPlayBtn.setBackgroundResource(R.color.button_hey);
 				setAlpha(index++);
-				if(index >= 3)
-					index = 0;
-				mNewInstance = true;
+				index = onClickChange(index, 3);
 			}
 		});
 	}
 	
+	
+	private int onClickChange(int index, int limit){
+		mPlayBtn.setBackgroundResource(R.color.button_hey);
+		if(index >= limit)
+			index = 0;
+		mNewInstance = true;
+		return index;
+	}
 	
 	
 	
@@ -737,7 +775,6 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private void setEnterPosition(int index){
-		
 		switch(index){
 			case 0:
 				mCurrStartX = -1f;
@@ -820,13 +857,23 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 	
-	private Animation getAnimation(){
-		return new Animation()
+	/*------------------------------------*
+	 *               GETTERS              *
+	 *------------------------------------*/
+	
+	private Animation getAnimation(boolean newAnim){
+		if(newAnim)
+			return new Animation()
 					.setAlpha(mCurrAlpha)
 					.setEasing(mCurrEasing)
 					.setOverlap(mCurrOverlapFactor, mCurrOverlapOrder)
-					.setStartPoint(mCurrStartX, mCurrStartY)
-					.setEndAction(mLineEndAction);
+					.setStartPoint(mCurrStartX, mCurrStartY);
+		else
+			return new Animation()
+					.setAlpha(mOldAlpha)
+					.setEasing(mOldEasing)
+					.setOverlap(mOldOverlapFactor, mOldOverlapOrder)
+					.setStartPoint(mOldStartX, mOldStartY);
 	}
 	
 	

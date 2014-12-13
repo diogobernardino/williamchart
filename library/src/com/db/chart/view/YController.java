@@ -32,9 +32,6 @@ import com.db.chart.model.ChartSet;
 public class YController{
 	
 	
-	private static final String TAG = "com.db.chart.view.YController";
-	
-	
 	public static enum LabelPosition {
 		NONE, OUTSIDE, INSIDE
     }

@@ -18,17 +18,11 @@ package com.db.chart.model;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
-import com.db.chart.exception.ChartException;
 
 /**
  * Data model containing {@link ChartEntry} elements to be used by {@link ChartView}.
  */
 public class ChartSet {
-
-	
-	private static final String TAG = "com.db.chart.model.ChartSet";
 	
 	
 	/** Set with entries */
@@ -63,12 +57,14 @@ public class ChartSet {
 	/**
 	 * Updates set values.
 	 * @param newValues
-	 * @return float[] with Y coordinates of old values
+	 * @return float[] with X and Y coordinates of old values
 	 */
-	public float[] updateValues(float[] newValues){
-		float[] result = new float[size()];
+	public float[][] updateValues(float[] newValues){
+		
+		float[][] result = new float[size()][2];
 		for(int i = 0; i < size(); i++){
-			result[i] = getEntry(i).getY();
+			result[i][0] = getEntry(i).getX();
+			result[i][1] = getEntry(i).getY();
 			setValue(i, newValues[i]);
 		}
 		return result;
@@ -83,47 +79,59 @@ public class ChartSet {
 	 * --------
 	 */
 	
-	
+	/**
+	 * Get set of {@link ChartEntry}s.
+	 */
 	public ArrayList<ChartEntry> getEntries(){
 		return mEntries;
 	}
 	
 	
+	/**
+	 * Get {@link ChartEntry} from specific index.
+	 * @param i - entry's index
+	 */
 	public ChartEntry getEntry(int i) {
 		return mEntries.get(i);
 	}
 	
 	
+	/**
+	 * Get {@link ChartEntry} value from specific index.
+	 * @param i - value's index
+	 */
 	public float getValue(int i){
 		return mEntries.get(i).getValue();
 	}
 	
 	
+	/**
+	 * Get {@link ChartEntry} label from specific index.
+	 * @param i - label's index
+	 */
 	public String getLabel(int i) {
 		return mEntries.get(i).getLabel();
 	}
 	
 	
-	public float[] getXCoordinates(){
+	/**
+	 * Get screen points.
+	 */
+	public float[][] getScreenPoints(){
 		
-		float[] result = new float[size()];
-		for(int i = 0; i < result.length; i++)
-			result[i] = getEntry(i).getX();
-		
-		return result;
-	}
-	
-	
-	public float[] getYCoordinates(){
-		
-		float[] result = new float[size()];
-		for(int i = 0; i < result.length; i++)
-			result[i] = getEntry(i).getY();
+		float[][] result = new float[size()][2];
+		for(int i = 0; i < size(); i++){
+			result[i][0] = getEntry(i).getX();
+			result[i][1] = getEntry(i).getY();
+		}
 		
 		return result;
 	}
 	
 	
+	/**
+	 * Get current set's alpha.
+	 */
 	public float getAlpha(){
 		return mAlpha;
 	}
@@ -138,11 +146,18 @@ public class ChartSet {
 	 */
 	
 	
+	/**
+	 * Set {@link ChartEntry} value at specific index position.
+	 * @param i - value's index where value will be placed.
+	 */
 	private void setValue(int i, float value){
 		mEntries.get(i).setValue(value);
 	}
 	
 	
+	/**
+	 * Get set's alpha.
+	 */
 	public void setAlpha(float alpha){
 		mAlpha = (alpha < 1) ? alpha : 1;
 	}

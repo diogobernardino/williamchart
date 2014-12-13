@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import com.db.williamchart.R;
 import com.db.chart.exception.ChartException;
 import com.db.chart.listener.OnEntryClickListener;
+import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.animation.Animation;
 
@@ -102,7 +103,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	/** Keep record of data updates to be done */
-	private ArrayList<Pair<Integer, float []>> toUpdateValues;
+	private ArrayList<Pair<Integer, float []>> mToUpdateValues;
 	
 	
 	/**
@@ -143,7 +144,7 @@ public abstract class ChartView extends RelativeLayout{
 			// Prepares the animation if needed and gets the first dump 
 			// of data to be drawn
 			if(mAnim != null)
-				data = mAnim.prepareEnter(ChartView.this, data);
+				data = mAnim.prepareEnterAnimation(ChartView.this);
 			
 			if (android.os.Build.VERSION.SDK_INT >= 
 					android.os.Build.VERSION_CODES.HONEYCOMB)
@@ -196,7 +197,7 @@ public abstract class ChartView extends RelativeLayout{
 		mIsDrawing = false;
 		data = new ArrayList<ChartSet>();
 		mRegions = new ArrayList<ArrayList<Region>>();
-		toUpdateValues = new ArrayList<Pair<Integer,float[]>>();
+		mToUpdateValues = new ArrayList<Pair<Integer,float[]>>();
 	}
 
 
@@ -230,7 +231,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	/**
-	 * Convert chart points into screen points.
+	 * Convert {@link ChartEntry} values into screen points.
 	 */
 	private void digestData() {
 		
@@ -248,9 +249,9 @@ public abstract class ChartView extends RelativeLayout{
 	/**
 	 * (Optional) To be overriden in case the view needs to execute some code before 
 	 * starting the drawing.
-	 * @param datasets
+	 * @param data - An array of {@link ChartSet}
 	 */
-	public void onPreDrawChart(ArrayList<ChartSet> sets){}
+	public void onPreDrawChart(ArrayList<ChartSet> data){}
 	
 	
 	
@@ -259,7 +260,8 @@ public abstract class ChartView extends RelativeLayout{
 	 * its own clickable regions.
 	 * This way, classes extending ChartView will only define their 
 	 * clickable regions.
-	 * @return ArrayList with regions where click should be detected.
+	 * @param data - An array of {@link ChartSet}
+	 * @return ArrayList with regions where click will be detected.
 	 * 	
 	 * Important: the returned vector must match the order of the data passed 
 	 * by the user. This ensures that onTouchEvent will return the correct index.
@@ -272,28 +274,32 @@ public abstract class ChartView extends RelativeLayout{
 	
 	/**
 	 * To be overridden in order for each chart to customize visualization.
-	 * @param screenPoints
+	 * @param data - An array of {@link ChartSet}
 	 */
-	abstract public void onDrawChart(Canvas canvas, ArrayList<ChartSet> set);
+	abstract public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data);
 	
 
 	
 	
 	
 	/**
-	 * Set a new data to the chart and invalidates the view to be then drawn.
-	 * @param data
+	 * Set new data to the chart and invalidates the view to be then drawn.
+	 * @param set - A {@link ChartSet} object.
 	 */
 	public void addData(ChartSet set){
 		
 		if(!data.isEmpty() && set.size() != data.get(0).size())
 			Log.e(TAG, "", 
-					new ChartException("The number of labels between sets doesn't match."));
+					new ChartException("The number of labels between " +
+							"sets doesn't match."));
 		data.add(set);
 	}
 	
 	
-	
+	/**
+	 * Add full chart data.
+	 * @param data - An array of {@link ChartSet}
+	 */
 	public void addData(ArrayList<ChartSet> data){
 		this.data = data;
 	}
@@ -301,24 +307,54 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	/**
-	 * Starts the animation given as parameter.
-	 * @param anim
+	 * Show chart data
 	 */
-	public void animate(Animation anim){
+	public void show(){
+		
+		this.getViewTreeObserver().addOnPreDrawListener(drawListener);
+		postInvalidate();
+	}
+	
+	/**
+	 * Starts the animation given as parameter.
+	 * @param anim - Animation used while showing and updating sets.
+	 */
+	public void show(Animation anim){
 		
 		mAnim = anim;
 		show();
 	}
 	
 	
+	/**
+	 * Dismiss chart data.
+	 */
+	public void dismiss(){
+		
+		data.clear();
+		invalidate();
+	}
 	
 	/**
-	 * Starts processing the data to be drawn
+	 * Dismiss chart data with animation.
+	 * @param anim - animation used to exit.
 	 */
-	public void show(){
+	public void dismiss(Animation anim){
 		
-		this.getViewTreeObserver().addOnPreDrawListener(drawListener);
-		postInvalidate();
+		mAnim = anim;
+		
+		final Runnable endAction = mAnim.getEndAction();
+		mAnim.setEndAction(new Runnable() {
+		        @Override
+		        public void run() {
+		        	if(endAction != null)
+		        		endAction.run();
+		            dismiss();
+		        }
+			});
+		
+		data = mAnim.prepareExitAnimation(ChartView.this);
+		invalidate();
 	}
 	
 	
@@ -331,7 +367,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		data.clear();
 		mRegions.clear();
-		toUpdateValues.clear();
+		mToUpdateValues.clear();
 		verController.minLabelValue = 0;
 		verController.maxLabelValue = 0;
 		if(horController.mandatoryBorderSpacing != 0)
@@ -341,7 +377,11 @@ public abstract class ChartView extends RelativeLayout{
 	}
 	
 	
-	
+	/**
+	 * Update set values. Animation support in case previously added.
+	 * @param setIndex - Index of set to be updated
+	 * @param values - Array of new values. Array length must match current data.
+	 */	
 	public ChartView updateValues(int setIndex, float[] values){
 		
 		try{
@@ -352,35 +392,31 @@ public abstract class ChartView extends RelativeLayout{
 			Log.e(TAG, "", e);
 			System.exit(1);
 		}
-		toUpdateValues.add(new Pair<Integer, float[]>(setIndex, values));
-		
+
+		data.get(setIndex).updateValues(values);
 		return this;
 	}
 	
 	
 	/**
-	 * Update set values. Animation support in case previously added.
-	 * @param setIndex - Index of set to be updated
-	 * @param values - Array of new values. Array length must match current data.
+	 * Notify ChartView about updated values. ChartView will be validated.
 	 */
 	public void notifyDataUpdate(){
 
-		final ArrayList<float []> oldValues = new ArrayList<float[]>(data.size());
-		final ArrayList<float []> xValues = new ArrayList<float[]>(data.size());
-		for(int i = 0; i < toUpdateValues.size(); i++){
-			oldValues.add(data.get(toUpdateValues.get(i).first)
-									.updateValues(toUpdateValues.get(i).second));
-			xValues.add(data.get(i).getXCoordinates());
-		}
-		
+		final ArrayList<float[][]> oldCoords = new ArrayList<float[][]>(data.size());
+		final ArrayList<float[][]> newCoords = new ArrayList<float[][]>(data.size());
+			
+		for(int i = 0; i < data.size(); i++)
+			oldCoords.add(data.get(i).getScreenPoints());
 		digestData();
+		for(int i = 0; i < data.size(); i++)
+			newCoords.add(data.get(i).getScreenPoints());
+		
 		mRegions = defineRegions(data);
-		if(mAnim != null)
-			data = mAnim.prepareEnter(ChartView.this, 
-										xValues,
-											oldValues, 
-												data);
-		toUpdateValues.clear();
+		if(mAnim != null){
+			data = mAnim.prepareAnimation(ChartView.this, oldCoords, newCoords);
+		}
+		mToUpdateValues.clear();
 		
 		invalidate();
 	}
@@ -406,11 +442,13 @@ public abstract class ChartView extends RelativeLayout{
 			if(layoutParams.leftMargin + layoutParams.width 
 					> chartRight - getPaddingRight())
 				layoutParams.leftMargin -= layoutParams.width 
-						- (chartRight - getPaddingRight() - layoutParams.leftMargin);
+						- (chartRight - getPaddingRight() 
+								- layoutParams.leftMargin);
 			if(layoutParams.topMargin + layoutParams.height 
 					> getInnerChartBottom() - getPaddingBottom())
 				layoutParams.topMargin -= layoutParams.height 
-						- (getInnerChartBottom() - getPaddingBottom() - layoutParams.topMargin);
+						- (getInnerChartBottom() - getPaddingBottom() 
+								- layoutParams.topMargin);
 			
 			tooltip.setLayoutParams(layoutParams);
 		}
@@ -438,6 +476,9 @@ public abstract class ChartView extends RelativeLayout{
 	}
 	
 
+	/**
+	 * Removes all tooltips from ChartView.
+	 */
 	public void dismissAllTooltips(){
 		this.removeAllViews();
 	}
@@ -481,6 +522,7 @@ public abstract class ChartView extends RelativeLayout{
 			verController.draw(canvas);
 						
 			// Draw data
+			if(!data.isEmpty())
 			onDrawChart(canvas, data);
 			
 			// Draw axis X
@@ -605,10 +647,18 @@ public abstract class ChartView extends RelativeLayout{
 					
 						mEntryListener.onClick(mSetClicked, 
 								mIndexClicked, 
-									new Rect(mRegions.get(mSetClicked).get(mIndexClicked).getBounds().left - getPaddingLeft(),
-											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().top - getPaddingTop(),
-											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().right - getPaddingLeft(),
-											mRegions.get(mSetClicked).get(mIndexClicked).getBounds().bottom - getPaddingTop()));
+									new Rect(mRegions.get(mSetClicked)
+												.get(mIndexClicked)
+													.getBounds().left - getPaddingLeft(),
+											mRegions.get(mSetClicked)
+												.get(mIndexClicked)
+													.getBounds().top - getPaddingTop(),
+											mRegions.get(mSetClicked)
+												.get(mIndexClicked)
+													.getBounds().right - getPaddingLeft(),
+											mRegions.get(mSetClicked)
+												.get(mIndexClicked)
+													.getBounds().bottom - getPaddingTop()));
 					}
 					mSetClicked = -1;
 					mIndexClicked = -1;
@@ -703,7 +753,9 @@ public abstract class ChartView extends RelativeLayout{
 	}
 	
 	
-	
+	public ArrayList<ChartSet> getData(){
+		return data;
+	}
 	
 	/*
 	 * --------
@@ -770,7 +822,8 @@ public abstract class ChartView extends RelativeLayout{
 		
 		try{
 			if((maxValue - minValue) % step != 0)
-				throw new ChartException("Step value must be a divisor of distance between minValue and maxValue");
+				throw new ChartException("Step value must be a divisor of " +
+						"distance between minValue and maxValue");
 		}catch(ChartException e){
 			Log.e(TAG, "", e);
 			System.exit(1);

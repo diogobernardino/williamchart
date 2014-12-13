@@ -39,10 +39,6 @@ public class Animation{
 	
 	/** Default animation duration */
 	private final static int DEFAULT_DURATION = 1000;
-	
-	
-	/** Maintains the current drawing data */
-	private ArrayList<ChartSet> mSets;
 
 	
 	/** Task that handles with animation updates */
@@ -83,7 +79,7 @@ public class Animation{
         @Override
         public void run() {
         	if(mChartView.canIPleaseAskYouToDraw()){
-        		mChartView.addData(getUpdate());
+        		mChartView.addData(getUpdate(mChartView.getData()));
         		mChartView.postInvalidate();
         	}
         }
@@ -133,6 +129,10 @@ public class Animation{
 	private int[] mOrder;
 	
 	
+	/** Whether the animation refers to entering or exiting */
+	private boolean mIsExiting;
+	
+	
 	
 	public Animation(){
 		init(DEFAULT_DURATION);
@@ -166,70 +166,76 @@ public class Animation{
 	/**
 	 * Method that prepares the animation. Defines starting points, targets, 
 	 * distance, yadda, as well as the first set of points to be drawn.
-	 * @param chartView - {@link ChartView} to invalidate each time the 
-	 * animation wants to update the values.
-	 * @param startY - starting point of values.
-	 * @param sets - Array of {@link ChartSet} containing the target values.
+	 * @param chartView - {@link ChartView} to be invalidated each time the 
+	 * animation wants to update values.
+	 * @param start - X and Y start coordinates.
+	 * @param end - X and Y end coordinates.
 	 * @return Array of {@link ChartSet} containing the first values to be 
 	 * drawn.
 	 */
-	public ArrayList<ChartSet> prepareEnter(ChartView chartView, ArrayList<float[]> startingX,
-			ArrayList<float[]> startingY, ArrayList<ChartSet> sets){
+	public ArrayList<ChartSet> prepareAnimation(ChartView chartView, 
+			ArrayList<float[][]> start, ArrayList<float[][]> end){
+
+		final int setSize = start.size();
+		final int entrySize = start.get(0).length;
 		
 		mChartView = chartView;
-		mSets = sets;
-		
-		mPathMeasures = new PathMeasure[mSets.size()][mSets.get(0).size()];
-		mInitTime = new long[mSets.get(0).size()];
-		mCurrentDuration = new long[mSets.get(0).size()];
+		mCurrentDuration = new long[entrySize];
 		
 		// Set the animation order if not defined already
 		if(mOrder == null){
-			mOrder = new int[mSets.get(0).size()];
+			mOrder = new int[entrySize];
 			for(int i = 0; i < mOrder.length; i++)
 				mOrder[i] = i;
 		}
 		
 		// Calculates the expected duration as there was with no overlap (factor = 0)
-		float noOverlapDuration = mGlobalDuration / mSets.get(0).size();
+		float noOverlapDuration = mGlobalDuration / entrySize;
 		// Adjust the duration to the overlap
 		mDuration = (int) (noOverlapDuration + (mGlobalDuration - noOverlapDuration) * mOverlapingFactor);
 		
 		// Define animation paths for each entry
 		Path path;
-		for(int i = 0; i < mSets.size(); i++){
+		mPathMeasures = new PathMeasure[setSize][entrySize];
+		for(int i = 0; i < setSize; i++){
 			
-			for(int j = 0; j < mSets.get(i).size(); j++){
+			for(int j = 0; j < entrySize; j++){
 				
 				path = new Path();
-				path.moveTo(startingX.get(i)[j], startingY.get(i)[j]);
-				path.lineTo(mSets.get(i).getEntry(j).getX(), mSets.get(i).getEntry(j).getY());
+				path.moveTo(start.get(i)[j][0], start.get(i)[j][1]);
+				path.lineTo(end.get(i)[j][0], end.get(i)[j][1]);
 				
 				mPathMeasures[i][j] = new PathMeasure(path, false);
 			}
 		}
 		
 		// Define initial time for each entry
+		mInitTime = new long[entrySize];
 		mGlobalInitTime = System.currentTimeMillis();
 		long noOverlapInitTime;
 		for(int i = 0; i < mInitTime.length; i++){
 			// Calculates the expected init time as there was with no overlap (factor = 0)
-			noOverlapInitTime = mGlobalInitTime + (i * (mGlobalDuration / mSets.get(0).size()));
+			noOverlapInitTime = mGlobalInitTime + (i * (mGlobalDuration / entrySize));
 			// Adjust the init time to overlap
-			mInitTime[mOrder[i]] = (noOverlapInitTime - ((long) (mOverlapingFactor * (noOverlapInitTime - mGlobalInitTime))));
+			mInitTime[mOrder[i]] = (noOverlapInitTime 
+					- ((long) (mOverlapingFactor * (noOverlapInitTime - mGlobalInitTime))));
 		}
 		
 		
-		
 		mPlaying = true;
-		return getUpdate();
+		return getUpdate(mChartView.getData());
 	}
 	
 	
-	
-	
-	
-	public ArrayList<ChartSet> prepareEnter(ChartView chartView, ArrayList<ChartSet> sets){
+	/**
+	 * Method that prepares the animation. Defines starting points, targets, 
+	 * distance, yadda, as well as the first set of points to be drawn.
+	 * @param chartView - {@link ChartView} to be invalidate each time the 
+	 * animation wants to update values and to get the {@link ChartSet} containing the target values.
+	 */
+	private ArrayList<ChartSet> prepareAnimation(ChartView chartView){
+		
+		final ArrayList<ChartSet> sets = chartView.getData();
 		
 		float x = 0;
 		if(mStartXFactor != -1)
@@ -246,35 +252,63 @@ public class Animation{
 			y = chartView.getZeroPosition();
 			
 		
-		final ArrayList<float[]> startXValues = new ArrayList<float[]>(sets.size());
-		final ArrayList<float[]> startYValues = new ArrayList<float[]>(sets.size());
-		float[] Xset;
-		float[] Yset;
-		for(int i = 0; i < sets.size(); i++){
+		final ArrayList<float[][]> startValues = new ArrayList<float[][]>(sets.size());
+		final ArrayList<float[][]> endValues = new ArrayList<float[][]>(sets.size());
+		float[][] startSet;
+		float[][] endSet;
+		
+		for(int i = 0; i < sets.size(); i++){	
 			
-			Xset = new float[sets.get(i).size()];
-			Yset = new float[sets.get(i).size()];
-			
+			startSet = new float[sets.get(i).size()][2];
+			endSet = new float[sets.get(i).size()][2];
+		
 			for(int j = 0; j < sets.get(i).size(); j++){
+	
 				if(mStartXFactor == -1)
-					Xset[j] = sets.get(i).getEntry(j).getX();
+					startSet[j][0] = sets.get(i).getEntry(j).getX();
 				else
-					Xset[j] = x;
-				Yset[j] = y;
+					startSet[j][0] = x;
+				startSet[j][1] = y;
+				
+				endSet[j][0] = sets.get(i).getEntry(j).getX();
+				endSet[j][1] = sets.get(i).getEntry(j).getY();;
 			}
 			
-			startXValues.add(Xset);
-			startYValues.add(Yset);
+			startValues.add(startSet);
+			endValues.add(endSet);
 		}
 		
-		mStartXFactor = -1;
-		mStartYFactor = -1;
+		return prepareAnimation(chartView, startValues, endValues);
 		
-		return prepareEnter(chartView, startXValues,
-				startYValues, sets);
 	}
 	
 	
+	/**
+	 * Method that prepares the enter animation. Defines starting points, targets, 
+	 * distance, yadda, as well as the first set of points to be drawn.
+	 * @param chartView - {@link ChartView} to be invalidate each time the 
+	 * animation wants to update values and to get the {@link ChartSet} 
+	 * containing the target values.
+	 */
+	public ArrayList<ChartSet> prepareEnterAnimation(ChartView chartView){
+		
+		mIsExiting = false;
+		return prepareAnimation(chartView);
+	}
+	
+
+	/**
+	 * Method that prepares the enter animation. Defines starting points, targets, 
+	 * distance, yadda, as well as the first set of points to be drawn.
+	 * @param chartView - {@link ChartView} to be invalidate each time the 
+	 * animation wants to update values and to get the {@link ChartSet} 
+	 * containing the target values.
+	 */
+	public ArrayList<ChartSet> prepareExitAnimation(ChartView chartView){
+		
+		mIsExiting = true;
+		return prepareAnimation(chartView);	
+	}
 	
 	
 	
@@ -282,7 +316,7 @@ public class Animation{
 	 * Updates values, with the next interpolation, to be drawn next.
 	 * @return return the next interpolated values.
 	 */
-	private ArrayList<ChartSet> getUpdate(){
+	private ArrayList<ChartSet> getUpdate(ArrayList<ChartSet> data){
 		
 		// Process current animation duration
 		long diff;
@@ -302,19 +336,22 @@ public class Animation{
 			mCurrentGlobalDuration = mGlobalDuration;
 		
 		// Update next values to be drawn
-		float[] posUpdate;
+		float[] posUpdate = new float[2];
 		float timeNormalized = 1;
-		for(int i = 0; i < mSets.size(); i++)
+		for(int i = 0; i < data.size(); i++)
 			
-			for(int j = 0; j < mSets.get(i).size(); j++){
+			for(int j = 0; j < data.get(i).size(); j++){
 				
 				timeNormalized = normalizeTime(j);
 				
 				if(mAlphaSpeed != -1)
-					mSets.get(i).setAlpha(timeNormalized * mAlphaSpeed);
+					data.get(i).setAlpha(timeNormalized * mAlphaSpeed);
 				
-				posUpdate = getEntryUpdate(i, j, timeNormalized);
-				mSets.get(i).getEntry(j).setCoordinates(posUpdate[0], posUpdate[1]);
+				if(!getEntryUpdate(i, j, timeNormalized, posUpdate)){
+					posUpdate[0] = data.get(i).getEntry(j).getX();
+					posUpdate[1] = data.get(i).getEntry(j).getY();
+				}
+				data.get(i).getEntry(j).setCoordinates(posUpdate[0], posUpdate[1]);
 			}
 
 		// Sets the next update or finishes the animation
@@ -330,7 +367,7 @@ public class Animation{
 			mAlphaSpeed = -1;
 		}
 		
-		return mSets; 
+		return data; 
 	}
 	
 	
@@ -343,7 +380,11 @@ public class Animation{
 	 * @return value from 0 to 1 telling the next step.
 	 */
 	private float normalizeTime(int index) {
-		return (float) mCurrentDuration[index] / mDuration;
+		if(!mIsExiting)
+			return (float) mCurrentDuration[index] / mDuration;
+		else	
+			return 1f - (float) mCurrentDuration[index] / mDuration;
+			
 	}
 	
 	
@@ -356,15 +397,9 @@ public class Animation{
 	 * @param normalizedTime
 	 * @return x display value where point will be drawn
 	 */
-	private float[] getEntryUpdate(int i, int j, float normalizedTime){
-		
-		final float[] pos = new float[2];
-		if(mPathMeasures[i][j].getPosTan(mPathMeasures[i][j].getLength() * mEasing.next(normalizedTime), pos, null))
-			return pos;
-		pos[0] = mSets.get(i).getEntry(j).getX();
-		pos[1] = mSets.get(i).getEntry(j).getY();
-		
-		return pos;
+	private boolean getEntryUpdate(int i, int j, float normalizedTime, float[] pos){
+		return mPathMeasures[i][j].getPosTan(mPathMeasures[i][j].getLength() 
+												* mEasing.next(normalizedTime), pos, null);
 	}
 	
 	
@@ -376,6 +411,9 @@ public class Animation{
 	
 	
 	
+	public Runnable getEndAction(){
+		return mRunnable;
+	}
 	
 	
 	/*
@@ -420,6 +458,7 @@ public class Animation{
 	 * { 0, 1, 2, 3, ...} - default order
 	 */
 	public Animation setOverlap(float factor, int[] order){
+		
 		mOverlapingFactor = factor;
 		mOrder = order;
 		return this;
@@ -444,6 +483,7 @@ public class Animation{
 	 * corner of the inner chart area.
 	 */
 	public Animation setStartPoint(float xFactor, float yFactor){
+		
 		mStartXFactor = xFactor;
 		mStartYFactor = yFactor;
 		return this;
@@ -456,7 +496,7 @@ public class Animation{
 	 * To disable alpha set it to -1.
 	 * Eg. If speed 2 alpha goes twice faster than translation.
 	 */
-	public Animation setAlpha(int speed){
+	public Animation setAlpha(int speed){	
 		mAlphaSpeed = speed;
 		return this;
 	}

@@ -32,9 +32,6 @@ import com.db.williamchart.R;
 public class XController{
 	
 	
-	private static final String TAG = "com.db.chart.view.XController";
-	
-	
 	public static enum LabelPosition {
 		NONE, OUTSIDE, INSIDE
     }
@@ -68,12 +65,20 @@ public class XController{
 	protected boolean hasAxis;
 	
 	
-	/** none/inside/outside */
+	/** None/Inside/Outside */
 	protected LabelPosition labelsPositioning;
 	
 
 	/** Max height of labels */
 	private int mLabelHeight;
+	
+	
+	/** Width of last label of sets */
+	private float mLastLabelWidth;
+	
+	
+	/** Labels to be drawn */
+	private String[] mLabels;
 	
 	
 	
@@ -106,6 +111,11 @@ public class XController{
 
 	protected void init() {
 		
+		mLastLabelWidth = mChartView.style.labelPaint
+				.measureText(mChartView.data.get(0)
+						.getLabel(mChartView.data.get(0)
+								.size()-1));
+		
 		// Set the vertical display coordinate
 		mLabelVerCoord = mChartView.chartBottom;
 		if(labelsPositioning == LabelPosition.INSIDE)
@@ -117,11 +127,23 @@ public class XController{
 				(getInnerChartRight() - mChartView.getInnerChartLeft() - borderSpacing * 2) 
 					/ mChartView.data.get(0).size() / 2;
 		
+		mLabels = getLabelsFromData();
 		labelsPos = calcLabelsPos(mChartView.data.get(0).size());
 	}
 
 	
 	
+	/**
+	 * Get labels from chart data.
+	 */	
+	private String[] getLabelsFromData() {
+		
+		final String[] result = new String[mChartView.data.get(0).size()];
+		for(int i = 0; i < mChartView.data.get(0).size(); i++)
+			result[i] = mChartView.data.get(0).getLabel(i);
+		return result;
+	}
+
 
 	/**
 	 * Get labels position having into account the horizontal padding of text size.
@@ -156,6 +178,9 @@ public class XController{
 	
 	
 	
+	/**
+	 * Get max height of labels.
+	 */
 	protected int getLabelHeight(){
 		if(mLabelHeight == -1){
 			int result = 0;
@@ -190,8 +215,8 @@ public class XController{
 		if(labelsPositioning != LabelPosition.NONE){
 			
 			mChartView.style.labelPaint.setTextAlign(Align.CENTER);
-			for(int i = 0; i < mChartView.data.get(0).size(); i++){
-				canvas.drawText(mChartView.data.get(0).getLabel(i), 
+			for(int i = 0; i < mLabels.length; i++){
+				canvas.drawText(mLabels[i], 
 								labelsPos.get(i), 
 									mLabelVerCoord, 
 										mChartView.style.labelPaint);
@@ -217,19 +242,19 @@ public class XController{
 	 */
 	public float getInnerChartRight(){
 		
-		float lastLabelWidth = mChartView.style.labelPaint
-								.measureText(mChartView.data.get(0)
-										.getLabel(mChartView.data.get(0)
-												.size()-1));
+
 		float rightBorder = 0;
-		if(borderSpacing + mandatoryBorderSpacing < lastLabelWidth / 2)
-			rightBorder = lastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);
+		if(borderSpacing + mandatoryBorderSpacing < mLastLabelWidth / 2)
+			rightBorder = mLastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);
 	
 		return mChartView.chartRight - rightBorder;
 		
 	}
 
 	
+	/**
+	 * Get the vertical position of axis.
+	 */
 	protected float getAxisVerticalPosition(){
 		
 		if(labelsPositioning != LabelPosition.OUTSIDE)

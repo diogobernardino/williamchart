@@ -99,7 +99,7 @@ public class BarChartView extends ChartView {
 		float drawingOffset;
 		BarSet barSet;
 		Bar bar;
-		
+
 		for (int i = 0; i < data.get(0).size(); i++) {
 			
 			// Set first offset to draw a group of bars

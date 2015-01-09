@@ -33,10 +33,14 @@ public class ChartSet {
 	private float mAlpha;
 	
 	
+	/** Whether the set will be visible or not */
+	private boolean mIsVisible;
+	
 	
 	public ChartSet(){
 		mEntries = new ArrayList<ChartEntry>();
 		mAlpha = 1;
+		mIsVisible = false;
 	}
 	
 	
@@ -137,6 +141,13 @@ public class ChartSet {
 	}
 	
 	
+	/**
+	 * Get whether the set should be presented or not.
+	 */
+	public boolean isVisible(){
+		return mIsVisible;
+	}
+	
 	
 	
 	/*
@@ -156,10 +167,18 @@ public class ChartSet {
 	
 	
 	/**
-	 * Get set's alpha.
+	 * Set set's alpha.
 	 */
 	public void setAlpha(float alpha){
 		mAlpha = (alpha < 1) ? alpha : 1;
+	}
+
+	
+	/**
+	 * Set whether the set should be visible or not.
+	 */
+	public void setVisible(boolean visible){
+		mIsVisible = visible;
 	}
 	
 	
@@ -167,7 +186,7 @@ public class ChartSet {
 	public String toString(){
 		return mEntries.toString();
 	}
-	
+
 	
 	public int size() {
 		return mEntries.size();

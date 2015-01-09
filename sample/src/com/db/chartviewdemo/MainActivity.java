@@ -307,8 +307,8 @@ public class MainActivity extends ActionBarActivity {
 			.setYLabels(YController.LabelPosition.OUTSIDE)
 			.setAxisBorderValues(LINE_MIN, LINE_MAX, 5)
 			.setLabelsMetric("u")
-			.show(getAnimation(true).setEndAction(mEnterEndAction))
-			//.show()
+			//.show(getAnimation(true).setEndAction(mEnterEndAction))
+			.show(0)
 			;
 	}
 	
@@ -425,8 +425,8 @@ public class MainActivity extends ActionBarActivity {
 			.setYAxis(false)
 			.setXLabels(XController.LabelPosition.OUTSIDE)
 			.setYLabels(YController.LabelPosition.NONE)
-			.show(getAnimation(true).setEndAction(mEnterEndAction))
-			//.show()
+			//.show(getAnimation(true).setEndAction(mEnterEndAction))
+			.show(0)
 			;	
 	}
 	
@@ -561,8 +561,8 @@ public class MainActivity extends ActionBarActivity {
 			.setYLabels(YController.LabelPosition.OUTSIDE)
 			.setThresholdLine(89, mStackBarThresholdPaint)
 			.setLabelsMetric(" %")
-			.show(getAnimation(true).setEndAction(mEnterEndAction))
-			//.show()
+			//.show(getAnimation(true).setEndAction(mEnterEndAction))
+			.show(0)
 			;
 	}
 	
@@ -726,6 +726,10 @@ public class MainActivity extends ActionBarActivity {
 	 *------------------------------------*/
 	
 	private void setOverlap(int index){
+		mLineChart.dismiss(0);
+		mBarChart.dismiss(0);
+		mStackBarChart.dismiss(0);
+		/*
 		switch(index){
 			case 0:
 				mCurrOverlapFactor = 1;
@@ -749,10 +753,14 @@ public class MainActivity extends ActionBarActivity {
 				break;
 			default:
 				
-		}
+		}*/
 	}
 	
 	private void setEasing(int index){
+		mLineChart.show(0);
+		mBarChart.show(0);
+		mStackBarChart.show(0);
+		/*
 		switch(index){
 			case 0:
 				mCurrEasing = new CubicEaseOut();
@@ -771,10 +779,14 @@ public class MainActivity extends ActionBarActivity {
 				mEaseBtn.setImageResource(R.drawable.ease_elastic);
 			default:
 				
-		}
+		}*/
 	}
 	
 	private void setEnterPosition(int index){
+		mLineChart.dismiss(1);
+		mBarChart.dismiss(1);
+		mStackBarChart.dismiss(1);
+		/*
 		switch(index){
 			case 0:
 				mCurrStartX = -1f;
@@ -823,12 +835,16 @@ public class MainActivity extends ActionBarActivity {
 				break;
 			default:
 				
-		}
+		}*/
 	}
 	
 	
 	@SuppressLint("NewApi")
 	private void setAlpha(int index){
+		mLineChart.show(1);
+		mBarChart.show(1);
+		mStackBarChart.show(1);
+		/*
 		switch(index){
 			case 0:
 				mCurrAlpha = -1;
@@ -852,7 +868,7 @@ public class MainActivity extends ActionBarActivity {
 					mAlphaBtn.setAlpha(.3f);
 				break;
 			default:
-		}
+		}*/
 	}
 	
 	
@@ -889,7 +905,7 @@ public class MainActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case R.id.github:
-	             startActivity(new Intent("android.intent.action.VIEW", 
+	            startActivity(new Intent("android.intent.action.VIEW", 
 	            		 			Uri.parse("https://github.com/diogobernardino/WilliamChart")));
 	            return true;
 	        case R.id.play:

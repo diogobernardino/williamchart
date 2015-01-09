@@ -94,7 +94,7 @@ public class StackBarChartView extends BarChartView {
 				bar = (Bar) barSet.getEntry(i);
 				
 				// If entry value is 0 it won't be drawn
-				if(bar.getValue() <= 0)
+				if(!barSet.isVisible() || bar.getValue() <= 0)
 					continue;
 				
 				style.barPaint.setColor(bar.getColor());

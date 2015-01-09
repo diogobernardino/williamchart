@@ -111,7 +111,7 @@ public class BarChartView extends ChartView {
 				bar = (Bar) barSet.getEntry(i);
 				
 				// If entry value is 0 it won't be drawn
-				if(bar.getValue() == 0)
+				if(!barSet.isVisible() || bar.getValue() == 0)
 					continue;
 
 				style.barPaint.setColor(bar.getColor());
@@ -123,6 +123,7 @@ public class BarChartView extends ChartView {
 				
 				// Draw bar
 				if(bar.getValue() > 0)
+					// Draw positive bar
 					canvas.drawRoundRect(new RectF((int) drawingOffset, 
 						(int) bar.getY(), 
 							(int) (drawingOffset + barWidth),
@@ -131,6 +132,7 @@ public class BarChartView extends ChartView {
 								style.cornerRadius,
 									style.barPaint);
 				else
+					// Draw negative bar
 					canvas.drawRoundRect(new RectF((int) drawingOffset, 
 							(int) this.verController.parseYPos(0), 
 								(int) (drawingOffset + barWidth),
@@ -180,7 +182,7 @@ public class BarChartView extends ChartView {
 	
 
 	/**
-	 * Having calculated previously bar width it gives the offset to know 
+	 * Having calculated previously the barWidth gives the offset to know 
 	 * where to start drawing the first bar of each group.
 	 * @param n - Number of sets
 	 */

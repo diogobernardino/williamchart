@@ -131,7 +131,7 @@ public abstract class ChartView extends RelativeLayout{
 			// Mandatory: X axis after Y axis!
 			horController.init();
 			
-			// Processes data to define screen positions
+			// Process data to define screen positions
 			digestData();
 			
 			// Tells view to execute code before starting drawing
@@ -305,14 +305,33 @@ public abstract class ChartView extends RelativeLayout{
 	}
 	
 	
+	/**
+	 * Base method when a show chart occurs
+	 */
+	private void displayChart(){
+		
+		this.getViewTreeObserver().addOnPreDrawListener(drawListener);
+		postInvalidate();
+	}
 	
 	/**
 	 * Show chart data
 	 */
 	public void show(){
 		
-		this.getViewTreeObserver().addOnPreDrawListener(drawListener);
-		postInvalidate();
+		for(int i = 0; i < data.size(); i++)
+			data.get(i).setVisible(true);
+		displayChart();
+	}
+	
+	/**
+	 * Show only a specfic chart dataset
+	 * @param setIndex - dataset's index to be displayed
+	 */
+	public void show(int setIndex){
+
+		data.get(setIndex).setVisible(true);
+		displayChart();
 	}
 	
 	/**
@@ -322,7 +341,7 @@ public abstract class ChartView extends RelativeLayout{
 	public void show(Animation anim){
 		
 		mAnim = anim;
-		show();
+		displayChart();
 	}
 	
 	
@@ -330,8 +349,18 @@ public abstract class ChartView extends RelativeLayout{
 	 * Dismiss chart data.
 	 */
 	public void dismiss(){
-		
+	
 		data.clear();
+		invalidate();
+	}
+	
+	/**
+	 * Dismiss a specific chart dataset
+	 * @param setIndex - dataset's index to be dismissed
+	 */
+	public void dismiss(int setIndex){
+		
+		data.get(setIndex).setVisible(false);
 		invalidate();
 	}
 	

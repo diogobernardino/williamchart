@@ -101,26 +101,28 @@ public class LineChartView extends ChartView {
 		for(int i = 0; i < data.size(); i++){
 			
 			lineSet = (LineSet) data.get(i);
-			mStyle.mLinePaint.setColor(lineSet.getLineColor());
-			mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());
-			handleAlpha(mStyle.mLinePaint, lineSet.getAlpha());
-			
-			
-			if(lineSet.isDashed())
-				mStyle.mLinePaint
-					.setPathEffect(new DashPathEffect(new float[] {10,10}, 0));
-			else
-				mStyle.mLinePaint.setPathEffect(null);
-			
-			//Draw line
-			if (!lineSet.isSmooth())
-				drawLine(canvas, lineSet);
-			else
-				drawSmoothLine(canvas, lineSet);
-			
-			//Draw points
-			if(lineSet.hasDots())
-				drawPoints(canvas, lineSet);
+			if(lineSet.isVisible()){
+				mStyle.mLinePaint.setColor(lineSet.getLineColor());
+				mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());
+				handleAlpha(mStyle.mLinePaint, lineSet.getAlpha());
+				
+				
+				if(lineSet.isDashed())
+					mStyle.mLinePaint
+						.setPathEffect(new DashPathEffect(new float[] {10,10}, 0));
+				else
+					mStyle.mLinePaint.setPathEffect(null);
+				
+				//Draw line
+				if (!lineSet.isSmooth())
+					drawLine(canvas, lineSet);
+				else
+					drawSmoothLine(canvas, lineSet);
+				
+				//Draw points
+				if(lineSet.hasDots())
+					drawPoints(canvas, lineSet);
+			}
 		}
 
 	}

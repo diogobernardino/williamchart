@@ -21,6 +21,8 @@ import android.util.Log;
 import com.db.chart.Tools;
 import com.db.chart.exception.ChartException;
 
+import java.lang.IllegalArgumentException;
+
 /**
  * Data model containing a set of {@link Point} to be used by {@link LineChartView}.
  */
@@ -66,8 +68,8 @@ public class LineSet extends ChartSet{
 	private int[] mGradientColors;
 	private float[] mGradientPositions;
 	
-	
-	
+	private int skip = 0;
+
 	public LineSet(){
 		super();
 		
@@ -146,9 +148,12 @@ public class LineSet extends ChartSet{
 	 * Getters
 	 * --------
 	 */
-	
-	
-	public float getDotsStrokeThickness() {
+
+  public int getSkip() {
+    return skip;
+  }
+
+  public float getDotsStrokeThickness() {
 		return mDotsStrokeThickness;
 	}
 
@@ -210,8 +215,19 @@ public class LineSet extends ChartSet{
 	 * --------
 	 */
 
-	
-	public LineSet setDashed(boolean bool) {
+  /**
+   * Will skip drawing first points.
+   *
+   * @param howMany how many points to skip
+   */
+  public void setSkipStartingPoints(int howMany) {
+    if(howMany < 0){
+      throw new IllegalArgumentException("number of points to skip cannot be negative");
+    }
+    this.skip = howMany;
+  }
+
+  public LineSet setDashed(boolean bool) {
 		mIsDashed = bool;
 		return this;
 	}

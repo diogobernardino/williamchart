@@ -274,7 +274,7 @@ public class YController{
 	 */
 	protected float parseYPos(double value){
 		return (float) ( mChartView.horController.getAxisVerticalPosition() - 
-							(((value+Math.abs(minLabelValue)) * mScreenStep) / (mLabels.get(1)+Math.abs(minLabelValue))));
+							(((value-minLabelValue) * mScreenStep) / (mLabels.get(1)-minLabelValue)));
 	}
 	
 	

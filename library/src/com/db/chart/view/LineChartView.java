@@ -19,12 +19,14 @@ package com.db.chart.view;
 import java.util.ArrayList;
 
 import com.db.williamchart.R;
+import com.db.chart.Tools;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -40,14 +42,18 @@ import android.graphics.Shader;
  */
 public class LineChartView extends ChartView {
 
-  public static final java.lang.String TAG = "LineChartView";
-  /** Radius clickable region */
+	public static final java.lang.String TAG = "LineChartView";
+	
+	
+	/** Radius clickable region */
 	private static float sRegionRadius;
 
 
 	/** Style applied to line chart */
 	private Style mStyle;
 
+	
+	
 	public LineChartView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
@@ -85,7 +91,7 @@ public class LineChartView extends ChartView {
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
 
 		LineSet lineSet;
-
+		
 		for(int i = 0; i < data.size(); i++){
 
 			lineSet = (LineSet) data.get(i);
@@ -123,7 +129,11 @@ public class LineChartView extends ChartView {
 	 * Responsible for drawing points
 	 */
 	private void drawPoints(Canvas canvas, LineSet set) {
-
+		
+		Bitmap dotsBitmap = null; 
+		if(set.getDotsDrawable() != null)
+			dotsBitmap = Tools.drawableToBitmap(set.getDotsDrawable());
+		
 		mStyle.mDotsPaint.setColor(set.getDotsColor());
 		handleAlpha(mStyle.mDotsPaint, set.getAlpha());
 		mStyle.mDotsStrokePaint.setStrokeWidth(set.getDotsStrokeThickness());
@@ -131,8 +141,11 @@ public class LineChartView extends ChartView {
 		handleAlpha(mStyle.mDotsStrokePaint, set.getAlpha());
 
 		final Path path = new Path();
-		for (int i = set.getBegin(); i < set.getEnd(); i++)
+		for (int i = set.getBegin(); i < set.getEnd(); i++){
 			path.addCircle(set.getEntry(i).getX(), set.getEntry(i).getY(), set.getDotsRadius(), Path.Direction.CW);
+			if(dotsBitmap != null)
+				canvas.drawBitmap(dotsBitmap, set.getEntry(i).getX() - dotsBitmap.getWidth()/2, set.getEntry(i).getY() - dotsBitmap.getHeight()/2, mStyle.mDotsPaint);
+		}
 
 		//Draw dots fill
 		canvas.drawPath(path, mStyle.mDotsPaint);

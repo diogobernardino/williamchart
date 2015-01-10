@@ -16,6 +16,7 @@
 
 package com.db.chart.model;
 
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.db.chart.Tools;
@@ -29,7 +30,7 @@ import java.lang.IllegalArgumentException;
 public class LineSet extends ChartSet{
 
 	
-	private static final String TAG = "com.db.chart.model.LineChartSet";
+	private static final String TAG = "com.db.chart.model.LineSet";
 
 	
 	/** Defaults */
@@ -74,6 +75,11 @@ public class LineSet extends ChartSet{
 	private int mEnd;
 	
 	
+	/** Dots drawable background */
+	private Drawable mDotsDrawable;
+	
+	
+	
 	public LineSet(){
 		super();
 		
@@ -101,6 +107,8 @@ public class LineSet extends ChartSet{
 		
 		mBegin = 0;
 		mEnd = 0;
+		
+		mDotsDrawable = null;
 	}
 
 	
@@ -223,6 +231,10 @@ public class LineSet extends ChartSet{
 		return mEnd;
 	}
 	
+	
+	public Drawable getDotsDrawable(){
+		return mDotsDrawable;
+	}
 	
 	
 	/*
@@ -347,13 +359,25 @@ public class LineSet extends ChartSet{
 	
 	
 	/**
+	 * Set a background drawable to each of the dataset's points.
+	 * @param drawable
+	 */
+	public LineSet setDotsDrawable(Drawable drawable){
+		mDotsDrawable = drawable;
+		return this;
+	}
+	
+	
+	
+	/**
 	 * Will skip drawing first points.
 	 * @param index where the set begins
 	 */
-	public void beginAt(int index) {
+	public LineSet beginAt(int index) {
 		if(index < 0)
 			throw new IllegalArgumentException("index cannot be negative");
 	    mBegin = index;
+	    return this;
 	}
 	
 	
@@ -361,10 +385,11 @@ public class LineSet extends ChartSet{
 	 * Will skip drawing first points.
 	 * @param index where the set begins
 	 */
-	public void endAt(int index) {
+	public LineSet endAt(int index) {
 		if(index > size())
 			throw new IllegalArgumentException("index cannot be greater than the set's size");
 	    mEnd = index;
+	    return this;
 	}
 	
 }

@@ -290,6 +290,8 @@ public class MainActivity extends ActionBarActivity {
 			.setDotsStrokeColor(this.getResources().getColor(R.color.line))
 			.setLineColor(this.getResources().getColor(R.color.line))
 			.setLineThickness(Tools.fromDpToPx(3));
+		dataSet.beginAt(1);
+		dataSet.endAt(5);
 		mLineChart.addData(dataSet);
 		
 		dataSet = new LineSet();
@@ -297,6 +299,8 @@ public class MainActivity extends ActionBarActivity {
 		dataSet.setLineColor(this.getResources().getColor(R.color.line))
 			.setLineThickness(Tools.fromDpToPx(3))
 			.setSmooth(true);
+		dataSet.beginAt(2);
+		dataSet.endAt(6);
 		mLineChart.addData(dataSet);
 		
 		mLineChart.setBorderSpacing(Tools.fromDpToPx(4))
@@ -307,8 +311,8 @@ public class MainActivity extends ActionBarActivity {
 			.setYLabels(YController.LabelPosition.OUTSIDE)
 			.setAxisBorderValues(LINE_MIN, LINE_MAX, 5)
 			.setLabelsMetric("u")
-			//.show(getAnimation(true).setEndAction(mEnterEndAction))
-			.show(0)
+			.show(getAnimation(true).setEndAction(mEnterEndAction))
+			//.show()
 			;
 	}
 	
@@ -425,8 +429,8 @@ public class MainActivity extends ActionBarActivity {
 			.setYAxis(false)
 			.setXLabels(XController.LabelPosition.OUTSIDE)
 			.setYLabels(YController.LabelPosition.NONE)
-			//.show(getAnimation(true).setEndAction(mEnterEndAction))
-			.show(0)
+			.show(getAnimation(true).setEndAction(mEnterEndAction))
+			//.show()
 			;	
 	}
 	
@@ -561,8 +565,8 @@ public class MainActivity extends ActionBarActivity {
 			.setYLabels(YController.LabelPosition.OUTSIDE)
 			.setThresholdLine(89, mStackBarThresholdPaint)
 			.setLabelsMetric(" %")
-			//.show(getAnimation(true).setEndAction(mEnterEndAction))
-			.show(0)
+			.show(getAnimation(true).setEndAction(mEnterEndAction))
+			//.show()
 			;
 	}
 	
@@ -726,10 +730,7 @@ public class MainActivity extends ActionBarActivity {
 	 *------------------------------------*/
 	
 	private void setOverlap(int index){
-		mLineChart.dismiss(0);
-		mBarChart.dismiss(0);
-		mStackBarChart.dismiss(0);
-		/*
+		
 		switch(index){
 			case 0:
 				mCurrOverlapFactor = 1;
@@ -752,15 +753,12 @@ public class MainActivity extends ActionBarActivity {
 				mOrderBtn.setImageResource(R.drawable.orderm);
 				break;
 			default:
-				
-		}*/
+				break;
+		}
 	}
 	
 	private void setEasing(int index){
-		mLineChart.show(0);
-		mBarChart.show(0);
-		mStackBarChart.show(0);
-		/*
+
 		switch(index){
 			case 0:
 				mCurrEasing = new CubicEaseOut();
@@ -778,15 +776,12 @@ public class MainActivity extends ActionBarActivity {
 				mCurrEasing = new ElasticEaseOut();
 				mEaseBtn.setImageResource(R.drawable.ease_elastic);
 			default:
-				
-		}*/
+				break;
+		}
 	}
 	
 	private void setEnterPosition(int index){
-		mLineChart.dismiss(1);
-		mBarChart.dismiss(1);
-		mStackBarChart.dismiss(1);
-		/*
+
 		switch(index){
 			case 0:
 				mCurrStartX = -1f;
@@ -834,17 +829,14 @@ public class MainActivity extends ActionBarActivity {
 				mEnterBtn.setImageResource(R.drawable.enterc);
 				break;
 			default:
-				
-		}*/
+				break;
+		}
 	}
 	
 	
 	@SuppressLint("NewApi")
 	private void setAlpha(int index){
-		mLineChart.show(1);
-		mBarChart.show(1);
-		mStackBarChart.show(1);
-		/*
+
 		switch(index){
 			case 0:
 				mCurrAlpha = -1;
@@ -868,7 +860,8 @@ public class MainActivity extends ActionBarActivity {
 					mAlphaBtn.setAlpha(.3f);
 				break;
 			default:
-		}*/
+				break;
+		}
 	}
 	
 	

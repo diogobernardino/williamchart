@@ -21,6 +21,8 @@ import android.util.Log;
 import com.db.chart.Tools;
 import com.db.chart.exception.ChartException;
 
+import java.lang.IllegalArgumentException;
+
 /**
  * Data model containing a set of {@link Point} to be used by {@link LineChartView}.
  */
@@ -67,6 +69,10 @@ public class LineSet extends ChartSet{
 	private float[] mGradientPositions;
 	
 	
+	/** Index where set begins/ends */
+	private int mBegin;
+	private int mEnd;
+	
 	
 	public LineSet(){
 		super();
@@ -92,6 +98,9 @@ public class LineSet extends ChartSet{
 		mHasGradientFill = false;
 		mGradientColors = null;
 		mGradientPositions = null;
+		
+		mBegin = 0;
+		mEnd = 0;
 	}
 
 	
@@ -147,8 +156,8 @@ public class LineSet extends ChartSet{
 	 * --------
 	 */
 	
-	
-	public float getDotsStrokeThickness() {
+
+  	public float getDotsStrokeThickness() {
 		return mDotsStrokeThickness;
 	}
 
@@ -203,6 +212,18 @@ public class LineSet extends ChartSet{
 	}
 	
 	
+	public int getBegin() {
+		return mBegin;
+  	}
+
+	
+	public int getEnd() {
+		if(mEnd == 0)
+			return size();
+		return mEnd;
+	}
+	
+	
 	
 	/*
 	 * --------
@@ -210,7 +231,7 @@ public class LineSet extends ChartSet{
 	 * --------
 	 */
 
-	
+
 	public LineSet setDashed(boolean bool) {
 		mIsDashed = bool;
 		return this;
@@ -322,6 +343,28 @@ public class LineSet extends ChartSet{
 	public LineSet setFill(boolean bool){
 		mHasFill = bool;
 		return this;
+	}
+	
+	
+	/**
+	 * Will skip drawing first points.
+	 * @param index where the set begins
+	 */
+	public void beginAt(int index) {
+		if(index < 0)
+			throw new IllegalArgumentException("index cannot be negative");
+	    mBegin = index;
+	}
+	
+	
+	/**
+	 * Will skip drawing first points.
+	 * @param index where the set begins
+	 */
+	public void endAt(int index) {
+		if(index > size())
+			throw new IllegalArgumentException("index cannot be greater than the set's size");
+	    mEnd = index;
 	}
 	
 }

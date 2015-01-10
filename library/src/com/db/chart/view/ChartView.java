@@ -308,7 +308,7 @@ public abstract class ChartView extends RelativeLayout{
 	/**
 	 * Base method when a show chart occurs
 	 */
-	private void displayChart(){
+	private void display(){
 		
 		this.getViewTreeObserver().addOnPreDrawListener(drawListener);
 		postInvalidate();
@@ -321,17 +321,17 @@ public abstract class ChartView extends RelativeLayout{
 		
 		for(int i = 0; i < data.size(); i++)
 			data.get(i).setVisible(true);
-		displayChart();
+		display();
 	}
 	
 	/**
-	 * Show only a specfic chart dataset
+	 * Show only a specific chart dataset
 	 * @param setIndex - dataset's index to be displayed
 	 */
 	public void show(int setIndex){
 
 		data.get(setIndex).setVisible(true);
-		displayChart();
+		display();
 	}
 	
 	/**
@@ -341,7 +341,7 @@ public abstract class ChartView extends RelativeLayout{
 	public void show(Animation anim){
 		
 		mAnim = anim;
-		displayChart();
+		show();
 	}
 	
 	

@@ -370,26 +370,26 @@ public class LineSet extends ChartSet{
 	
 	
 	/**
-	 * Will skip drawing first points.
-	 * @param index where the set begins
-	 */
+	* Define at which index should the dataset begin.
+	* @param begin - index where the set begins
+	*/
 	public LineSet beginAt(int index) {
 		if(index < 0)
 			throw new IllegalArgumentException("index cannot be negative");
-	    mBegin = index;
-	    return this;
+		mBegin = index;
+		return this;
 	}
-	
-	
+
+
 	/**
-	 * Will skip drawing first points.
-	 * @param index where the set begins
-	 */
+	* Define at which index should the dataset end.
+	* @param index where the set ends
+	*/
 	public LineSet endAt(int index) {
 		if(index > size())
 			throw new IllegalArgumentException("index cannot be greater than the set's size");
-	    mEnd = index;
-	    return this;
+		mEnd = index;
+		return this;
 	}
 	
 }

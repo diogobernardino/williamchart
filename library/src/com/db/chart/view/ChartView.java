@@ -19,7 +19,6 @@ package com.db.chart.view;
 import java.util.ArrayList;
 
 import com.db.williamchart.R;
-import com.db.chart.exception.ChartException;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
@@ -138,7 +137,7 @@ public abstract class ChartView extends RelativeLayout{
 			onPreDrawChart(data);
 			
 			// Sets listener if needed
-			if(mEntryListener != null) 
+			if(mEntryListener != null)
 				mRegions = defineRegions(data);
 			
 			// Prepares the animation if needed and gets the first dump 
@@ -289,9 +288,9 @@ public abstract class ChartView extends RelativeLayout{
 	public void addData(ChartSet set){
 		
 		if(!data.isEmpty() && set.size() != data.get(0).size())
-			Log.e(TAG, "", 
-					new ChartException("The number of labels between " +
-							"sets doesn't match."));
+			Log.e(TAG, "The number of labels between sets doesn't match.", 
+					new IllegalArgumentException());
+		
 		data.add(set);
 	}
 	
@@ -309,7 +308,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Base method when a show chart occurs
 	 */
 	private void display(){
-		
+			
 		this.getViewTreeObserver().addOnPreDrawListener(drawListener);
 		postInvalidate();
 	}
@@ -413,14 +412,8 @@ public abstract class ChartView extends RelativeLayout{
 	 */	
 	public ChartView updateValues(int setIndex, float[] values){
 		
-		try{
-			if(values.length != data.get(setIndex).size())
-				throw new ChartException("New values size doesn't match " +
-						"current dataset size.");
-		}catch(ChartException e){
-			Log.e(TAG, "", e);
-			System.exit(1);
-		}
+		if(values.length != data.get(setIndex).size())
+			Log.e(TAG, "New values size doesn't match current dataset size.", new IllegalArgumentException());
 
 		data.get(setIndex).updateValues(values);
 		return this;
@@ -431,20 +424,21 @@ public abstract class ChartView extends RelativeLayout{
 	 * Notify ChartView about updated values. ChartView will be validated.
 	 */
 	public void notifyDataUpdate(){
-
+		
 		final ArrayList<float[][]> oldCoords = new ArrayList<float[][]>(data.size());
 		final ArrayList<float[][]> newCoords = new ArrayList<float[][]>(data.size());
 			
 		for(int i = 0; i < data.size(); i++)
 			oldCoords.add(data.get(i).getScreenPoints());
+		
 		digestData();
 		for(int i = 0; i < data.size(); i++)
 			newCoords.add(data.get(i).getScreenPoints());
 		
 		mRegions = defineRegions(data);
-		if(mAnim != null){
+		if(mAnim != null)
 			data = mAnim.prepareAnimation(ChartView.this, oldCoords, newCoords);
-		}
+		
 		mToUpdateValues.clear();
 		
 		invalidate();
@@ -534,6 +528,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
+		
 		mIsDrawing = true;
 		super.onDraw(canvas);
 		
@@ -651,22 +646,21 @@ public abstract class ChartView extends RelativeLayout{
 			if(event.getAction() == MotionEvent.ACTION_DOWN &&
 					mEntryListener != null && mRegions != null){
 				
-					 //Check if ACTION_DOWN over any ScreenPoint region.
-						for(int i = 0; i < mRegions.size() ; i++){
+				//Check if ACTION_DOWN over any ScreenPoint region.
+				for(int i = 0; i < mRegions.size() ; i++){
 							
-							for(int j = 0; j < mRegions.get(i).size(); j++){
+					for(int j = 0; j < mRegions.get(i).size(); j++){
 								
-								if(mRegions.get(i).get(j)
-										.contains((int) event.getX(), 
-													(int) event.getY())){
-									mSetClicked = i;
-									mIndexClicked = j;
-								}
-							}
+						if(mRegions.get(i).get(j)
+								.contains((int) event.getX(), 
+									(int) event.getY())){
+							mSetClicked = i;
+							mIndexClicked = j;
 						}
-			
-				
+					}
+				}
 			}else if(event.getAction() == MotionEvent.ACTION_UP){
+				
 				if(mEntryListener != null && 
 						mSetClicked != -1 && 
 							mIndexClicked != -1){
@@ -849,14 +843,10 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public ChartView setAxisBorderValues(int minValue, int maxValue, int step){
 		
-		try{
-			if((maxValue - minValue) % step != 0)
-				throw new ChartException("Step value must be a divisor of " +
-						"distance between minValue and maxValue");
-		}catch(ChartException e){
-			Log.e(TAG, "", e);
-			System.exit(1);
-		}
+		if((maxValue - minValue) % step != 0)
+			Log.e(TAG, "Step value must be a divisor of distance between " +
+					"minValue and maxValue", new IllegalArgumentException());
+	
 		verController.maxLabelValue = maxValue;
 		verController.minLabelValue = minValue;
 		verController.step = step;
@@ -874,13 +864,9 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public ChartView setStep(int step){
 		
-		try{
-			if(step <= 0)
-				throw new ChartException("Step can't be lower or equal to 0");
-		}catch(ChartException e){
-			Log.e(TAG, "", e);
-			System.exit(1);
-		}
+		if(step <= 0)
+			Log.e(TAG, "Step can't be lower or equal to 0", new IllegalArgumentException());
+		
 		verController.step = step;
 		
 		return this;

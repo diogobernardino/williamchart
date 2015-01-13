@@ -41,8 +41,6 @@ import android.graphics.Shader;
  * Implements a line chart extending {@link ChartView}
  */
 public class LineChartView extends ChartView {
-
-	public static final java.lang.String TAG = "LineChartView";
 	
 	
 	/** Radius clickable region */

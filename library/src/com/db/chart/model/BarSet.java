@@ -47,8 +47,9 @@ public class BarSet extends ChartSet{
 		
 		if(labels.length != values.length)
 			Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
-		
-		for(int i = 0; i < labels.length; i++)
+
+		int nEntries = labels.length;
+		for(int i = 0; i < nEntries; i++)
 			addBar(labels[i], values[i]);
 	}
 	
@@ -73,8 +74,9 @@ public class BarSet extends ChartSet{
 	 */
 	
 	public BarSet setColor(int color){
-		for(int i = 0; i < size(); i++)
-			((Bar) getEntry(i)).setColor(color);
+		
+		for(ChartEntry e : getEntries())
+			((Bar) e).setColor(color);
 		return this;
 	}
 	

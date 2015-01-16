@@ -27,7 +27,7 @@ public class ChartSet {
 	
 	/** Set with entries */
 	private ArrayList<ChartEntry> mEntries;
-
+	
 	
 	/** Paint alpha value from 0 to 1 */
 	private float mAlpha;
@@ -65,10 +65,11 @@ public class ChartSet {
 	 */
 	public float[][] updateValues(float[] newValues){
 		
-		float[][] result = new float[size()][2];
-		for(int i = 0; i < size(); i++){
-			result[i][0] = getEntry(i).getX();
-			result[i][1] = getEntry(i).getY();
+		int nEntries = size();
+		float[][] result = new float[nEntries][2];
+		for(int i = 0; i < nEntries; i++){
+			result[i][0] = mEntries.get(i).getX();
+			result[i][1] = mEntries.get(i).getY();
 			setValue(i, newValues[i]);
 		}
 		return result;
@@ -123,10 +124,11 @@ public class ChartSet {
 	 */
 	public float[][] getScreenPoints(){
 		
-		float[][] result = new float[size()][2];
-		for(int i = 0; i < size(); i++){
-			result[i][0] = getEntry(i).getX();
-			result[i][1] = getEntry(i).getY();
+		int nEntries = size();
+		float[][] result = new float[nEntries][2];
+		for(int i = 0; i < nEntries; i++){
+			result[i][0] = mEntries.get(i).getX();
+			result[i][1] = mEntries.get(i).getY();
 		}
 		
 		return result;

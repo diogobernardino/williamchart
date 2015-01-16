@@ -87,12 +87,12 @@ public class LineChartView extends ChartView {
 	 */
 	@Override
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
-
+		
 		LineSet lineSet;
 		
-		for(int i = 0; i < data.size(); i++){
+		for(ChartSet set : data){
 
-			lineSet = (LineSet) data.get(i);
+			lineSet = (LineSet) set;
 
 			if(lineSet.isVisible()){
 				
@@ -129,8 +129,13 @@ public class LineChartView extends ChartView {
 	private void drawPoints(Canvas canvas, LineSet set) {
 		
 		Bitmap dotsBitmap = null; 
-		if(set.getDotsDrawable() != null)
+		float dotsBitmapWidthCenter = 0;
+		float dotsBitmapHeightCenter = 0;
+		if(set.getDotsDrawable() != null){
 			dotsBitmap = Tools.drawableToBitmap(set.getDotsDrawable());
+			dotsBitmapWidthCenter = dotsBitmap.getWidth()/2;
+			dotsBitmapHeightCenter = dotsBitmap.getHeight()/2;
+		}
 		
 		mStyle.mDotsPaint.setColor(set.getDotsColor());
 		handleAlpha(mStyle.mDotsPaint, set.getAlpha());
@@ -138,11 +143,13 @@ public class LineChartView extends ChartView {
 		mStyle.mDotsStrokePaint.setColor(set.getDotsStrokeColor());
 		handleAlpha(mStyle.mDotsStrokePaint, set.getAlpha());
 
-		final Path path = new Path();
-		for (int i = set.getBegin(); i < set.getEnd(); i++){
+		Path path = new Path();
+		int begin = set.getBegin();
+		int end = set.getEnd();
+		for (int i = begin; i < end; i++){
 			path.addCircle(set.getEntry(i).getX(), set.getEntry(i).getY(), set.getDotsRadius(), Path.Direction.CW);
 			if(dotsBitmap != null)
-				canvas.drawBitmap(dotsBitmap, set.getEntry(i).getX() - dotsBitmap.getWidth()/2, set.getEntry(i).getY() - dotsBitmap.getHeight()/2, mStyle.mDotsPaint);
+				canvas.drawBitmap(dotsBitmap, set.getEntry(i).getX() - dotsBitmapWidthCenter, set.getEntry(i).getY() - dotsBitmapHeightCenter, mStyle.mDotsPaint);
 		}
 
 		//Draw dots fill
@@ -163,28 +170,34 @@ public class LineChartView extends ChartView {
 
 		float minY = this.getInnerChartBottom();
 
-		final Path path = new Path();
-		final Path bgPath = new Path();
+		Path path = new Path();
+		Path bgPath = new Path();
 
-		for (int i = set.getBegin(); i < set.getEnd(); i++) {
-
+		int begin = set.getBegin();
+		int end = set.getEnd();
+		float x;
+		float y;
+		for (int i = begin; i < end; i++) {
+			
+			x = set.getEntry(i).getX();
+			y = set.getEntry(i).getY();
+			
 			// Get minimum display Y to optimize gradient
-			if (set.getEntry(i).getY() < minY) 
-				minY = set.getEntry(i).getY();
+			if (y < minY) 
+				minY = y;
 				
-			if (i == set.getBegin()) {
+			if (i == begin) {
 				//Defining outline
-				path.moveTo(set.getEntry(i).getX(), set.getEntry(i).getY());
+				path.moveTo(x, y);
 				//Defining background
-				bgPath.moveTo(set.getEntry(i).getX(), set.getEntry(i).getY());
+				bgPath.moveTo(x, y);
 			}else{
 				//Defining outline
-				path.lineTo(set.getEntry(i).getX(), set.getEntry(i).getY());
+				path.lineTo(x, y);
 				//Defining background
-				bgPath.lineTo(set.getEntry(i).getX(), set.getEntry(i).getY());
+				bgPath.lineTo(x, y);
 			}
 		}
-
 
 		//Draw background
 		if(set.hasFill() || set.hasGradientFill())
@@ -218,21 +231,27 @@ public class LineChartView extends ChartView {
 		float secondControlX;
 		float secondControlY;
 
-		final Path path = new Path();
+		Path path = new Path();
 		path.moveTo(set.getEntry(set.getBegin()).getX(),set.getEntry(set.getBegin()).getY());
 
-		final Path bgPath= new Path();
+		Path bgPath= new Path();
 		bgPath.moveTo(set.getEntry(set.getBegin()).getX(), set.getEntry(set.getBegin()).getY());
 
-		
-		for (int i = set.getBegin(); i < set.getEnd() - 1; i++) {
+		int begin = set.getBegin();
+		int end = set.getEnd();
+		float x;
+		float y;
+		for (int i = begin; i < end - 1; i++) {
 
+			x = set.getEntry(i).getX();
+			y = set.getEntry(i).getY();
+			
 			// Get minimum display Y to optimize gradient
-			if (set.getEntry(i).getY() < minY) 
-				minY = set.getEntry(i).getY();
+			if (y < minY) 
+				minY = y;
 
-			thisPointX = set.getEntry(i).getX();
-			thisPointY = set.getEntry(i).getY();
+			thisPointX = x;
+			thisPointY = y;
 			
 			nextPointX = set.getEntry(i + 1).getX();
 			nextPointY = set.getEntry(i + 1).getY();
@@ -274,9 +293,11 @@ public class LineChartView extends ChartView {
 	 * Responsible for drawing line background
 	 */
 	private void drawBackground(Canvas canvas, Path path, LineSet set, float minDisplayY){
-
+		
+		float innerChartBottom = super.getInnerChartBottom();
+		
 		mStyle.mFillPaint.setAlpha((int)(set.getAlpha() * 255));
-
+		
 		if(set.hasFill())
 			mStyle.mFillPaint.setColor(set.getFillColor());
 		if(set.hasGradientFill())
@@ -285,13 +306,13 @@ public class LineChartView extends ChartView {
 							super.getInnerChartLeft(),
 								minDisplayY,
 									super.getInnerChartLeft(),
-										super.getInnerChartBottom(),
+										innerChartBottom,
 											set.getGradientColors(),
 												set.getGradientPositions(),
 													Shader.TileMode.MIRROR));
 
-		path.lineTo(set.getEntry(set.size()-1).getX(), this.getInnerChartBottom());
-		path.lineTo(set.getEntry(0).getX(), this.getInnerChartBottom());
+		path.lineTo(set.getEntry(set.size()-1).getX(), innerChartBottom);
+		path.lineTo(set.getEntry(0).getX(), innerChartBottom);
 		path.close();
 		canvas.drawPath(path, mStyle.mFillPaint);
 	}
@@ -301,17 +322,23 @@ public class LineChartView extends ChartView {
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
 
-		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
+		ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
+		
 		ArrayList<Region> regionSet;
-
+		float x;
+		float y;
 		for(ChartSet set : data){
+			
 			regionSet = new ArrayList<Region>(set.size());
-
-			for(ChartEntry e : set.getEntries())
-				regionSet.add(new Region((int)(e.getX() - sRegionRadius),
-										(int)(e.getY() - sRegionRadius),
-											(int)(e.getX() + sRegionRadius),
-												(int)(e.getY() + sRegionRadius)));
+			for(ChartEntry e : set.getEntries()){
+				
+				x = e.getX();
+				y = e.getY();
+				regionSet.add(new Region((int)(x - sRegionRadius),
+											(int)(y - sRegionRadius),
+												(int)(x + sRegionRadius),
+													(int)(y + sRegionRadius)));
+			}
 			result.add(regionSet);
 		}
 

@@ -22,6 +22,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 
+import com.db.chart.model.ChartEntry;
 import com.db.williamchart.R;
 
 
@@ -81,6 +82,10 @@ public class XController{
 	private String[] mLabels;
 	
 	
+	/** Number of entries */
+	private int nEntries;
+	
+	
 	
 	public XController(ChartView chartView) {
 		
@@ -91,7 +96,6 @@ public class XController{
 				.getDimension(R.dimen.axis_dist_from_label));
 		mandatoryBorderSpacing = 0;
 		hasAxis = true;
-		labelsPos = new ArrayList<Float>();
 		labelsPositioning = LabelPosition.OUTSIDE;
 		borderSpacing = mChartView.getResources()
 									.getDimension(R.dimen.axis_border_spacing);	
@@ -111,10 +115,11 @@ public class XController{
 
 	protected void init() {
 		
+		nEntries =  mChartView.data.get(0).size();
+		
 		mLastLabelWidth = mChartView.style.labelPaint
 				.measureText(mChartView.data.get(0)
-						.getLabel(mChartView.data.get(0)
-								.size()-1));
+						.getLabel(nEntries - 1));
 		
 		// Set the vertical display coordinate
 		mLabelVerCoord = mChartView.chartBottom;
@@ -125,10 +130,10 @@ public class XController{
 		if(mandatoryBorderSpacing == 1)
 			mandatoryBorderSpacing = 
 				(getInnerChartRight() - mChartView.getInnerChartLeft() - borderSpacing * 2) 
-					/ mChartView.data.get(0).size() / 2;
+					/ nEntries / 2;
 		
 		mLabels = getLabelsFromData();
-		labelsPos = calcLabelsPos(mChartView.data.get(0).size());
+		labelsPos = calcLabelsPos();
 	}
 
 	
@@ -138,8 +143,8 @@ public class XController{
 	 */	
 	private String[] getLabelsFromData() {
 		
-		final String[] result = new String[mChartView.data.get(0).size()];
-		for(int i = 0; i < mChartView.data.get(0).size(); i++)
+		String[] result = new String[nEntries];
+		for(int i = 0; i < nEntries; i++)
 			result[i] = mChartView.data.get(0).getLabel(i);
 		return result;
 	}
@@ -149,11 +154,11 @@ public class XController{
 	 * Get labels position having into account the horizontal padding of text size.
 	 * @param nLabels- number of labels to display
 	 */
-	private ArrayList<Float> calcLabelsPos(int nLabels) {
+	private ArrayList<Float> calcLabelsPos() {
 		
-		final ArrayList<Float> result = new ArrayList<Float>();
+		ArrayList<Float> result = new ArrayList<Float>(nEntries);
 		
-		if(nLabels == 1)
+		if(nEntries == 1)
 			result.add(mChartView.getInnerChartLeft() + (getInnerChartRight() - mChartView.getInnerChartLeft())/2);
 		else{
 			final float screenStep = 
@@ -163,7 +168,7 @@ public class XController{
 						//if 0 first label will be right at the beginning of the axis
 						- borderSpacing * 2
 						- mandatoryBorderSpacing * 2 ) 
-					/ (nLabels-1);
+					/ (nEntries - 1);
 
 			float pos = mChartView.getInnerChartLeft() + borderSpacing + mandatoryBorderSpacing;
 			while(pos <= mChartView.chartRight - borderSpacing - mandatoryBorderSpacing){
@@ -184,8 +189,8 @@ public class XController{
 	protected int getLabelHeight(){
 		if(mLabelHeight == -1){
 			int result = 0;
-			for(int i = 0; i < mChartView.data.get(0).size(); i++){
-				result = mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(i));
+			for(ChartEntry e : mChartView.data.get(0).getEntries()){
+				result = mChartView.style.getTextHeightBounds(e.getLabel());
 				if(result != 0)
 					break;
 			}
@@ -215,7 +220,7 @@ public class XController{
 		if(labelsPositioning != LabelPosition.NONE){
 			
 			mChartView.style.labelPaint.setTextAlign(Align.CENTER);
-			for(int i = 0; i < mLabels.length; i++){
+			for(int i = 0; i < nEntries; i++){
 				canvas.drawText(mLabels[i], 
 								labelsPos.get(i), 
 									mLabelVerCoord, 
@@ -242,7 +247,6 @@ public class XController{
 	 */
 	public float getInnerChartRight(){
 		
-
 		float rightBorder = 0;
 		if(borderSpacing + mandatoryBorderSpacing < mLastLabelWidth / 2)
 			rightBorder = mLastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);

@@ -140,6 +140,8 @@ public class MainActivity extends ActionBarActivity {
 	private final OnEntryClickListener lineEntryListener = new OnEntryClickListener(){
 		@Override
 		public void onClick(int setIndex, int entryIndex, Rect rect) {
+			System.out.println(setIndex);
+			System.out.println(entryIndex);
 			if(mLineTooltip == null)
 				showLineTooltip(setIndex, entryIndex, rect);
 			else
@@ -290,8 +292,6 @@ public class MainActivity extends ActionBarActivity {
 			.setDotsStrokeColor(this.getResources().getColor(R.color.line))
 			.setLineColor(this.getResources().getColor(R.color.line))
 			.setLineThickness(Tools.fromDpToPx(3));
-		dataSet.beginAt(1);
-		dataSet.endAt(5);
 		mLineChart.addData(dataSet);
 		
 		dataSet = new LineSet();
@@ -299,8 +299,6 @@ public class MainActivity extends ActionBarActivity {
 		dataSet.setLineColor(this.getResources().getColor(R.color.line))
 			.setLineThickness(Tools.fromDpToPx(3))
 			.setSmooth(true);
-		dataSet.beginAt(2);
-		dataSet.endAt(6);
 		mLineChart.addData(dataSet);
 		
 		mLineChart.setBorderSpacing(Tools.fromDpToPx(4))
@@ -421,7 +419,7 @@ public class MainActivity extends ActionBarActivity {
 		barSet.setColor(this.getResources().getColor(R.color.bar_fill2));
 		mBarChart.addData(barSet);
 		
-		mBarChart.setSetSpacing(Tools.fromDpToPx(1));
+		mBarChart.setSetSpacing(-Tools.fromDpToPx(8));
 		
 		mBarChart.setBorderSpacing(0)
 			.setAxisBorderValues(BAR_MIN, BAR_MAX, 2)

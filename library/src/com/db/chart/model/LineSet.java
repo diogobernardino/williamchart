@@ -123,9 +123,12 @@ public class LineSet extends ChartSet{
 	
 	
 	public void addPoints(String[] labels, float[] values){
+		
 		if(labels.length != values.length)
 			Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
-		for(int i = 0; i < labels.length; i++)
+		
+		int nEntries = labels.length;
+		for(int i = 0; i < nEntries; i++)
 			addPoint(labels[i], values[i]);
 	}
 	
@@ -255,6 +258,7 @@ public class LineSet extends ChartSet{
 	 * @param thickness - Line thickness. Can't be equal or less than 0.
 	 */
 	public LineSet setLineThickness(float thickness) {
+		
 		if(thickness <= 0)
 			Log.e(TAG, "Line thickness <= 0.", new IllegalArgumentException());
 		mLineThickness = thickness;
@@ -290,6 +294,7 @@ public class LineSet extends ChartSet{
 	 * @param thickness - grid thickness. Can't be equal or less than 0.
 	 */
 	public LineSet setDotsStrokeThickness(float thickness){
+		
 		if(thickness <= 0)
 			Log.e(TAG, "Grid thickness <= 0.", new IllegalArgumentException());
 		mHasDotsStroke = true;
@@ -317,6 +322,7 @@ public class LineSet extends ChartSet{
 	
 	
 	public LineSet setFill(int color){
+		
 		mHasFill = true;
 		mFillColor = color;
 		return this;
@@ -329,6 +335,7 @@ public class LineSet extends ChartSet{
 	 * @return
 	 */
 	public LineSet setGradientFill(int colors[], float[] positions){
+		
 		mHasGradientFill = true;
 		mGradientColors = colors;
 		mGradientPositions = positions;
@@ -358,6 +365,7 @@ public class LineSet extends ChartSet{
 	* @param begin - index where the set begins
 	*/
 	public LineSet beginAt(int index) {
+		
 		if(index < 0)
 			Log.e(TAG, "Index can't be negative.", new IllegalArgumentException());
 		mBegin = index;
@@ -370,6 +378,7 @@ public class LineSet extends ChartSet{
 	* @param index where the set ends
 	*/
 	public LineSet endAt(int index) {
+		
 		if(index > size())
 			Log.e(TAG, "Index cannot be greater than the set's size.", new IllegalArgumentException());
 		mEnd = index;

@@ -39,6 +39,14 @@ public class Animation{
 	
 	/** Default animation duration */
 	private final static int DEFAULT_DURATION = 1000;
+	
+	
+	/** Default animation overlap */
+	private final static float DEFAULT_OVERLAP_FACTOR = 1f;
+	
+	
+	/** Default animation alpha */
+	private final static int DEFAULT_ALPHA_OFF = -1;
 
 	
 	/** Task that handles with animation updates */
@@ -149,14 +157,15 @@ public class Animation{
 	private void init(int duration){
 		
 		mGlobalDuration = duration;
-		mCurrentGlobalDuration = 0;
-		mGlobalInitTime = 0;
-		mOverlapingFactor = 1f;
+		mOverlapingFactor = DEFAULT_OVERLAP_FACTOR;
+		mAlphaSpeed = DEFAULT_ALPHA_OFF;
 		mEasing = new QuintEaseOut();
-		mPlaying = false;
 		mStartXFactor = -1f;
 		mStartYFactor = -1f;
-		mAlphaSpeed = -1;
+		
+		mPlaying = false;
+		mCurrentGlobalDuration = 0;
+		mGlobalInitTime = 0;
 	}
 	
 	
@@ -176,30 +185,29 @@ public class Animation{
 	public ArrayList<ChartSet> prepareAnimation(ChartView chartView, 
 			ArrayList<float[][]> start, ArrayList<float[][]> end){
 
-		final int setSize = start.size();
-		final int entrySize = start.get(0).length;
+		final int nSets = start.size();
+		final int nEntries = start.get(0).length;
 		
 		mChartView = chartView;
-		mCurrentDuration = new long[entrySize];
+		mCurrentDuration = new long[nEntries];
 		
 		// Set the animation order if not defined already
 		if(mOrder == null){
-			mOrder = new int[entrySize];
+			mOrder = new int[nEntries];
 			for(int i = 0; i < mOrder.length; i++)
 				mOrder[i] = i;
 		}
 		
 		// Calculates the expected duration as there was with no overlap (factor = 0)
-		float noOverlapDuration = mGlobalDuration / entrySize;
+		float noOverlapDuration = mGlobalDuration / nEntries;
 		// Adjust the duration to the overlap
 		mDuration = (int) (noOverlapDuration + (mGlobalDuration - noOverlapDuration) * mOverlapingFactor);
 		
 		// Define animation paths for each entry
 		Path path;
-		mPathMeasures = new PathMeasure[setSize][entrySize];
-		for(int i = 0; i < setSize; i++){
-			
-			for(int j = 0; j < entrySize; j++){
+		mPathMeasures = new PathMeasure[nSets][nEntries];
+		for(int i = 0; i < nSets; i++){
+			for(int j = 0; j < nEntries; j++){
 				
 				path = new Path();
 				path.moveTo(start.get(i)[j][0], start.get(i)[j][1]);
@@ -210,17 +218,16 @@ public class Animation{
 		}
 		
 		// Define initial time for each entry
-		mInitTime = new long[entrySize];
+		mInitTime = new long[nEntries];
 		mGlobalInitTime = System.currentTimeMillis();
 		long noOverlapInitTime;
-		for(int i = 0; i < mInitTime.length; i++){
+		for(int i = 0; i < nEntries; i++){
 			// Calculates the expected init time as there was with no overlap (factor = 0)
-			noOverlapInitTime = mGlobalInitTime + (i * (mGlobalDuration / entrySize));
+			noOverlapInitTime = mGlobalInitTime + (i * (mGlobalDuration / nEntries));
 			// Adjust the init time to overlap
 			mInitTime[mOrder[i]] = (noOverlapInitTime 
 					- ((long) (mOverlapingFactor * (noOverlapInitTime - mGlobalInitTime))));
 		}
-		
 		
 		mPlaying = true;
 		return getUpdate(mChartView.getData());
@@ -251,18 +258,20 @@ public class Animation{
 		else
 			y = chartView.getZeroPosition();
 			
+		final int nSets = sets.size();
+		final int nEntries = sets.get(0).size();
 		
-		final ArrayList<float[][]> startValues = new ArrayList<float[][]>(sets.size());
-		final ArrayList<float[][]> endValues = new ArrayList<float[][]>(sets.size());
+		ArrayList<float[][]> startValues = new ArrayList<float[][]>(nSets);
+		ArrayList<float[][]> endValues = new ArrayList<float[][]>(nSets);
 		float[][] startSet;
 		float[][] endSet;
 		
-		for(int i = 0; i < sets.size(); i++){	
+		for(int i = 0; i < nSets; i++){	
 			
-			startSet = new float[sets.get(i).size()][2];
-			endSet = new float[sets.get(i).size()][2];
+			startSet = new float[nEntries][2];
+			endSet = new float[nEntries][2];
 		
-			for(int j = 0; j < sets.get(i).size(); j++){
+			for(int j = 0; j < nEntries; j++){
 	
 				if(mStartXFactor == -1)
 					startSet[j][0] = sets.get(i).getEntry(j).getX();
@@ -318,11 +327,14 @@ public class Animation{
 	 */
 	private ArrayList<ChartSet> getUpdate(ArrayList<ChartSet> data){
 		
+		final int nSets = data.size();
+		final int nEntries = data.get(0).size();
+		
 		// Process current animation duration
 		long diff;
-		final long currentTime = System.currentTimeMillis();
+		long currentTime = System.currentTimeMillis();
 		mCurrentGlobalDuration = currentTime - mGlobalInitTime;
-		for(int i = 0; i < mCurrentDuration.length; i++){
+		for(int i = 0; i < nEntries; i++){
 			diff = currentTime - mInitTime[i];
 			if(diff < 0)
 				mCurrentDuration[i] = 0;
@@ -338,9 +350,9 @@ public class Animation{
 		// Update next values to be drawn
 		float[] posUpdate = new float[2];
 		float timeNormalized = 1;
-		for(int i = 0; i < data.size(); i++)
+		for(int i = 0; i < nSets; i++)
 			
-			for(int j = 0; j < data.get(i).size(); j++){
+			for(int j = 0; j < nEntries; j++){
 				
 				timeNormalized = normalizeTime(j);
 				

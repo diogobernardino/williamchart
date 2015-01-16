@@ -233,9 +233,9 @@ public abstract class ChartView extends RelativeLayout{
 	 * Convert {@link ChartEntry} values into screen points.
 	 */
 	private void digestData() {
-		
+		int nEntries = data.get(0).size();
 		for(ChartSet set: data){
-			for (int i = 0; i < set.size(); i++){
+			for(int i = 0; i < nEntries; i++){
 				set.getEntry(i)
 					.setCoordinates(horController.labelsPos.get(i), 
 									verController.parseYPos(set.getValue(i)));
@@ -318,8 +318,8 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public void show(){
 		
-		for(int i = 0; i < data.size(); i++)
-			data.get(i).setVisible(true);
+		for(ChartSet set : data)
+			set.setVisible(true);
 		display();
 	}
 	
@@ -381,7 +381,7 @@ public abstract class ChartView extends RelativeLayout{
 		        }
 			});
 		
-		data = mAnim.prepareExitAnimation(ChartView.this);
+		data = mAnim.prepareExitAnimation(this);
 		invalidate();
 	}
 	
@@ -425,19 +425,19 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public void notifyDataUpdate(){
 		
-		final ArrayList<float[][]> oldCoords = new ArrayList<float[][]>(data.size());
-		final ArrayList<float[][]> newCoords = new ArrayList<float[][]>(data.size());
-			
-		for(int i = 0; i < data.size(); i++)
-			oldCoords.add(data.get(i).getScreenPoints());
+		ArrayList<float[][]> oldCoords = new ArrayList<float[][]>(data.size());
+		ArrayList<float[][]> newCoords = new ArrayList<float[][]>(data.size());
+		
+		for(ChartSet set : data)
+			oldCoords.add(set.getScreenPoints());
 		
 		digestData();
-		for(int i = 0; i < data.size(); i++)
-			newCoords.add(data.get(i).getScreenPoints());
+		for(ChartSet set : data)
+			newCoords.add(set.getScreenPoints());
 		
 		mRegions = defineRegions(data);
 		if(mAnim != null)
-			data = mAnim.prepareAnimation(ChartView.this, oldCoords, newCoords);
+			data = mAnim.prepareAnimation(this, oldCoords, newCoords);
 		
 		mToUpdateValues.clear();
 		
@@ -532,11 +532,11 @@ public abstract class ChartView extends RelativeLayout{
 		mIsDrawing = true;
 		super.onDraw(canvas);
 		
-		//long time = System.currentTimeMillis();
-		
 		if(mReadyToDraw){
 			
+			//long time = System.currentTimeMillis();
 			// Draw grid
+			
 			if(style.hasVerticalGrid)
 				drawVerticalGrid(canvas);
 			if(style.hasHorizontalGrid)
@@ -554,9 +554,10 @@ public abstract class ChartView extends RelativeLayout{
 			
 			if(style.thresholdPaint != null)
 				drawThresholdLine(canvas);
+			
+			//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
 		}
 		
-		//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
 		mIsDrawing = false;
 	}
 	
@@ -576,10 +577,10 @@ public abstract class ChartView extends RelativeLayout{
 	private void drawVerticalGrid(Canvas canvas){
 		
 		// Draw vertical grid lines
-		for(int i = 0; i < horController.labelsPos.size(); i++){
-			canvas.drawLine(horController.labelsPos.get(i), 
+		for(Float pos : horController.labelsPos){
+			canvas.drawLine(pos, 
 								getInnerChartBottom(), 
-									horController.labelsPos.get(i), 
+									pos, 
 										getInnerChartTop(), 
 											style.gridPaint);
 		}
@@ -605,11 +606,11 @@ public abstract class ChartView extends RelativeLayout{
 	private void drawHorizontalGrid(Canvas canvas){
 		
 		// Draw horizontal grid lines
-		for(int i = 0; i < verController.labelsPos.size(); i++){
+		for(Float pos : verController.labelsPos){
 			canvas.drawLine(getInnerChartLeft(), 
-								verController.labelsPos.get(i), 
+								pos, 
 									getInnerChartRight(),
-										verController.labelsPos.get(i), 
+										pos, 
 											style.gridPaint);
 		}
 		
@@ -647,9 +648,10 @@ public abstract class ChartView extends RelativeLayout{
 					mEntryListener != null && mRegions != null){
 				
 				//Check if ACTION_DOWN over any ScreenPoint region.
-				for(int i = 0; i < mRegions.size() ; i++){
-							
-					for(int j = 0; j < mRegions.get(i).size(); j++){
+				int nSets = mRegions.size();
+				int nEntries = mRegions.get(0).size();
+				for(int i = 0; i < nSets ; i++){
+					for(int j = 0; j < nEntries; j++){
 								
 						if(mRegions.get(i).get(j)
 								.contains((int) event.getX(), 
@@ -1103,8 +1105,7 @@ public abstract class ChartView extends RelativeLayout{
 	    			R.styleable.ChartAttrs_chart_fontSize, 
 	    				getResources().getDimension(R.dimen.font_size));
 			
-	    	final String typefaceName = attrs.getString(
-	    			R.styleable.ChartAttrs_chart_typeface);
+	    	String typefaceName = attrs.getString(R.styleable.ChartAttrs_chart_typeface);
 			if (typefaceName != null)
 				typeface = Typeface.createFromAsset(getResources().
 												getAssets(), typefaceName);
@@ -1139,7 +1140,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		protected int getTextHeightBounds(String character){
 			if(character != ""){
-				final Rect bounds = new Rect();
+				Rect bounds = new Rect();
 				style.labelPaint
 					.getTextBounds(character, 
 							0, 

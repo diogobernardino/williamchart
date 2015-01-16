@@ -23,6 +23,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 
 import com.db.williamchart.R;
+import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 
 /**
@@ -97,7 +98,14 @@ public class YController{
 	protected String labelMetric;
 
 	
+	/** Maximum height that a label can have */
 	private int mLabelHeight;
+	
+	
+	/** Number of labels */
+	private int mNLabels;
+	
+	
 	
 	public YController(ChartView chartView) {
 		
@@ -136,8 +144,10 @@ public class YController{
 			mDistLabelToAxis *= -1;
 			
 		mLabels = calcLabels();
+		mNLabels = mLabels.size();
+		
 		mAxisHorPosition = calcAxisHorizontalPosition();
-		labelsPos = calcLabelsPos(mChartView.data.get(0).size());
+		labelsPos = calcLabelsPos();
 	
 	}
 
@@ -152,21 +162,17 @@ public class YController{
 		
 		float max = Integer.MIN_VALUE;
 		float min = Integer.MAX_VALUE;
-		ChartSet set;
 		
-		for(int i = 0; i < mChartView.data.size(); i++){
-			
-			set = mChartView.data.get(i);
-			for(int j = 0; j < set.size(); j++){
-				
-				if(set.getValue(j) >= max)
-					max = set.getValue(j);
-				if(set.getValue(j) <= min)
-					min = set.getValue(j);
+		for(ChartSet set : mChartView.data){
+			for(ChartEntry e : set.getEntries()){
+				if(e.getValue() >= max)
+					max = e.getValue();
+				if(e.getValue() <= min)
+					min = e.getValue();
 			}
 		}
 
-		final float[] result = {min, max};
+		float[] result = {min, max};
 		return result;
 	}
 	
@@ -179,7 +185,7 @@ public class YController{
 	 */
 	private ArrayList<Integer> calcLabels(){
 		
-		final float[] borderValues = calcBorderValues();
+		float[] borderValues = calcBorderValues();
 		minValue = borderValues[0];
 		maxValue = borderValues[1];
 		
@@ -200,7 +206,7 @@ public class YController{
 				maxLabelValue += 1;
 		}
 		
-		final ArrayList<Integer> result = new ArrayList<Integer>();
+		ArrayList<Integer> result = new ArrayList<Integer>();
 		int pos = minLabelValue;
 		while(pos <= maxLabelValue){
 			result.add(pos);
@@ -208,7 +214,7 @@ public class YController{
 		}
 
 		//Set max Y axis label in case isn't already there
-		if(result.get(result.size()-1) < maxLabelValue)
+		if(result.get(result.size() - 1) < maxLabelValue)
 			result.add(maxLabelValue);
 		
 		return result;
@@ -221,15 +227,16 @@ public class YController{
 	 * Get labels position having into account the vertical padding of text size.
 	 * @param nLabels
 	 */
-	private ArrayList<Float> calcLabelsPos(int nLabels) {
+	private ArrayList<Float> calcLabelsPos() {
 		
-		final ArrayList<Float> result = new ArrayList<Float>();
+		ArrayList<Float> result = new ArrayList<Float>(mNLabels);
 		
-		final int frameHeight = (int) mChartView.horController.getAxisVerticalPosition() - mChartView.chartTop;
-		mScreenStep = (float) (frameHeight - topSpacing) / (mLabels.size() - 1);
+		mScreenStep = (float) ((mChartView.horController.getAxisVerticalPosition() 
+									- mChartView.chartTop) 
+								- topSpacing) / (mNLabels - 1);
 		
 		float currPos = (float) (mChartView.horController.getAxisVerticalPosition());
-		for(int i = 0; i < mLabels.size(); i++){
+		for(int i = 0; i < mNLabels; i++){
 			result.add(currPos);
 			currPos -= mScreenStep;
 		}
@@ -250,9 +257,8 @@ public class YController{
 			
 			float maxLenghtLabel = 0;
 			float aux = 0;
-			for(int i = 0; i < mLabels.size(); i++){
-
-				aux = mChartView.style.labelPaint.measureText(Integer.toString(mLabels.get(i)) + labelMetric);
+			for(Integer label : mLabels){
+				aux = mChartView.style.labelPaint.measureText(Integer.toString(label) + labelMetric);
 				if(aux > maxLenghtLabel)
 					maxLenghtLabel = aux;
 			}
@@ -302,7 +308,7 @@ public class YController{
 						? Align.RIGHT : Align.LEFT);
 			
 			// Draw labels
-			for(int i = 0; i < mLabels.size(); i++){
+			for(int i = 0; i < mNLabels; i++){
 				canvas.drawText(Integer.toString(mLabels.get(i)) + labelMetric, 
 									mAxisHorPosition - mChartView.style.axisThickness/2 - mDistLabelToAxis, 
 										(float) labelsPos.get(i) + mChartView.style.getTextHeightBounds("0")/2, 
@@ -347,10 +353,12 @@ public class YController{
 	
 	
 	protected int getLabelHeight(){
+		
 		if(mLabelHeight == -1){
+			
 			int result = 0;
-			for(int i = 0; i < mChartView.data.get(0).size(); i++){
-				result = mChartView.style.getTextHeightBounds(mChartView.data.get(0).getLabel(i));
+			for(ChartEntry e : mChartView.data.get(0).getEntries()){
+				result = mChartView.style.getTextHeightBounds(e.getLabel());
 				if(result != 0)
 					break;
 			}

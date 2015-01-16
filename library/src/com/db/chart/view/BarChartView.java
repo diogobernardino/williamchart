@@ -96,16 +96,20 @@ public class BarChartView extends ChartView {
 	@Override
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
 		
+		final int nSets = data.size();
+		final int nEntries = data.get(0).size();
+		final int yZeroCoord = (int) this.verController.parseYPos(0);
+		
 		float drawingOffset;
 		BarSet barSet;
 		Bar bar;
-
-		for (int i = 0; i < data.get(0).size(); i++) {
+		
+		for (int i = 0; i < nEntries; i++) {
 			
 			// Set first offset to draw a group of bars
 			drawingOffset = data.get(0).getEntry(i).getX() - mDrawingOffset;
 			
-			for(int j = 0; j < data.size(); j++){
+			for(int j = 0; j < nSets; j++){
 				
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
@@ -127,14 +131,14 @@ public class BarChartView extends ChartView {
 					canvas.drawRoundRect(new RectF((int) drawingOffset, 
 						(int) bar.getY(), 
 							(int) (drawingOffset + barWidth),
-								(int) this.verController.parseYPos(0)), 
+								(int) yZeroCoord), 
 							style.cornerRadius,
 								style.cornerRadius,
 									style.barPaint);
 				else
 					// Draw negative bar
 					canvas.drawRoundRect(new RectF((int) drawingOffset, 
-							(int) this.verController.parseYPos(0), 
+							(int) yZeroCoord, 
 								(int) (drawingOffset + barWidth),
 									(int) bar.getY()), 
 								style.cornerRadius,
@@ -144,7 +148,7 @@ public class BarChartView extends ChartView {
 				drawingOffset += barWidth;
 				
 				// If last bar of group no set spacing is necessary
-				if(j != data.size()-1)
+				if(j != nSets - 1)
 					drawingOffset += style.mSetSpacing;
 			}		
 		}
@@ -225,21 +229,26 @@ public class BarChartView extends ChartView {
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
 		
-		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
-		for(int i = 0; i < data.size(); i++)
-			result.add(new ArrayList<Region>());
+		int nSets = data.size();
+		int nEntries = data.get(0).size();
+		final int yZeroCoord = (int) this.verController.parseYPos(0);
+		
+		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>(nSets);
+		
+		for(int i = 0; i < nSets; i++)
+			result.add(new ArrayList<Region>(nEntries));
 		
 		float drawingOffset;
 		BarSet barSet;
 		Bar bar;
 		
-		for (int i = 0; i < data.get(0).size(); i++) {
+		for (int i = 0; i < nEntries; i++) {
 			
 			// Set first offset to draw a group of bars
 			drawingOffset = data.get(0).getEntry(i).getX() - mDrawingOffset;
 			
 			
-			for(int j = 0; j < data.size(); j++){
+			for(int j = 0; j < nSets; j++){
 				
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
@@ -248,15 +257,15 @@ public class BarChartView extends ChartView {
 					result.get(j).add(new Region((int) drawingOffset, 
 									(int) bar.getY(), 
 										(int) (drawingOffset += barWidth), 
-											(int) this.getZeroPosition()));
+											yZeroCoord));
 				else
 					result.get(j).add(new Region((int) drawingOffset, 
-							(int) this.getZeroPosition(), 
+							yZeroCoord, 
 								(int) (drawingOffset += barWidth), 
 									(int) bar.getY()));
 				
 				// If last bar of group no set spacing is necessary
-				if(j != data.size()-1)
+				if(j != nSets - 1)
 					drawingOffset += style.mSetSpacing;
 			}	
 			

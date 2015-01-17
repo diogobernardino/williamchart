@@ -311,7 +311,7 @@ public class YController{
 			for(int i = 0; i < mNLabels; i++){
 				canvas.drawText(Integer.toString(mLabels.get(i)) + labelMetric, 
 									mAxisHorPosition - mChartView.style.axisThickness/2 - mDistLabelToAxis, 
-										(float) labelsPos.get(i) + mChartView.style.getTextHeightBounds("0")/2, 
+										(float) labelsPos.get(i) + getLabelHeight()/2, 
 											mChartView.style.labelPaint);
 			}
 		}

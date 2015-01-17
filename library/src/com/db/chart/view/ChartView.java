@@ -23,6 +23,8 @@ import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.animation.Animation;
+import com.db.chart.view.animation.style.BaseStyleAnimation;
+import com.db.chart.view.animation.style.DashAnimation;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -507,6 +509,15 @@ public abstract class ChartView extends RelativeLayout{
 	}
 	
 	
+	/**
+	 * Animate {@link ChartSet}
+	 * @param index - position of {@link ChartSet}
+	 * @param anim - animation extending {@link BaseStyleAnimation}
+	 */
+    public void animateSet(int index, BaseStyleAnimation anim){
+    	anim.play(this, this.data.get(index));
+    }
+	
 	
 	/**
 	 * Asks the view if it is able to draw now.
@@ -547,7 +558,7 @@ public abstract class ChartView extends RelativeLayout{
 						
 			// Draw data
 			if(!data.isEmpty())
-			onDrawChart(canvas, data);
+				onDrawChart(canvas, data);
 			
 			// Draw axis X
 			horController.draw(canvas);

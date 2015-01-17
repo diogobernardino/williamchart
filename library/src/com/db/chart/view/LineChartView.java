@@ -23,6 +23,7 @@ import com.db.chart.Tools;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
+import com.db.chart.view.animation.style.DashAnimation;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -34,6 +35,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.graphics.Shader;
 
@@ -102,7 +104,7 @@ public class LineChartView extends ChartView {
 				
 				if(lineSet.isDashed())
 					mStyle.mLinePaint
-						.setPathEffect(new DashPathEffect(new float[] {10,10}, 0));
+						.setPathEffect(new DashPathEffect(new float[] {10,10}, lineSet.getPhase()));
 				else
 					mStyle.mLinePaint.setPathEffect(null);
 				
@@ -379,10 +381,11 @@ public class LineChartView extends ChartView {
         return i;
     }
 
-
-
-
-
+    
+    
+    
+    
+    
 	/**
 	 * Class responsible to style the LineChart!
 	 * Can be instantiated with or without attributes.

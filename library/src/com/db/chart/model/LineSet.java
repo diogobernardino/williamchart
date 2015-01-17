@@ -78,6 +78,9 @@ public class LineSet extends ChartSet{
 	private Drawable mDotsDrawable;
 	
 	
+	private int mPhase;
+	
+	
 	
 	public LineSet(){
 		super();
@@ -234,6 +237,12 @@ public class LineSet extends ChartSet{
 	}
 	
 	
+	public int getPhase(){
+		return mPhase;
+	}
+	
+	
+	
 	/*
 	 * --------
 	 * Setters
@@ -243,7 +252,13 @@ public class LineSet extends ChartSet{
 
 	public LineSet setDashed(boolean bool) {
 		mIsDashed = bool;
+		mPhase = 0;
 		return this;
+	}
+	
+	
+	public void setPhase(int phase){
+		mPhase = phase;
 	}
 
 	

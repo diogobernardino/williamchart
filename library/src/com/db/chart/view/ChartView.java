@@ -24,7 +24,6 @@ import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.animation.Animation;
 import com.db.chart.view.animation.style.BaseStyleAnimation;
-import com.db.chart.view.animation.style.DashAnimation;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -50,6 +49,11 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	private static final String TAG = "com.db.chart.view.ChartView";
+	
+	
+	public static enum GridType {
+		FULL, VERTICAL, HORIZONTAL
+    }
 	
 	
 	/** Chart borders */
@@ -404,6 +408,8 @@ public abstract class ChartView extends RelativeLayout{
 			horController.mandatoryBorderSpacing = 1;
 		style.thresholdPaint = null;
 		style.gridPaint = null;
+		style.hasHorizontalGrid = false;
+		style.hasVerticalGrid = false;
 	}
 	
 	
@@ -546,8 +552,8 @@ public abstract class ChartView extends RelativeLayout{
 		if(mReadyToDraw){
 			
 			//long time = System.currentTimeMillis();
-			// Draw grid
 			
+			// Draw grid
 			if(style.hasVerticalGrid)
 				drawVerticalGrid(canvas);
 			if(style.hasHorizontalGrid)
@@ -952,57 +958,19 @@ public abstract class ChartView extends RelativeLayout{
 
 	/**
 	 * Apply grid to chart.
+	 * @param type - {@link GridType} for grid.
 	 * @param paint - The Paint instance that will be used to draw the grid. 
 	 * If null the grid won't be drawn.
 	 */
-	public ChartView setGrid(Paint paint){
+	public ChartView setGrid(GridType type, Paint paint){
 		
-		if(paint != null){
+		if(type.compareTo(GridType.FULL) == 0){
 			style.hasVerticalGrid = true;
 			style.hasHorizontalGrid = true;
+		}else if(type.compareTo(GridType.VERTICAL) == 0){
+			style.hasVerticalGrid = true;
 		}else{
-			style.hasVerticalGrid = false;
-			style.hasHorizontalGrid = false;
-		}
-		style.gridPaint = paint;
-		
-		return this;
-	}
-	
-	
-	
-	/**
-	 * Apply vertical grid to chart
-	 * @param paint - The Paint instance that will be used to draw the grid. 
-	 * If null the grid won't be drawn.
-	 */
-	public ChartView setVerticalGrid(Paint paint){
-		
-		if(paint != null)
-			style.hasVerticalGrid = true;
-		else{
-			style.hasVerticalGrid = false;
-			style.hasHorizontalGrid = false;
-		}
-		style.gridPaint = paint;
-		
-		return this;
-	}
-	
-	
-	
-	/**
-	 * Apply horizontal grid to chart
-	 * @param paint - The Paint instance that will be used to draw the grid. 
-	 * If null the grid won't be drawn.
-	 */
-	public ChartView setHorizontalGrid(Paint paint){
-		
-		if(paint != null)
 			style.hasHorizontalGrid = true;
-		else{
-			style.hasHorizontalGrid = false;
-			style.hasVerticalGrid = false;
 		}
 		style.gridPaint = paint;
 		
@@ -1067,7 +1035,6 @@ public abstract class ChartView extends RelativeLayout{
 		
 		/** Grid */
 		protected Paint gridPaint;
-		protected boolean hasGrid;
 		protected boolean hasHorizontalGrid;
 		protected boolean hasVerticalGrid;
 		
@@ -1085,7 +1052,6 @@ public abstract class ChartView extends RelativeLayout{
 		
 		protected Style() {
 			
-			hasGrid = false;
 			hasHorizontalGrid = false;
 			hasVerticalGrid = false;
 			
@@ -1099,7 +1065,6 @@ public abstract class ChartView extends RelativeLayout{
 		
 		protected Style(TypedArray attrs) {
 			
-			hasGrid = false;
 			hasHorizontalGrid = false;
 			hasVerticalGrid = false;
 			

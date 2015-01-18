@@ -16,6 +16,7 @@ import com.db.chart.view.animation.easing.bounce.BounceEaseOut;
 import com.db.chart.view.animation.easing.cubic.CubicEaseOut;
 import com.db.chart.view.animation.easing.elastic.ElasticEaseOut;
 import com.db.chart.view.animation.easing.quint.QuintEaseOut;
+import com.db.chart.view.animation.style.DashAnimation;
 import com.db.williamchartdemo.R;
 
 import android.net.Uri;
@@ -291,18 +292,20 @@ public class MainActivity extends ActionBarActivity {
 			.setDotsStrokeThickness(Tools.fromDpToPx(2))
 			.setDotsStrokeColor(this.getResources().getColor(R.color.line))
 			.setLineColor(this.getResources().getColor(R.color.line))
-			.setLineThickness(Tools.fromDpToPx(3));
+			.setLineThickness(Tools.fromDpToPx(3))
+			.beginAt(1).endAt(lineLabels.length - 1);
 		mLineChart.addData(dataSet);
 		
 		dataSet = new LineSet();
 		dataSet.addPoints(lineLabels, lineValues[1]);
 		dataSet.setLineColor(this.getResources().getColor(R.color.line))
 			.setLineThickness(Tools.fromDpToPx(3))
-			.setSmooth(true);
+			.setSmooth(true)
+			.setDashed(true);
 		mLineChart.addData(dataSet);
 		
 		mLineChart.setBorderSpacing(Tools.fromDpToPx(4))
-			.setHorizontalGrid(mLineGridPaint)
+			.setGrid(LineChartView.GridType.HORIZONTAL, mLineGridPaint)
 			.setXAxis(false)
 			.setXLabels(XController.LabelPosition.OUTSIDE)
 			.setYAxis(false)
@@ -312,6 +315,8 @@ public class MainActivity extends ActionBarActivity {
 			.show(getAnimation(true).setEndAction(mEnterEndAction))
 			//.show()
 			;
+		
+		mLineChart.animateSet(1, new DashAnimation());
 	}
 	
 	
@@ -423,7 +428,7 @@ public class MainActivity extends ActionBarActivity {
 		
 		mBarChart.setBorderSpacing(0)
 			.setAxisBorderValues(BAR_MIN, BAR_MAX, 2)
-			.setGrid(mBarGridPaint)
+			.setGrid(BarChartView.GridType.FULL, mBarGridPaint)
 			.setYAxis(false)
 			.setXLabels(XController.LabelPosition.OUTSIDE)
 			.setYLabels(YController.LabelPosition.NONE)

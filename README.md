@@ -1,9 +1,10 @@
 WilliamChart
 ===============
 
-WilliamChart is an Android Library based on Views to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional charts but instead everything that could be pleasant and intuitive to represent and visualize data. I would prefer to keep charts simple and clean rather than overfeatured.
+WilliamChart is an Android Library to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional chart features but instead something that could be pleasant and intuitive while representing and visualizing data. I would prefer to keep charts simple and clean rather than overfeatured.
 
 At the moment it provides:
+
 * ``LineChartView``
 * ``BarChartView``
 * ``StackBarChartView``
@@ -75,6 +76,7 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
 ```
 
 ```java
+    
     // Customize labels
     chart.setYLabels(NONE/OUTSIDE/INSIDE)
     chart.setXLabels(NONE/OUTSIDE/INSIDE)
@@ -84,21 +86,31 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     chart.setTypeface(typeface)
 
     // Define grid
-    chart.setGrid(paint)
-    chart.setHorizontalGrid(paint)
-    chart.setVerticalGrid(paint)
+    chart.setGrid(gridtype, paint)
     
     // Show threshold line
     chart.setThresholdLine(float, paint)
-
+	
+	// Y Axis border labels
     chart.setAxisBorderValues(integer, integer, integer)
+    // Step value between Y labels
     chart.setStep(integer)
+    
+    // Y Axis top spacing
     chart.setTopSpacing(dimen)
+    
+    // X Axis side spacing
     chart.setBorderSpacing(dimen)
+    
     chart.setAxisX(boolean)
     chart.setAxisY(boolean)
-
-    chart.show()
+    
+    // Show both chart and its data
+    chart.show(opt:index, opt:animation)
+    
+    // Dismiss data from chart
+    chart.dismiss(opt:animation)
+    chart.dismiss(index)
     
     // Update values of a given set
     chart.updateValues(int, array)
@@ -106,8 +118,12 @@ To create a new chart that requires axis extend the class ``ChartView`` and impl
     chart.notifyDataUpdate()
 
     // Tooltip support
-    chart.showTooltip(view)
+    chart.showTooltip(view, opt:boolean)
     chart.dismissTooltip(view)
+    
+    // Movement effect
+    chartView.animateSet(index)
+    
 ```
 
 
@@ -146,8 +162,13 @@ LineChart
     // Style type
     lineSet.setDashed(boolean)
     lineSet.setSmooth(boolean)
+    
+    // Between which index should the line be displayed 
+    lineSet.beginAt(index)
+    lineSet.endAt(index)
 
     chartView.addData(lineSet)
+    
 ```
 
 
@@ -233,10 +254,16 @@ Implementing the interface ``BaseEasingMethod`` you can create your own easing f
 * ``SineEaseOut``
 
 
+StyleAnimation
+--------------
+By extending ``BaseStyleAnimation`` and implementing the abstract ``nextUpdate(set)`` method you can animate any set's attribute (e.g. set's thickness). Be creative! So far these are the style-animations provided:
+
+* ``DashAnimation``
+
 License
 -------
 
-    Copyright 2014 Diogo Bernardino
+    Copyright 2015 Diogo Bernardino
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

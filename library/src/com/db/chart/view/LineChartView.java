@@ -314,7 +314,7 @@ public class LineChartView extends ChartView {
 													Shader.TileMode.MIRROR));
 
 		path.lineTo(set.getEntry(set.size()-1).getX(), innerChartBottom);
-		path.lineTo(set.getEntry(0).getX(), innerChartBottom);
+		path.lineTo(set.getEntry(set.getBegin()).getX(), innerChartBottom);
 		path.close();
 		canvas.drawPath(path, mStyle.mFillPaint);
 	}

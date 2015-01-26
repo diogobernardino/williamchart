@@ -43,7 +43,7 @@ Then, to use the library in your project add the following to your `build.gradle
 
 ```groovy
 dependencies {
-    compile 'com.db.williamchart:williamchart:1.0.0'
+    compile 'com.db.williamchart:library:1.7.0'
 }
 ```
 

@@ -24,5 +24,9 @@ public class Point extends ChartEntry{
 	public Point(String label, float value){
 		super(label, value);
 	}
-	
+
+
+	public Point(String label, float value, int xIndex){
+		super(label, value, xIndex);
+	}
 }

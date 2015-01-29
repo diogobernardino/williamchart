@@ -42,10 +42,14 @@ public class ChartSet {
 		mAlpha = 1;
 		mIsVisible = false;
 	}
-	
-	
-	
-	
+
+
+
+	protected void addEntry(String label, float value, int xIndex){
+		mEntries.add(new ChartEntry(label, value, xIndex));
+	}
+
+
 	protected void addEntry(String label, float value){
 		mEntries.add(new ChartEntry(label, value));
 	}
@@ -74,8 +78,23 @@ public class ChartSet {
 		}
 		return result;
 	}
-	
-	
+
+	/**
+	 * Updates set values.
+	 * @param newValues
+	 * @param xIndices
+	 * @return float[] with X and Y coordinates of old values
+	 */
+	public float[][] updateValues(float[] newValues, int[] xIndices){
+
+		float[][] result = new float[size()][2];
+		for(int i = 0; i < size(); i++){
+			result[i][0] = getEntry(i).getX();
+			result[i][1] = getEntry(i).getY();
+			setValue(i, newValues[i], xIndices[i]);
+		}
+		return result;
+	}
 	
 	
 	/*
@@ -165,6 +184,16 @@ public class ChartSet {
 	 */
 	private void setValue(int i, float value){
 		mEntries.get(i).setValue(value);
+	}
+
+	/**
+	 * Set {@link ChartEntry} value at specific index position.
+	 * @param i - value's index where value will be placed.
+	 * @param xIndex - x index (position on x axis)
+	 */
+	private void setValue(int i, float value, int xIndex){
+		mEntries.get(i).setValue(value);
+		mEntries.get(i).setxIndex(xIndex);
 	}
 	
 	

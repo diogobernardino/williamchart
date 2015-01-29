@@ -132,7 +132,8 @@ public class MainActivity extends ActionBarActivity {
 	private final static int LINE_MAX = 10;
 	private final static int LINE_MIN = -10;
 	private final static String[] lineLabels = {"", "ANT", "GNU", "OWL", "APE", "JAY", ""};
-	private final static float[][] lineValues = { {-5f, 6f, 2f, 9f, 0f, -2f, 5f}, 
+	private final static int[] xIndices = {0, 1, 4, 5, 6, 11, 13};
+	private final static float[][] lineValues = { {-5f, 6f, 2f, 9f, 0f, -2f, 5f},
 													{-9f, -2f, -4f, -3f, -7f, -5f, -3f}};
 	private static LineChartView mLineChart;
 	private Paint mLineGridPaint;
@@ -285,7 +286,7 @@ public class MainActivity extends ActionBarActivity {
 		mLineChart.reset();
 		
 		LineSet dataSet = new LineSet();
-		dataSet.addPoints(lineLabels, lineValues[0]);
+		dataSet.addPoints(lineLabels, lineValues[0], xIndices);
 		dataSet.setDots(true)
 			.setDotsColor(this.getResources().getColor(R.color.line_bg))
 			.setDotsRadius(Tools.fromDpToPx(5))
@@ -297,7 +298,7 @@ public class MainActivity extends ActionBarActivity {
 		mLineChart.addData(dataSet);
 		
 		dataSet = new LineSet();
-		dataSet.addPoints(lineLabels, lineValues[1]);
+		dataSet.addPoints(lineLabels, lineValues[1], xIndices);
 		dataSet.setLineColor(this.getResources().getColor(R.color.line))
 			.setLineThickness(Tools.fromDpToPx(3))
 			.setSmooth(true)
@@ -377,8 +378,8 @@ public class MainActivity extends ActionBarActivity {
 	
 	private void updateValues(LineChartView chartView){
 		
-		chartView.updateValues(0, lineValues[1]);
-		chartView.updateValues(1, lineValues[0]);
+		chartView.updateValues(0, lineValues[1], xIndices);
+		chartView.updateValues(1, lineValues[0], xIndices);
 		chartView.notifyDataUpdate();
 	}
 	

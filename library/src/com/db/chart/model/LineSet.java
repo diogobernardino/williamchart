@@ -118,8 +118,12 @@ public class LineSet extends ChartSet{
 	public void addPoint(String label, float value){
 		this.addPoint(new Point(label, value));
 	}
-	
-	
+
+	public void addPoint(String label, float value, int xIndex){
+		this.addPoint(new Point(label, value, xIndex));
+	}
+
+
 	public void addPoint(Point point){
 		this.addEntry(point);
 	}
@@ -134,9 +138,19 @@ public class LineSet extends ChartSet{
 		for(int i = 0; i < nEntries; i++)
 			addPoint(labels[i], values[i]);
 	}
-	
-	
-	
+
+	public void addPoints(String[] labels, float[] values, int[] xIndices){
+
+		if(labels.length != values.length)
+			Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
+
+		int nEntries = labels.length;
+		for(int i = 0; i < nEntries; i++)
+			addPoint(labels[i], values[i], xIndices[i]);
+	}
+
+
+
 	public boolean hasDots() {
 		return mHasDots;
 	}

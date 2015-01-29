@@ -25,6 +25,7 @@ public class ChartEntry {
 	/** Input from user */
 	private String mLabel;
 	private float mValue;
+	private int xIndex = -1;
 
 	
 	/** Display coordinates */
@@ -39,7 +40,11 @@ public class ChartEntry {
 		mValue = value;
 	}
 
-	
+	public ChartEntry(String label, float value, int xIndex){
+		mLabel = label;
+		mValue = value;
+		this.xIndex = xIndex;
+	}
 	
 	
 	/*
@@ -58,7 +63,16 @@ public class ChartEntry {
 		return mValue;
 	}
 
-	
+
+	public int getxIndex() {
+		return xIndex;
+	}
+
+	public void setxIndex(int xIndex) {
+		this.xIndex = xIndex;
+	}
+
+
 	public float getX() {
 		return mX;
 	}
@@ -68,7 +82,10 @@ public class ChartEntry {
 		return mY;
 	}
 
-	
+
+	public boolean hasXIndex(){
+		return (xIndex != -1);
+	}
 
 	
 	/*

@@ -426,7 +426,20 @@ public abstract class ChartView extends RelativeLayout{
 		data.get(setIndex).updateValues(values);
 		return this;
 	}
-	
+
+	/**
+	 * Update set values. Animation support in case previously added.
+	 * @param setIndex - Index of set to be updated
+	 * @param values - Array of new values. Array length must match current data.
+	 */
+	public ChartView updateValues(int setIndex, float[] values, int[] xIndices){
+
+		if(values.length != data.get(setIndex).size())
+			Log.e(TAG, "New values size doesn't match current dataset size.", new IllegalArgumentException());
+
+		data.get(setIndex).updateValues(values, xIndices);
+		return this;
+	}
 	
 	/**
 	 * Notify ChartView about updated values. ChartView will be validated.

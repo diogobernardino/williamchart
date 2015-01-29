@@ -152,28 +152,62 @@ public class XController{
 
 	/**
 	 * Get labels position having into account the horizontal padding of text size.
-	 * @param nLabels- number of labels to display
 	 */
 	private ArrayList<Float> calcLabelsPos() {
 		
 		ArrayList<Float> result = new ArrayList<Float>(nEntries);
+
+		// last entry contains the highest index
+		ChartEntry lastEntry =  mChartView.data.get(0).getEntry(mChartView.data.get(0).getEntries().size()-1);
 		
 		if(nEntries == 1)
 			result.add(mChartView.getInnerChartLeft() + (getInnerChartRight() - mChartView.getInnerChartLeft())/2);
 		else{
-			final float screenStep = 
-					(getInnerChartRight()
-						- mChartView.getInnerChartLeft() 
-						- mChartView.style.axisThickness/2
-						//if 0 first label will be right at the beginning of the axis
-						- borderSpacing * 2
-						- mandatoryBorderSpacing * 2 ) 
-					/ (nEntries - 1);
+			if(lastEntry.hasXIndex()) {
 
-			float pos = mChartView.getInnerChartLeft() + borderSpacing + mandatoryBorderSpacing;
-			while(pos <= mChartView.chartRight - borderSpacing - mandatoryBorderSpacing){
-				result.add(pos);
-				pos += screenStep;
+				ArrayList<ChartEntry> entries = mChartView.data.get(0).getEntries();
+
+				int highestXIndex = lastEntry.getxIndex();
+
+				final float screenStep =
+						(getInnerChartRight()
+								- mChartView.getInnerChartLeft()
+								- mChartView.style.axisThickness / 2
+								//if 0 first label will be right at the beginning of the axis
+								- borderSpacing * 2
+								- mandatoryBorderSpacing * 2)
+								/// (nLabels-1);
+								/ (highestXIndex);
+
+				float pos = mChartView.getInnerChartLeft() + borderSpacing + mandatoryBorderSpacing;
+				int xIndexPos = 0;
+				int count = 0;
+				while (pos <= (mChartView.chartRight - borderSpacing - mandatoryBorderSpacing)
+						&& count <= highestXIndex) {
+
+					if (entries.get(xIndexPos).getxIndex() == count) {
+						result.add(pos);
+						xIndexPos++;
+					}
+					pos += screenStep;
+					count++;
+				}
+
+			} else {
+				final float screenStep =
+						(getInnerChartRight()
+								- mChartView.getInnerChartLeft()
+								- mChartView.style.axisThickness / 2
+								//if 0 first label will be right at the beginning of the axis
+								- borderSpacing * 2
+								- mandatoryBorderSpacing * 2)
+								/ (nEntries - 1);
+
+				float pos = mChartView.getInnerChartLeft() + borderSpacing + mandatoryBorderSpacing;
+				while (pos <= mChartView.chartRight - borderSpacing - mandatoryBorderSpacing) {
+					result.add(pos);
+					pos += screenStep;
+				}
 			}
 		}
 		

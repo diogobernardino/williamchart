@@ -163,6 +163,8 @@ public class XController{
 		if(nEntries == 1)
 			result.add(mChartView.getInnerChartLeft() + (getInnerChartRight() - mChartView.getInnerChartLeft())/2);
 		else{
+
+			// maybe not the best way to check if an entry has an xIndex..
 			if(lastEntry.hasXIndex()) {
 
 				ArrayList<ChartEntry> entries = mChartView.data.get(0).getEntries();

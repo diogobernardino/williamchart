@@ -286,6 +286,7 @@ public class MainActivity extends ActionBarActivity {
 		mLineChart.reset();
 		
 		LineSet dataSet = new LineSet();
+		// xIndex parameter is optional
 		dataSet.addPoints(lineLabels, lineValues[0], xIndices);
 		dataSet.setDots(true)
 			.setDotsColor(this.getResources().getColor(R.color.line_bg))
@@ -379,7 +380,9 @@ public class MainActivity extends ActionBarActivity {
 	private void updateValues(LineChartView chartView){
 		
 		chartView.updateValues(0, lineValues[1], xIndices);
+		//chartView.updateValues(0, lineValues[1]);
 		chartView.updateValues(1, lineValues[0], xIndices);
+		//chartView.updateValues(1, lineValues[0]);
 		chartView.notifyDataUpdate();
 	}
 	

@@ -431,6 +431,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Update set values. Animation support in case previously added.
 	 * @param setIndex - Index of set to be updated
 	 * @param values - Array of new values. Array length must match current data.
+	 * @param xIndices - Array of relative positions of entries on the X axis
 	 */
 	public ChartView updateValues(int setIndex, float[] values, int[] xIndices){
 

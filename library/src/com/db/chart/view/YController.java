@@ -16,15 +16,16 @@
 
 package com.db.chart.view;
 
-import java.util.ArrayList;
-
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 
-import com.db.williamchart.R;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
+import com.db.williamchart.R;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * Class responsible to control vertical measures, positions, yadda yadda. 
@@ -95,7 +96,7 @@ public class YController{
 	
 	
 	/** Labels Metric to draw together with labels */
-	protected String labelMetric;
+	protected DecimalFormat labelFormat;
 
 	
 	/** Maximum height that a label can have */
@@ -120,7 +121,7 @@ public class YController{
 		maxLabelValue = 0;
 		labelsPositioning = LabelPosition.OUTSIDE;
 		hasAxis = true;
-		labelMetric = "";
+		labelFormat = new DecimalFormat();
 		mLabelHeight = -1;
 	}
 	
@@ -129,7 +130,7 @@ public class YController{
 		this(chartView);
 		
 		topSpacing = attrs.getDimension(
-								R.styleable.ChartAttrs_chart_axisTopSpacing, 
+								R.styleable.ChartAttrs_chart_axisTopSpacing,
 									topSpacing);
 	}
 
@@ -225,8 +226,7 @@ public class YController{
 	
 	/**
 	 * Get labels position having into account the vertical padding of text size.
-	 * @param nLabels
-	 */
+     */
 	private ArrayList<Float> calcLabelsPos() {
 		
 		ArrayList<Float> result = new ArrayList<Float>(mNLabels);
@@ -258,7 +258,7 @@ public class YController{
 			float maxLenghtLabel = 0;
 			float aux = 0;
 			for(Integer label : mLabels){
-				aux = mChartView.style.labelPaint.measureText(Integer.toString(label) + labelMetric);
+				aux = mChartView.style.labelPaint.measureText(labelFormat.format(label));
 				if(aux > maxLenghtLabel)
 					maxLenghtLabel = aux;
 			}
@@ -309,9 +309,9 @@ public class YController{
 			
 			// Draw labels
 			for(int i = 0; i < mNLabels; i++){
-				canvas.drawText(Integer.toString(mLabels.get(i)) + labelMetric, 
+				canvas.drawText(labelFormat.format(mLabels.get(i)),
 									mAxisHorPosition - mChartView.style.axisThickness/2 - mDistLabelToAxis, 
-										(float) labelsPos.get(i) + getLabelHeight()/2, 
+										(float) labelsPos.get(i) + getLabelHeight()/2,
 											mChartView.style.labelPaint);
 			}
 		}

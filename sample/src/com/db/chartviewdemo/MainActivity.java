@@ -42,6 +42,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -311,7 +313,7 @@ public class MainActivity extends ActionBarActivity {
 			.setYAxis(false)
 			.setYLabels(YController.LabelPosition.OUTSIDE)
 			.setAxisBorderValues(LINE_MIN, LINE_MAX, 5)
-			.setLabelsMetric("u")
+			.setLabelsFormat(new DecimalFormat("##'u'"))
 			.show(getAnimation(true).setEndAction(mEnterEndAction))
 			//.show()
 			;
@@ -567,7 +569,7 @@ public class MainActivity extends ActionBarActivity {
 			.setYAxis(true)
 			.setYLabels(YController.LabelPosition.OUTSIDE)
 			.setThresholdLine(89, mStackBarThresholdPaint)
-			.setLabelsMetric(" %")
+			.setLabelsFormat(new DecimalFormat("###'%'"))
 			.show(getAnimation(true).setEndAction(mEnterEndAction))
 			//.show()
 			;

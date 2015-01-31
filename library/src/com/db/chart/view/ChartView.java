@@ -132,7 +132,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 			// Initialize controllers now that we have the measures
 			verController.init();	
-			mThresholdValue = verController.parseYPos(mThresholdValue);
+			mThresholdValue = verController.parsePos(0, mThresholdValue);
 			// Mandatory: X axis after Y axis!
 			horController.init();
 			
@@ -243,8 +243,8 @@ public abstract class ChartView extends RelativeLayout{
 		for(ChartSet set: data){
 			for(int i = 0; i < nEntries; i++){
 				set.getEntry(i)
-					.setCoordinates(horController.labelsPos.get(i),
-									verController.parseYPos(set.getValue(i)));
+					.setCoordinates(horController.parsePos(i, set.getValue(i)),
+                            verController.parsePos(i, set.getValue(i)));
 			}
 		}
 	}
@@ -458,7 +458,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Adds a tooltip to ChartView. If is not the case already,
 	 * the whole tooltip is forced to be inside ChartView bounds.
 	 * @param tooltip - tooltip view to be added.
-	 * @param boolean - false if the tooltip should not be forced to be inside
+	 * @param bool - false if the tooltip should not be forced to be inside
 	 * ChartView. You may want to take care of it.
 	 */
 	public void showTooltip(View tooltip, boolean bool){
@@ -772,7 +772,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return position of 0 value on chart
 	 */
 	public float getZeroPosition(){
-		return verController.parseYPos(0);
+		return verController.parsePos(0, 0);
 	}
 
 
@@ -808,7 +808,7 @@ public abstract class ChartView extends RelativeLayout{
 
 	/**
 	 * Show/Hide Y labels and respective axis
-	 * @param YController.LabelPosition
+	 * @param position
 	 * 	NONE - No labels
 	 *  OUTSIDE - Labels will be positioned outside the chart
 	 *  INSIDE - Labels will be positioned inside the chart
@@ -821,7 +821,7 @@ public abstract class ChartView extends RelativeLayout{
 
 	/**
 	 * Show/Hide X labels and respective axis
-	 * @param XController.LabelPosition
+	 * @param position
 	 * 	NONE - No labels
 	 *  OUTSIDE - Labels will be positioned outside the chart
 	 *  INSIDE - Labels will be positioned inside the chart
@@ -857,7 +857,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * A step is seen as the step to be defined between 2 labels. As an
 	 * example a step of 2 with a maxAxisValue of 6 will end up with
 	 * {0, 2, 4, 6} as labels.
-	 * @param maxAxisValue - the maximum value that Y axis will have as a label
+	 * @param maxValue - the maximum value that Y axis will have as a label
 	 * @param step - step - (real) value distance from every label
 	 */
 	public ChartView setAxisBorderValues(int minValue, int maxValue, int step){

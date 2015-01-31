@@ -98,7 +98,7 @@ public class BarChartView extends ChartView {
 		
 		final int nSets = data.size();
 		final int nEntries = data.get(0).size();
-		final int yZeroCoord = (int) this.verController.parseYPos(0);
+		final int yZeroCoord = (int) this.verController.parsePos(0, 0);
 		
 		float drawingOffset;
 		BarSet barSet;
@@ -231,7 +231,7 @@ public class BarChartView extends ChartView {
 		
 		int nSets = data.size();
 		int nEntries = data.get(0).size();
-		final int yZeroCoord = (int) this.verController.parseYPos(0);
+		final int yZeroCoord = (int) this.verController.parsePos(0,0);
 		
 		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>(nSets);
 		

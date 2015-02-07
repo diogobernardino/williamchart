@@ -24,7 +24,7 @@ import com.db.chart.Tools;
 import java.lang.IllegalArgumentException;
 
 /**
- * Data model containing a set of {@link Point} to be used by {@link LineChartView}.
+ * Data model containing a set of {@link Point} to be used by {@link com.db.chart.view.LineChartView}.
  */
 public class LineSet extends ChartSet{
 
@@ -269,8 +269,9 @@ public class LineSet extends ChartSet{
 
 	
 	/**
-	 * Defines the thickness to be used when drawing the line. 
-	 * @param thickness - Line thickness. Can't be equal or less than 0.
+	 * Defines the thickness to be used when drawing the line.
+     *
+	 * @param thickness   Line thickness. Can't be equal or less than 0
 	 */
 	public LineSet setLineThickness(float thickness) {
 		
@@ -306,7 +307,8 @@ public class LineSet extends ChartSet{
 	
 
 	/**
-	 * @param thickness - grid thickness. Can't be equal or less than 0.
+     *
+	 * @param thickness   Grid thickness. Can't be equal or less than 0
 	 */
 	public LineSet setDotsStrokeThickness(float thickness){
 		
@@ -345,8 +347,9 @@ public class LineSet extends ChartSet{
 	
 	
 	/**
-	 * @param colors - The colors to be distributed among gradient
-	 * @param positions - 
+     *
+	 * @param colors   The colors to be distributed among gradient
+	 * @param positions
 	 * @return
 	 */
 	public LineSet setGradientFill(int colors[], float[] positions){
@@ -366,6 +369,7 @@ public class LineSet extends ChartSet{
 	
 	/**
 	 * Set a background drawable to each of the dataset's points.
+     *
 	 * @param drawable
 	 */
 	public LineSet setDotsDrawable(Drawable drawable){
@@ -377,7 +381,8 @@ public class LineSet extends ChartSet{
 	
 	/**
 	* Define at which index should the dataset begin.
-	* @param begin - index where the set begins
+     *
+	* @param index   Index where the set begins
 	*/
 	public LineSet beginAt(int index) {
 		
@@ -390,7 +395,8 @@ public class LineSet extends ChartSet{
 
 	/**
 	* Define at which index should the dataset end.
-	* @param index where the set ends
+     *
+	* @param index   Where the set ends
 	*/
 	public LineSet endAt(int index) {
 		

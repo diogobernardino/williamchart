@@ -60,6 +60,7 @@ public class ChartSet {
 	
 	/**
 	 * Updates set values.
+     *
 	 * @param newValues
 	 * @return float[] with X and Y coordinates of old values
 	 */
@@ -94,28 +95,31 @@ public class ChartSet {
 	
 	/**
 	 * Get {@link ChartEntry} from specific index.
-	 * @param i - entry's index
+     *
+	 * @param index - Entry's index
 	 */
-	public ChartEntry getEntry(int i) {
-		return mEntries.get(i);
+	public ChartEntry getEntry(int index) {
+		return mEntries.get(index);
 	}
 	
 	
 	/**
 	 * Get {@link ChartEntry} value from specific index.
-	 * @param i - value's index
+     *
+	 * @param index   Value's index
 	 */
-	public float getValue(int i){
-		return mEntries.get(i).getValue();
+	public float getValue(int index){
+		return mEntries.get(index).getValue();
 	}
 	
 	
 	/**
 	 * Get {@link ChartEntry} label from specific index.
-	 * @param i - label's index
+     *
+	 * @param index   Label's index
 	 */
-	public String getLabel(int i) {
-		return mEntries.get(i).getLabel();
+	public String getLabel(int index) {
+		return mEntries.get(index).getLabel();
 	}
 	
 	
@@ -161,10 +165,11 @@ public class ChartSet {
 	
 	/**
 	 * Set {@link ChartEntry} value at specific index position.
-	 * @param i - value's index where value will be placed.
+     *
+	 * @param index   Value's index where value will be placed
 	 */
-	private void setValue(int i, float value){
-		mEntries.get(i).setValue(value);
+	private void setValue(int index, float value){
+		mEntries.get(index).setValue(value);
 	}
 	
 	

@@ -6,6 +6,7 @@ import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.BarChartView;
+import com.db.chart.view.HorizontalBarChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.StackBarChartView;
 import com.db.chart.view.YController;
@@ -68,7 +69,7 @@ public class MainActivity extends ActionBarActivity {
 	private static float mCurrOverlapFactor;
 	private static int[] mCurrOverlapOrder;
 	private static float mOldOverlapFactor;
-	private static int[] mOldOverlapOrder;	
+	private static int[] mOldOverlapOrder;
 	
 	
 	/**
@@ -112,12 +113,14 @@ public class MainActivity extends ActionBarActivity {
             mHandler.postDelayed(new Runnable() { 
                 public void run() {
             		mOldOverlapFactor = mCurrOverlapFactor;
+                    mOldOverlapOrder = mCurrOverlapOrder;
             		mOldEasing = mCurrEasing;
             		mOldStartX = mCurrStartX;
             		mOldStartY = mCurrStartY;	
             		mOldAlpha = mCurrAlpha;
                 	updateLineChart();
                 	updateBarChart();
+                    updateHorBarChart();
                 	updateStackBarChart();
                 }  
            }, 500);  
@@ -134,7 +137,7 @@ public class MainActivity extends ActionBarActivity {
 	private final static int LINE_MAX = 10;
 	private final static int LINE_MIN = -10;
 	private final static String[] lineLabels = {"", "ANT", "GNU", "OWL", "APE", "JAY", ""};
-	private final static float[][] lineValues = { {-5f, 6f, 2f, 9f, 0f, -2f, 5f}, 
+	private final static float[][] lineValues = { {-5f, 6f, 2f, 9f, 0f, 1f, 5f},
 													{-9f, -2f, -4f, -3f, -7f, -5f, -3f}};
 	private static LineChartView mLineChart;
 	private Paint mLineGridPaint;
@@ -143,8 +146,7 @@ public class MainActivity extends ActionBarActivity {
 	private final OnEntryClickListener lineEntryListener = new OnEntryClickListener(){
 		@Override
 		public void onClick(int setIndex, int entryIndex, Rect rect) {
-			System.out.println(setIndex);
-			System.out.println(entryIndex);
+
 			if(mLineTooltip == null)
 				showLineTooltip(setIndex, entryIndex, rect);
 			else
@@ -168,8 +170,8 @@ public class MainActivity extends ActionBarActivity {
 	private final static int BAR_MAX = 10;
 	private final static int BAR_MIN = 0;
 	private final static String[] barLabels = {"YAK", "ANT", "GNU", "OWL", "APE", "JAY", "COD"};
-	private final static float [][] barValues = { {5f, 6f, 2f, 2f, 9f, 3f, 4f}, 
-													{8f, 2f, 4f, 3f, 7f, 5f, 4f} };
+	private final static float [][] barValues = { {6.5f, 7.5f, 3.5f, 3.5f, 10f, 4.5f, 5.5f},
+													{9.5f, 3.5f, 5.5f, 4.5f, 8.5f, 6.5f, 5.5f} };
 	private static BarChartView mBarChart;
 	private Paint mBarGridPaint;
 	private TextView mBarTooltip;
@@ -191,7 +193,39 @@ public class MainActivity extends ActionBarActivity {
 				dismissBarTooltip(-1, -1, null);
 		}
 	};
-	
+
+
+
+    /**
+     * HorizontalBar
+     */
+    private final static int HOR_BAR_MAX = 8;
+    private final static int HOR_BAR_MIN = 0;
+    private final static String[] horBarLabels = {"YAK", "ANT", "GNU", "OWL", "APE", "JAY", "COD"};
+    private final static float [][] horBarValues = { {6f, 7f, 2f, 4f, 3f, 2f, 5f},
+            {7f, 4f, 3f, 1f, 6f, 2f, 4f} };
+    private static HorizontalBarChartView mHorBarChart;
+    private Paint mHorBarGridPaint;
+    private TextView mHorBarTooltip;
+
+    private final OnEntryClickListener horBarEntryListener = new OnEntryClickListener(){
+        @Override
+        public void onClick(int setIndex, int entryIndex, Rect rect) {
+            if(mHorBarTooltip == null)
+                showHorBarTooltip(setIndex, entryIndex, rect);
+            else
+                dismissHorBarTooltip(setIndex, entryIndex, rect);
+        }
+    };
+
+    private final OnClickListener horBarClickListener = new OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            if(mHorBarTooltip != null)
+                dismissHorBarTooltip(-1, -1, null);
+        }
+    };
+
 	
 	
 	/**
@@ -200,9 +234,10 @@ public class MainActivity extends ActionBarActivity {
 	private final static int STACKBAR_MAX = 100;
 	private final static int STACKBAR_MIN = 0;
 	private final static String[] stackBarLabels = {"YAK", "ANT", "GNU", "OWL", "APE", "JAY", "COD"};
-	private final static float [][] stackBarValues = {{40f, 60f, 20f, 20f, 50f, 20f, 20f}, 
-														{20f, 20f, 20f, 40f, 20f, 40f, 40f},
-															{20f, 20f, 20f, 30f, 20f, 20f, 30f} };
+	private final static float [][] stackBarValues = {
+            {30f, 40f, 25f, 25f, 40f, 25f, 25f},
+            {30f, 30f, 25f, 40f, 25f, 30f, 40f},
+            {30f, 30f, 25f, 25f, 25f, 25f, 25f} };
 	private static StackBarChartView mStackBarChart;
 	private Paint mStackBarThresholdPaint; 
 	private TextView mStackBarTooltip;
@@ -252,11 +287,13 @@ public class MainActivity extends ActionBarActivity {
 		
 		initLineChart();
 		initBarChart();
+        initHorBarChart();
 		initStackBarChart();
 		
 		updateLineChart();
 		updateBarChart();
-		updateStackBarChart();	
+        updateHorBarChart();
+		updateStackBarChart();
 
 	}
 	
@@ -411,7 +448,7 @@ public class MainActivity extends ActionBarActivity {
 		
 		BarSet barSet = new BarSet();
 		Bar bar;
-		for(int i = 0; i < 7; i++){
+		for(int i = 0; i < barLabels.length; i++){
 			bar = new Bar(barLabels[i], barValues[0][i]);
 			if(i == 4)
 				bar.setColor(this.getResources().getColor(R.color.bar_highest));
@@ -426,7 +463,8 @@ public class MainActivity extends ActionBarActivity {
 		barSet.setColor(this.getResources().getColor(R.color.bar_fill2));
 		mBarChart.addData(barSet);
 		
-		mBarChart.setSetSpacing(-Tools.fromDpToPx(8));
+		mBarChart.setSetSpacing(Tools.fromDpToPx(3));
+        mBarChart.setBarSpacing(Tools.fromDpToPx(14));
 		
 		mBarChart.setBorderSpacing(0)
 			.setAxisBorderValues(BAR_MIN, BAR_MAX, 2)
@@ -497,6 +535,110 @@ public class MainActivity extends ActionBarActivity {
 		chartView.updateValues(1, barValues[0]);
 		chartView.notifyDataUpdate();
 	}
+
+
+
+
+    /*------------------------------------*
+	 *         HORIZONTALBARCHART         *
+	 *------------------------------------*/
+
+    private void initHorBarChart(){
+
+        mHorBarChart = (HorizontalBarChartView) findViewById(R.id.horbarchart);
+        mHorBarChart.setOnEntryClickListener(horBarEntryListener);
+        mHorBarChart.setOnClickListener(horBarClickListener);
+
+        mHorBarGridPaint = new Paint();
+        mHorBarGridPaint.setColor(this.getResources().getColor(R.color.bar_grid));
+        mHorBarGridPaint.setStyle(Paint.Style.STROKE);
+        mHorBarGridPaint.setAntiAlias(true);
+        mHorBarGridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
+    }
+
+
+    private void updateHorBarChart(){
+
+        mHorBarChart.reset();
+
+        BarSet barSet = new BarSet();
+        Bar bar;
+        for(int i = 0; i < horBarLabels.length; i++){
+            bar = new Bar(horBarLabels[i], horBarValues[0][i]);
+            bar.setColor(this.getResources().getColor(R.color.horbar_fill));
+            barSet.addBar(bar);
+        }
+        mHorBarChart.addData(barSet);
+        mHorBarChart.setBarSpacing(Tools.fromDpToPx(3));
+
+        mHorBarChart.setBorderSpacing(0)
+                .setAxisBorderValues(HOR_BAR_MIN, HOR_BAR_MAX, 2)
+                .setGrid(HorizontalBarChartView.GridType.VERTICAL, mHorBarGridPaint)
+                .setXAxis(false)
+                .setYAxis(false)
+                .setXLabels(XController.LabelPosition.NONE)
+                .show(getAnimation(true).setEndAction(mEnterEndAction))
+        //.show()
+        ;
+    }
+
+
+    @SuppressLint("NewApi")
+    private void showHorBarTooltip(int setIndex, int entryIndex, Rect rect){
+
+        mHorBarTooltip = (TextView) getLayoutInflater().inflate(R.layout.horbar_tooltip, null);
+        mHorBarTooltip.setText(Integer.toString((int) horBarValues[setIndex][entryIndex]));
+        mHorBarTooltip.setIncludeFontPadding(false);
+
+        LayoutParams layoutParams = new LayoutParams((int) Tools.fromDpToPx(15), (int) Tools.fromDpToPx(15));
+        layoutParams.leftMargin = rect.right;
+        layoutParams.topMargin = rect.top - (int) (Tools.fromDpToPx(15)/2 - (rect.bottom - rect.top)/2);
+        mHorBarTooltip.setLayoutParams(layoutParams);
+
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1){
+            mHorBarTooltip.setAlpha(0);
+            mHorBarTooltip.animate()
+                    .setDuration(200)
+                    .alpha(1)
+                    .translationX(10)
+                    .setInterpolator(enterInterpolator);
+        }
+
+        mHorBarChart.showTooltip(mHorBarTooltip);
+    }
+
+
+    @SuppressLint("NewApi")
+    private void dismissHorBarTooltip(final int setIndex, final int entryIndex, final Rect rect){
+
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+            mHorBarTooltip.animate()
+                    .setDuration(100)
+                    .alpha(0)
+                    .translationX(-10)
+                    .setInterpolator(exitInterpolator).withEndAction(new Runnable(){
+                @Override
+                public void run() {
+                    mHorBarChart.removeView(mHorBarTooltip);
+                    mHorBarTooltip = null;
+                    if(entryIndex != -1)
+                        showHorBarTooltip(setIndex, entryIndex, rect);
+                }
+            });
+        }else{
+            mHorBarChart.dismissTooltip(mHorBarTooltip);
+            mHorBarTooltip = null;
+            if(entryIndex != -1)
+                showHorBarTooltip(setIndex, entryIndex, rect);
+        }
+    }
+
+
+    private void updateValues(HorizontalBarChartView chartView){
+
+        chartView.updateValues(0, horBarValues[1]);
+        chartView.notifyDataUpdate();
+    }
 	
 	
 	
@@ -526,7 +668,7 @@ public class MainActivity extends ActionBarActivity {
 		
 		BarSet stackBarSet = new BarSet();
 		Bar bar;
-		for(int i = 0; i < 7; i++){
+		for(int i = 0; i < stackBarLabels.length; i++){
 			bar = new Bar(stackBarLabels[i], stackBarValues[0][i]);
 			if(i == 2)
 				bar.setColor(this.getResources().getColor(R.color.stackbar_fill1_h));
@@ -563,7 +705,7 @@ public class MainActivity extends ActionBarActivity {
 		
 		mStackBarChart.setStep(4)
 			.setBorderSpacing(Tools.fromDpToPx(5))
-			.setAxisBorderValues(STACKBAR_MIN, STACKBAR_MAX, 20)
+			.setAxisBorderValues(STACKBAR_MIN, STACKBAR_MAX, 50)
 			.setXAxis(false)
 			.setXLabels(XController.LabelPosition.OUTSIDE)
 			.setYAxis(true)
@@ -658,16 +800,20 @@ public class MainActivity extends ActionBarActivity {
 				mLineTooltip = null;
 				mBarChart.dismissAllTooltips();
 				mBarTooltip = null;
+                mHorBarChart.dismissAllTooltips();
+                mHorBarTooltip = null;
 				mStackBarChart.dismissAllTooltips();
 				mStackBarTooltip = null;
 				
 				if(mNewInstance){
 					mLineChart.dismiss(getAnimation(false).setEndAction(null));
 					mBarChart.dismiss(getAnimation(false).setEndAction(null));
+                    mHorBarChart.dismiss(getAnimation(false).setEndAction(null));
 					mStackBarChart.dismiss(getAnimation(false).setEndAction(mExitEndAction));
 				}else{
 					updateValues(mLineChart);
 					updateValues(mBarChart);
+                    updateValues(mHorBarChart);
 					updateValues(mStackBarChart);
 				}
 				mNewInstance = !mNewInstance;

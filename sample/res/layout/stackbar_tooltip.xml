@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center"
-    android:textSize="12sp"
+    android:textSize="10sp"
     android:textColor="@color/stackbar_fill1"
     android:background="@color/text">
 </TextView>

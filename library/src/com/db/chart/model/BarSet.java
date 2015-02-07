@@ -19,7 +19,7 @@ package com.db.chart.model;
 import android.util.Log;
 
 /**
- * Data model containing a set of {@link Bar} to be used by {@link BarChartView}.
+ * Data model containing a set of {@link Bar} to be used by {@link com.db.chart.view.BaseBarChartView}.
  */
 public class BarSet extends ChartSet{
 	

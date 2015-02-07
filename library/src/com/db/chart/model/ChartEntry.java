@@ -17,7 +17,7 @@
 package com.db.chart.model;
 
 /**
- * Generic Data model of a {@link ChartView} entry
+ * Generic Data model of a {@link com.db.chart.view.ChartView} entry
  */
 public class ChartEntry {
 		
@@ -80,7 +80,8 @@ public class ChartEntry {
 	
 	/**
 	 * Set new entry value.
-	 * @param value - new value
+     *
+	 * @param value   New value
 	 */
 	public void setValue(float value){
 		mValue = value;
@@ -88,7 +89,8 @@ public class ChartEntry {
 	
 	
 	/**
-	 * Set the parsed display coordinates
+	 * Set the parsed display coordinates.
+     *
 	 * @param x
 	 * @param y
 	 */

@@ -16,38 +16,42 @@
 
 package com.db.chart.view;
 
-import java.util.ArrayList;
-
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
 import com.db.chart.model.ChartSet;
+import com.db.williamchart.R;
 
-
+import java.util.ArrayList;
 
 /**
- * Implements a {@link com.db.chart.view.BarChartView} extending {@link com.db.chart.view.BaseBarChartView}
+ * Implements a {@link com.db.chart.view.HorizontalBarChartView} extending {@link com.db.chart.view.ChartView}
  */
-public class BarChartView extends BaseBarChartView {
+public class HorizontalBarChartView extends BaseBarChartView {
 
-	
-	public BarChartView(Context context, AttributeSet attrs) {
+
+
+	public HorizontalBarChartView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-        setOrientation(Orientation.VERTICAL);
+        setOrientation(Orientation.HORIZONTAL);
 		setMandatoryBorderSpacing();
 	}
-	
-	
-	public BarChartView(Context context) {
+
+
+	public HorizontalBarChartView(Context context) {
 		super(context);
 
-        setOrientation(Orientation.VERTICAL);
+        setOrientation(Orientation.HORIZONTAL);
 		setMandatoryBorderSpacing();
 	}
 
@@ -57,11 +61,12 @@ public class BarChartView extends BaseBarChartView {
      * Method responsible to draw bars with the parsed screen points.
      *
      * @param canvas   The canvas to draw on
-     * @param data   {@link java.util.ArrayList} of {@link com.db.chart.model.ChartSet} to use
+     * @param data   {@link java.util.ArrayList} of {@link com.db.chart.model.ChartSet}
+     *             to use while drawing the Chart
      */
 	@Override
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
-		
+
 		final int nSets = data.size();
 		final int nEntries = data.get(0).size();
 		final int yZeroCoord = (int) this.getZeroPosition();
@@ -70,10 +75,10 @@ public class BarChartView extends BaseBarChartView {
 		BarSet barSet;
 		Bar bar;
 		
-		for (int i = 0; i < nEntries; i++) {
+		for (int i = nEntries - 1; i >= 0; i--) {
 			
 			// Set first offset to draw a group of bars
-            offset = data.get(0).getEntry(i).getX() - drawingOffset;
+            offset = data.get(0).getEntry(i).getY() - drawingOffset;
 			
 			for(int j = 0; j < nSets; j++){
 				
@@ -90,20 +95,21 @@ public class BarChartView extends BaseBarChartView {
 				// If bar needs background
 				if(style.hasBarBackground)
                     drawBarBackground(canvas,
-                            offset, this.getInnerChartTop(),
-                            offset + barWidth, this.getInnerChartBottom());
+                            this.getInnerChartLeft(), offset,
+                            this.getInnerChartRight(), (offset + barWidth));
+
 				
 				// Draw bar
 				if(bar.getValue() > 0)
 					// Draw positive bar
                     drawBar(canvas,
-                            offset, bar.getY(),
-                            offset + barWidth, yZeroCoord);
+                            yZeroCoord, offset,
+                            bar.getX(), offset + barWidth);
 				else
 					// Draw negative bar
                     drawBar(canvas,
-                            offset, yZeroCoord,
-                            offset + barWidth, bar.getY());
+                            bar.getX(), offset,
+                            yZeroCoord, offset + barWidth);
 
                 offset += barWidth;
 				
@@ -125,16 +131,16 @@ public class BarChartView extends BaseBarChartView {
 	@Override
 	protected void onPreDrawChart(ArrayList<ChartSet> data){
 
-		// In case of only on entry
+        // In case of only on entry
 		if(data.get(0).size() == 1){
 			style.barSpacing = 0;
-			calculateBarsWidth(data.size(), 0, this.getInnerChartRight()
-                    - this.getInnerChartLeft()
-                    - super.horController.borderSpacing * 2);
-		// In case of more than one entry
+			calculateBarsWidth(data.size(), 0, this.getInnerChartBottom()
+                    - this.getInnerChartTop()
+                    - super.verController.borderSpacing * 2);
+        // In case of more than one entry
         }else
-			calculateBarsWidth(data.size(), data.get(0).getEntry(0).getX(), 
-							data.get(0).getEntry(1).getX());
+			calculateBarsWidth(data.size(), data.get(0).getEntry(1).getY(),
+                    data.get(0).getEntry(0).getY());
 
 		calculatePositionOffset(data.size());
 	}
@@ -148,19 +154,19 @@ public class BarChartView extends BaseBarChartView {
      * Important: the returned vector must match the order of the data passed
      * by the user. This ensures that onTouchEvent will return the correct index.
      *
-     * @param data   {@link java.util.ArrayList} of {@link com.db.chart.model.ChartSet}
-     *             to use while defining each region of a {@link com.db.chart.view.BarChartView}
+     * @param data   {@link java.util.ArrayList} of {@link com.db.chart.model.ChartSet} to use
+     *               while defining each region of a {@link com.db.chart.view.HorizontalBarChartView}
      * @return   {@link java.util.ArrayList} of {@link android.graphics.Region} with regions
      *           where click will be detected
      */
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
 		
-		final int nSets = data.size();
-		final int nEntries = data.get(0).size();
-		final int yZeroCoord = (int) this.getZeroPosition();
+		int nSets = data.size();
+		int nEntries = data.get(0).size();
+		int yZeroCoord = (int) this.getZeroPosition();
 		
-		ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>(nSets);
+		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>(nSets);
 		
 		for(int i = 0; i < nSets; i++)
 			result.add(new ArrayList<Region>(nEntries));
@@ -169,10 +175,10 @@ public class BarChartView extends BaseBarChartView {
 		BarSet barSet;
 		Bar bar;
 		
-		for (int i = 0; i < nEntries; i++) {
+		for (int i = nEntries - 1; i >= 0; i--) {
 			
 			// Set first offset to draw a group of bars
-            offset = data.get(0).getEntry(i).getX() - drawingOffset;
+            offset = data.get(0).getEntry(i).getY() - drawingOffset;
 
 			for(int j = 0; j < nSets; j++){
 				
@@ -181,25 +187,23 @@ public class BarChartView extends BaseBarChartView {
 				
 				if(bar.getValue() > 0)
 					result.get(j).add(new Region(
+                            yZeroCoord,
                             (int) offset,
-                            (int) bar.getY(),
-                            (int) (offset += barWidth),
-                            yZeroCoord));
+                            (int) bar.getX(),
+                            (int) (offset + barWidth)));
 				else
 					result.get(j).add(new Region(
+                            (int) bar.getX(),
                             (int) offset,
                             yZeroCoord,
-                            (int) (offset += barWidth),
-                            (int) bar.getY()));
+                            (int) (offset + barWidth)));
 				
 				// If last bar of group no set spacing is necessary
 				if(j != nSets - 1)
                     offset += style.setSpacing;
-			}	
-			
+			}
 		}
-		
 		return result;
 	}
-	
+
 }

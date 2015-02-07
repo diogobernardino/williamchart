@@ -17,7 +17,7 @@
 package com.db.chart.model;
 
 /**
- * Data model that represents a point in {@link LineChartView}
+ * Data model that represents a point in {@link com.db.chart.view.LineChartView}
  */
 public class Point extends ChartEntry{
 

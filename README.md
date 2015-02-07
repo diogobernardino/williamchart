@@ -6,7 +6,7 @@ WilliamChart is an Android Library to help the implementation of charts in andro
 At the moment it provides:
 
 * ``LineChartView``
-* ``BarChartView``
+* ``BarChartView`` ``HorizontalBarChartView``
 * ``StackBarChartView``
 
 
@@ -150,6 +150,7 @@ LineChart
     lineSet.setDotsRadius(dimen)
     lineSet.setDotsStrokeThickness(dimen)
     lineSet.setDotsStrokeColor(color)
+    lineSet.setDotsDrawable(drawable)
     
     // Style line
     lineSet.setLineThickness(dimen)
@@ -172,7 +173,7 @@ LineChart
 ```
 
 
-BarChart & StackBarChart
+(Horizontal)BarChart & StackBarChart
 -------------------------
 
 ```xml
@@ -184,7 +185,7 @@ BarChart & StackBarChart
 ```
 
 ```java
-    BarChartView chartView = new BarcChartView()
+    BarChartView chartView = new BarChartView()
     barChart.setBarSpacing(dimen)
     barChart.setSetSpacing(dimen)
     barChart.setBarBackground(boolean)

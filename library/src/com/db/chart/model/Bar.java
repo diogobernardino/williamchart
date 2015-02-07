@@ -18,7 +18,7 @@ package com.db.chart.model;
 
 
 /**
- * Data model that represents a bar in {@link BarChartView}
+ * Data model that represents a bar in {@link com.db.chart.view.BaseBarChartView}
  */
 public class Bar extends ChartEntry{
 

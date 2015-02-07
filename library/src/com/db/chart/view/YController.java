@@ -16,13 +16,12 @@
 
 package com.db.chart.view;
 
+import java.util.Collections;
+
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 
-import com.db.williamchart.R;
-
-import java.util.ArrayList;
 
 
 /**
@@ -32,26 +31,13 @@ import java.util.ArrayList;
 public class YController extends AxisController{
 
 
-	/** Spacing for top label */
-	protected float topSpacing;
-
-	
-	
 	public YController(ChartView chartView) {
         super(chartView);
-		
-		// DEFAULTS
-		topSpacing = chartView.getResources().getDimension(R.dimen.axis_top_spacing);
-        isDynamic = true;
 	}
 	
 	
 	public YController(ChartView chartView, TypedArray attrs) {
         super(chartView, attrs);
-
-        // DEFAULTS
-		topSpacing = attrs.getDimension(R.styleable.ChartAttrs_chart_axisTopSpacing, topSpacing);
-        isDynamic = true;
 	}
 
 
@@ -59,16 +45,15 @@ public class YController extends AxisController{
     /*
      * IMPORTANT: Method's calls order is crucial. Change it (or not) carefully.
      */
-    @Override
 	protected void init(){
 
         if(labelsPositioning == LabelPosition.INSIDE)
             distLabelToAxis *= -1;
 
-        super.init();
-
-        axisHorPosition = calcAxisHorizontalPosition();
-        labelsPos = calcLabelsPos();
+        defineLabels();
+        defineMandatoryBorderSpacing(chartView.getInnerChartTop(), getInnerChartBottom());
+        defineAxisHorizontalPosition();
+        defineLabelsPos(chartView.getInnerChartTop(), getInnerChartBottom());
     }
 
 
@@ -76,7 +61,7 @@ public class YController extends AxisController{
     /**
      * Calculates the starting X point of the axis
      */
-    protected float calcAxisHorizontalPosition(){
+    protected void defineAxisHorizontalPosition(){
 
         // Just in case Y labels need to be drawn
         if(labelsPositioning == LabelPosition.OUTSIDE){
@@ -85,9 +70,34 @@ public class YController extends AxisController{
             for(String label : labels)
                 if((aux = chartView.style.labelPaint.measureText(label)) > maxLabelLength)
                     maxLabelLength = aux;
-            return chartView.chartLeft + maxLabelLength + distLabelToAxis;
+            axisHorPosition = chartView.chartLeft + maxLabelLength + distLabelToAxis;
         }else
-            return chartView.chartLeft;
+            axisHorPosition = chartView.chartLeft;
+    }
+
+
+
+    @Override
+    protected void defineLabelsPos(float innerStart, float innerEnd) {
+        super.defineLabelsPos(innerStart, innerEnd);
+        Collections.reverse(labelsPos);
+    }
+
+
+
+    /**
+     * Based in a (real) value returns the associated screen point.
+     *
+     * @param value - Value to be parsed in display coordinate
+     * @return Chart's coordinate
+     */
+    protected float parsePos(int index, double value){
+
+        if(handleValues)
+            return (float) ( chartView.horController.getAxisVerticalPosition() -
+                (((value - minLabelValue) * screenStep) / (labelsValues.get(1) - minLabelValue)));
+        else
+            return labelsPos.get(index);
     }
 
 
@@ -99,12 +109,12 @@ public class YController extends AxisController{
 	 */
 
     /**
-     * Differentiates the inner left side of the chart depending
-     * if axis Y is drawn or not.
+     * Differentiates the inner left side of the chart depending if axis Y is drawn or not.
      * If drawing axis give it gives half of the line thickness as margin.
      * Inner Chart refers only to the area where chart data will be draw,
      * excluding labels, axis, etc.
-     * @return position of the inner left side of the chart
+     *
+     * @return Position of the inner left side of the chart
      */
     public float getInnerChartLeft(){
 
@@ -118,7 +128,8 @@ public class YController extends AxisController{
     /**
      * Inner Chart refers only to the area where chart data will be draw,
      * excluding labels, axis, etc.
-     * @return position of the inner left side of the chart
+     *
+     * @return Position of the inner left side of the chart
      */
     public float getInnerChartBottom(){
         return chartView.horController.getAxisVerticalPosition() - chartView.style.axisThickness/2;
@@ -131,27 +142,6 @@ public class YController extends AxisController{
 	 * Abstract Methods
 	 * ----------------
 	 */
-
-	/**
-	 * Get labels position having into account the vertical padding of text size.
-     */
-    @Override
-	protected ArrayList<Float> calcLabelsPos() {
-		
-		ArrayList<Float> result = new ArrayList<Float>(nLabels);
-		
-		screenStep = (chartView.horController.getAxisVerticalPosition()
-                - chartView.chartTop - topSpacing) / (nLabels - 1);
-		
-		float currPos = chartView.horController.getAxisVerticalPosition();
-		for(int i = 0; i < nLabels; i++){
-			result.add(currPos);
-			currPos -= screenStep;
-		}
-		
-		return result;
-	}
-
 
     @Override
 	protected void draw(Canvas canvas){

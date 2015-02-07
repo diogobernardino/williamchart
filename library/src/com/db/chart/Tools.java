@@ -24,11 +24,25 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 public class Tools {
-	
+
+
+    /**
+     * Converts dp size into pixels.
+     *
+     * @param dp   dp size to get converted
+     * @return Pixel size
+     */
 	public static float fromDpToPx(float dp) {
         return dp * Resources.getSystem().getDisplayMetrics().density;
     }
 
+
+    /**
+     * Converts a {@link android.graphics.drawable.Drawable} into {@link android.graphics.Bitmap}.
+     *
+     * @param drawable   {@link android.graphics.drawable.Drawable} to be converted
+     * @return {@link android.graphics.Bitmap} object
+     */
 	public static Bitmap drawableToBitmap (Drawable drawable) {
 		
 	    if (drawable instanceof BitmapDrawable)

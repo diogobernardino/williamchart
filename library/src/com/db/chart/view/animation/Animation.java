@@ -175,12 +175,12 @@ public class Animation{
 	/**
 	 * Method that prepares the animation. Defines starting points, targets, 
 	 * distance, yadda, as well as the first set of points to be drawn.
-	 * @param chartView - {@link ChartView} to be invalidated each time the 
-	 * animation wants to update values.
-	 * @param start - X and Y start coordinates.
-	 * @param end - X and Y end coordinates.
-	 * @return Array of {@link ChartSet} containing the first values to be 
-	 * drawn.
+     *
+	 * @param chartView   {@link ChartView} to be invalidated each time the
+     *                  animation wants to update values
+	 * @param start   X and Y start coordinates
+	 * @param end   X and Y end coordinates
+	 * @return Array of {@link ChartSet} containing the first values to be drawn.
 	 */
 	public ArrayList<ChartSet> prepareAnimation(ChartView chartView, 
 			ArrayList<float[][]> start, ArrayList<float[][]> end){
@@ -237,8 +237,10 @@ public class Animation{
 	/**
 	 * Method that prepares the animation. Defines starting points, targets, 
 	 * distance, yadda, as well as the first set of points to be drawn.
-	 * @param chartView - {@link ChartView} to be invalidate each time the 
-	 * animation wants to update values and to get the {@link ChartSet} containing the target values.
+     *
+	 * @param chartView   {@link ChartView} to be invalidate each time the
+     *                  animation wants to update values and to get the {@link ChartSet}
+     *                  containing the target values
 	 */
 	private ArrayList<ChartSet> prepareAnimation(ChartView chartView){
 		
@@ -249,7 +251,9 @@ public class Animation{
 			x = chartView.getInnerChartLeft() 
 				+ (chartView.getInnerChartRight() - chartView.getInnerChartLeft()) 
 					* mStartXFactor;
-		
+        else
+            x = chartView.getZeroPosition();
+
 		float y = 0;
 		if(mStartYFactor != -1)
 			y = chartView.getInnerChartBottom() 
@@ -273,11 +277,17 @@ public class Animation{
 		
 			for(int j = 0; j < nEntries; j++){
 	
-				if(mStartXFactor == -1)
+				if(mStartXFactor == -1
+                        && chartView.getOrientation() == ChartView.Orientation.VERTICAL)
 					startSet[j][0] = sets.get(i).getEntry(j).getX();
 				else
 					startSet[j][0] = x;
-				startSet[j][1] = y;
+
+                if(mStartYFactor == -1
+                        && chartView.getOrientation() == ChartView.Orientation.HORIZONTAL)
+                    startSet[j][1] = sets.get(i).getEntry(j).getY();
+                else
+                    startSet[j][1] = y;
 				
 				endSet[j][0] = sets.get(i).getEntry(j).getX();
 				endSet[j][1] = sets.get(i).getEntry(j).getY();;
@@ -295,9 +305,9 @@ public class Animation{
 	/**
 	 * Method that prepares the enter animation. Defines starting points, targets, 
 	 * distance, yadda, as well as the first set of points to be drawn.
-	 * @param chartView - {@link ChartView} to be invalidate each time the 
-	 * animation wants to update values and to get the {@link ChartSet} 
-	 * containing the target values.
+     *
+	 * @param chartView   {@link ChartView} to be invalidate each time the animation wants to update
+     *                    values and to get the {@link ChartSet} containing the target values
 	 */
 	public ArrayList<ChartSet> prepareEnterAnimation(ChartView chartView){
 		
@@ -309,9 +319,9 @@ public class Animation{
 	/**
 	 * Method that prepares the enter animation. Defines starting points, targets, 
 	 * distance, yadda, as well as the first set of points to be drawn.
-	 * @param chartView - {@link ChartView} to be invalidate each time the 
-	 * animation wants to update values and to get the {@link ChartSet} 
-	 * containing the target values.
+     *
+	 * @param chartView   {@link ChartView} to be invalidate each time the animation wants to
+     *                  update values and to get the {@link ChartSet} containing the target values
 	 */
 	public ArrayList<ChartSet> prepareExitAnimation(ChartView chartView){
 		
@@ -323,6 +333,7 @@ public class Animation{
 	
 	/**
 	 * Updates values, with the next interpolation, to be drawn next.
+     *
 	 * @return return the next interpolated values.
 	 */
 	private ArrayList<ChartSet> getUpdate(ArrayList<ChartSet> data){
@@ -387,8 +398,8 @@ public class Animation{
 	
 	/**
 	 * Normalize time to a 0-1 relation.
-	 * @param currentTime - value from 0 to 1 representing the current time 
-	 * of the animation
+     *
+	 * @param index
 	 * @return value from 0 to 1 telling the next step.
 	 */
 	private float normalizeTime(int index) {
@@ -403,10 +414,11 @@ public class Animation{
 	
 	
 	/**
-	 * Gets the next position coordinate of a point
-	 * @param i - set index
-	 * @param j - point index
-	 * @param normalizedTime
+	 * Gets the next position coordinate of a point.
+     *
+	 * @param i   set index
+	 * @param j   point index
+	 * @param normalizedTime   normalized time from 0 to 1
 	 * @return x display value where point will be drawn
 	 */
 	private boolean getEntryUpdate(int i, int j, float normalizedTime, float[] pos){
@@ -427,7 +439,8 @@ public class Animation{
 		return mRunnable;
 	}
 	
-	
+
+
 	/*
 	 * --------
 	 * Setters
@@ -448,11 +461,12 @@ public class Animation{
 	
 	
 	/**
-	 * Sets whether entries should be animate in sequence or paralell.
-	 * @param factor - value from 0 to 1 that tells how much will be the 
-	 * overlap of an entry's animation according to the previous one.
-	 * 0 - no overlap
-	 * 1 - all entries animate in paralell (default)
+	 * Sets whether entries should be animate in sequence or parallel.
+     *
+	 * @param factor   value from 0 to 1 that tells how much will be the overlap of an entry's
+     *               animation according to the previous one.
+     *               0 - no overlap
+     *               1 - all entries animate in parallel (default)
 	 */
 	public Animation setOverlap(float factor){
 		mOverlapingFactor = factor;
@@ -461,13 +475,14 @@ public class Animation{
 	
 	
 	/**
-	 * Sets whether entries should be animate in sequence or paralell.
-	 * @param factor - value from 0 to 1 that tells how much will be the 
-	 * overlap of an entry's animation according to the previous one.
-	 * 0 - no overlap
-	 * 1 - all entries animate in paralell (default)
-	 * @param order - order from which the entries will be animated.
-	 * { 0, 1, 2, 3, ...} - default order
+	 * Sets whether entries should be animate in sequence or parallel.
+     *
+	 * @param factor   value from 0 to 1 that tells how much will be the overlap of an entry's
+     *               animation according to the previous one
+     *               0 - no overlap
+     *               1 - all entries animate in parallel (default)
+	 * @param order   order from which the entries will be animated
+     *              { 0, 1, 2, 3, ...} - default order
 	 */
 	public Animation setOverlap(float factor, int[] order){
 		
@@ -479,7 +494,8 @@ public class Animation{
 	
 	/**
 	 * Sets an action to be executed once the animation finishes.
-	 * @param runnable to be executed once the animation finishes.
+     *
+	 * @param runnable to be executed once the animation finishes
 	 */
 	public Animation setEndAction(Runnable runnable){
 		mRunnable = runnable;
@@ -489,8 +505,9 @@ public class Animation{
 	
 	/**
 	 * Sets the starting point for the animation.
-	 * @param xFactor - horizontal factor between 0 and 1
-	 * @param yFactor - vertical factor between 0 and 1
+     *
+	 * @param xFactor   horizontal factor between 0 and 1
+	 * @param yFactor   vertical factor between 0 and 1
 	 * Eg. xFactor=0; yFactor=0; starts the animation on the bottom left 
 	 * corner of the inner chart area.
 	 */
@@ -504,7 +521,8 @@ public class Animation{
 	
 	/**
 	 * Sets an alpha speed to animation.
-	 * @param speed - speed of alpha animation values according with translation.
+     *
+	 * @param speed   speed of alpha animation values according with translation.
 	 * To disable alpha set it to -1.
 	 * Eg. If speed 2 alpha goes twice faster than translation.
 	 */

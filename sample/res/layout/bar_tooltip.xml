@@ -2,5 +2,6 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center"
     android:textColor="@color/text"
+    android:textSize="10sp"
     android:background="@color/bar_tooltip">
 </TextView>

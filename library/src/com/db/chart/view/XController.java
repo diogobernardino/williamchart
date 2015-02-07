@@ -20,10 +20,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 
-import com.db.williamchart.R;
-
-import java.util.ArrayList;
-
 
 /**
  * Class responsible to control horizontal measures, positions, yadda yadda.  
@@ -36,42 +32,25 @@ public class XController extends AxisController{
 	private int mLabelVerCoord;
 
 	
-	/** Horizontal border spacing for labels */
-	protected float borderSpacing;
-
-
-	/** Mandatory horizontal border when necessary (ex: BarCharts) */
-	protected float mandatoryBorderSpacing;
-
-	
 	/** Width of last label of sets */
 	private float mLastLabelWidth;
 
-	
-	
+
+
 	public XController(ChartView chartView) {
 		super(chartView);
-
-		mandatoryBorderSpacing = 0;
-		borderSpacing = chartView.getResources()
-									.getDimension(R.dimen.axis_border_spacing);
 	}
 
-	
+
 	public XController(ChartView chartView, TypedArray attrs) {
 		super(chartView);
-
-        mandatoryBorderSpacing = 0;
-		borderSpacing = attrs.getDimension( R.styleable.ChartAttrs_chart_axisBorderSpacing,
-                borderSpacing);
 	}
 
 
 
     /*
-     * IMPORTANT: Method's calls order is crucial. Change it (or not) carefully.
+     * IMPORTANT: Method's order is crucial. Change it (or not) carefully.
      */
-    @Override
 	protected void init() {
 
         // Set the vertical display coordinate
@@ -79,16 +58,13 @@ public class XController extends AxisController{
         if(labelsPositioning == LabelPosition.INSIDE)
             mLabelVerCoord -= distLabelToAxis;
 
-        super.init();
+        defineLabels();
 
+        // To manage horizontal width of the last axis label
         mLastLabelWidth = chartView.style.labelPaint.measureText(labels.get(nLabels - 1));
 
-        // In case of mandatory border spacing (ex. BarChart)
-        if(mandatoryBorderSpacing == 1)
-            mandatoryBorderSpacing = (getInnerChartRight() - chartView.getInnerChartLeft()
-                    - borderSpacing * 2) / nLabels / 2;
-
-        labelsPos = calcLabelsPos();
+        defineMandatoryBorderSpacing(chartView.getInnerChartLeft(), getInnerChartRight());
+        defineLabelsPos(chartView.getInnerChartLeft(), getInnerChartRight());
     }
 	
 	
@@ -102,7 +78,8 @@ public class XController extends AxisController{
 	/**
 	 * Inner Chart refers only to the area where chart data will be draw, 
 	 * excluding labels, axis, etc.
-	 * @return position of the inner right side of the chart
+     *
+	 * @return Position of the inner right side of the chart
 	 */
 	public float getInnerChartRight(){
 		
@@ -127,43 +104,33 @@ public class XController extends AxisController{
 
 
 
-    /*
-     * ----------------
-     * Abstract Methods
-     * ----------------
+    /**
+     * Based in a (real) value returns the associated screen point.
+     *
+     * @param value   Value to be parsed in display coordinate
+     * @return Display's coordinate
      */
+    protected float parsePos(int index, double value){
 
-    @Override
-    protected ArrayList<Float> calcLabelsPos() {
-
-        ArrayList<Float> result = new ArrayList<Float>(nLabels);
-
-        if(nLabels == 1)
-            result.add(chartView.getInnerChartLeft() + (getInnerChartRight() - chartView.getInnerChartLeft())/2);
-        else{
-            final float screenStep =
-                    (getInnerChartRight()
-                            - chartView.getInnerChartLeft()
-                            - chartView.style.axisThickness/2
-                            //if 0 first label will be right at the beginning of the axis
-                            - borderSpacing * 2
-                            - mandatoryBorderSpacing * 2 )
-                            / (nLabels - 1);
-
-            float pos = chartView.getInnerChartLeft() + borderSpacing + mandatoryBorderSpacing;
-            while(pos <= chartView.chartRight - borderSpacing - mandatoryBorderSpacing){
-                result.add(pos);
-                pos += screenStep;
-            }
-        }
-
-        return result;
+        if(handleValues)
+            return (float) (chartView.getInnerChartLeft() +
+                (((value - minLabelValue) * screenStep) / (labelsValues.get(1) - minLabelValue)));
+        else
+            return labelsPos.get(index);
     }
 
 
+
+    /*
+     * -----------------
+     * Abstract Methods
+     * -----------------
+     */
+
     /**
-     * Method called from onDraw method to draw XController data
-     * @param canvas - Canvas to use while drawing the data.
+     * Method called from onDraw method to draw XController data.
+     *
+     * @param canvas   {@link android.graphics.Canvas} object to use while drawing the data.
      */
     @Override
     protected void draw(Canvas canvas){
@@ -182,9 +149,9 @@ public class XController extends AxisController{
             chartView.style.labelPaint.setTextAlign(Align.CENTER);
             for(int i = 0; i < nLabels; i++){
                 canvas.drawText(labels.get(i),
-                        labelsPos.get(i),
-                        mLabelVerCoord,
-                        chartView.style.labelPaint);
+                                    labelsPos.get(i),
+                                        mLabelVerCoord,
+                                            chartView.style.labelPaint);
 
             }
         }

@@ -16,15 +16,17 @@
 
 package com.db.chart.view;
 
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-
-import com.db.chart.model.ChartEntry;
-import com.db.chart.model.ChartSet;
-import com.db.williamchart.R;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.util.Log;
+
+import com.db.williamchart.R;
+import com.db.chart.model.ChartEntry;
+import com.db.chart.model.ChartSet;
 
 /**
  * Class responsible to control vertical measures, positions, yadda yadda. 
@@ -42,22 +44,25 @@ public abstract class AxisController{
     private static final int DEFAULT_STEP = 1;
 
 
-    /** Distance between axis and label */
-    protected int distLabelToAxis;
-
-
     /** ChartView object */
     protected ChartView chartView;
+
+
+    /** Distance between axis and label */
+    protected int distLabelToAxis;
 
 
     /** Label's values formatted */
     protected ArrayList<String> labels;
 
     /** Label's values */
-    private ArrayList<Integer> mLabelsValues;
+    protected ArrayList<Integer> labelsValues;
 
     /** Labels position */
     protected ArrayList<Float> labelsPos;
+
+    /** Number of labels */
+    protected int nLabels;
 
 
     /** none/inside/outside */
@@ -91,12 +96,20 @@ public abstract class AxisController{
     protected float axisHorPosition;
 
 
-    /** Number of labels */
-    protected int nLabels;
+    /** Spacing for top label */
+    protected float topSpacing;
 
 
-    /** Define whether labels must be taken from data or calculated */
-    protected boolean isDynamic;
+    /** Horizontal border spacing for labels */
+    protected float borderSpacing;
+
+
+    /** Mandatory horizontal border when necessary (ex: BarCharts) */
+    protected float mandatoryBorderSpacing;
+
+
+    /** Define whether labels must be taken from data or calculated from values */
+    protected boolean handleValues;
 
 
 
@@ -106,6 +119,9 @@ public abstract class AxisController{
 
         //Set DEFAULTS
         distLabelToAxis= (int) chartView.getResources().getDimension(R.dimen.axis_dist_from_label);
+        mandatoryBorderSpacing = 0;
+        borderSpacing = 0;
+        topSpacing = 0;
         step = DEFAULT_STEP;
         labelsPositioning = LabelPosition.OUTSIDE;
         labelFormat = new DecimalFormat();
@@ -114,7 +130,7 @@ public abstract class AxisController{
         maxLabelValue = 0;
         labelHeight = -1;
         hasAxis = true;
-        isDynamic = false;
+        handleValues = false;
     }
 
 
@@ -123,16 +139,53 @@ public abstract class AxisController{
     }
 
 
+    /**
+     * Defines what will be the axis labels
+     */
+    protected void defineLabels() {
 
-    protected void init() {
-
-        mLabelsValues = calcLabels();
-        if(isDynamic)
+        labelsValues = calcLabels();
+        if(handleValues)
             labels = getLabelsFromValues();
         else
             labels = getLabelsFromData();
         nLabels = labels.size();
+    }
 
+
+
+    /**
+     * In case of a Chart that requires a mandatory border spacing (ex. BarChart)
+     */
+    protected void defineMandatoryBorderSpacing(float innerStart, float innerEnd){
+        if(mandatoryBorderSpacing == 1)
+            mandatoryBorderSpacing = (innerEnd - innerStart - borderSpacing * 2) / nLabels / 2;
+    }
+
+
+
+    /**
+     * Calculates the position of each label along the axis.
+     *
+     * @param innerStart   Start inner position the chart
+     * @param innerEnd   End inned position of chart
+     */
+    protected void defineLabelsPos(float innerStart, float innerEnd) {
+
+        labelsPos = new ArrayList<Float>(nLabels);
+
+        screenStep = (innerEnd
+                - innerStart
+                - topSpacing
+                - borderSpacing * 2
+                - mandatoryBorderSpacing * 2 )
+                / (nLabels - 1);
+
+        float currPos = innerStart + borderSpacing + mandatoryBorderSpacing;
+        for(int i = 0; i < nLabels; i++){
+            labelsPos.add(currPos);
+            currPos += screenStep;
+        }
     }
 
 
@@ -142,10 +195,10 @@ public abstract class AxisController{
      */
     private ArrayList<String> getLabelsFromValues() {
 
-        int size = mLabelsValues.size();
+        int size = labelsValues.size();
         ArrayList<String> result = new ArrayList<String>(size);
         for(int i = 0; i < size; i++)
-            result.add(labelFormat.format(mLabelsValues.get(i)));
+            result.add(labelFormat.format(labelsValues.get(i)));
         return result;
     }
 
@@ -166,7 +219,8 @@ public abstract class AxisController{
 
     /**
      * Calculates the min/max value.
-     * @return {min, max} value.
+     *
+     * @return {min, max} value
      */
     private float[]  calcBorderValues() {
 
@@ -190,6 +244,7 @@ public abstract class AxisController{
 
     /**
      * Get labels based on the maximum value displayed
+     *
      * @return result
      */
     private ArrayList<Integer> calcLabels(){
@@ -231,22 +286,6 @@ public abstract class AxisController{
 
 
 
-    /**
-     * Based in a (real) value returns the associated screen point
-     * @param value
-     * @return point
-     */
-    protected float parsePos(int index, double value){
-
-        if(isDynamic)
-            return (float) ( chartView.horController.getAxisVerticalPosition() -
-                    (((value-minLabelValue) * screenStep) / (mLabelsValues.get(1) - minLabelValue)));
-        else
-            return labelsPos.get(index);
-    }
-
-
-
     protected int getLabelHeight(){
 
         if(labelHeight == -1){
@@ -266,13 +305,9 @@ public abstract class AxisController{
 
 
     /**
-     * Get labels position
-     */
-    abstract protected ArrayList<Float> calcLabelsPos();
-
-    /**
-     * Method called from onDraw method to draw AxisController data
-     * @param canvas - Canvas to use while drawing the data.
+     * Method called from onDraw method to draw AxisController data.
+     *
+     * @param canvas   {@link android.graphics.Canvas} to use while drawing the data
      */
     abstract protected void draw(Canvas canvas);
 

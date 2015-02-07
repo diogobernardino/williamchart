@@ -57,6 +57,7 @@ public class LineChartView extends ChartView {
 	public LineChartView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
+        setOrientation(Orientation.VERTICAL);
 		mStyle = new Style(context.getTheme()
 				.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
 		sRegionRadius = (float) getResources()
@@ -65,6 +66,8 @@ public class LineChartView extends ChartView {
 
 	public LineChartView(Context context) {
 		super(context);
+
+        setOrientation(Orientation.VERTICAL);
 		mStyle = new Style();
 	}
 
@@ -82,10 +85,8 @@ public class LineChartView extends ChartView {
 
 	/**
 	 * Method responsible to draw a line with the parsed screen points.
-	 * @param canvas
-	 *   The canvas to draw on.
-	 * @param screenPoints
-	 *   The parsed screen points ready to be used/drawn.
+     *
+	 * @param canvas   The canvas to draw on.
 	 */
 	@Override
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
@@ -100,7 +101,7 @@ public class LineChartView extends ChartView {
 				
 				mStyle.mLinePaint.setColor(lineSet.getLineColor());
 				mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());
-				handleAlpha(mStyle.mLinePaint, lineSet.getAlpha());
+				applyAlpha(mStyle.mLinePaint, lineSet.getAlpha());
 				
 				if(lineSet.isDashed())
 					mStyle.mLinePaint
@@ -140,10 +141,10 @@ public class LineChartView extends ChartView {
 		}
 		
 		mStyle.mDotsPaint.setColor(set.getDotsColor());
-		handleAlpha(mStyle.mDotsPaint, set.getAlpha());
+		applyAlpha(mStyle.mDotsPaint, set.getAlpha());
 		mStyle.mDotsStrokePaint.setStrokeWidth(set.getDotsStrokeThickness());
 		mStyle.mDotsStrokePaint.setColor(set.getDotsStrokeColor());
-		handleAlpha(mStyle.mDotsStrokePaint, set.getAlpha());
+		applyAlpha(mStyle.mDotsStrokePaint, set.getAlpha());
 
 		Path path = new Path();
 		int begin = set.getBegin();
@@ -320,7 +321,18 @@ public class LineChartView extends ChartView {
 	}
 
 
-
+    /**
+     * (Optional) To be overridden in order for each chart to define its own clickable regions.
+     * This way, classes extending ChartView will only define their clickable regions.
+     *
+     * Important: the returned vector must match the order of the data passed
+     * by the user. This ensures that onTouchEvent will return the correct index.
+     *
+     * @param data   {@link java.util.ArrayList} of {@link com.db.chart.model.ChartSet}
+     *             to use while defining each region of a {@link com.db.chart.view.BarChartView}
+     * @return   {@link java.util.ArrayList} of {@link android.graphics.Region} with regions
+     *           where click will be detected
+     */
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
 
@@ -350,7 +362,7 @@ public class LineChartView extends ChartView {
 
 
 
-    private void handleAlpha(Paint paint, float alpha){
+    private void applyAlpha(Paint paint, float alpha){
 
 		paint.setAlpha((int)(alpha * 255));
 		paint.setShadowLayer(

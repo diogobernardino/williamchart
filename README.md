@@ -131,7 +131,7 @@ LineChart
 ----------
 
 ```xml
-    <com.db.chart.LineChartView
+    <com.db.chart.view.LineChartView
         ... 
     />
 ```
@@ -177,7 +177,7 @@ LineChart
 -------------------------
 
 ```xml
-    <com.db.chart.BarChartView
+    <com.db.chart.view.BarChartView
         ... 
         chart:chart_barSpacing="dp"
         chart:chart_setSpacing="dp"

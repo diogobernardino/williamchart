@@ -49,4 +49,3 @@ License
 [4]: https://github.com/diogobernardino/WilliamChart/wiki/%285%29-Stacked-Chart
 [5]: https://github.com/diogobernardino/WilliamChart/wiki
 [6]: https://twitter.com/dfbernardino
-

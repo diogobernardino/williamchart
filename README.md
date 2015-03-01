@@ -5,13 +5,16 @@ WilliamChart is an Android Library to help the implementation of charts in andro
 
 At the moment it provides:
 
-* ``LineChartView``
-* ``BarChartView`` ``HorizontalBarChartView``
-* ``StackBarChartView``
-
-
+* [``LineChartView``][2]
+* [``BarChartView``][3]
+* [``HorizontalBarChartView``][3]
+* [``StackBarChartView``][4]
 
 It has been tested in Android 2.2 and above.
+
+Check the [wiki][5] for further documentation.
+
+If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][6].
 
 ![Demo2][1]
 
@@ -20,246 +23,6 @@ It has been tested in Android 2.2 and above.
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-WilliamChart-lightgrey.svg?style=flat)](https://android-arsenal.com/details/1/769)
 
-Usage
------
-Each chart type has common but also specific customization attributes. Add the View to your layout and configure it using styleable attributes or/and programmatically.
-
-
-### Gradle build
-
-To install the sample application to your device run the following task:
-
-```
-$ ./gradlew installDebug
-```
-
-To deploy the library to your local Maven repository run the following task:
-
-```
-$ ./gradlew install
-```
-
-Then, to use the library in your project add the following to your `build.gradle`:
-
-```groovy
-dependencies {
-    compile 'com.db.williamchart:library:1.7.0'
-}
-```
-
-
-Chart (Common customization)
-----------------------
-
-To create a new chart that requires axis extend the class ``ChartView`` and implement the necessary abstract methods. I believe the data you get from those methods should be enough to draw whatever you feel like.
-
-```xml
-
-    <com.db.chart.view.ChartView
-        xmlns:chart="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="dp"
-        ...
-        chart:chart_shadowDx="dp"
-        chart:chart_shadowDy="dp"
-        chart:chart_shadowRadius="dp"
-        chart:chart_shadowColor="color"
-        chart:chart_fontSize="dp"
-        chart:chart_typeface="typeface"
-        chart:chart_axisBorderSpacing="dp"
-        chart:chart_axisThickness="dp"
-        chart:chart_axisTopSpacing="dp"
-        chart:chart_axisColor="color"
-        chart:chart_labelColor="color"
-    />
-
-```
-
-```java
-    
-    // Customize labels
-    chart.setYLabels(NONE/OUTSIDE/INSIDE)
-    chart.setXLabels(NONE/OUTSIDE/INSIDE)
-    chart.setLabelColor(color)
-    chart.setLabelsMetric(string)
-    chart.setFontSize(integer)
-    chart.setTypeface(typeface)
-
-    // Define grid
-    chart.setGrid(gridtype, paint)
-    
-    // Show threshold line
-    chart.setThresholdLine(float, paint)
-	
-	// Y Axis border labels
-    chart.setAxisBorderValues(integer, integer, integer)
-    // Step value between Y labels
-    chart.setStep(integer)
-    
-    // Y Axis top spacing
-    chart.setTopSpacing(dimen)
-    
-    // X Axis side spacing
-    chart.setBorderSpacing(dimen)
-    
-    chart.setAxisX(boolean)
-    chart.setAxisY(boolean)
-    
-    // Show both chart and its data
-    chart.show(opt:index, opt:animation)
-    
-    // Dismiss data from chart
-    chart.dismiss(opt:animation)
-    chart.dismiss(index)
-    
-    // Update values of a given set
-    chart.updateValues(int, array)
-    // Notify chart about updated values
-    chart.notifyDataUpdate()
-
-    // Tooltip support
-    chart.showTooltip(view, opt:boolean)
-    chart.dismissTooltip(view)
-    
-    // Movement effect
-    chartView.animateSet(index)
-    
-```
-
-
-LineChart
-----------
-
-```xml
-    <com.db.chart.LineChartView
-        ... 
-    />
-```
-
-```java
-    LineChartView chartView= new LineChartView()
-
-    LineSet lineSet = new LineSet()
-    lineSet.addPoint(new Point(string, float)
-    lineSet.addPoint(string, float)
-    lineSet.addPoints(string[], float[])
-    
-    // Style dots
-    lineSet.setDots(boolean)
-    lineSet.setDotsColor(color)
-    lineSet.setDotsRadius(dimen)
-    lineSet.setDotsStrokeThickness(dimen)
-    lineSet.setDotsStrokeColor(color)
-    lineSet.setDotsDrawable(drawable)
-    
-    // Style line
-    lineSet.setLineThickness(dimen)
-    lineSet.setLineColor(color)
-    
-    // Style background fill
-    lineSet.setFill(boolean)
-    lineSet.setFillColor(color)
-    
-    // Style type
-    lineSet.setDashed(boolean)
-    lineSet.setSmooth(boolean)
-    
-    // Between which index should the line be displayed 
-    lineSet.beginAt(index)
-    lineSet.endAt(index)
-
-    chartView.addData(lineSet)
-    
-```
-
-
-(Horizontal)BarChart & StackBarChart
--------------------------
-
-```xml
-    <com.db.chart.BarChartView
-        ... 
-        chart:chart_barSpacing="dp"
-        chart:chart_setSpacing="dp"
-    />
-```
-
-```java
-    BarChartView chartView = new BarChartView()
-    barChart.setBarSpacing(dimen)
-    barChart.setSetSpacing(dimen)
-    barChart.setBarBackground(boolean)
-    barChart.setBarBackgroundColor(color)
-    barChart.setRoundCorners(dimen)
-
-    BarSet barSet = new BarSet()
-    barSet.addBar(string, float)
-    barSet.addBars(string[], float[])
-
-    Bar bar = new Bar(string, float)
-    bar.setColor(color)
-    barSet.addBar(bar)
-
-    chartView.addData(barSet)
-```
-
-
-
-Listener
----------
-
-```java
-    chart.setOnEntryClickListener(new OnEntryClickListener(){
-        @Override
-        public void onClick(int setIndex, int entryIndex, Rect entryRect) {
-            //Do things
-        }
-    });
-```
-
-
-Animation
----------
-
-```java
-    Animation anim = new Animation()
-
-    anim.setDuration(integer)
-    anim.setEasing(easingFunction)
-    anim.setEndAction(runnable)
-    
-    // Animation overlap between entries
-    anim.setOverlap(float)
-    // Animation overlap between entries in a specific order
-    anim.setOverlap(float,int[])
-    // Animation starting point
-    anim.setStartPoint(float, float)
-    // Include alpha transition
-    anim.setAlpha(int)
-    
-    // Starts animation
-    chart.animate(animation)
-```
-
-Implementing the interface ``BaseEasingMethod`` you can create your own easing function. I've implemented a few (credits to [Jesus Gollonet](http://jesusgollonet.com/)):
-
-* ``LinearEase``
-* ``BounceEaseOut``
-* ``ElasticEaseOut``
-* ``CircEaseOut``
-* ``CubicEaseOut``
-* ``ExpoEaseOut``
-* ``QuadEaseOut``
-* ``QuartEaseOut``
-* ``QuintEaseOut``
-* ``SineEaseOut``
-
-
-StyleAnimation
---------------
-By extending ``BaseStyleAnimation`` and implementing the abstract ``nextUpdate(set)`` method you can animate any set's attribute (e.g. set's thickness). Be creative! So far these are the style-animations provided:
-
-* ``DashAnimation``
 
 License
 -------
@@ -281,3 +44,9 @@ License
 
 
 [1]: ./art/demo2.gif
+[2]: https://github.com/diogobernardino/WilliamChart/wiki/%283%29-Line-Chart
+[3]: https://github.com/diogobernardino/WilliamChart/wiki/%284%29-Bar-Chart
+[4]: https://github.com/diogobernardino/WilliamChart/wiki/%285%29-Stacked-Chart
+[5]: https://github.com/diogobernardino/WilliamChart/wiki
+[6]: https://twitter.com/dfbernardino
+

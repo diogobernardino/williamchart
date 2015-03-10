@@ -19,8 +19,11 @@ package com.db.chart.model;
 /**
  * Generic Data model of a {@link com.db.chart.view.ChartView} entry
  */
-public class ChartEntry {
-		
+public abstract class ChartEntry {
+
+    /** Default bar color */
+    private static final int DEFAULT_COLOR = -16777216;
+
 	
 	/** Input from user */
 	private String mLabel;
@@ -30,16 +33,27 @@ public class ChartEntry {
 	/** Display coordinates */
 	private float mX;
 	private float mY;
-	
-	
-	
+
+
+    /** Bar color */
+    private int mColor;
+
+
+    /** Defines if entry is visible */
+    protected boolean isVisible;
+
 	
 	public ChartEntry(String label, float value){
 		mLabel = label;
 		mValue = value;
+
+        mColor = DEFAULT_COLOR;
 	}
 
-	
+
+    public boolean isVisible(){
+        return isVisible;
+    }
 	
 	
 	/*
@@ -68,6 +82,10 @@ public class ChartEntry {
 		return mY;
 	}
 
+
+    public int getColor() {
+        return mColor;
+    }
 	
 
 	
@@ -98,6 +116,13 @@ public class ChartEntry {
 		mX = x;
 		mY = y;
 	}
+
+
+    public void setColor(int mColor) {
+
+        isVisible = true;
+        this.mColor = mColor;
+    }
 
 	
 	public String toString(){

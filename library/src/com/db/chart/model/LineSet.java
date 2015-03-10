@@ -29,35 +29,24 @@ import java.lang.IllegalArgumentException;
 public class LineSet extends ChartSet{
 
 	
-	private static final String TAG = "com.db.chart.model.LineSet";
+	private static final String TAG = "chart.model.LineSet";
 
 	
 	/** Defaults */
-	private static final float LINE_THICKNESS = 4;
-	private static final float DOTS_THICKNESS = 4;
-	private static final float DOTS_RADIUS = 1;
-	private static final int DEFAULT_COLOR = -16777216;
-	
-	
-	/** Line variables */
-	private float mLineThickness;
-	private int mLineColor;
+    private static final int DEFAULT_COLOR = -16777216;
+    private static final float LINE_THICKNESS = 4;
 
 	
-	/** Dot variables */
-	private boolean mHasDots;
-	private int mDotsColor;
-	private float mDotsRadius;
-	private boolean mHasDotsStroke;
-	private float mDotsStrokeThickness;
-	private int mDotsStrokeColor;
+	/** Line variables */
+	private float mThickness;
+	private int mColor;
 	
 	
 	/** Line type */
 	private boolean mIsDashed;
 	private boolean mIsSmooth;
-	
-	
+
+
 	/** Background fill variables */
 	private boolean mHasFill;
 	private int mFillColor;
@@ -73,45 +62,48 @@ public class LineSet extends ChartSet{
 	private int mBegin;
 	private int mEnd;
 	
-	
-	/** Dots drawable background */
-	private Drawable mDotsDrawable;
-	
-	
+
+    /** Phase of the line (for animations) */
 	private int mPhase;
-	
-	
+
 	
 	public LineSet(){
 		super();
-		
-		//Set defaults
-		mLineThickness = Tools.fromDpToPx(LINE_THICKNESS);
-		mLineColor = DEFAULT_COLOR;
-		
-		mHasDots = false;
-		mDotsColor = DEFAULT_COLOR;
-		mDotsRadius = Tools.fromDpToPx(DOTS_THICKNESS);
-		
-		mHasDotsStroke = false;
-		mDotsStrokeThickness = Tools.fromDpToPx(DOTS_RADIUS);
-		mDotsStrokeColor = DEFAULT_COLOR;
-		
-		mIsDashed = false;
-		mIsSmooth = false;
-		
-		mHasFill = false;
-		mFillColor = DEFAULT_COLOR;
-		
-		mHasGradientFill = false;
-		mGradientColors = null;
-		mGradientPositions = null;
-		
-		mBegin = 0;
-		mEnd = 0;
-		
-		mDotsDrawable = null;
+        init();
 	}
+
+    public LineSet(String[] labels, float[] values){
+        super();
+        init();
+
+        if(labels.length != values.length)
+            Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
+
+        int nEntries = labels.length;
+        for(int i = 0; i < nEntries; i++)
+            addPoint(labels[i], values[i]);
+    }
+
+
+    private void init(){
+
+        //Set defaults
+        mThickness = Tools.fromDpToPx(LINE_THICKNESS);
+        mColor = DEFAULT_COLOR;
+
+        mIsDashed = false;
+        mIsSmooth = false;
+
+        mHasFill = false;
+        mFillColor = DEFAULT_COLOR;
+
+        mHasGradientFill = false;
+        mGradientColors = null;
+        mGradientPositions = null;
+
+        mBegin = 0;
+        mEnd = 0;
+    }
 
 	
 	
@@ -123,75 +115,45 @@ public class LineSet extends ChartSet{
 	public void addPoint(Point point){
 		this.addEntry(point);
 	}
-	
-	
-	public void addPoints(String[] labels, float[] values){
-		
-		if(labels.length != values.length)
-			Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
-		
-		int nEntries = labels.length;
-		for(int i = 0; i < nEntries; i++)
-			addPoint(labels[i], values[i]);
-	}
-	
-	
-	
-	public boolean hasDots() {
-		return mHasDots;
-	}
 
-	public boolean hasDotsStroke() {
-		return mHasDotsStroke;
-	}
-	
-	
-	
+
+
 	public boolean isDashed() {
 		return mIsDashed;
 	}
-	
+
 	
 	public boolean isSmooth() {
 		return mIsSmooth;
 	}
 
-	
+
+
+    public boolean hasFill() {
+        return mHasFill;
+    }
+
+
+    public boolean hasGradientFill(){
+        return mHasGradientFill;
+    }
+
+
 	
 	/*
 	 * --------
 	 * Getters
 	 * --------
 	 */
-	
 
-  	public float getDotsStrokeThickness() {
-		return mDotsStrokeThickness;
+	
+	public float getThickness() {
+		return mThickness;
 	}
 
 	
-	public float getLineThickness() {
-		return mLineThickness;
-	}
-
-	
-	public int getLineColor() {
-		return mLineColor;
-	}
-
-	
-	public int getDotsColor() {
-		return mDotsColor;
-	}
-
-	
-	public float getDotsRadius() {
-		return mDotsRadius;
-	}
-
-	
-	public int getDotsStrokeColor() {
-		return mDotsStrokeColor;
+	public int getColor() {
+		return mColor;
 	}
 	
 	
@@ -210,16 +172,6 @@ public class LineSet extends ChartSet{
 	}
 	
 	
-	public boolean hasFill() {
-		return mHasFill;
-	}
-	
-	
-	public boolean hasGradientFill(){
-		return mHasGradientFill;
-	}
-	
-	
 	public int getBegin() {
 		return mBegin;
   	}
@@ -229,11 +181,6 @@ public class LineSet extends ChartSet{
 		if(mEnd == 0)
 			return size();
 		return mEnd;
-	}
-	
-	
-	public Drawable getDotsDrawable(){
-		return mDotsDrawable;
 	}
 	
 	
@@ -248,21 +195,21 @@ public class LineSet extends ChartSet{
 	 * Setters
 	 * --------
 	 */
-
-
-	public LineSet setDashed(boolean bool) {
-		mIsDashed = bool;
-		mPhase = 0;
-		return this;
-	}
 	
 	
 	public void setPhase(int phase){
 		mPhase = phase;
 	}
 
-	
-	public LineSet setSmooth(boolean bool) {
+
+    public LineSet setDashed(boolean bool) {
+        mIsDashed = bool;
+        mPhase = 0;
+        return this;
+    }
+
+
+    public LineSet setSmooth(boolean bool) {
 		mIsSmooth = bool;
 		return this;
 	}
@@ -273,97 +220,105 @@ public class LineSet extends ChartSet{
      *
 	 * @param thickness   Line thickness. Can't be equal or less than 0
 	 */
-	public LineSet setLineThickness(float thickness) {
+	public LineSet setThickness(float thickness) {
 		
 		if(thickness <= 0)
 			Log.e(TAG, "Line thickness <= 0.", new IllegalArgumentException());
-		mLineThickness = thickness;
+		mThickness = thickness;
 		return this;
 	}
 	
 	
-	public LineSet setLineColor(int color){
-		mLineColor = color;
+	public LineSet setColor(int color){
+		mColor = color;
 		return this;
 	}
 
-	
-	public LineSet setDots(boolean bool){
-		mHasDots = bool;
-		return this;
-	}
+
+    public LineSet setFill(int color){
+
+        mHasFill = true;
+        mFillColor = color;
+        return this;
+    }
+
+
+    /**
+     *
+     * @param colors   The colors to be distributed among gradient
+     * @param positions
+     * @return
+     */
+    public LineSet setGradientFill(int colors[], float[] positions){
+
+        mHasGradientFill = true;
+        mGradientColors = colors;
+        mGradientPositions = positions;
+        return this;
+    }
+
+
+    /**
+     * Define at which index should the dataset begin.
+     *
+     * @param index   Index where the set begins
+     */
+    public LineSet beginAt(int index) {
+
+        if(index < 0)
+            Log.e(TAG, "Index can't be negative.", new IllegalArgumentException());
+        mBegin = index;
+        return this;
+    }
+
+
+    /**
+     * Define at which index should the dataset end.
+     *
+     * @param index   Where the set ends
+     */
+    public LineSet endAt(int index) {
+
+        if(index > size())
+            Log.e(TAG, "Index cannot be greater than the set's size.", new IllegalArgumentException());
+        mEnd = index;
+        return this;
+    }
 
 	
 	public LineSet setDotsColor(int color){
-		mDotsColor = color;
+
+        for(ChartEntry e : getEntries())
+            ((Point) e).setColor(color);
+        return this;
+	}
+
+
+	public LineSet setDotsRadius(float radius){
+
+        for(ChartEntry e : getEntries())
+            ((Point) e).setRadius(radius);
 		return this;
 	}
 
-	
-	public LineSet setDotsRadius(float radius){
-		mDotsRadius = radius;
-		return this;
-	}
-	
 
 	/**
      *
 	 * @param thickness   Grid thickness. Can't be equal or less than 0
 	 */
 	public LineSet setDotsStrokeThickness(float thickness){
-		
-		if(thickness <= 0)
-			Log.e(TAG, "Grid thickness <= 0.", new IllegalArgumentException());
-		mHasDotsStroke = true;
-		mDotsStrokeThickness = thickness;
-		return this;
+
+        for(ChartEntry e : getEntries())
+            ((Point) e).setStrokeThickness(thickness);
+        return this;
 	}
 
-	
+
 	public LineSet setDotsStrokeColor(int color){
-		mDotsStrokeColor = color;
-		return this;
-	}
-	
-	
-	public LineSet setLineDashed(boolean bool){
-		mIsDashed = bool;
-		return this;
-	}
-	
-	
-	public LineSet setLineSmooth(boolean bool){
-		mIsSmooth = bool;
-		return this;
-	}
-	
-	
-	public LineSet setFill(int color){
-		
-		mHasFill = true;
-		mFillColor = color;
-		return this;
-	}
-	
-	
-	/**
-     *
-	 * @param colors   The colors to be distributed among gradient
-	 * @param positions
-	 * @return
-	 */
-	public LineSet setGradientFill(int colors[], float[] positions){
-		
-		mHasGradientFill = true;
-		mGradientColors = colors;
-		mGradientPositions = positions;
-		return this;
-	}
-	
-	
-	public LineSet setFill(boolean bool){
-		mHasFill = bool;
-		return this;
+
+        for(ChartEntry e : getEntries())
+            ((Point) e).setStrokeColor(color);
+        return this;
 	}
 	
 	
@@ -373,37 +328,10 @@ public class LineSet extends ChartSet{
 	 * @param drawable
 	 */
 	public LineSet setDotsDrawable(Drawable drawable){
-		mDotsDrawable = drawable;
-		return this;
-	}
-	
-	
-	
-	/**
-	* Define at which index should the dataset begin.
-     *
-	* @param index   Index where the set begins
-	*/
-	public LineSet beginAt(int index) {
-		
-		if(index < 0)
-			Log.e(TAG, "Index can't be negative.", new IllegalArgumentException());
-		mBegin = index;
-		return this;
-	}
 
-
-	/**
-	* Define at which index should the dataset end.
-     *
-	* @param index   Where the set ends
-	*/
-	public LineSet endAt(int index) {
-		
-		if(index > size())
-			Log.e(TAG, "Index cannot be greater than the set's size.", new IllegalArgumentException());
-		mEnd = index;
-		return this;
+        for(ChartEntry e : getEntries())
+            ((Point) e).setDrawable(drawable);
+        return this;
 	}
 	
 }

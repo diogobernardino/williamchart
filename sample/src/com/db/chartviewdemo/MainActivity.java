@@ -323,22 +323,19 @@ public class MainActivity extends ActionBarActivity {
 		
 		mLineChart.reset();
 		
-		LineSet dataSet = new LineSet();
-		dataSet.addPoints(lineLabels, lineValues[0]);
-		dataSet.setDots(true)
-			.setDotsColor(this.getResources().getColor(R.color.line_bg))
+		LineSet dataSet = new LineSet(lineLabels, lineValues[0]);
+		dataSet.setDotsColor(this.getResources().getColor(R.color.line_bg))
 			.setDotsRadius(Tools.fromDpToPx(5))
 			.setDotsStrokeThickness(Tools.fromDpToPx(2))
 			.setDotsStrokeColor(this.getResources().getColor(R.color.line))
-			.setLineColor(this.getResources().getColor(R.color.line))
-			.setLineThickness(Tools.fromDpToPx(3))
+			.setColor(this.getResources().getColor(R.color.line))
+			.setThickness(Tools.fromDpToPx(3))
 			.beginAt(1).endAt(lineLabels.length - 1);
 		mLineChart.addData(dataSet);
 		
-		dataSet = new LineSet();
-		dataSet.addPoints(lineLabels, lineValues[1]);
-		dataSet.setLineColor(this.getResources().getColor(R.color.line))
-			.setLineThickness(Tools.fromDpToPx(3))
+		dataSet = new LineSet(lineLabels, lineValues[1]);
+		dataSet.setColor(this.getResources().getColor(R.color.line))
+			.setThickness(Tools.fromDpToPx(3))
 			.setSmooth(true)
 			.setDashed(true);
 		mLineChart.addData(dataSet);
@@ -458,8 +455,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 		mBarChart.addData(barSet);
 		
-		barSet = new BarSet();
-		barSet.addBars(barLabels, barValues[1]);
+		barSet = new BarSet(barLabels, barValues[1]);
 		barSet.setColor(this.getResources().getColor(R.color.bar_fill2));
 		mBarChart.addData(barSet);
 		

@@ -20,10 +20,10 @@ import java.util.ArrayList;
 
 
 /**
- * Data model containing {@link ChartEntry} elements to be used by {@link ChartView}.
+ * Data model containing {@link ChartEntry} elements to be used by {@link com.db.chart.view.ChartView}.
  */
-public class ChartSet {
-	
+public abstract class ChartSet {
+
 	
 	/** Set with entries */
 	private ArrayList<ChartEntry> mEntries;
@@ -42,15 +42,8 @@ public class ChartSet {
 		mAlpha = 1;
 		mIsVisible = false;
 	}
-	
-	
-	
-	
-	protected void addEntry(String label, float value){
-		mEntries.add(new ChartEntry(label, value));
-	}
 
-	
+
 	
 	protected void addEntry(ChartEntry e){
 		mEntries.add(e);

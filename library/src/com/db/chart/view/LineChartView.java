@@ -18,6 +18,7 @@ package com.db.chart.view;
 
 import java.util.ArrayList;
 
+import com.db.chart.model.Point;
 import com.db.williamchart.R;
 import com.db.chart.Tools;
 import com.db.chart.model.ChartEntry;
@@ -99,8 +100,8 @@ public class LineChartView extends ChartView {
 
 			if(lineSet.isVisible()){
 				
-				mStyle.mLinePaint.setColor(lineSet.getLineColor());
-				mStyle.mLinePaint.setStrokeWidth(lineSet.getLineThickness());
+				mStyle.mLinePaint.setColor(lineSet.getColor());
+				mStyle.mLinePaint.setStrokeWidth(lineSet.getThickness());
 				applyAlpha(mStyle.mLinePaint, lineSet.getAlpha());
 				
 				if(lineSet.isDashed())
@@ -116,8 +117,7 @@ public class LineChartView extends ChartView {
 					drawSmoothLine(canvas, lineSet);
 				
 				//Draw points
-				if(lineSet.hasDots())
-					drawPoints(canvas, lineSet);
+				drawPoints(canvas, lineSet);
 			}
 		}
 
@@ -130,37 +130,43 @@ public class LineChartView extends ChartView {
 	 * Responsible for drawing points
 	 */
 	private void drawPoints(Canvas canvas, LineSet set) {
-		
-		Bitmap dotsBitmap = null; 
-		float dotsBitmapWidthCenter = 0;
-		float dotsBitmapHeightCenter = 0;
-		if(set.getDotsDrawable() != null){
-			dotsBitmap = Tools.drawableToBitmap(set.getDotsDrawable());
-			dotsBitmapWidthCenter = dotsBitmap.getWidth()/2;
-			dotsBitmapHeightCenter = dotsBitmap.getHeight()/2;
-		}
-		
-		mStyle.mDotsPaint.setColor(set.getDotsColor());
-		applyAlpha(mStyle.mDotsPaint, set.getAlpha());
-		mStyle.mDotsStrokePaint.setStrokeWidth(set.getDotsStrokeThickness());
-		mStyle.mDotsStrokePaint.setColor(set.getDotsStrokeColor());
-		applyAlpha(mStyle.mDotsStrokePaint, set.getAlpha());
 
-		Path path = new Path();
 		int begin = set.getBegin();
 		int end = set.getEnd();
+        Point dot;
 		for (int i = begin; i < end; i++){
-			path.addCircle(set.getEntry(i).getX(), set.getEntry(i).getY(), set.getDotsRadius(), Path.Direction.CW);
-			if(dotsBitmap != null)
-				canvas.drawBitmap(dotsBitmap, set.getEntry(i).getX() - dotsBitmapWidthCenter, set.getEntry(i).getY() - dotsBitmapHeightCenter, mStyle.mDotsPaint);
+
+            dot = (Point) set.getEntry(i);
+
+            if(dot.isVisible()) {
+
+                // Style dot
+                mStyle.mDotsPaint.setColor(dot.getColor());
+                applyAlpha(mStyle.mDotsPaint, set.getAlpha());
+
+                // Draw dot
+                canvas.drawCircle(dot.getX(), dot.getY(), dot.getRadius(), mStyle.mDotsPaint);
+
+                //Draw dots stroke
+                if(dot.hasStroke()) {
+
+                    // Style stroke
+                    mStyle.mDotsStrokePaint.setStrokeWidth(dot.getStrokeThickness());
+                    mStyle.mDotsStrokePaint.setColor(dot.getStrokeColor());
+                    applyAlpha(mStyle.mDotsStrokePaint, set.getAlpha());
+
+                    canvas.drawCircle(dot.getX(), dot.getY(), dot.getRadius(), mStyle.mDotsStrokePaint);
+                }
+
+                // Draw drawable
+                if (dot.getDrawable() != null) {
+                    Bitmap dotsBitmap = Tools.drawableToBitmap(dot.getDrawable());
+                    canvas.drawBitmap(dotsBitmap, dot.getX() - dotsBitmap.getWidth() / 2,
+                            dot.getY() - dotsBitmap.getHeight() / 2, mStyle.mDotsPaint);
+                }
+            }
 		}
 
-		//Draw dots fill
-		canvas.drawPath(path, mStyle.mDotsPaint);
-
-		//Draw dots stroke
-		if(set.hasDotsStroke())
-			canvas.drawPath(path, mStyle.mDotsStrokePaint);
 	}
 
 
@@ -321,6 +327,8 @@ public class LineChartView extends ChartView {
 	}
 
 
+
+
     /**
      * (Optional) To be overridden in order for each chart to define its own clickable regions.
      * This way, classes extending ChartView will only define their clickable regions.
@@ -365,16 +373,13 @@ public class LineChartView extends ChartView {
     private void applyAlpha(Paint paint, float alpha){
 
 		paint.setAlpha((int)(alpha * 255));
-		paint.setShadowLayer(
-				mStyle.mShadowRadius,
-					mStyle.mShadowDx,
-						mStyle.mShadowDy,
-							Color.argb(((int)(alpha * 255) < mStyle.mAlpha)
-							? (int)(alpha * 255)
-							: mStyle.mAlpha,
-								mStyle.mRed,
-									mStyle.mGreen,
-										mStyle.mBlue));
+		paint.setShadowLayer(mStyle.mShadowRadius, mStyle.mShadowDx, mStyle.mShadowDy,
+                Color.argb(((int)(alpha * 255) < mStyle.mAlpha)
+							    ? (int)(alpha * 255)
+							    : mStyle.mAlpha,
+						mStyle.mRed,
+						mStyle.mGreen,
+						mStyle.mBlue));
     }
 
 

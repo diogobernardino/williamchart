@@ -398,8 +398,24 @@ public class LineChartView extends ChartView {
         return i;
     }
 
-    
-    
+
+
+    /**
+     *
+     * @param radius
+     * @param dx
+     * @param dy
+     * @param color
+     * @return
+     */
+    public LineChartView setShadow(float radius, float dx, float dy, int color){
+
+        mStyle.mShadowRadius = radius;
+        mStyle.mShadowDx = dx;
+        mStyle.mShadowDy = dy;
+        mStyle.mShadowColor = color;
+        return this;
+    }
     
     
     
@@ -418,10 +434,10 @@ public class LineChartView extends ChartView {
 
 
 		/** Shadow variables */
-		private final int mShadowColor;
-		private final float mShadowRadius;
-		private final float mShadowDx;
-		private final float mShadowDy;
+		private int mShadowColor;
+		private float mShadowRadius;
+		private float mShadowDx;
+		private float mShadowDy;
 
 		/** Shadow color */
 		private int mAlpha;

@@ -68,7 +68,7 @@ public class YController extends AxisController{
             float aux;
             float maxLabelLength = 0;
             for(String label : labels)
-                if((aux = chartView.style.labelPaint.measureText(label)) > maxLabelLength)
+                if((aux = chartView.style.labelsPaint.measureText(label)) > maxLabelLength)
                     maxLabelLength = aux;
             axisHorPosition = chartView.chartLeft + maxLabelLength + distLabelToAxis;
         }else
@@ -158,7 +158,7 @@ public class YController extends AxisController{
 
 		if(labelsPositioning != LabelPosition.NONE){
 			
-			chartView.style.labelPaint.setTextAlign(
+			chartView.style.labelsPaint.setTextAlign(
 					(labelsPositioning == LabelPosition.OUTSIDE)
 						? Align.RIGHT : Align.LEFT);
 
@@ -167,7 +167,7 @@ public class YController extends AxisController{
 				canvas.drawText(labels.get(i),
 									axisHorPosition - chartView.style.axisThickness/2 - distLabelToAxis,
 										labelsPos.get(i) + getLabelHeight()/2,
-											chartView.style.labelPaint);
+											chartView.style.labelsPaint);
 			}
 		}
 	}

@@ -214,8 +214,25 @@ public abstract class BaseBarChartView extends ChartView {
 	public void setRoundCorners(float radius){
 		style.cornerRadius = radius;
 	}
-	
-	
+
+
+    /**
+     *
+     * @param radius
+     * @param dx
+     * @param dy
+     * @param color
+     * @return
+     */
+    public void setShadow(float radius, float dx, float dy, int color){
+
+        style.mShadowRadius = radius;
+        style.mShadowDx = dx;
+        style.mShadowDy = dy;
+        style.mShadowColor = color;
+    }
+
+
 
 
 	/*
@@ -250,10 +267,10 @@ public abstract class BaseBarChartView extends ChartView {
 		
 		
 		/** Shadow related variables */
-		private final float mShadowRadius;
-		private final float mShadowDx;
-		private final float mShadowDy;
-		private final int mShadowColor;
+		private float mShadowRadius;
+		private float mShadowDx;
+		private float mShadowDy;
+		private int mShadowColor;
 		
 		
 		/** Shadow color */

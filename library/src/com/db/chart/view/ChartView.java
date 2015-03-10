@@ -49,7 +49,7 @@ import android.widget.RelativeLayout;
 public abstract class ChartView extends RelativeLayout{
 	
 	
-	private static final String TAG = "com.db.chart.view.ChartView";
+	private static final String TAG = "chart.view.ChartView";
 	
 	
 	public static enum GridType {
@@ -886,6 +886,51 @@ public abstract class ChartView extends RelativeLayout{
 	}
 
 
+
+    /**
+     * Set the format to be added to Y labels.
+     *
+     * @param format   Format to be applied
+     */
+    public ChartView setLabelsFormat(DecimalFormat format){
+        verController.labelFormat = format;
+        return this;
+    }
+
+
+    /**
+     *
+     * @param color
+     * @return
+     */
+    public ChartView setLabelsColor(int color) {
+        style.labelsColor = color;
+        return this;
+    }
+
+
+    /**
+     *
+     * @param size
+     * @return
+     */
+    public ChartView setFontSize(int size) {
+        style.fontSize = size;
+        return this;
+    }
+
+
+    /**
+     *
+     * @param typeface
+     * @return
+     */
+    public ChartView setTypeface(Typeface typeface) {
+        style.typeface = typeface;
+        return this;
+    }
+
+
 	
 	/**
 	 * Show/Hide X axis.
@@ -937,7 +982,29 @@ public abstract class ChartView extends RelativeLayout{
 		
 		return this;
 	}
-	
+
+
+    /**
+     * Define the thickness of the axis.
+     *
+     * @param thickness   size of the thickness
+     */
+    public ChartView setAxisThickness(float thickness){
+        style.axisThickness = thickness;
+        return this;
+    }
+
+
+    /**
+     * Define the color of the axis.
+     *
+     * @param color   color of the axis
+     * @return
+     */
+    public ChartView setAxisColor(int color){
+        style.axisColor = color;
+        return this;
+    }
 	
 	
 	/**
@@ -982,27 +1049,6 @@ public abstract class ChartView extends RelativeLayout{
 	public void setOnClickListener(OnClickListener listener){
 		this.mChartListener = listener;
 	}
-	
-	
-	
-    public ChartView setLabelColor(int color) {
-    	style.labelColor = color;
-    	return this;
-    }
-
-    
-    
-    public ChartView setFontSize(int size) {
-    	style.fontSize = size;
-    	return this;
-    }
-    
-    
-    
-    public ChartView setTypeface(Typeface typeface) {
-    	style.typeface = typeface;
-    	return this;
-    }
 	  
     
     
@@ -1092,18 +1138,6 @@ public abstract class ChartView extends RelativeLayout{
             verController.mandatoryBorderSpacing = 1;
 		return this;
 	}
-	
-	
-	
-	/**
-	 * Set the format to be added to Y labels.
-     *
-	 * @param format   Format to be applied
-	 */
-	public ChartView setLabelsFormat(DecimalFormat format){
-		verController.labelFormat = format;
-		return this;
-	}
 
 
 
@@ -1140,8 +1174,8 @@ public abstract class ChartView extends RelativeLayout{
 		
 		
 		/** Font */
-		protected Paint labelPaint;
-		protected int labelColor;
+		protected Paint labelsPaint;
+		protected int labelsColor;
 		protected float fontSize;
 		protected Typeface typeface;
 		
@@ -1154,7 +1188,7 @@ public abstract class ChartView extends RelativeLayout{
 			axisColor = DEFAULT_COLOR;
 			axisThickness = (float) getResources().getDimension(R.dimen.grid_thickness);
 			
-			labelColor = DEFAULT_COLOR;
+			labelsColor = DEFAULT_COLOR;
 			fontSize = getResources().getDimension(R.dimen.font_size);
 		}
 
@@ -1171,7 +1205,7 @@ public abstract class ChartView extends RelativeLayout{
 					R.styleable.ChartAttrs_chart_axisThickness, 
 						getResources().getDimension(R.dimen.axis_thickness));
 			
-			labelColor = attrs.getColor(
+			labelsColor = attrs.getColor(
 					R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
 	    	fontSize = attrs.getDimension(
 	    			R.styleable.ChartAttrs_chart_fontSize, 
@@ -1192,19 +1226,19 @@ public abstract class ChartView extends RelativeLayout{
 			chartPaint.setStrokeWidth(axisThickness);
 			chartPaint.setAntiAlias(true);
 
-			labelPaint = new Paint();
-			labelPaint.setColor(labelColor);
-			labelPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-			labelPaint.setAntiAlias(true);
-			labelPaint.setTextSize(fontSize);
-			labelPaint.setTypeface(typeface);
+			labelsPaint = new Paint();
+			labelsPaint.setColor(labelsColor);
+			labelsPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+			labelsPaint.setAntiAlias(true);
+			labelsPaint.setTextSize(fontSize);
+			labelsPaint.setTypeface(typeface);
 		}
 
 		
 		public void clean() {
 			
 			chartPaint = null;
-			labelPaint = null;
+			labelsPaint = null;
 			gridPaint = null;
 			thresholdPaint = null;
 		}
@@ -1213,7 +1247,7 @@ public abstract class ChartView extends RelativeLayout{
 		protected int getTextHeightBounds(String character){
 			if(character != ""){
 				Rect bounds = new Rect();
-				style.labelPaint
+				style.labelsPaint
 					.getTextBounds(character, 
 							0, 
 								1, 

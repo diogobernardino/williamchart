@@ -845,7 +845,7 @@ public abstract class ChartView extends RelativeLayout{
      * @param index   {@link com.db.chart.model.ChartSet} index
      * @return The list of {@link android.graphics.Region} for the specified dataset
      */
-    public ArrayList<Region> getEntriesRegions(int index){
+    public ArrayList<Region> getEntriesRegion(int index){
         return mRegions.get(index);
     }
 

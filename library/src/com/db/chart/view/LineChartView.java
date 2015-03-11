@@ -47,7 +47,7 @@ public class LineChartView extends ChartView {
 	
 	
 	/** Radius clickable region */
-	private static float sRegionRadius;
+	private float mClickableRadius;
 
 
 	/** Style applied to line chart */
@@ -61,7 +61,7 @@ public class LineChartView extends ChartView {
         setOrientation(Orientation.VERTICAL);
 		mStyle = new Style(context.getTheme()
 				.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
-		sRegionRadius = (float) getResources()
+        mClickableRadius = (float) getResources()
 									.getDimension(R.dimen.dot_region_radius);
 	}
 
@@ -70,6 +70,8 @@ public class LineChartView extends ChartView {
 
         setOrientation(Orientation.VERTICAL);
 		mStyle = new Style();
+        mClickableRadius = (float) getResources()
+                .getDimension(R.dimen.dot_region_radius);
 	}
 
 	@Override
@@ -356,10 +358,10 @@ public class LineChartView extends ChartView {
 				
 				x = e.getX();
 				y = e.getY();
-				regionSet.add(new Region((int)(x - sRegionRadius),
-											(int)(y - sRegionRadius),
-												(int)(x + sRegionRadius),
-													(int)(y + sRegionRadius)));
+				regionSet.add(new Region((int)(x - mClickableRadius),
+											(int)(y - mClickableRadius),
+												(int)(x + mClickableRadius),
+													(int)(y + mClickableRadius)));
 			}
 			result.add(regionSet);
 		}
@@ -416,8 +418,19 @@ public class LineChartView extends ChartView {
         mStyle.mShadowColor = color;
         return this;
     }
-    
-    
+
+
+    /**
+     *
+     * @param radius
+     * @return
+     */
+    public LineChartView setClickablePointRadius(float radius){
+        mClickableRadius = radius;
+        return this;
+    }
+
+
     
 	/**
 	 * Class responsible to style the LineChart!

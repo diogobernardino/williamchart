@@ -816,7 +816,7 @@ public abstract class ChartView extends RelativeLayout{
 	/**
 	 * Get the step used between Y values.
      *
-	 * @return Step
+	 * @return step
 	 */
 	protected int getStep(){
 
@@ -827,10 +827,27 @@ public abstract class ChartView extends RelativeLayout{
 	}
 
 
-	
+
+    /**
+     * Get the whole data owned by the chart.
+     *
+     * @return   List of {@link com.db.chart.model.ChartSet} owned by the chart
+     */
 	public ArrayList<ChartSet> getData(){
 		return data;
 	}
+
+
+
+    /**
+     * Get the list of {@link android.graphics.Region} associated to each entry of a ChartSet.
+     *
+     * @param index   {@link com.db.chart.model.ChartSet} index
+     * @return The list of {@link android.graphics.Region} for the specified dataset
+     */
+    public ArrayList<Region> getEntriesRegions(int index){
+        return mRegions.get(index);
+    }
 
 
 

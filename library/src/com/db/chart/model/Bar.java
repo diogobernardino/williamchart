@@ -21,12 +21,50 @@ package com.db.chart.model;
  * Data model that represents a bar in {@link com.db.chart.view.BaseBarChartView}
  */
 public class Bar extends ChartEntry{
-	
-	
-	public Bar(String label, float value){
+
+
+    private boolean mHasGradientColor;
+    private int[] mGradientColors;
+    private float[] mGradientPositions;
+
+    public Bar(String label, float value){
 		super(label, value);
 
         isVisible = true;
+        mHasGradientColor = false;
 	}
+
+
+
+    public boolean hasGradientColor(){
+        return mHasGradientColor;
+    }
+
+
+
+    public int[] getGradientColors(){
+        return mGradientColors;
+    }
+
+
+    public float[] getGradientPositions(){
+        return mGradientPositions;
+    }
+
+
+
+    /**
+     * Set gradient colors to the fill of the {@link com.db.chart.model.Bar}
+     * @param colors   The colors to be distributed among gradient
+     * @param positions
+     * @return
+     */
+    public Bar setGradientColor(int colors[], float[] positions){
+
+        mHasGradientColor = true;
+        mGradientColors = colors;
+        mGradientPositions = positions;
+        return this;
+    }
 	
 }

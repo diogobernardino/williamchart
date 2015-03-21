@@ -20,8 +20,10 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 
 import com.db.chart.model.Bar;
@@ -84,7 +86,18 @@ public class BarChartView extends BaseBarChartView {
 				if(!barSet.isVisible() || bar.getValue() == 0)
 					continue;
 
-				style.barPaint.setColor(bar.getColor());
+                if(!bar.hasGradientColor())
+				    style.barPaint.setColor(bar.getColor());
+                else
+                    style.barPaint.setShader(
+                            new LinearGradient(
+                                    bar.getX(),
+                                    yZeroCoord,
+                                    bar.getX(),
+                                    bar.getY(),
+                                    bar.getGradientColors(),
+                                    bar.getGradientPositions(),
+                                    Shader.TileMode.MIRROR));
 				style.applyAlpha(style.barPaint, barSet.getAlpha());
 				
 				// If bar needs background

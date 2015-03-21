@@ -802,10 +802,11 @@ public class MainActivity extends ActionBarActivity {
 				mStackBarTooltip = null;
 				
 				if(mNewInstance){
-					mLineChart.dismiss(getAnimation(false).setEndAction(null));
-					mBarChart.dismiss(getAnimation(false).setEndAction(null));
-                    mHorBarChart.dismiss(getAnimation(false).setEndAction(null));
-					mStackBarChart.dismiss(getAnimation(false).setEndAction(mExitEndAction));
+                    mStackBarChart.getChartAnimation().setEndAction(mExitEndAction);
+					mLineChart.dismiss();
+					mBarChart.dismiss();
+                    mHorBarChart.dismiss();
+					mStackBarChart.dismiss();
 				}else{
 					updateValues(mLineChart);
 					updateValues(mBarChart);

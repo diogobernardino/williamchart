@@ -370,9 +370,8 @@ public abstract class ChartView extends RelativeLayout{
 	 * Dismiss chart data.
 	 */
 	public void dismiss(){
-	
-		data.clear();
-		invalidate();
+
+        dismiss(mAnim);
 	}
 	
 	/**
@@ -392,20 +391,25 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param anim   Animation used to exit
 	 */
 	public void dismiss(Animation anim){
-		
-		mAnim = anim;
-		
-		final Runnable endAction = mAnim.getEndAction();
-		mAnim.setEndAction(new Runnable() {
-		        @Override
-		        public void run() {
-		        	if(endAction != null)
-		        		endAction.run();
-		            dismiss();
-		        }
-			});
-		
-		data = mAnim.prepareExitAnimation(this);
+
+        if(anim != null) {
+            mAnim = anim;
+
+            final Runnable endAction = mAnim.getEndAction();
+            mAnim.setEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    if (endAction != null)
+                        endAction.run();
+                    data.clear();
+                    invalidate();
+                }
+            });
+
+            data = mAnim.prepareExitAnimation(this);
+        }else{
+            data.clear();
+        }
 		invalidate();
 	}
 	
@@ -849,6 +853,17 @@ public abstract class ChartView extends RelativeLayout{
         return mRegions.get(index);
     }
 
+
+    /**
+     * Get the current {@link com.db.chart.view.animation.Animation}
+     * held by {@link com.db.chart.view.ChartView}.
+     * Useful, for instance, to define another endAction.
+     *
+     * @return   Current {@link com.db.chart.view.animation.Animation}
+     */
+    public Animation getChartAnimation(){
+        return mAnim;
+    }
 
 
 

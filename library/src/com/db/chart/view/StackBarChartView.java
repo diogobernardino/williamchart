@@ -238,45 +238,72 @@ public class StackBarChartView extends BaseStackBarChartView{
      */
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
-		
+
 		int dataSize = data.size();
 		int setSize = data.get(0).size();
-		float innerChartBottom = this.getInnerChartBottom();
 		ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>(dataSize);
-
 		for(int i = 0; i < dataSize; i++)
 			result.add(new ArrayList<Region>(setSize));
-		
-		float verticalOffset;
-		float nextBottomY;
-		float dist;
-		BarSet barSet;
-		Bar bar;
-		
+
+        float verticalOffset;
+        float currBottomY;
+
+        float negVerticalOffset;
+        float negCurrBottomY;
+
+        float y1;
+        float barSize;
+        BarSet barSet;
+        Bar bar;
+        float zeroPosition = this.getZeroPosition();
+
 		for (int i = 0; i < setSize; i++) {
 			
 			// Vertical offset to keep drawing bars on top of the others
 			verticalOffset = 0;
+            negVerticalOffset = 0;
 			// Bottom of the next bar to be drawn
-			nextBottomY = innerChartBottom;
+			currBottomY = zeroPosition;
+            negCurrBottomY = zeroPosition;
 			
 			for(int j = 0; j < dataSize; j++){
 				
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
-				
-				// Distance from bottom to top of the bar
-				dist = innerChartBottom - bar.getY();
-				
-				result.get(j).add(new Region(
-                        (int) (bar.getX() - barWidth/2),
-                        (int) (innerChartBottom - (dist + verticalOffset)),
-                        (int) (bar.getX() + barWidth/2),
-                        (int)(nextBottomY)));
-				
-				nextBottomY = innerChartBottom - (dist + verticalOffset);
-				// Sum X to compensate the loss of precision in float
-				verticalOffset += dist + 2;
+
+                barSize = Math.abs(zeroPosition - bar.getY());
+
+                // If:
+                // Bar not visible OR
+                // Bar value equal to 0 OR
+                // Size of bar < 2 (Due to the loss of precision)
+                // Then no need to have region
+                if(!barSet.isVisible() || bar.getValue() == 0 || barSize < 2)
+                    continue;
+
+                if(bar.getValue() > 0) {
+
+                    y1 = zeroPosition - (barSize + verticalOffset);
+                    result.get(j).add(new Region(
+                            (int) (bar.getX() - barWidth / 2),
+                            (int) y1,
+                            (int) (bar.getX() + barWidth / 2),
+                            (int) currBottomY));
+
+                    currBottomY = y1;
+                    verticalOffset += barSize + 2;
+                }else{
+
+                    y1 = zeroPosition + (barSize - negVerticalOffset);
+                    result.get(j).add(new Region(
+                            (int) (bar.getX() - barWidth / 2),
+                            (int) negCurrBottomY,
+                            (int) (bar.getX() + barWidth / 2),
+                            (int) y1));
+
+                    negCurrBottomY = y1;
+                    negVerticalOffset -= barSize;
+                }
 			}
 		}
 		

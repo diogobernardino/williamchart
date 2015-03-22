@@ -60,20 +60,25 @@ public class StackBarChartView extends BaseStackBarChartView{
      */
 	@Override
 	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
-		
+
 		float verticalOffset;
-		float nextBottomY;
-		float dist;
-		int bottomSetIndex;
-		int topSetIndex;
-		float cornersFix;
-        float x;
-        float y;
-		BarSet barSet;
+		float currBottomY;
+
+        float negVerticalOffset;
+        float negCurrBottomY;
+
+        float x0;
+        float x1;
+        float y1;
+        float barSize;
+        int bottomSetIndex;
+        int topSetIndex;
+        float cornersPatch;
+        BarSet barSet;
 		Bar bar;
 		int dataSize = data.size();
 		int setSize = data.get(0).size();
-		float innerChartBottom = this.getInnerChartBottom();
+        float zeroPosition = this.getZeroPosition();
 
 		for (int i = 0; i < setSize; i++) {
 			
@@ -88,9 +93,11 @@ public class StackBarChartView extends BaseStackBarChartView{
 			
 			// Vertical offset to keep drawing bars on top of the others
 			verticalOffset = 0;
+            negVerticalOffset = 0;
 
 			// Bottom of the next bar to be drawn
-			nextBottomY = innerChartBottom;
+			currBottomY = zeroPosition;
+            negCurrBottomY = zeroPosition;
 
 			// Unfortunately necessary to discover which set is the bottom and top in case there
 			// are entries with value 0. To better understand check one of the methods.
@@ -101,70 +108,98 @@ public class StackBarChartView extends BaseStackBarChartView{
 				
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
-				
-				// If entry value is 0 it won't be drawn
-				if(!barSet.isVisible() || bar.getValue() <= 0)
+
+                barSize = Math.abs(zeroPosition - bar.getY());
+
+				// If:
+				// Bar not visible OR
+				// Bar value equal to 0 OR
+                // Size of bar < 2 (Due to the loss of precision)
+                // Then no need to draw
+				if(!barSet.isVisible() || bar.getValue() == 0 || barSize < 2)
 					continue;
-				
-				x = bar.getX();
-				y = bar.getY();
-				
+
 				style.barPaint.setColor(bar.getColor());
 				style.applyAlpha(style.barPaint, barSet.getAlpha());
-				
-				// Distance from bottom to top of the bar
-				dist = innerChartBottom - y;
-				
-				// Draw bar
-				if(j == bottomSetIndex){
 
-                    drawBar(canvas,
-                            (int) (x - barWidth/2), (int) (innerChartBottom - (dist + verticalOffset)),
-                            (int) (x + barWidth/2), (int) nextBottomY);
-					
-					if(bottomSetIndex != topSetIndex && style.cornerRadius != 0){
-                        // Patch top corners of bar
-                        cornersFix = (nextBottomY - (innerChartBottom - (dist + verticalOffset)))/2;
-						canvas.drawRect(new Rect((int) (x - barWidth/2),
-							(int) (innerChartBottom - (dist + verticalOffset)), 
-								(int) (x + barWidth/2),
-									(int) (innerChartBottom - (dist + verticalOffset) + cornersFix)),
-								style.barPaint);
-					}
-					
-				}else if(j == topSetIndex){
+                x0 = (bar.getX() - barWidth / 2);
+                x1 = (bar.getX() + barWidth / 2);
 
-                    drawBar(canvas,
-                            (int) (x - barWidth/2), (int) (innerChartBottom - (dist + verticalOffset)),
-                            (int) (x + barWidth/2), (int) (nextBottomY));
 
-					// Patch bottom corners of bar
-					cornersFix = (nextBottomY - (innerChartBottom - (dist + verticalOffset))) / 2;
-					canvas.drawRect(new Rect((int) (x - barWidth/2), 
-							(int) (nextBottomY - cornersFix), 
-								(int) (x + barWidth/2),
-									(int) (nextBottomY)),
-								style.barPaint);
-				
-				}else{// if(j != bottomSetIndex && j != topSetIndex){ // Middle sets
+                if(bar.getValue() > 0) {
 
-					canvas.drawRect(new Rect((int) (x - barWidth/2), 
-							(int) (innerChartBottom - (dist + verticalOffset)), 
-									(int) (x + barWidth/2),
-											(int) (nextBottomY)),
-											style.barPaint);
-				}
-					
-				nextBottomY = innerChartBottom - (dist + verticalOffset);
-				
-				// In case bar is still hidden
-				if(dist != 0)
-					// Sum 2 to compensate the loss of precision in float
-					verticalOffset += dist + 2;
+                    y1 = zeroPosition - (barSize + verticalOffset);
+
+                    // Draw bar
+                    if (j == bottomSetIndex) {
+                        drawBar(canvas, (int) x0, (int) y1, (int) x1, (int) currBottomY);
+                        if (bottomSetIndex != topSetIndex && style.cornerRadius != 0) {
+                            // Patch top corners of bar
+                            cornersPatch = (currBottomY - y1) / 2;
+                            canvas.drawRect(new Rect((int) x0, (int) y1,
+                                                        (int) x1, (int) (y1 + cornersPatch)),
+                                                style.barPaint);
+                        }
+
+                    } else if (j == topSetIndex) {
+                        drawBar(canvas, (int) x0, (int) y1, (int) x1, (int) currBottomY);
+                        // Patch bottom corners of bar
+                        cornersPatch = (currBottomY - y1) / 2;
+                        canvas.drawRect(new Rect((int) x0, (int) (currBottomY - cornersPatch),
+                                                    (int) x1, (int) currBottomY),
+                                            style.barPaint);
+
+                    } else {// if(j != bottomSetIndex && j != topSetIndex){ // Middle sets
+                        canvas.drawRect(new Rect((int) x0, (int) y1,
+                                                    (int) x1, (int) currBottomY),
+                                            style.barPaint);
+                    }
+
+                    currBottomY = y1;
+
+                    // Increase the vertical offset to be used by the next bar
+                    if (barSize != 0)
+                        // Sum 1 to compensate the loss of precision in float
+                        verticalOffset += barSize + 2;
+
+
+                }else{ // if(bar.getValue() < 0)
+
+                    y1 = zeroPosition + (barSize - negVerticalOffset);
+
+                    if (j == bottomSetIndex) {
+                        drawBar(canvas, (int) x0, (int) negCurrBottomY, (int) x1, (int) y1);
+                        if (bottomSetIndex != topSetIndex && style.cornerRadius != 0) {
+                            // Patch top corners of bar
+                            cornersPatch = (y1 - negCurrBottomY) / 2;
+                            canvas.drawRect(new Rect((int) x0, (int) negCurrBottomY,
+                                                        (int) x1, (int) (negCurrBottomY + cornersPatch)),
+                                                style.barPaint);
+                        }
+
+                    } else if (j == topSetIndex) {
+                        drawBar(canvas, (int) x0, (int) negCurrBottomY, (int) x1, (int) y1);
+                        // Patch bottom corners of bar
+                        cornersPatch = (y1 - negCurrBottomY) / 2;
+                        canvas.drawRect(new Rect((int) x0, (int) (y1 - cornersPatch),
+                                                    (int) x1, (int) y1),
+                                            style.barPaint);
+
+                    } else {// if(j != bottomSetIndex && j != topSetIndex){ // Middle sets
+                        canvas.drawRect(new Rect((int) x0, (int) negCurrBottomY,
+                                                    (int) x1, (int) y1),
+                                            style.barPaint);
+                    }
+
+                    negCurrBottomY = y1;
+
+                    // Increase the vertical offset to be used by the next bar
+                    if (barSize != 0)
+                        negVerticalOffset -= barSize;
+
+                }
 			}
-			
 		}
-		
 	}
 
 

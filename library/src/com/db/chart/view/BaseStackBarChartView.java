@@ -82,10 +82,25 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
 
         int dataSize = data.size();
         int index;
+
+        boolean hasNegativeValues = false;
         for(index = 0; index < dataSize; index++){
-            if(data.get(index).getEntry(entryIndex).getValue() == 0)
-                continue;
-            break;
+            if(data.get(index).getEntry(entryIndex).getValue() < 0) {
+                hasNegativeValues = true;
+                break;
+            }
+        }
+
+        if(hasNegativeValues) { // Find last value < 0
+            for (index = dataSize - 1; index >= 0; index--) {
+                if (data.get(index).getEntry(entryIndex).getValue() < 0)
+                    break;
+            }
+        }else { // Find first non null value
+            for (index = 0; index < dataSize; index++) {
+                if (data.get(index).getEntry(entryIndex).getValue() != 0)
+                    break;
+            }
         }
         return index;
     }
@@ -103,10 +118,24 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
 
         int dataSize = data.size();
         int index;
-        for(index = dataSize - 1; index >= 0; index--){
-            if(data.get(index).getEntry(entryIndex).getValue() == 0)
-                continue;
-            break;
+
+        boolean hasPositiveValues = false;
+        for(index = 0; index < dataSize; index++){
+            if(data.get(index).getEntry(entryIndex).getValue() > 0) {
+                hasPositiveValues = true;
+                break;
+            }
+        }
+
+        if(hasPositiveValues) { // Find last value > 0
+            for (index = dataSize - 1; index >= 0; index--)
+                if (data.get(index).getEntry(entryIndex).getValue() > 0)
+                    break;
+        }else { // Find first non null value
+            for (index = 0; index < dataSize; index++) {
+                if (data.get(index).getEntry(entryIndex).getValue() != 0)
+                    break;
+            }
         }
         return index;
     }
@@ -119,32 +148,43 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
      */
     protected void calculateMaxStackBarValue() {
 
-        float stackValue;
+        float positiveStackValue;
+        float negativeStackValue;
         BarSet barSet;
         Bar bar;
         int maxStackValue = 0;
+        int minStackValue = 0;
 
         int dataSize = data.size();
         int setSize = data.get(0).size();
 
         for (int i = 0; i < setSize; i++) {
 
-            stackValue = 0;
+            positiveStackValue = 0;
+            negativeStackValue = 0;
             for(int j = 0; j < dataSize; j++){
 
                 barSet = (BarSet) data.get(j);
                 bar = (Bar) barSet.getEntry(i);
-                stackValue += bar.getValue();
+
+                if(bar.getValue() >= 0)
+                    positiveStackValue += bar.getValue();
+                else
+                    negativeStackValue += bar.getValue();
             }
 
-            if(maxStackValue < (int) Math.ceil(stackValue))
-                maxStackValue = (int) Math.ceil(stackValue);
+            if(maxStackValue < (int) Math.ceil(positiveStackValue))
+                maxStackValue = (int) Math.ceil(positiveStackValue);
+            if(minStackValue > (int) Math.ceil(negativeStackValue))
+                minStackValue = (int) Math.ceil(negativeStackValue);
         }
 
         while(maxStackValue % this.getStep() != 0)
             maxStackValue += 1;
+        while(minStackValue % this.getStep() != 0)
+            minStackValue -= 1;
 
-        super.setAxisBorderValues(0, maxStackValue, this.getStep());
+        super.setAxisBorderValues(minStackValue, maxStackValue, this.getStep());
     }
 
 

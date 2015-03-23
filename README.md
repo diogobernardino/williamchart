@@ -1,5 +1,4 @@
-WilliamChart
-===============
+#WilliamChart
 
 WilliamChart is an Android Library to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional chart features but instead something that could be pleasant and intuitive while representing and visualizing data. I would prefer to keep charts simple and clean rather than overfeatured.
 
@@ -9,10 +8,16 @@ At the moment it provides:
 * [``BarChartView``][3]
 * [``HorizontalBarChartView``][3]
 * [``StackBarChartView``][4]
+* [``HorizontalStackBarChartView``][4]
 
 It has been tested in Android 2.2 and above.
 
 Check the [wiki][5] for further documentation.
+
+###Gradle 
+``` groovy
+   compile 'com.diogobernardino:williamchart:1.7.0'
+```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][6].
 

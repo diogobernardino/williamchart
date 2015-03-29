@@ -337,7 +337,7 @@ public class MainActivity extends ActionBarActivity {
 		dataSet.setColor(this.getResources().getColor(R.color.line))
 			.setThickness(Tools.fromDpToPx(3))
 			.setSmooth(true)
-			.setDashed(true);
+			.setDashed(new float[]{10, 10});
 		mLineChart.addData(dataSet);
 		
 		mLineChart.setBorderSpacing(Tools.fromDpToPx(4))

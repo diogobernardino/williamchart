@@ -108,7 +108,7 @@ public class LineChartView extends ChartView {
 				
 				if(lineSet.isDashed())
 					mStyle.mLinePaint
-						.setPathEffect(new DashPathEffect(new float[] {10,10}, lineSet.getPhase()));
+						.setPathEffect(new DashPathEffect(lineSet.getDashedIntervals(), lineSet.getDashedPhase()));
 				else
 					mStyle.mLinePaint.setPathEffect(null);
 				

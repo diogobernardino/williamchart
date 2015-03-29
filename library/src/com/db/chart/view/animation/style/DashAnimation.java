@@ -25,7 +25,7 @@ public class DashAnimation extends BaseStyleAnimation {
 	@Override
 	public void nextUpdate(ChartSet set) {
 		LineSet line = (LineSet) set;
-			line.setPhase(line.getPhase() - 4);
+			line.setDashedPhase(line.getDashedPhase() - 4);
 	}
 	
 }

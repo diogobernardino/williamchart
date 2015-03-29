@@ -217,7 +217,7 @@ public class HorizontalStackBarChartView extends BaseStackBarChartView{
 		// in case of animation
 		if(data.get(0).size() == 1)
             barWidth = (this.getInnerChartBottom() - this.getInnerChartTop()
-                    - this.verController.borderSpacing * 2);
+                    - this.getBorderSpacing() * 2);
         else
 			calculateBarsWidth(-1, data.get(0).getEntry(1).getY(), data.get(0).getEntry(0).getY());
 	}

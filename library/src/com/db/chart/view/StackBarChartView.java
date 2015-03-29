@@ -87,7 +87,7 @@ public class StackBarChartView extends BaseStackBarChartView{
                 drawBarBackground(canvas,
                         (int) (data.get(0).getEntry(i).getX() - barWidth / 2),
                         (int) this.getInnerChartTop(),
-                        (int) (data.get(0).getEntry(i).getX() - barWidth / 2 + barWidth),
+                        (int) (data.get(0).getEntry(i).getX() + barWidth / 2),
                         (int) this.getInnerChartBottom());
             }
 			
@@ -217,7 +217,7 @@ public class StackBarChartView extends BaseStackBarChartView{
 		// in case of animation
 		if(data.get(0).size() == 1)
             barWidth = (this.getInnerChartRight() - this.getInnerChartLeft()
-                    - this.horController.borderSpacing * 2);
+                    - this.getBorderSpacing() * 2);
         else
 			calculateBarsWidth(-1, data.get(0).getEntry(0).getX(), data.get(0).getEntry(1).getX());
 	}

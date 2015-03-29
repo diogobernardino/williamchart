@@ -831,6 +831,20 @@ public abstract class ChartView extends RelativeLayout{
 	}
 
 
+    /**
+     * Get chart's border spacing.
+     *
+     * @return spacing
+     */
+    protected float getBorderSpacing(){
+
+        if(orientation == Orientation.VERTICAL)
+            return verController.borderSpacing;
+        else
+            return horController.borderSpacing;
+    }
+
+
 
     /**
      * Get the whole data owned by the chart.

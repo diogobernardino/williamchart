@@ -136,7 +136,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 			style.barSpacing = 0;
 			calculateBarsWidth(data.size(), 0, this.getInnerChartBottom()
                     - this.getInnerChartTop()
-                    - super.verController.borderSpacing * 2);
+                    - this.getBorderSpacing() * 2);
         // In case of more than one entry
         }else
 			calculateBarsWidth(data.size(), data.get(0).getEntry(1).getY(),

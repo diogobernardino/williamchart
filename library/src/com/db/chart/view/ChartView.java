@@ -132,6 +132,8 @@ public abstract class ChartView extends RelativeLayout{
 		public boolean onPreDraw() {
 			ChartView.this.getViewTreeObserver().removeOnPreDrawListener(this);
 
+            style.init();
+
 			// Define chart frame
 			chartTop = getPaddingTop() + verController.getLabelHeight()/2;
 			chartBottom = getMeasuredHeight() - getPaddingBottom();
@@ -939,7 +941,12 @@ public abstract class ChartView extends RelativeLayout{
      * @param format   Format to be applied
      */
     public ChartView setLabelsFormat(DecimalFormat format){
-        verController.labelFormat = format;
+
+        if(orientation == Orientation.VERTICAL)
+            verController.labelFormat = format;
+        else
+            horController.labelFormat = format;
+
         return this;
     }
 
@@ -951,6 +958,7 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setLabelsColor(int color) {
         style.labelsColor = color;
+        style.labelsPaint.setColor(color);
         return this;
     }
 
@@ -962,6 +970,7 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setFontSize(int size) {
         style.fontSize = size;
+        style.labelsPaint.setTextSize(size);
         return this;
     }
 
@@ -973,6 +982,7 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setTypeface(Typeface typeface) {
         style.typeface = typeface;
+        style.labelsPaint.setTypeface(typeface);
         return this;
     }
 
@@ -1037,6 +1047,7 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setAxisThickness(float thickness){
         style.axisThickness = thickness;
+        style.chartPaint.setStrokeWidth(thickness);
         return this;
     }
 
@@ -1049,6 +1060,7 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setAxisColor(int color){
         style.axisColor = color;
+        style.chartPaint.setColor(color);
         return this;
     }
 	

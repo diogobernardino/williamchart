@@ -470,7 +470,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		mRegions = defineRegions(data);
 		if(mAnim != null)
-			data = mAnim.prepareAnimation(this, oldCoords, newCoords);
+			data = mAnim.prepareUpdateAnimation(this, oldCoords, newCoords);
 		
 		mToUpdateValues.clear();
 		

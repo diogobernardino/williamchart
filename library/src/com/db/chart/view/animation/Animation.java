@@ -24,7 +24,7 @@ import android.graphics.PathMeasure;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;
 import com.db.chart.view.animation.easing.BaseEasingMethod;
-import com.db.chart.view.animation.easing.quint.QuintEaseOut;
+import com.db.chart.view.animation.easing.QuintEase;
 
 
 /**
@@ -131,14 +131,13 @@ public class Animation{
 	
 	/** Alpha speed to include in animation */
 	private int mAlphaSpeed;
+
+    /** Sets alpha value to be preserved */
+    private float[] mSetsAlpha;
 	
 	
 	/** Animation order */
 	private int[] mOrder;
-	
-	
-	/** Whether the animation refers to entering or exiting */
-	private boolean mIsExiting;
 	
 	
 	
@@ -159,7 +158,7 @@ public class Animation{
 		mGlobalDuration = duration;
 		mOverlapingFactor = DEFAULT_OVERLAP_FACTOR;
 		mAlphaSpeed = DEFAULT_ALPHA_OFF;
-		mEasing = new QuintEaseOut();
+		mEasing = new QuintEase();
 		mStartXFactor = -1f;
 		mStartYFactor = -1f;
 		
@@ -264,14 +263,19 @@ public class Animation{
 			
 		final int nSets = sets.size();
 		final int nEntries = sets.get(0).size();
-		
+
+        mSetsAlpha = new float[nSets];
+
 		ArrayList<float[][]> startValues = new ArrayList<float[][]>(nSets);
 		ArrayList<float[][]> endValues = new ArrayList<float[][]>(nSets);
 		float[][] startSet;
 		float[][] endSet;
 		
 		for(int i = 0; i < nSets; i++){	
-			
+
+            // Save set alpha value to be preserved
+            mSetsAlpha[i] = sets.get(i).getAlpha();
+
 			startSet = new float[nEntries][2];
 			endSet = new float[nEntries][2];
 		
@@ -311,10 +315,23 @@ public class Animation{
 	 */
 	public ArrayList<ChartSet> prepareEnterAnimation(ChartView chartView){
 		
-		mIsExiting = false;
+		mEasing.setState(BaseEasingMethod.ENTER);
 		return prepareAnimation(chartView);
 	}
-	
+
+    /**
+     * Method that prepares the enter animation. Defines starting points, targets,
+     * distance, yadda, as well as the first set of points to be drawn.
+     *
+     * @param chartView   {@link ChartView} to be invalidate each time the animation wants to update
+     *                    values and to get the {@link ChartSet} containing the target values
+     */
+    public ArrayList<ChartSet> prepareUpdateAnimation(ChartView chartView,
+        ArrayList<float[][]> start, ArrayList<float[][]> end){
+
+        mEasing.setState(BaseEasingMethod.UPDATE);
+        return prepareAnimation(chartView, start, end);
+    }
 
 	/**
 	 * Method that prepares the enter animation. Defines starting points, targets, 
@@ -325,7 +342,7 @@ public class Animation{
 	 */
 	public ArrayList<ChartSet> prepareExitAnimation(ChartView chartView){
 		
-		mIsExiting = true;
+		mEasing.setState(BaseEasingMethod.EXIT);
 		return prepareAnimation(chartView);	
 	}
 	
@@ -364,11 +381,11 @@ public class Animation{
 		for(int i = 0; i < nSets; i++)
 			
 			for(int j = 0; j < nEntries; j++){
-				
+
 				timeNormalized = normalizeTime(j);
-				
-				if(mAlphaSpeed != -1)
-					data.get(i).setAlpha(timeNormalized * mAlphaSpeed);
+
+				if(mAlphaSpeed != -1 && mEasing.getState() != BaseEasingMethod.UPDATE)
+                    data.get(i).setAlpha(mEasing.next(timeNormalized) * mAlphaSpeed * mSetsAlpha[i]);
 				
 				if(!getEntryUpdate(i, j, timeNormalized, posUpdate)){
 					posUpdate[0] = data.get(i).getEntry(j).getX();
@@ -387,7 +404,6 @@ public class Animation{
 			if(mRunnable != null)
 				mRunnable.run();
 			mPlaying = false;
-			mAlphaSpeed = -1;
 		}
 		
 		return data; 
@@ -403,11 +419,7 @@ public class Animation{
 	 * @return value from 0 to 1 telling the next step.
 	 */
 	private float normalizeTime(int index) {
-		if(!mIsExiting)
-			return (float) mCurrentDuration[index] / mDuration;
-		else	
-			return 1f - (float) mCurrentDuration[index] / mDuration;
-			
+		return (float) mCurrentDuration[index] / mDuration;
 	}
 	
 	

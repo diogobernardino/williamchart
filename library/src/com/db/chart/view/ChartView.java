@@ -633,7 +633,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		// If border diff than 0 inner chart sides must have lines
 		if(horController.borderSpacing != 0 || horController.mandatoryBorderSpacing != 0){
-			if(verController.labelsPositioning == YController.LabelPosition.NONE)
+            if(!verController.hasAxis)
 				canvas.drawLine(getInnerChartLeft(), 
 									getInnerChartBottom(), 
 										getInnerChartLeft(), 

@@ -958,7 +958,6 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setLabelsColor(int color) {
         style.labelsColor = color;
-        style.labelsPaint.setColor(color);
         return this;
     }
 
@@ -970,7 +969,6 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setFontSize(int size) {
         style.fontSize = size;
-        style.labelsPaint.setTextSize(size);
         return this;
     }
 
@@ -982,7 +980,6 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setTypeface(Typeface typeface) {
         style.typeface = typeface;
-        style.labelsPaint.setTypeface(typeface);
         return this;
     }
 
@@ -1047,7 +1044,6 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setAxisThickness(float thickness){
         style.axisThickness = thickness;
-        style.chartPaint.setStrokeWidth(thickness);
         return this;
     }
 
@@ -1060,7 +1056,6 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setAxisColor(int color){
         style.axisColor = color;
-        style.chartPaint.setColor(color);
         return this;
     }
 	

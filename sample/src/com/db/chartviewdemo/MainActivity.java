@@ -13,10 +13,10 @@ import com.db.chart.view.YController;
 import com.db.chart.view.XController;
 import com.db.chart.view.animation.Animation;
 import com.db.chart.view.animation.easing.BaseEasingMethod;
-import com.db.chart.view.animation.easing.bounce.BounceEaseOut;
-import com.db.chart.view.animation.easing.cubic.CubicEaseOut;
-import com.db.chart.view.animation.easing.elastic.ElasticEaseOut;
-import com.db.chart.view.animation.easing.quint.QuintEaseOut;
+import com.db.chart.view.animation.easing.BounceEase;
+import com.db.chart.view.animation.easing.CubicEase;
+import com.db.chart.view.animation.easing.ElasticEase;
+import com.db.chart.view.animation.easing.QuintEase;
 import com.db.chart.view.animation.style.DashAnimation;
 import com.db.williamchartdemo.R;
 
@@ -270,13 +270,13 @@ public class MainActivity extends ActionBarActivity {
 		
         mNewInstance = false;
 		mCurrOverlapFactor = 1;
-		mCurrEasing = new QuintEaseOut();
+		mCurrEasing = new QuintEase();
 		mCurrStartX = -1;
 		mCurrStartY = 0;	
 		mCurrAlpha = -1;
 		
 		mOldOverlapFactor = 1;
-		mOldEasing = new QuintEaseOut();
+		mOldEasing = new QuintEase();
 		mOldStartX = -1;
 		mOldStartY = 0;	
 		mOldAlpha = -1;
@@ -909,19 +909,19 @@ public class MainActivity extends ActionBarActivity {
 
 		switch(index){
 			case 0:
-				mCurrEasing = new CubicEaseOut();
+				mCurrEasing = new CubicEase();
 				mEaseBtn.setImageResource(R.drawable.ease_cubic);
 				break;
 			case 1:
-				mCurrEasing = new QuintEaseOut();
+				mCurrEasing = new QuintEase();
 				mEaseBtn.setImageResource(R.drawable.ease_quint);
 				break;
 			case 2:
-				mCurrEasing = new BounceEaseOut();
+				mCurrEasing = new BounceEase();
 				mEaseBtn.setImageResource(R.drawable.ease_bounce);
 				break;
 			case 3:
-				mCurrEasing = new ElasticEaseOut();
+				mCurrEasing = new ElasticEase();
 				mEaseBtn.setImageResource(R.drawable.ease_elastic);
 			default:
 				break;

@@ -10,7 +10,7 @@ public class QuartEase extends BaseEasingMethod {
 
     @Override
     protected float easeOut(float time) {
-        return (float) Math.pow( time - 1, 4) + 1;
+        return (float) -(Math.pow( time - 1, 4) - 1);
     }
 
     @Override

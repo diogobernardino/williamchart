@@ -104,7 +104,7 @@ public abstract class BaseBarChartView extends ChartView {
      */
     protected void drawBar(Canvas canvas, float left, float top, float right, float bottom) {
 
-        canvas.drawRoundRect(new RectF((int) left, (int) top, (int) right, (int) bottom),
+        canvas.drawRoundRect(new RectF((int)left, (int)top, (int)right, (int)bottom),
                 style.cornerRadius, style.cornerRadius,
                 style.barPaint);
     }
@@ -122,7 +122,7 @@ public abstract class BaseBarChartView extends ChartView {
      */
     protected void drawBarBackground(Canvas canvas, float left, float top, float right, float bottom) {
 
-        canvas.drawRoundRect(new RectF(left, top, right, bottom),
+        canvas.drawRoundRect(new RectF((int)left, (int)top, (int)right, (int)bottom),
                 style.cornerRadius, style.cornerRadius,
                 style.barBackgroundPaint);
     }
@@ -187,21 +187,12 @@ public abstract class BaseBarChartView extends ChartView {
 	
 	
 	/**
-	 * Background in bars place.
-     *
-	 * @param bool   True in case {@link com.db.chart.model.Bar} must display a background
-	 */
-	public void setBarBackground(boolean bool){
-		style.hasBarBackground = bool;
-	}
-	
-	
-	/**
 	 * Color to use in bars background.
      *
 	 * @param color   Color of background in case setBarBackground has been set to True
 	 */
-	public void setBarBackgroundColor(int color){
+	public void setBarBackground(int color){
+        style.hasBarBackground = true;
 		style.mBarBackgroundColor = color;
 	}
 	

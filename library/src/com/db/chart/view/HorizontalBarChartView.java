@@ -44,7 +44,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 		super(context, attrs);
 
         setOrientation(Orientation.HORIZONTAL);
-		setMandatoryBorderSpacing();
+        setMandatoryBorderSpacing();
 	}
 
 
@@ -52,7 +52,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 		super(context);
 
         setOrientation(Orientation.HORIZONTAL);
-		setMandatoryBorderSpacing();
+        setMandatoryBorderSpacing();
 	}
 
 

@@ -116,6 +116,16 @@ public abstract class AxisController{
     public AxisController(ChartView view) {
 
         chartView = view;
+        reset();
+    }
+
+
+    public AxisController(ChartView chartView, TypedArray attrs) {
+        this(chartView);
+    }
+
+
+    protected void reset(){
 
         //Set DEFAULTS
         distLabelToAxis= (int) chartView.getResources().getDimension(R.dimen.axis_dist_from_label);
@@ -131,11 +141,6 @@ public abstract class AxisController{
         labelHeight = -1;
         hasAxis = true;
         handleValues = false;
-    }
-
-
-    public AxisController(ChartView chartView, TypedArray attrs) {
-        this(chartView);
     }
 
 

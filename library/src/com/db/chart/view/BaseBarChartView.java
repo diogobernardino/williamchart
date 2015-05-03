@@ -55,6 +55,7 @@ public abstract class BaseBarChartView extends ChartView {
 
 		style = new Style(context.getTheme()
 				.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
+
 	}
 
 
@@ -157,7 +158,12 @@ public abstract class BaseBarChartView extends ChartView {
 	}
 	
 	
-	
+	@Override
+    public void reset(){
+        super.reset();
+        setMandatoryBorderSpacing();
+    }
+
 	
     /*
 	 * --------
@@ -191,7 +197,7 @@ public abstract class BaseBarChartView extends ChartView {
      *
 	 * @param color   Color of background in case setBarBackground has been set to True
 	 */
-	public void setBarBackground(int color){
+	public void setBarBackgroundColor(int color){
         style.hasBarBackground = true;
 		style.mBarBackgroundColor = color;
 	}

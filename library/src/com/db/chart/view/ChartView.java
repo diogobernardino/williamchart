@@ -53,7 +53,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	public static enum GridType {
-		FULL, VERTICAL, HORIZONTAL
+		FULL, VERTICAL, HORIZONTAL, NONE
     }
 
     public static enum Orientation {
@@ -117,6 +117,9 @@ public abstract class ChartView extends RelativeLayout{
 	
 	/** Keep record of data updates to be done */
 	private ArrayList<Pair<Integer, float []>> mToUpdateValues;
+
+
+    private GridType mGridType;
 	
 	
 	/**
@@ -213,6 +216,7 @@ public abstract class ChartView extends RelativeLayout{
 		data = new ArrayList<ChartSet>();
 		mRegions = new ArrayList<ArrayList<Region>>();
 		mToUpdateValues = new ArrayList<Pair<Integer,float[]>>();
+        mGridType = GridType.NONE;
 	}
 
 
@@ -422,18 +426,18 @@ public abstract class ChartView extends RelativeLayout{
 	 * Resets chart state to insert new configuration.
 	 */
 	public void reset(){
-		
-		data.clear();
-		mRegions.clear();
-		mToUpdateValues.clear();
-		verController.minLabelValue = 0;
-		verController.maxLabelValue = 0;
-		if(horController.mandatoryBorderSpacing != 0)
-			horController.mandatoryBorderSpacing = 1;
+
+        init();
+        if(horController.mandatoryBorderSpacing != 0) {
+            horController.reset();
+        }
+
+        if(verController.mandatoryBorderSpacing != 0) {
+            verController.reset();
+        }
+
 		style.thresholdPaint = null;
 		style.gridPaint = null;
-		style.hasHorizontalGrid = false;
-		style.hasVerticalGrid = false;
 	}
 	
 	
@@ -583,9 +587,9 @@ public abstract class ChartView extends RelativeLayout{
 			//long time = System.currentTimeMillis();
 			
 			// Draw grid
-			if(style.hasVerticalGrid)
+			if(mGridType == GridType.FULL || mGridType == GridType.VERTICAL)
 				drawVerticalGrid(canvas);
-			if(style.hasHorizontalGrid)
+            if(mGridType == GridType.FULL || mGridType == GridType.HORIZONTAL)
 				drawHorizontalGrid(canvas);
 			
 			// Draw Axis Y
@@ -1146,16 +1150,8 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public ChartView setGrid(GridType type, Paint paint){
 		
-		if(type.compareTo(GridType.FULL) == 0){
-			style.hasVerticalGrid = true;
-			style.hasHorizontalGrid = true;
-		}else if(type.compareTo(GridType.VERTICAL) == 0){
-			style.hasVerticalGrid = true;
-		}else{
-			style.hasHorizontalGrid = true;
-		}
+		mGridType = type;
 		style.gridPaint = paint;
-		
 		return this;
 	}
 	
@@ -1218,8 +1214,6 @@ public abstract class ChartView extends RelativeLayout{
 		
 		/** Grid */
 		protected Paint gridPaint;
-		protected boolean hasHorizontalGrid;
-		protected boolean hasVerticalGrid;
 		
 		
 		/** Threshold Line **/
@@ -1235,9 +1229,6 @@ public abstract class ChartView extends RelativeLayout{
 		
 		protected Style() {
 			
-			hasHorizontalGrid = false;
-			hasVerticalGrid = false;
-			
 			axisColor = DEFAULT_COLOR;
 			axisThickness = (float) getResources().getDimension(R.dimen.grid_thickness);
 			
@@ -1247,9 +1238,6 @@ public abstract class ChartView extends RelativeLayout{
 
 		
 		protected Style(TypedArray attrs) {
-			
-			hasHorizontalGrid = false;
-			hasVerticalGrid = false;
 			
 			axisColor = attrs.getColor(
 					R.styleable.ChartAttrs_chart_axisColor, 

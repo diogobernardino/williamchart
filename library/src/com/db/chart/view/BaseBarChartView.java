@@ -198,8 +198,11 @@ public abstract class BaseBarChartView extends ChartView {
 	 * @param color   Color of background in case setBarBackground has been set to True
 	 */
 	public void setBarBackgroundColor(int color){
+
         style.hasBarBackground = true;
 		style.mBarBackgroundColor = color;
+        if(style.barBackgroundPaint != null)
+            style.barBackgroundPaint.setColor(style.mBarBackgroundColor);
 	}
 	
 	

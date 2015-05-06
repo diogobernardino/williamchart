@@ -175,8 +175,8 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
 
             if(maxStackValue < (int) Math.ceil(positiveStackValue))
                 maxStackValue = (int) Math.ceil(positiveStackValue);
-            if(minStackValue > (int) Math.ceil(negativeStackValue))
-                minStackValue = (int) Math.ceil(negativeStackValue);
+            if(minStackValue > (int) Math.ceil(negativeStackValue * -1) * -1)
+                minStackValue = (int) Math.ceil(negativeStackValue * -1) * -1;
         }
 
         while(maxStackValue % this.getStep() != 0)

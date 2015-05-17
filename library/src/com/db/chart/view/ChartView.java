@@ -50,8 +50,8 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	private static final String TAG = "chart.view.ChartView";
-	
-	
+
+
 	public static enum GridType {
 		FULL, VERTICAL, HORIZONTAL, NONE
     }
@@ -480,7 +480,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		invalidate();
 	}
-	
+
 	
 	
 	/**
@@ -492,7 +492,7 @@ public abstract class ChartView extends RelativeLayout{
      *               You may want to take care of it
 	 */
 	public void showTooltip(View tooltip, boolean bool){
-		
+
 		if(bool){
 			final LayoutParams layoutParams = (LayoutParams) tooltip.getLayoutParams();
 			

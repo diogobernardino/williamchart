@@ -29,6 +29,6 @@ public interface OnEntryClickListener{
 	 * @param entryIndex - index of the entry within set(setIndex) 
 	 * @param rect - a Rect covering the entry area.
 	 */
-	abstract void onClick(int setIndex, int entryIndex, Rect rect);
+	void onClick(int setIndex, int entryIndex, Rect rect);
 	
 }

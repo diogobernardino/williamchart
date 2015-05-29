@@ -26,6 +26,7 @@ import com.db.chart.model.ChartSet;
 import com.db.chart.view.animation.Animation;
 import com.db.chart.view.animation.style.BaseStyleAnimation;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -37,6 +38,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver.OnPreDrawListener;
@@ -61,6 +63,7 @@ public abstract class ChartView extends RelativeLayout{
     }
 	
 
+	/** Chart orientation */
     protected Orientation orientation;
 
 
@@ -120,7 +123,10 @@ public abstract class ChartView extends RelativeLayout{
 
 
     private GridType mGridType;
-	
+
+
+	private Tooltip mTooltip;
+
 	
 	/**
 	 * Executed only before the chart is drawn for the first time.
@@ -155,17 +161,15 @@ public abstract class ChartView extends RelativeLayout{
 			// Tells view to execute code before starting drawing
 			onPreDrawChart(data);
 			
-			// Sets listener if needed
-			if(mEntryListener != null)
-				mRegions = defineRegions(data);
-			
+			// Define regions
+			mRegions = defineRegions(data);
+
 			// Prepares the animation if needed and gets the first dump 
 			// of data to be drawn
 			if(mAnim != null)
 				data = mAnim.prepareEnterAnimation(ChartView.this);
 			
-			if (android.os.Build.VERSION.SDK_INT >= 
-					android.os.Build.VERSION_CODES.HONEYCOMB)
+			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
 				ChartView.this.setLayerType(LAYER_TYPE_SOFTWARE, null);
 				
 			return mReadyToDraw = true;
@@ -458,7 +462,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	/**
-	 * Notify ChartView about updated values. ChartView will be validated.
+	 * Notify {@link ChartView} about updated values. {@link ChartView} will be validated.
 	 */
 	public void notifyDataUpdate(){
 		
@@ -481,71 +485,129 @@ public abstract class ChartView extends RelativeLayout{
 		invalidate();
 	}
 
-	
-	
+
 	/**
-	 * Adds a tooltip to ChartView. If is not the case already, 
-	 * the whole tooltip is forced to be inside ChartView bounds.
+	 * Set the {@link Tooltip} object which will be used to create chart tooltips.
+	 *
+	 * @param tip   {@link Tooltip} object in order to produce chart tooltips
+	 */
+    public void setTooltips(Tooltip tip){
+        mTooltip = tip;
+    }
+
+
+	/**
+	 * Toggles {@link Tooltip} between show and dismiss.
+	 *
+	 * @param rect   {@link Rect} containing the bounds of last clicked entry
+	 * @param value   Value of the last entry clicked
+	 */
+	private void toggleTooltip(Rect rect, float value){
+
+        if(!mTooltip.on()) {
+			mTooltip.prepare(rect, value);
+            showTooltip(mTooltip, true);
+        }else {
+			dismissTooltip(mTooltip, rect, value);
+		}
+	}
+
+
+	/**
+	 * Adds a tooltip to {@link ChartView}. If is not the case already,
+	 * the whole tooltip is forced to be inside {@link ChartView} bounds.
      *
-	 * @param tooltip   Tooltip view to be added
-	 * @param bool   False if the tooltip should not be forced to be inside ChartView.
+	 * @param tooltip   {@link Tooltip} view to be added
+	 * @param correctPos   False if tooltip should not be forced to be inside ChartView.
      *               You may want to take care of it
 	 */
-	public void showTooltip(View tooltip, boolean bool){
+	public void showTooltip(Tooltip tooltip, boolean correctPos) {
 
-		if(bool){
-			final LayoutParams layoutParams = (LayoutParams) tooltip.getLayoutParams();
-			
-			if(layoutParams.leftMargin < chartLeft - getPaddingLeft())
-				layoutParams.leftMargin = (int) chartLeft - getPaddingLeft();
-			if(layoutParams.topMargin < chartTop - getPaddingTop())
-				layoutParams.topMargin = (int) chartTop - getPaddingTop();
-			if(layoutParams.leftMargin + layoutParams.width 
-					> chartRight - getPaddingRight())
-				layoutParams.leftMargin -= layoutParams.width 
-						- (chartRight - getPaddingRight() 
-								- layoutParams.leftMargin);
-			if(layoutParams.topMargin + layoutParams.height 
-					> getInnerChartBottom() - getPaddingBottom())
-				layoutParams.topMargin -= layoutParams.height 
-						- (getInnerChartBottom() - getPaddingBottom() 
-								- layoutParams.topMargin);
-			
-			tooltip.setLayoutParams(layoutParams);
+		if (correctPos) {
+			tooltip.correctPosition(chartLeft - getPaddingLeft(),
+                    chartTop - getPaddingTop(),
+                    chartRight - getPaddingRight(),
+                    (int) (getInnerChartBottom() - getPaddingBottom()));
 		}
-		
-		this.addView(tooltip);
+
+        if(tooltip.hasEnterAnimation())
+            tooltip.animateEnter();
+
+		this.addTooltip(tooltip);
+
 	}
-	
-	
-	/**
-	 * Adds a tooltip to ChartView. If is not the case already, 
-	 * the whole tooltip is forced to be inside ChartView bounds.
-     *
-	 * @param tooltip   Tooltip view to be added
-	 */
-	public void showTooltip(View tooltip){
-		showTooltip(tooltip, true);
-	}
-	
-	
-	/**
-	 * Removes tooltip from ChartView.
-     *
-	 * @param tooltip   View to be removed
-	 */
-	public void dismissTooltip(View tooltip){
-		this.removeView(tooltip);
-	}
-	
+
 
 	/**
-	 * Removes all tooltips from ChartView.
+	 * Add {@link Tooltip}/{@link View}. to chart/parent view.
+	 *
+	 * @param tip   tooltip to be added to chart
+	 */
+    private void addTooltip(Tooltip tip){
+        this.addView(tip);
+        tip.setOn(true);
+    }
+
+
+	/**
+	 * Remove {@link Tooltip}/{@link View} to chart/parent view.
+	 *
+	 * @param tip   tooltip to be removed to chart
+	 */
+    private void removeTooltip(Tooltip tip){
+        this.removeView(tip);
+        tip.setOn(false);
+    }
+
+
+	/**
+	 * Dismiss tooltip from {@link ChartView}.
+	 *
+	 * @param tooltip   View to be dismissed
+	 */
+    public void dismissTooltip(Tooltip tooltip){
+        dismissTooltip(tooltip, null, 0);
+	}
+
+
+	/**
+	 * Dismiss tooltip from {@link ChartView}.
+     *
+	 * @param tooltip   View to be dismissed
+	 */
+	public void dismissTooltip(final Tooltip tooltip, final Rect rect, final float value){
+
+        if(tooltip.hasExitAnimation()) {
+            tooltip.animateExit( new Runnable(){
+				@Override
+				public void run() {
+
+					removeTooltip(tooltip);
+					if(rect != null)
+						toggleTooltip(rect, value);
+				}
+			});
+        }else{
+            this.removeTooltip(tooltip);
+			if(rect != null)
+				this.toggleTooltip(rect, value);
+        }
+
+
+
+	}
+
+
+	/**
+	 * Removes all tooltips currently presented in the chart.
 	 */
 	public void dismissAllTooltips(){
 		this.removeAllViews();
+		if(mTooltip != null)
+			mTooltip.setOn(false);
 	}
-	
+
+
 	
 	/**
 	 * Animate {@link ChartSet}.
@@ -695,7 +757,8 @@ public abstract class ChartView extends RelativeLayout{
 		if(mAnim == null || !mAnim.isPlaying())
 			
 			if(event.getAction() == MotionEvent.ACTION_DOWN &&
-					mEntryListener != null && mRegions != null){
+                    (mTooltip != null || mEntryListener != null) &&
+                    mRegions != null){
 				
 				//Check if ACTION_DOWN over any ScreenPoint region.
 				int nSets = mRegions.size();
@@ -711,16 +774,17 @@ public abstract class ChartView extends RelativeLayout{
 						}
 					}
 				}
+
 			}else if(event.getAction() == MotionEvent.ACTION_UP){
 				
-				if(mEntryListener != null && 
-						mSetClicked != -1 && 
+				if(mSetClicked != -1 &&
 							mIndexClicked != -1){
 					if(mRegions.get(mSetClicked).get(mIndexClicked)
 								.contains((int)event.getX(), 
 											(int)event.getY())){
-					
-						mEntryListener.onClick(mSetClicked, 
+
+					    if(mEntryListener != null){
+						    mEntryListener.onClick(mSetClicked,
 								mIndexClicked, 
 									new Rect(mRegions.get(mSetClicked)
 												.get(mIndexClicked)
@@ -734,11 +798,35 @@ public abstract class ChartView extends RelativeLayout{
 											mRegions.get(mSetClicked)
 												.get(mIndexClicked)
 													.getBounds().bottom - getPaddingTop()));
+                        }
+
+                        if(mTooltip != null){
+                            toggleTooltip(new Rect(mRegions.get(mSetClicked)
+                                    .get(mIndexClicked)
+                                    .getBounds().left - getPaddingLeft(),
+                                    mRegions.get(mSetClicked)
+                                            .get(mIndexClicked)
+                                            .getBounds().top - getPaddingTop(),
+                                    mRegions.get(mSetClicked)
+                                            .get(mIndexClicked)
+                                            .getBounds().right - getPaddingLeft(),
+                                    mRegions.get(mSetClicked)
+                                            .get(mIndexClicked)
+                                            .getBounds().bottom - getPaddingTop()),
+                                    data.get(mSetClicked).getValue(mIndexClicked));
+                        }
+
 					}
 					mSetClicked = -1;
 					mIndexClicked = -1;
-				}else if(mChartListener != null){
-					mChartListener.onClick(this);
+
+				}else{
+
+                    if(mChartListener != null)
+					    mChartListener.onClick(this);
+
+                    if(mTooltip != null && mTooltip.on())
+                            dismissTooltip(mTooltip);
 				}
 			}
 		

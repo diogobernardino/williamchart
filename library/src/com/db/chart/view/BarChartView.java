@@ -101,10 +101,11 @@ public class BarChartView extends BaseBarChartView {
 				style.applyAlpha(style.barPaint, barSet.getAlpha());
 				
 				// If bar needs background
-				if(style.hasBarBackground)
+				if(style.hasBarBackground) {
                     drawBarBackground(canvas,
                             offset, this.getInnerChartTop(),
                             offset + barWidth, this.getInnerChartBottom());
+                }
 				
 				// Draw bar
 				if(bar.getValue() > 0)

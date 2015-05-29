@@ -84,7 +84,7 @@ public class XController extends AxisController{
 	public float getInnerChartRight(){
 		
 		float rightBorder = 0;
-		if(borderSpacing + mandatoryBorderSpacing < mLastLabelWidth / 2)
+		if(labelsPositioning != LabelPosition.NONE && borderSpacing + mandatoryBorderSpacing < mLastLabelWidth / 2)
 			rightBorder = mLastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);
 	
 		return chartView.chartRight - rightBorder;

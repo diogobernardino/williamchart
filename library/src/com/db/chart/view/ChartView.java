@@ -438,6 +438,9 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public void reset(){
 
+		if(mAnim != null && mAnim.isPlaying())
+			mAnim.cancel();
+
         init();
         if(horController.mandatoryBorderSpacing != 0) {
             horController.reset();

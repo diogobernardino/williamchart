@@ -103,6 +103,10 @@ public class Animation{
 	
 	/** Keeps information if animation is ongoing or not */
 	private boolean mPlaying;
+
+
+	/** Flags the cancellation of the on-going animation */
+	private boolean mCancelled;
 	
 	
 	/** Keeps the initial time of the animation for each of the points */
@@ -404,7 +408,7 @@ public class Animation{
 			}
 
 		// Sets the next update or finishes the animation
-		if(mCurrentGlobalDuration < mGlobalDuration){
+		if(mCurrentGlobalDuration < mGlobalDuration && !mCancelled){
 			mChartView.postDelayed(mAnimator, DELAY_BETWEEN_UPDATES);
 			mCurrentGlobalDuration+= DELAY_BETWEEN_UPDATES;
 		}else{
@@ -430,8 +434,14 @@ public class Animation{
 	private float normalizeTime(int index) {
 		return (float) mCurrentDuration[index] / mDuration;
 	}
-	
-	
+
+
+	/**
+	 * Cancel the on-going animation.
+	 */
+	public void cancel(){
+		mCancelled = true;
+	}
 	
 	
 	/**

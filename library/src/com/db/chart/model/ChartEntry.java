@@ -113,6 +113,7 @@ public abstract class ChartEntry {
 	 * @param y
 	 */
 	public void setCoordinates(float x, float y){
+
 		mX = x;
 		mY = y;
 	}
@@ -124,10 +125,10 @@ public abstract class ChartEntry {
         this.mColor = mColor;
     }
 
-	
+
 	public String toString(){
 		return "Label="+mLabel+" \n" + "Value="+mValue+"\n" +
 				"X = "+mX+"\n" + "Y = "+mY;
 	}
-		
+
 }

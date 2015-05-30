@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import android.graphics.Path;
 import android.graphics.PathMeasure;
+import android.util.Log;
 
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;
@@ -31,8 +32,10 @@ import com.db.chart.view.animation.easing.QuintEase;
  * Controls the whole animation process.
  */
 public class Animation{
-	
-	
+
+	private static final String TAG = "animation.Animation";
+
+
 	/** The delay between data updates to be drawn in the screen */
 	private final static long DELAY_BETWEEN_UPDATES = 20;
 	
@@ -195,6 +198,12 @@ public class Animation{
 			mOrder = new int[nEntries];
 			for(int i = 0; i < mOrder.length; i++)
 				mOrder[i] = i;
+		}else{
+			// In case the animation order has been defined,
+			// check if size equal than set's entries size
+			if(mOrder.length != nEntries)
+				Log.e(TAG, "Size of overlap order different than set's entries size.",
+						new IllegalArgumentException());
 		}
 		
 		// Calculates the expected duration as there was with no overlap (factor = 0)
@@ -327,7 +336,7 @@ public class Animation{
      *                    values and to get the {@link ChartSet} containing the target values
      */
     public ArrayList<ChartSet> prepareUpdateAnimation(ChartView chartView,
-        ArrayList<float[][]> start, ArrayList<float[][]> end){
+													  ArrayList<float[][]> start, ArrayList<float[][]> end){
 
         mEasing.setState(BaseEasingMethod.UPDATE);
         return prepareAnimation(chartView, start, end);
@@ -383,10 +392,10 @@ public class Animation{
 			for(int j = 0; j < nEntries; j++){
 
 				timeNormalized = normalizeTime(j);
-
+				
 				if(mAlphaSpeed != -1 && mEasing.getState() != BaseEasingMethod.UPDATE)
                     data.get(i).setAlpha(mEasing.next(timeNormalized) * mAlphaSpeed * mSetsAlpha[i]);
-				
+
 				if(!getEntryUpdate(i, j, timeNormalized, posUpdate)){
 					posUpdate[0] = data.get(i).getEntry(j).getX();
 					posUpdate[1] = data.get(i).getEntry(j).getY();
@@ -481,6 +490,11 @@ public class Animation{
      *               1 - all entries animate in parallel (default)
 	 */
 	public Animation setOverlap(float factor){
+
+		if(factor > 1 || factor < 0)
+			Log.e(TAG, "Overlap's factor must be between 0 and 1, the current defined is "+factor,
+					new IllegalArgumentException());
+
 		mOverlapingFactor = factor;
 		return this;
 	}
@@ -497,8 +511,8 @@ public class Animation{
      *              { 0, 1, 2, 3, ...} - default order
 	 */
 	public Animation setOverlap(float factor, int[] order){
-		
-		mOverlapingFactor = factor;
+
+		setOverlap(factor);
 		mOrder = order;
 		return this;
 	}

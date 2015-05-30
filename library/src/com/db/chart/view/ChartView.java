@@ -318,9 +318,9 @@ public abstract class ChartView extends RelativeLayout{
 	public void addData(ChartSet set){
 		
 		if(!data.isEmpty() && set.size() != data.get(0).size())
-			Log.e(TAG, "The number of labels between sets doesn't match.", 
+			Log.e(TAG, "The number of entries between sets doesn't match.",
 					new IllegalArgumentException());
-		
+
 		data.add(set);
 	}
 	
@@ -330,6 +330,13 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param data   An array of {@link ChartSet}
 	 */
 	public void addData(ArrayList<ChartSet> data){
+
+		final int nEntries = data.get(0).size();
+		for (ChartSet set: data)
+			if(nEntries != set.size())
+				Log.e(TAG, "The number of entries between sets doesn't match.",
+						new IllegalArgumentException());
+
 		this.data = data;
 	}
 	
@@ -1114,15 +1121,14 @@ public abstract class ChartView extends RelativeLayout{
 		if((maxValue - minValue) % step != 0)
 			Log.e(TAG, "Step value must be a divisor of distance between " +
 					"minValue and maxValue", new IllegalArgumentException());
+		setStep(step);
 
         if(orientation == Orientation.VERTICAL) {
             verController.maxLabelValue = maxValue;
             verController.minLabelValue = minValue;
-            verController.step = step;
         }else {
             horController.maxLabelValue = maxValue;
             horController.minLabelValue = minValue;
-            horController.step = step;
         }
 		
 		return this;

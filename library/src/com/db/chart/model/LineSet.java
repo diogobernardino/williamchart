@@ -215,6 +215,7 @@ public class LineSet extends ChartSet{
      * @return
      */
     public LineSet setDashed(float[] intervals) {
+
         mIsDashed = true;
         mDashedIntervals = intervals;
         mDashedPhase = 0;
@@ -223,6 +224,7 @@ public class LineSet extends ChartSet{
 
 
     public LineSet setSmooth(boolean bool) {
+
 		mIsSmooth = bool;
 		return this;
 	}
@@ -237,12 +239,14 @@ public class LineSet extends ChartSet{
 		
 		if(thickness <= 0)
 			Log.e(TAG, "Line thickness <= 0.", new IllegalArgumentException());
+
 		mThickness = thickness;
 		return this;
 	}
 	
 	
 	public LineSet setColor(int color){
+
 		mColor = color;
 		return this;
 	}
@@ -280,6 +284,7 @@ public class LineSet extends ChartSet{
 
         if(index < 0)
             Log.e(TAG, "Index can't be negative.", new IllegalArgumentException());
+
         mBegin = index;
         return this;
     }
@@ -294,6 +299,7 @@ public class LineSet extends ChartSet{
 
         if(index > size())
             Log.e(TAG, "Index cannot be greater than the set's size.", new IllegalArgumentException());
+
         mEnd = index;
         return this;
     }
@@ -302,7 +308,7 @@ public class LineSet extends ChartSet{
 	public LineSet setDotsColor(int color){
 
         for(ChartEntry e : getEntries())
-            ((Point) e).setColor(color);
+            e.setColor(color);
         return this;
 	}
 

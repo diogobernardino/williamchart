@@ -16,6 +16,8 @@
 
 package com.db.chart.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 
@@ -24,7 +26,10 @@ import java.util.ArrayList;
  */
 public abstract class ChartSet {
 
-	
+
+	private static final String TAG = "chart.model.ChartSet";
+
+
 	/** Set with entries */
 	private ArrayList<ChartEntry> mEntries;
 	
@@ -58,8 +63,12 @@ public abstract class ChartSet {
 	 * @return float[] with X and Y coordinates of old values
 	 */
 	public float[][] updateValues(float[] newValues){
-		
+
 		int nEntries = size();
+		if(newValues.length != nEntries)
+			Log.e(TAG, "New set values given doesn't match previous number of entries.",
+					new IllegalArgumentException());
+
 		float[][] result = new float[nEntries][2];
 		for(int i = 0; i < nEntries; i++){
 			result[i][0] = mEntries.get(i).getX();
@@ -130,8 +139,8 @@ public abstract class ChartSet {
 		
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Get current set's alpha.
 	 */
@@ -164,8 +173,8 @@ public abstract class ChartSet {
 	private void setValue(int index, float value){
 		mEntries.get(index).setValue(value);
 	}
-	
-	
+
+
 	/**
 	 * Set set's alpha.
 	 */
@@ -180,16 +189,16 @@ public abstract class ChartSet {
 	public void setVisible(boolean visible){
 		mIsVisible = visible;
 	}
-	
-	
-	
+
+
+	public int size() {
+		return mEntries.size();
+	}
+
+
 	public String toString(){
 		return mEntries.toString();
 	}
 
-	
-	public int size() {
-		return mEntries.size();
-	}
 	
 }

@@ -331,12 +331,6 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public void addData(ArrayList<ChartSet> data){
 
-		final int nEntries = data.get(0).size();
-		for (ChartSet set: data)
-			if(nEntries != set.size())
-				Log.e(TAG, "The number of entries between sets doesn't match.",
-						new IllegalArgumentException());
-
 		this.data = data;
 	}
 	

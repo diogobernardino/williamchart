@@ -273,6 +273,10 @@ public abstract class AxisController{
 
             while((maxLabelValue - minLabelValue) % step != 0)
                 maxLabelValue += 1;
+
+            // All given set values are 0
+            if(minLabelValue == maxLabelValue)
+                maxLabelValue += step;
         }
 
         ArrayList<Integer> result = new ArrayList<Integer>();

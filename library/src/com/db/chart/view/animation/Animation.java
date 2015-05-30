@@ -392,7 +392,7 @@ public class Animation{
 			for(int j = 0; j < nEntries; j++){
 
 				timeNormalized = normalizeTime(j);
-				
+
 				if(mAlphaSpeed != -1 && mEasing.getState() != BaseEasingMethod.UPDATE)
                     data.get(i).setAlpha(mEasing.next(timeNormalized) * mAlphaSpeed * mSetsAlpha[i]);
 

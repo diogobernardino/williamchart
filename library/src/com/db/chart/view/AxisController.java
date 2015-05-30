@@ -286,7 +286,7 @@ public abstract class AxisController{
             pos += step;
         }
 
-        //Set max Y axis label in case isn't already there
+        // Set max Y axis label in case isn't already there
         if(result.get(result.size() - 1) < maxLabelValue)
             result.add(maxLabelValue);
 
@@ -309,6 +309,13 @@ public abstract class AxisController{
         }
 
         return labelHeight;
+    }
+
+
+
+    public void setAxisLabelsSpacing(float spacing){
+
+        distLabelToAxis = (int) spacing;
     }
 
 

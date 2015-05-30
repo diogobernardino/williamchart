@@ -1269,6 +1269,17 @@ public abstract class ChartView extends RelativeLayout{
 	}
 
 
+	/**
+	 * Set spacing between Labels and Axis. Will be applied to both X and Y.
+	 *
+	 * @param spacing   Spacing between labels and axis
+	 */
+	public ChartView setAxisLabelsSpacing(float spacing){
+
+		horController.setAxisLabelsSpacing(spacing);
+		verController.setAxisLabelsSpacing(spacing);
+		return this;
+	}
 
     /**
      * Mandatory horizontal border when necessary (ex: BarCharts)
@@ -1383,6 +1394,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 		
 		protected int getTextHeightBounds(String character){
+
 			if(character != ""){
 				Rect bounds = new Rect();
 				style.labelsPaint

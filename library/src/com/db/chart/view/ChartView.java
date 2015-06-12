@@ -703,6 +703,7 @@ public abstract class ChartView extends RelativeLayout{
 		
 		// If border diff than 0 inner chart sides must have lines
 		if(horController.borderSpacing != 0 || horController.mandatoryBorderSpacing != 0){
+			// If there's no axis
             if(!verController.hasAxis)
 				canvas.drawLine(getInnerChartLeft(), 
 									getInnerChartBottom(), 
@@ -729,14 +730,22 @@ public abstract class ChartView extends RelativeLayout{
 										pos, 
 											style.gridPaint);
 		}
-		
-		// If there's no axis
-		if(!horController.hasAxis)
-			canvas.drawLine(getInnerChartLeft(), 
-								getInnerChartBottom(), 
-									getInnerChartRight(), 
-										getInnerChartBottom(), 
-											style.gridPaint);
+
+		// If border diff than 0 inner chart sides must have lines
+		if(verController.borderSpacing != 0 || verController.mandatoryBorderSpacing != 0) {
+			// If there's no axis
+			if (!horController.hasAxis)
+				canvas.drawLine(getInnerChartLeft(),
+						getInnerChartBottom(),
+						getInnerChartRight(),
+						getInnerChartBottom(),
+						style.gridPaint);
+			canvas.drawLine(getInnerChartLeft(),
+					getInnerChartTop(),
+					getInnerChartRight(),
+					getInnerChartTop(),
+					style.gridPaint);
+		}
 	}
 	
 	

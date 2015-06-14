@@ -790,34 +790,12 @@ public abstract class ChartView extends RelativeLayout{
 
 					    if(mEntryListener != null){
 						    mEntryListener.onClick(mSetClicked,
-								mIndexClicked, 
-									new Rect(mRegions.get(mSetClicked)
-												.get(mIndexClicked)
-													.getBounds().left - getPaddingLeft(),
-											mRegions.get(mSetClicked)
-												.get(mIndexClicked)
-													.getBounds().top - getPaddingTop(),
-											mRegions.get(mSetClicked)
-												.get(mIndexClicked)
-													.getBounds().right - getPaddingLeft(),
-											mRegions.get(mSetClicked)
-												.get(mIndexClicked)
-													.getBounds().bottom - getPaddingTop()));
+									mIndexClicked,
+									new Rect(getEntryRect(mRegions.get(mSetClicked).get(mIndexClicked))));
                         }
 
                         if(mTooltip != null){
-                            toggleTooltip(new Rect(mRegions.get(mSetClicked)
-                                    .get(mIndexClicked)
-                                    .getBounds().left - getPaddingLeft(),
-                                    mRegions.get(mSetClicked)
-                                            .get(mIndexClicked)
-                                            .getBounds().top - getPaddingTop(),
-                                    mRegions.get(mSetClicked)
-                                            .get(mIndexClicked)
-                                            .getBounds().right - getPaddingLeft(),
-                                    mRegions.get(mSetClicked)
-                                            .get(mIndexClicked)
-                                            .getBounds().bottom - getPaddingTop()),
+                            toggleTooltip(getEntryRect(mRegions.get(mSetClicked).get(mIndexClicked)),
                                     data.get(mSetClicked).getValue(mIndexClicked));
                         }
 
@@ -957,14 +935,35 @@ public abstract class ChartView extends RelativeLayout{
 
 
     /**
-     * Get the list of {@link android.graphics.Region} associated to each entry of a ChartSet.
+     * Get the list of {@link android.graphics.Rect} associated to each entry of a ChartSet.
      *
      * @param index   {@link com.db.chart.model.ChartSet} index
-     * @return The list of {@link android.graphics.Region} for the specified dataset
+     * @return The list of {@link android.graphics.Rect} for the specified dataset
      */
-    public ArrayList<Region> getEntriesRegion(int index){
-        return mRegions.get(index);
+    public ArrayList<Rect> getEntriesArea(int index){
+
+		ArrayList<Rect> result = new ArrayList<>();
+		for(Region r: mRegions.get(index))
+			result.add(getEntryRect(r));
+
+        return result;
     }
+
+
+
+	/**
+	 * Get the area, {@link android.graphics.Rect}, of an entry from the entry's {@link android.graphics.Region}
+	 *
+	 * @param region
+	 * @return   {@link android.graphics.Rect} specifying the area of an Entry
+	 */
+	private Rect getEntryRect(Region region){
+		return new Rect(region.getBounds().left - getPaddingLeft(),
+				region.getBounds().top - getPaddingTop(),
+				region.getBounds().right - getPaddingLeft(),
+				region.getBounds().bottom - getPaddingTop());
+	}
+
 
 
     /**

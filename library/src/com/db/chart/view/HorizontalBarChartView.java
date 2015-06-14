@@ -17,21 +17,16 @@
 package com.db.chart.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
 import com.db.chart.model.ChartSet;
-import com.db.williamchart.R;
 
 import java.util.ArrayList;
+
 
 /**
  * Implements a {@link com.db.chart.view.HorizontalBarChartView} extending {@link com.db.chart.view.ChartView}
@@ -166,7 +161,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 		int nEntries = data.get(0).size();
 		int yZeroCoord = (int) this.getZeroPosition();
 		
-		final ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>(nSets);
+		final ArrayList<ArrayList<Region>> result = new ArrayList<>(nSets);
 		
 		for(int i = 0; i < nSets; i++)
 			result.add(new ArrayList<Region>(nEntries));

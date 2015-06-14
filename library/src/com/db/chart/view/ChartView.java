@@ -26,7 +26,6 @@ import com.db.chart.model.ChartSet;
 import com.db.chart.view.animation.Animation;
 import com.db.chart.view.animation.style.BaseStyleAnimation;
 
-import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -54,37 +53,37 @@ public abstract class ChartView extends RelativeLayout{
 	private static final String TAG = "chart.view.ChartView";
 
 
-	public static enum GridType {
+	public enum GridType {
 		FULL, VERTICAL, HORIZONTAL, NONE
     }
 
-    public static enum Orientation {
+    public enum Orientation {
         HORIZONTAL, VERTICAL
     }
 	
 
 	/** Chart orientation */
-    protected Orientation orientation;
+    private Orientation orientation;
 
 
 	/** Chart borders */
-	protected int chartTop;
-	protected int chartBottom;
-	protected int chartLeft;
-	protected int chartRight;
+	int chartTop;
+	int chartBottom;
+	int chartLeft;
+	int chartRight;
 	
 	
 	/** Horizontal and Vertical position controllers */
-	protected XController horController;
-	protected YController verController;
+	final XController horController;
+	final YController verController;
 	
 	
 	/** Chart data to be displayed */
-	protected ArrayList<ChartSet> data;
+	ArrayList<ChartSet> data;
 	
 	
 	/** Style applied to chart */
-	protected Style style;
+	final Style style;
 	
 	
 	
@@ -116,10 +115,6 @@ public abstract class ChartView extends RelativeLayout{
 
 	/** Chart animation */
 	private Animation mAnim;
-	
-	
-	/** Keep record of data updates to be done */
-	private ArrayList<Pair<Integer, float []>> mToUpdateValues;
 
 
     private GridType mGridType;
@@ -135,7 +130,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * . defineRegions(), if listener has been registered 
 	 * 	 this will define the chart regions to handle by onTouchEvent
 	 */
-    private OnPreDrawListener drawListener = new OnPreDrawListener(){
+    final private OnPreDrawListener drawListener = new OnPreDrawListener(){
 		@SuppressLint("NewApi")
 		@Override
 		public boolean onPreDraw() {
@@ -217,9 +212,8 @@ public abstract class ChartView extends RelativeLayout{
 		mIndexClicked = -1;
 		mThresholdValue = 0;
 		mIsDrawing = false;
-		data = new ArrayList<ChartSet>();
-		mRegions = new ArrayList<ArrayList<Region>>();
-		mToUpdateValues = new ArrayList<Pair<Integer,float[]>>();
+		data = new ArrayList<>();
+		mRegions = new ArrayList<>();
         mGridType = GridType.NONE;
 	}
 
@@ -276,7 +270,7 @@ public abstract class ChartView extends RelativeLayout{
      *
 	 * @param data   Array of {@link ChartSet} to do the necessary preparation just before onDraw
 	 */
-	protected void onPreDrawChart(ArrayList<ChartSet> data){}
+	void onPreDrawChart(ArrayList<ChartSet> data){}
 
 
 
@@ -292,9 +286,9 @@ public abstract class ChartView extends RelativeLayout{
      * @return   {@link java.util.ArrayList} of {@link android.graphics.Region} with regions
      *           where click will be detected
      */
-	protected ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
+	ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
 		return mRegions;
-	};
+	}
 
 
 
@@ -470,8 +464,8 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public void notifyDataUpdate(){
 		
-		ArrayList<float[][]> oldCoords = new ArrayList<float[][]>(data.size());
-		ArrayList<float[][]> newCoords = new ArrayList<float[][]>(data.size());
+		ArrayList<float[][]> oldCoords = new ArrayList<>(data.size());
+		ArrayList<float[][]> newCoords = new ArrayList<>(data.size());
 		
 		for(ChartSet set : data)
 			oldCoords.add(set.getScreenPoints());
@@ -483,8 +477,6 @@ public abstract class ChartView extends RelativeLayout{
 		mRegions = defineRegions(data);
 		if(mAnim != null)
 			data = mAnim.prepareUpdateAnimation(this, oldCoords, newCoords);
-		
-		mToUpdateValues.clear();
 		
 		invalidate();
 	}
@@ -569,7 +561,7 @@ public abstract class ChartView extends RelativeLayout{
 	 *
 	 * @param tooltip   View to be dismissed
 	 */
-    public void dismissTooltip(Tooltip tooltip){
+    private void dismissTooltip(Tooltip tooltip){
         dismissTooltip(tooltip, null, 0);
 	}
 
@@ -579,7 +571,7 @@ public abstract class ChartView extends RelativeLayout{
      *
 	 * @param tooltip   View to be dismissed
 	 */
-	public void dismissTooltip(final Tooltip tooltip, final Rect rect, final float value){
+	private void dismissTooltip(final Tooltip tooltip, final Rect rect, final float value){
 
         if(tooltip.hasExitAnimation()) {
             tooltip.animateExit( new Runnable(){
@@ -929,7 +921,7 @@ public abstract class ChartView extends RelativeLayout{
      *
 	 * @return step
 	 */
-	protected int getStep(){
+	int getStep(){
 
         if(orientation == Orientation.VERTICAL)
             return verController.step;
@@ -943,7 +935,7 @@ public abstract class ChartView extends RelativeLayout{
      *
      * @return spacing
      */
-    protected float getBorderSpacing(){
+    float getBorderSpacing(){
 
         if(orientation == Orientation.VERTICAL)
             return verController.borderSpacing;
@@ -1000,7 +992,7 @@ public abstract class ChartView extends RelativeLayout{
      *
      * @param orien   Orientation.HORIZONTAL | Orientation.VERTICAL
      */
-    protected void setOrientation(Orientation orien){
+    void setOrientation(Orientation orien){
 
         orientation = orien;
         if(orientation == Orientation.VERTICAL) {
@@ -1290,7 +1282,7 @@ public abstract class ChartView extends RelativeLayout{
      * e.g. If orientation is VERTICAL it means that this attribute must be handled
      * by horizontal axis and not the vertical axis.
      */
-	protected ChartView setMandatoryBorderSpacing(){
+	ChartView setMandatoryBorderSpacing(){
 
         if(orientation == Orientation.VERTICAL)
 		    horController.mandatoryBorderSpacing = 1;
@@ -1318,13 +1310,13 @@ public abstract class ChartView extends RelativeLayout{
 		
 		
 		/** Chart */
-		protected Paint chartPaint;
-		protected float axisThickness;
-		protected int axisColor;
+		Paint chartPaint;
+		float axisThickness;
+		int axisColor;
 		
 		
 		/** Grid */
-		protected Paint gridPaint;
+		Paint gridPaint;
 		
 		
 		/** Threshold Line **/
@@ -1332,23 +1324,23 @@ public abstract class ChartView extends RelativeLayout{
 		
 		
 		/** Font */
-		protected Paint labelsPaint;
-		protected int labelsColor;
-		protected float fontSize;
-		protected Typeface typeface;
+		Paint labelsPaint;
+		int labelsColor;
+		float fontSize;
+		Typeface typeface;
 		
 		
-		protected Style() {
+		Style() {
 			
 			axisColor = DEFAULT_COLOR;
-			axisThickness = (float) getResources().getDimension(R.dimen.grid_thickness);
+			axisThickness = getResources().getDimension(R.dimen.grid_thickness);
 			
 			labelsColor = DEFAULT_COLOR;
 			fontSize = getResources().getDimension(R.dimen.font_size);
 		}
 
 		
-		protected Style(TypedArray attrs) {
+		Style(TypedArray attrs) {
 			
 			axisColor = attrs.getColor(
 					R.styleable.ChartAttrs_chart_axisColor, 
@@ -1396,9 +1388,9 @@ public abstract class ChartView extends RelativeLayout{
 		}
 	
 		
-		protected int getTextHeightBounds(String character){
+		int getTextHeightBounds(String character){
 
-			if(character != ""){
+			if(!character.equals("")){
 				Rect bounds = new Rect();
 				style.labelsPaint
 					.getTextBounds(character, 

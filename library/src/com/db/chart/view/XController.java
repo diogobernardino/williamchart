@@ -43,7 +43,7 @@ public class XController extends AxisController{
 
 
 	public XController(ChartView chartView, TypedArray attrs) {
-		super(chartView);
+		super(chartView, attrs);
 	}
 
 
@@ -51,7 +51,7 @@ public class XController extends AxisController{
     /*
      * IMPORTANT: Method's order is crucial. Change it (or not) carefully.
      */
-	protected void init() {
+	void init() {
 
         // Set the vertical display coordinate
         mLabelVerCoord = chartView.chartBottom;
@@ -94,7 +94,7 @@ public class XController extends AxisController{
 	/**
 	 * Get the vertical position of axis.
 	 */
-	protected float getAxisVerticalPosition(){
+	float getAxisVerticalPosition(){
 		
 		if(labelsPositioning != LabelPosition.OUTSIDE)
 			return chartView.chartBottom;
@@ -110,7 +110,7 @@ public class XController extends AxisController{
      * @param value   Value to be parsed in display coordinate
      * @return Display's coordinate
      */
-    protected float parsePos(int index, double value){
+    float parsePos(int index, double value){
 
         if(handleValues)
             return (float) (chartView.getInnerChartLeft() +

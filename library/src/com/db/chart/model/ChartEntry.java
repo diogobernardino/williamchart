@@ -26,7 +26,7 @@ public abstract class ChartEntry {
 
 	
 	/** Input from user */
-	private String mLabel;
+	final private String mLabel;
 	private float mValue;
 
 	
@@ -40,10 +40,10 @@ public abstract class ChartEntry {
 
 
     /** Defines if entry is visible */
-    protected boolean isVisible;
+    boolean isVisible;
 
 	
-	public ChartEntry(String label, float value){
+	ChartEntry(String label, float value){
 		mLabel = label;
 		mValue = value;
 

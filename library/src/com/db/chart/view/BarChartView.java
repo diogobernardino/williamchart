@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
-import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.Shader;
 import android.util.AttributeSet;
@@ -174,7 +173,7 @@ public class BarChartView extends BaseBarChartView {
 		final int nEntries = data.get(0).size();
 		final int yZeroCoord = (int) this.getZeroPosition();
 		
-		ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>(nSets);
+		ArrayList<ArrayList<Region>> result = new ArrayList<>(nSets);
 		
 		for(int i = 0; i < nSets; i++)
 			result.add(new ArrayList<Region>(nEntries));

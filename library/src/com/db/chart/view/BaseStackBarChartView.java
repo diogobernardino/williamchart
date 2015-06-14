@@ -17,16 +17,11 @@
 package com.db.chart.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
 import com.db.chart.model.ChartSet;
-import com.db.williamchart.R;
 
 import java.util.ArrayList;
 
@@ -38,7 +33,7 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
 
 
     /** Whether to calculate max value or not */
-    protected boolean mCalcMaxValue;
+    private boolean mCalcMaxValue;
 
 
 
@@ -78,7 +73,7 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
      *             to use while drawing the Chart
      * @return   The bottom set index
      */
-    protected static int discoverBottomSet(int entryIndex, ArrayList<ChartSet> data){
+    static int discoverBottomSet(int entryIndex, ArrayList<ChartSet> data){
 
         int dataSize = data.size();
         int index;
@@ -114,7 +109,7 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
      *             to use while drawing the Chart
      * @return   The top set index
      */
-    protected static int discoverTopSet(int entryIndex, ArrayList<ChartSet> data){
+    static int discoverTopSet(int entryIndex, ArrayList<ChartSet> data){
 
         int dataSize = data.size();
         int index;
@@ -146,7 +141,7 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
      * This method will calculate what needs to be the max axis value that fits all the sets
      * aggregated, one on top of the other.
      */
-    protected void calculateMaxStackBarValue() {
+    private void calculateMaxStackBarValue() {
 
         float positiveStackValue;
         float negativeStackValue;

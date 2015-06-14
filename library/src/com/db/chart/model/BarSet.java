@@ -44,7 +44,7 @@ public class BarSet extends ChartSet{
 	
 	
 	
-	public void addBar(String label, float value){
+	private void addBar(String label, float value){
 		this.addBar(new Bar(label, value));
 	}
 	
@@ -62,7 +62,7 @@ public class BarSet extends ChartSet{
 	 */
 	
 	public int getColor(){
-		return ((Bar) this.getEntry(0)).getColor();
+		return this.getEntry(0).getColor();
 	}
 
 	

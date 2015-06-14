@@ -32,7 +32,7 @@ public abstract class BaseEasingMethod {
         else if(mState == BaseEasingMethod.EXIT)
             return easeIn(time);
         return 1;
-    };
+    }
 
     public int getState(){
         return mState;

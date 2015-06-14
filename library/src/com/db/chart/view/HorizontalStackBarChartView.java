@@ -241,7 +241,7 @@ public class HorizontalStackBarChartView extends BaseStackBarChartView{
 
 		int dataSize = data.size();
 		int setSize = data.get(0).size();
-		ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>(dataSize);
+		ArrayList<ArrayList<Region>> result = new ArrayList<>(dataSize);
 		for(int i = 0; i < dataSize; i++)
 			result.add(new ArrayList<Region>(setSize));
 

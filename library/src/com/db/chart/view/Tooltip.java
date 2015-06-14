@@ -28,6 +28,10 @@ public class Tooltip extends RelativeLayout{
     private boolean mOn;
 
 
+    public Tooltip(Context context){
+        super(context);
+    }
+
     public Tooltip(Context context, int layoutId) {
         super(context);
         init(layoutId);
@@ -83,7 +87,7 @@ public class Tooltip extends RelativeLayout{
      * @param right
      * @param bottom
      */
-    protected void correctPosition(int left, int top, int right, int bottom){
+    void correctPosition(int left, int top, int right, int bottom){
 
         final LayoutParams layoutParams = (LayoutParams) getLayoutParams();
 
@@ -104,7 +108,7 @@ public class Tooltip extends RelativeLayout{
      *
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    protected void animateEnter(){
+    void animateEnter(){
         mEnterAnimator.start();
     }
 
@@ -113,7 +117,7 @@ public class Tooltip extends RelativeLayout{
      * @param endAction
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    protected void animateExit(final Runnable endAction){
+    void animateExit(final Runnable endAction){
 
         mExitAnimator.addListener(new Animator.AnimatorListener() {
             @Override
@@ -135,27 +139,23 @@ public class Tooltip extends RelativeLayout{
      *
      * @return
      */
-    protected boolean hasEnterAnimation(){
-        if(mEnterAnimator != null)
-            return true;
-        return false;
+    boolean hasEnterAnimation(){
+        return mEnterAnimator != null;
     }
 
     /**
      *
      * @return
      */
-    protected boolean hasExitAnimation(){
-        if(mExitAnimator != null)
-            return true;
-        return false;
+    boolean hasExitAnimation(){
+        return mExitAnimator != null;
     }
 
     /**
      *
      * @return
      */
-    protected boolean on(){
+    boolean on(){
         return mOn;
     }
 
@@ -164,7 +164,7 @@ public class Tooltip extends RelativeLayout{
      *
      * @param on
      */
-    protected void setOn(boolean on){
+    void setOn(boolean on){
         mOn = on;
     }
 
@@ -178,21 +178,21 @@ public class Tooltip extends RelativeLayout{
 
         for(PropertyValuesHolder value: values){
 
-            if(value.getPropertyName() == "alpha")
+            if(value.getPropertyName().equals("alpha"))
                 setAlpha(0);
-            if(value.getPropertyName() == "rotation")
+            if(value.getPropertyName().equals("rotation"))
                 setRotation(0);
-            if(value.getPropertyName() == "rotationX")
+            if(value.getPropertyName().equals("rotationX"))
                 setRotationX(0);
-            if(value.getPropertyName() == "rotationY")
+            if(value.getPropertyName().equals("rotationY"))
                 setRotationY(0);
-            if(value.getPropertyName() == "translationX")
+            if(value.getPropertyName().equals("translationX"))
                 setTranslationX(0);
-            if(value.getPropertyName() == "translationY")
+            if(value.getPropertyName().equals("translationY"))
                 setTranslationY(0);
-            if(value.getPropertyName() == "scaleX")
+            if(value.getPropertyName().equals("scaleX"))
                 setScaleX(0);
-            if(value.getPropertyName() == "scaleY")
+            if(value.getPropertyName().equals("scaleY"))
                 setScaleY(0);
         }
         return mEnterAnimator =  ObjectAnimator.ofPropertyValuesHolder(this, values);

@@ -31,7 +31,7 @@ public abstract class ChartSet {
 
 
 	/** Set with entries */
-	private ArrayList<ChartEntry> mEntries;
+	final private ArrayList<ChartEntry> mEntries;
 	
 	
 	/** Paint alpha value from 0 to 1 */
@@ -42,15 +42,15 @@ public abstract class ChartSet {
 	private boolean mIsVisible;
 	
 	
-	public ChartSet(){
-		mEntries = new ArrayList<ChartEntry>();
+	ChartSet(){
+		mEntries = new ArrayList<>();
 		mAlpha = 1;
 		mIsVisible = false;
 	}
 
 
 	
-	protected void addEntry(ChartEntry e){
+	void addEntry(ChartEntry e){
 		mEntries.add(e);
 	}
 

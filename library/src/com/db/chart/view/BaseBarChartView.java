@@ -38,15 +38,15 @@ public abstract class BaseBarChartView extends ChartView {
 
 
 	/** Offset to control bar positions. Added due to multiset charts. */
-	protected float drawingOffset;
+	float drawingOffset;
 
 
 	/** Style applied to Graph */
-	protected Style style;
+	final Style style;
 
 
 	/** Bar width */
-	protected float barWidth;
+	float barWidth;
 
 
 
@@ -103,7 +103,7 @@ public abstract class BaseBarChartView extends ChartView {
      * @param right  The X coordinate of the right side of the rectangle
      * @param bottom The Y coordinate of the bottom of the rectangle
      */
-    protected void drawBar(Canvas canvas, float left, float top, float right, float bottom) {
+    void drawBar(Canvas canvas, float left, float top, float right, float bottom) {
 
         canvas.drawRoundRect(new RectF((int)left, (int)top, (int)right, (int)bottom),
                 style.cornerRadius, style.cornerRadius,
@@ -121,7 +121,7 @@ public abstract class BaseBarChartView extends ChartView {
      * @param right  The X coordinate of the right side of the rectangle
      * @param bottom The Y coordinate of the bottom of the rectangle
      */
-    protected void drawBarBackground(Canvas canvas, float left, float top, float right, float bottom) {
+    void drawBarBackground(Canvas canvas, float left, float top, float right, float bottom) {
 
         canvas.drawRoundRect(new RectF((int)left, (int)top, (int)right, (int)bottom),
                 style.cornerRadius, style.cornerRadius,
@@ -137,7 +137,7 @@ public abstract class BaseBarChartView extends ChartView {
      * @param x0     Coordinate(n)
      * @param x1     Coordinate(n+1)
      */
-	protected void calculateBarsWidth(int nSets, float x0, float x1) {
+	void calculateBarsWidth(int nSets, float x0, float x1) {
 		barWidth = ((x1 - x0) - style.barSpacing/2 - style.setSpacing * (nSets - 1)) / nSets;
 	}
 
@@ -149,7 +149,7 @@ public abstract class BaseBarChartView extends ChartView {
      *
 	 * @param size   Size of sets
 	 */
-	protected void calculatePositionOffset(int size){
+	void calculatePositionOffset(int size){
 		
 		if(size % 2 == 0)
 			drawingOffset = size * barWidth/2 + (size - 1) * (style.setSpacing / 2);
@@ -248,18 +248,18 @@ public abstract class BaseBarChartView extends ChartView {
 		
 		
 		/** Bars fill variables */
-		protected Paint barPaint;
+		Paint barPaint;
 		
 		
 		/** Spacing between bars */
-		protected float barSpacing;
-		protected float setSpacing;
+		float barSpacing;
+		float setSpacing;
 
 
         /** Bar background variables */
-        protected Paint barBackgroundPaint;
+        Paint barBackgroundPaint;
         private int mBarBackgroundColor;
-        protected boolean hasBarBackground;
+        boolean hasBarBackground;
 
 
 		/** Radius to round corners **/
@@ -281,7 +281,7 @@ public abstract class BaseBarChartView extends ChartView {
 
 
 		
-	    protected Style() {
+	    Style() {
 	    	
 	    	mBarBackgroundColor = DEFAULT_COLOR;
 	    	hasBarBackground = false;
@@ -296,7 +296,7 @@ public abstract class BaseBarChartView extends ChartView {
 	    }
 	    
 	    
-	    protected Style(TypedArray attrs) {
+	    Style(TypedArray attrs) {
 	    	
 	    	mBarBackgroundColor = DEFAULT_COLOR;
 	    	hasBarBackground = false;
@@ -352,7 +352,7 @@ public abstract class BaseBarChartView extends ChartView {
          * @param paint   {@link android.graphics.Paint} object to apply alpha.
          * @param alpha   Alpha value (opacity).
          */
-        protected void applyAlpha(Paint paint, float alpha){
+        void applyAlpha(Paint paint, float alpha){
 
             paint.setAlpha((int)(alpha * 255));
             paint.setShadowLayer( style.mShadowRadius, style.mShadowDx, style.mShadowDy,

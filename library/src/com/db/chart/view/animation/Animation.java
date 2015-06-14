@@ -86,7 +86,7 @@ public class Animation{
 
 	
 	/** Control animation updates */
-    private Runnable mAnimator = new Runnable() {
+    final private Runnable mAnimator = new Runnable() {
         @Override
         public void run() {
         	if(mChartView.canIPleaseAskYouToDraw()){
@@ -188,7 +188,7 @@ public class Animation{
 	 * @param end   X and Y end coordinates
 	 * @return Array of {@link ChartSet} containing the first values to be drawn.
 	 */
-	public ArrayList<ChartSet> prepareAnimation(ChartView chartView, 
+	private ArrayList<ChartSet> prepareAnimation(ChartView chartView,
 			ArrayList<float[][]> start, ArrayList<float[][]> end){
 
 		final int nSets = start.size();
@@ -258,7 +258,7 @@ public class Animation{
 		
 		final ArrayList<ChartSet> sets = chartView.getData();
 		
-		float x = 0;
+		float x;
 		if(mStartXFactor != -1)
 			x = chartView.getInnerChartLeft() 
 				+ (chartView.getInnerChartRight() - chartView.getInnerChartLeft()) 
@@ -266,7 +266,7 @@ public class Animation{
         else
             x = chartView.getZeroPosition();
 
-		float y = 0;
+		float y;
 		if(mStartYFactor != -1)
 			y = chartView.getInnerChartBottom() 
 				- (chartView.getInnerChartBottom() - chartView.getInnerChartTop()) 
@@ -279,8 +279,8 @@ public class Animation{
 
         mSetsAlpha = new float[nSets];
 
-		ArrayList<float[][]> startValues = new ArrayList<float[][]>(nSets);
-		ArrayList<float[][]> endValues = new ArrayList<float[][]>(nSets);
+		ArrayList<float[][]> startValues = new ArrayList<>(nSets);
+		ArrayList<float[][]> endValues = new ArrayList<>(nSets);
 		float[][] startSet;
 		float[][] endSet;
 		
@@ -307,7 +307,7 @@ public class Animation{
                     startSet[j][1] = y;
 				
 				endSet[j][0] = sets.get(i).getEntry(j).getX();
-				endSet[j][1] = sets.get(i).getEntry(j).getY();;
+				endSet[j][1] = sets.get(i).getEntry(j).getY();
 			}
 			
 			startValues.add(startSet);
@@ -390,7 +390,7 @@ public class Animation{
 		
 		// Update next values to be drawn
 		float[] posUpdate = new float[2];
-		float timeNormalized = 1;
+		float timeNormalized;
 		for(int i = 0; i < nSets; i++)
 			
 			for(int j = 0; j < nEntries; j++){
@@ -426,7 +426,7 @@ public class Animation{
 	
 	
 	/**
-	 * Normalize time to a 0-1 relation.
+	 * Normalize time into a 0-1 relation.
      *
 	 * @param index
 	 * @return value from 0 to 1 telling the next step.
@@ -499,7 +499,7 @@ public class Animation{
      *               0 - no overlap
      *               1 - all entries animate in parallel (default)
 	 */
-	public Animation setOverlap(float factor){
+	private Animation setOverlap(float factor){
 
 		if(factor > 1 || factor < 0)
 			Log.e(TAG, "Overlap's factor must be between 0 and 1, the current defined is "+factor,

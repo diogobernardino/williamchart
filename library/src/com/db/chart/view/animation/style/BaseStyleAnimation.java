@@ -28,7 +28,7 @@ public abstract class BaseStyleAnimation {
 	private ChartSet mSet;
 	
 	/** Control animation updates */
-    private Runnable mAnimator = new Runnable() {
+    final private Runnable mAnimator = new Runnable() {
         @Override
         public void run() {
         	if(mChartView.canIPleaseAskYouToDraw()){
@@ -53,6 +53,6 @@ public abstract class BaseStyleAnimation {
 	}
 	
 	
-	public abstract void nextUpdate(ChartSet set);
+	protected abstract void nextUpdate(ChartSet set);
 	
 }

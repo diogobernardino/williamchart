@@ -24,7 +24,6 @@ import com.db.chart.Tools;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
-import com.db.chart.view.animation.style.DashAnimation;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -36,7 +35,6 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.graphics.Shader;
 
@@ -51,7 +49,7 @@ public class LineChartView extends ChartView {
 
 
 	/** Style applied to line chart */
-	private Style mStyle;
+	final private Style mStyle;
 
 	
 	
@@ -61,8 +59,7 @@ public class LineChartView extends ChartView {
         setOrientation(Orientation.VERTICAL);
 		mStyle = new Style(context.getTheme()
 				.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
-        mClickableRadius = (float) getResources()
-									.getDimension(R.dimen.dot_region_radius);
+        mClickableRadius = getResources().getDimension(R.dimen.dot_region_radius);
 	}
 
 	public LineChartView(Context context) {
@@ -70,8 +67,7 @@ public class LineChartView extends ChartView {
 
         setOrientation(Orientation.VERTICAL);
 		mStyle = new Style();
-        mClickableRadius = (float) getResources()
-                .getDimension(R.dimen.dot_region_radius);
+        mClickableRadius = getResources().getDimension(R.dimen.dot_region_radius);
 	}
 
 	@Override
@@ -177,7 +173,7 @@ public class LineChartView extends ChartView {
 	/**
 	 * Responsible for drawing a (non smooth) line
 	 */
-	public void drawLine(Canvas canvas, LineSet set) {
+	private void drawLine(Canvas canvas, LineSet set) {
 
 		float minY = this.getInnerChartBottom();
 
@@ -346,14 +342,14 @@ public class LineChartView extends ChartView {
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
 
-		ArrayList<ArrayList<Region>> result = new ArrayList<ArrayList<Region>>();
+		ArrayList<ArrayList<Region>> result = new ArrayList<>();
 		
 		ArrayList<Region> regionSet;
 		float x;
 		float y;
 		for(ChartSet set : data){
 			
-			regionSet = new ArrayList<Region>(set.size());
+			regionSet = new ArrayList<>(set.size());
 			for(ChartEntry e : set.getEntries()){
 				
 				x = e.getX();
@@ -459,7 +455,7 @@ public class LineChartView extends ChartView {
 		private int mGreen;
 
 
-		protected Style() {
+		Style() {
 
 			mShadowRadius = 0;
 	    	mShadowDx = 0;
@@ -468,7 +464,7 @@ public class LineChartView extends ChartView {
 		}
 
 
-		protected Style(TypedArray attrs) {
+		Style(TypedArray attrs) {
 
 			mShadowRadius = attrs.getDimension(
 					R.styleable.ChartAttrs_chart_shadowRadius, 0);

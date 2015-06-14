@@ -5,10 +5,7 @@
     
 	<!-- Distance from vertical label to vertical axis -->
     <dimen name="axis_dist_from_label">5dp</dimen>
-    <!-- X Axis - Labels border spacing -->
-    <dimen name="axis_border_spacing">10dp</dimen>
-    <!-- Y Axis - Labels top spacing -->
-    <dimen name="axis_top_spacing">0dp</dimen>
+
     <!-- Axis thickness-->
     <dimen name="axis_thickness">2dp</dimen>
         

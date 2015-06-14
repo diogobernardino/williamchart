@@ -18,11 +18,9 @@ package com.db.chart.view;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.util.Log;
 
 import com.db.williamchart.R;
 import com.db.chart.model.ChartEntry;
@@ -35,7 +33,7 @@ import com.db.chart.model.ChartSet;
 public abstract class AxisController{
 
 
-    public static enum LabelPosition {
+    public enum LabelPosition {
         NONE, OUTSIDE, INSIDE
     }
 
@@ -45,87 +43,87 @@ public abstract class AxisController{
 
 
     /** ChartView object */
-    protected ChartView chartView;
+    final ChartView chartView;
 
 
     /** Distance between axis and label */
-    protected int distLabelToAxis;
+    int distLabelToAxis;
 
 
     /** Label's values formatted */
-    protected ArrayList<String> labels;
+    ArrayList<String> labels;
 
     /** Label's values */
-    protected ArrayList<Integer> labelsValues;
+    ArrayList<Integer> labelsValues;
 
     /** Labels position */
-    protected ArrayList<Float> labelsPos;
+    ArrayList<Float> labelsPos;
 
     /** Number of labels */
-    protected int nLabels;
+    int nLabels;
 
 
     /** none/inside/outside */
-    protected LabelPosition labelsPositioning;
+    LabelPosition labelsPositioning;
 
     /** Labels Metric to draw together with labels */
-    protected DecimalFormat labelFormat;
+    DecimalFormat labelFormat;
 
     /** Maximum height that a label can have */
-    protected int labelHeight;
+    private int labelHeight;
 
 
     /** Maximum value of labels */
-    protected int maxLabelValue;
+    int maxLabelValue;
 
     /** Minimum value of labels */
-    protected int minLabelValue;
+    int minLabelValue;
 
 
     /** Step between labels */
-    protected int step;
+    int step;
 
     /** Screen step between labels */
-    protected float screenStep;
+    float screenStep;
 
 
     /** Whether the chart has Y Axis or not */
-    protected boolean hasAxis;
+    boolean hasAxis;
 
     /** Starting X point of the axis */
-    protected float axisHorPosition;
+    float axisHorPosition;
 
 
     /** Spacing for top label */
-    protected float topSpacing;
+    float topSpacing;
 
 
     /** Horizontal border spacing for labels */
-    protected float borderSpacing;
+    float borderSpacing;
 
 
     /** Mandatory horizontal border when necessary (ex: BarCharts) */
-    protected float mandatoryBorderSpacing;
+    float mandatoryBorderSpacing;
 
 
     /** Define whether labels must be taken from data or calculated from values */
-    protected boolean handleValues;
+    boolean handleValues;
 
 
 
-    public AxisController(ChartView view) {
+    AxisController(ChartView view) {
 
         chartView = view;
         reset();
     }
 
 
-    public AxisController(ChartView chartView, TypedArray attrs) {
+    AxisController(ChartView chartView, TypedArray attrs) {
         this(chartView);
     }
 
 
-    protected void reset(){
+    void reset(){
 
         //Set DEFAULTS
         distLabelToAxis= (int) chartView.getResources().getDimension(R.dimen.axis_dist_from_label);
@@ -147,7 +145,7 @@ public abstract class AxisController{
     /**
      * Defines what will be the axis labels
      */
-    protected void defineLabels() {
+    void defineLabels() {
 
         labelsValues = calcLabels();
         if(handleValues)
@@ -162,7 +160,7 @@ public abstract class AxisController{
     /**
      * In case of a Chart that requires a mandatory border spacing (ex. BarChart)
      */
-    protected void defineMandatoryBorderSpacing(float innerStart, float innerEnd){
+    void defineMandatoryBorderSpacing(float innerStart, float innerEnd){
         if(mandatoryBorderSpacing == 1)
             mandatoryBorderSpacing = (innerEnd - innerStart - borderSpacing * 2) / nLabels / 2;
     }
@@ -175,9 +173,9 @@ public abstract class AxisController{
      * @param innerStart   Start inner position the chart
      * @param innerEnd   End inned position of chart
      */
-    protected void defineLabelsPos(float innerStart, float innerEnd) {
+    void defineLabelsPos(float innerStart, float innerEnd) {
 
-        labelsPos = new ArrayList<Float>(nLabels);
+        labelsPos = new ArrayList<>(nLabels);
 
         screenStep = (innerEnd
                 - innerStart
@@ -201,7 +199,7 @@ public abstract class AxisController{
     private ArrayList<String> getLabelsFromValues() {
 
         int size = labelsValues.size();
-        ArrayList<String> result = new ArrayList<String>(size);
+        ArrayList<String> result = new ArrayList<>(size);
         for(int i = 0; i < size; i++)
             result.add(labelFormat.format(labelsValues.get(i)));
         return result;
@@ -211,10 +209,10 @@ public abstract class AxisController{
     /**
      * Get labels from chart data.
      */
-    protected ArrayList<String> getLabelsFromData() {
+    private ArrayList<String> getLabelsFromData() {
 
         int size = chartView.data.get(0).size();
-        ArrayList<String> result = new ArrayList<String>(size);
+        ArrayList<String> result = new ArrayList<>(size);
         for(int i = 0; i < size; i++)
             result.add(chartView.data.get(0).getLabel(i));
         return result;
@@ -279,7 +277,7 @@ public abstract class AxisController{
                 maxLabelValue += step;
         }
 
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<>();
         int pos = minLabelValue;
         while(pos <= maxLabelValue){
             result.add(pos);
@@ -295,7 +293,7 @@ public abstract class AxisController{
 
 
 
-    protected int getLabelHeight(){
+    int getLabelHeight(){
 
         if(labelHeight == -1){
 

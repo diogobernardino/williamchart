@@ -45,7 +45,7 @@ public class YController extends AxisController{
     /*
      * IMPORTANT: Method's calls order is crucial. Change it (or not) carefully.
      */
-	protected void init(){
+	void init(){
 
         if(labelsPositioning == LabelPosition.INSIDE)
             distLabelToAxis *= -1;
@@ -61,7 +61,7 @@ public class YController extends AxisController{
     /**
      * Calculates the starting X point of the axis
      */
-    protected void defineAxisHorizontalPosition(){
+    private void defineAxisHorizontalPosition(){
 
         // Just in case Y labels need to be drawn
         if(labelsPositioning == LabelPosition.OUTSIDE){
@@ -78,7 +78,7 @@ public class YController extends AxisController{
 
 
     @Override
-    protected void defineLabelsPos(float innerStart, float innerEnd) {
+    void defineLabelsPos(float innerStart, float innerEnd) {
         super.defineLabelsPos(innerStart, innerEnd);
         Collections.reverse(labelsPos);
     }
@@ -91,7 +91,7 @@ public class YController extends AxisController{
      * @param value - Value to be parsed in display coordinate
      * @return Chart's coordinate
      */
-    protected float parsePos(int index, double value){
+    float parsePos(int index, double value){
 
         if(handleValues)
             return (float) ( chartView.horController.getAxisVerticalPosition() -

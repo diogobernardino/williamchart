@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <layer-list>
+            <item android:top="15dp" android:bottom="15dp" android:left="0dp" android:right="45dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="15dp" android:left="10dp" android:right="35dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="15dp" android:left="20dp" android:right="25dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="15dp" android:left="30dp" android:right="15dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="15dp" android:left="40dp" android:right="5dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item android:top="15dp" android:bottom="15dp" android:left="0dp" android:right="45dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="15dp" android:left="10dp" android:right="35dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="15dp" android:left="20dp" android:right="25dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="15dp" android:left="30dp" android:right="15dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@android:color/black"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="15dp" android:left="40dp" android:right="5dp">
+                <shape android:shape="rectangle">
+                    <size android:height="15dp" android:width="5dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

@@ -1,46 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <color name="text">#ffffff</color>
-    <color name="button_hey">#6eabb2</color>
-    <color name="button_pressed">#dbe1e7</color>
-    <color name="button_disabled">#dbe1e7</color>
-    <color name="button_default">#3c5e62</color>
-    <color name="app_background">#eaedf1</color>
-    <color name="actionbar">#1f3133</color>
-    
-    <color name="axis">#ffffff</color>
-    <color name="label">#ffffff</color>
-    
-    <color name="line_bg">#00bba7</color>
-    <color name="line_grid">#00a694</color>
-    <color name="line">#ffffff</color>
-    <color name="line_fill">#30ffffff</color>
-    <color name="line_tooltip">#ffffff</color>
-    
-    <color name="bar_bg">#f67743</color>
-    <color name="bar_bgbar">#d96739</color>
-    <color name="bar_fill1">#fed4c2</color>
-    <color name="bar_fill2">#ffc2a9</color>
-    <color name="bar_highest">#ffffff</color>
-    <color name="bar_grid">#1Aaa3302</color>
-    <color name="bar_tooltip">#aa3302</color>
 
-    <color name="horbar_bg">#f67743</color>
-    <color name="horbar_bgbar">#d96739</color>
-    <color name="horbar_fill">#cddc39</color>
-    <color name="horbar_highest">#e6ee9c</color>
-    <color name="horbar_grid">#827717</color>
-    <color name="horbar_tooltip">#f9fbe7</color>
-    
-    <color name="stackbar_bg">#0091EA</color>
-    <color name="stackbar_line">#8002889a</color>
-    <color name="stackbar_fill1">#109bae</color>
-    <color name="stackbar_fill2">#33a3b3</color>
-    <color name="stackbar_fill3">#47b7c7</color>
-    <color name="stackbar_fill1_h">#05d6f1</color>
-    <color name="stackbar_fill2_h">#4fdcf0</color>
-    <color name="stackbar_fill3_h">#8fe5f1</color>
-    <color name="stackbar_tooltip">#ffffff</color>
+    <color name="button_disabled">#dbe1e7</color>
+
+    <color name="line_tooltip">#ffffff</color>
+
+    <color name="primary">#607D8B</color>
+    <color name="primary_dark">#455A64</color>
+    <color name="primary_light">#CFD8DC</color>
+    <color name="accent">#009688</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+
+    <color name="button_pressed">#dbe1e7</color>
+    <color name="button_default">#3c5e62</color>
+
+    <color name="selected">#009688</color>
+    <color name="unselected">#CFD8DC</color>
+    <color name="stacked">#ffa5adb1</color>
+
+    <color name="gray">#ff363436</color>
     
 </resources>

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.db.williamchartdemo"
-    android:versionCode="11"
-    android:versionName="1.8.0" >
-
-
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="21" />
+    package="com.db.williamchartdemo">
 
     <application
         android:allowBackup="true"
@@ -15,8 +8,7 @@
         android:label="@string/app_name" 
         android:theme="@style/Theme.WilliamChart" >
         <activity
-            android:name="com.db.chartviewdemo.MainActivity"
-            android:label="@string/app_name" 
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

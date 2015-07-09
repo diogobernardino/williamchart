@@ -1,8 +1,12 @@
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:21.0.3'
     compile project(':library')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:cardview-v7:21.0.0'
+    compile 'com.larswerkman:HoloColorPicker:1.5'
 }
 
 android {
@@ -14,6 +18,7 @@ android {
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
+        applicationId "com.db.williamchartdemo"
     }
 
     sourceSets {

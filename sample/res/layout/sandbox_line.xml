@@ -1,0 +1,232 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <RelativeLayout
+        android:id="@+id/sandbox_line_type"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/sandbox_line_smooth"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_margin="@dimen/two_button_margin"
+            android:onClick="onMenuClick"
+            android:src="@drawable/smooth_btn"
+            android:background="@android:color/transparent"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/gradient_line_bck"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+
+        <ImageButton
+            android:id="@+id/sandbox_line_color"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_margin="19dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/color_bck"
+            android:onClick="onMenuClick"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/sandbox_line_type2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/sandbox_line_solid"
+                    android:layout_width="@dimen/button_size"
+                    android:layout_height="@dimen/button_size"
+                    android:layout_margin="@dimen/three_button_margin"
+                    android:src="@drawable/line_solid_bck"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+
+                <ImageButton
+                    android:id="@+id/sandbox_line_dashed"
+                    android:layout_width="@dimen/button_size"
+                    android:layout_height="@dimen/button_size"
+                    android:layout_toRightOf="@+id/sandbox_line_solid"
+                    android:layout_toEndOf="@+id/sandbox_line_solid"
+                    android:layout_margin="@dimen/three_button_margin"
+                    android:src="@drawable/line_dashed_bck"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+
+                <ImageButton
+                    android:id="@+id/sandbox_line_dashed2"
+                    android:layout_width="@dimen/button_size"
+                    android:layout_height="@dimen/button_size"
+                    android:layout_toRightOf="@+id/sandbox_line_dashed"
+                    android:layout_toEndOf="@+id/sandbox_line_dashed"
+                    android:layout_margin="@dimen/three_button_margin"
+                    android:src="@drawable/line_dashed2_bck"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sandbox_line_thickness"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                    <ImageButton
+                        android:id="@+id/sandbox_line_thickness1"
+                        android:layout_width="@dimen/button_size"
+                        android:layout_height="@dimen/button_size"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/four_button_margin"
+                        android:src="@drawable/thickness_size1_bck"
+                        android:background="@android:color/transparent"
+                        android:onClick="onMenuClick"/>
+
+                    <ImageButton
+                        android:id="@+id/sandbox_line_thickness2"
+                        android:layout_width="@dimen/button_size"
+                        android:layout_height="@dimen/button_size"
+                        android:layout_toEndOf="@+id/sandbox_line_thickness1"
+                        android:layout_toRightOf="@+id/sandbox_line_thickness1"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/four_button_margin"
+                        android:src="@drawable/thickness_size2_bck"
+                        android:background="@android:color/transparent"
+                        android:onClick="onMenuClick"/>
+
+                    <ImageButton
+                        android:id="@+id/sandbox_line_thickness3"
+                        android:layout_width="@dimen/button_size"
+                        android:layout_height="@dimen/button_size"
+                        android:layout_toEndOf="@+id/sandbox_line_thickness2"
+                        android:layout_toRightOf="@+id/sandbox_line_thickness2"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/four_button_margin"
+                        android:src="@drawable/thickness_size3_bck"
+                        android:background="@android:color/transparent"
+                        android:onClick="onMenuClick"/>
+
+                    <ImageButton
+                        android:id="@+id/sandbox_line_thickness4"
+                        android:layout_width="@dimen/button_size"
+                        android:layout_height="@dimen/button_size"
+                        android:layout_toEndOf="@+id/sandbox_line_thickness3"
+                        android:layout_toRightOf="@+id/sandbox_line_thickness3"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/four_button_margin"
+                        android:src="@drawable/thickness_size4_bck"
+                        android:background="@android:color/transparent"
+                        android:onClick="onMenuClick"
+                        />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/gradient_line_bck"
+        />
+
+    <RelativeLayout
+        android:id="@+id/sandbox_points_size"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageButton
+            android:id="@+id/sandbox_point_color"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_margin="19dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/color_bck"
+            android:onClick="onMenuClick"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/sandbox_point_size1"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/point_size1_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"/>
+            <ImageButton
+                android:id="@+id/sandbox_point_size2"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toEndOf="@+id/sandbox_point_size1"
+                android:layout_toRightOf="@+id/sandbox_point_size1"
+                android:layout_centerVertical="true"
+                android:layout_margin="7dp"
+                android:src="@drawable/point_size2_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+            <ImageButton
+                android:id="@+id/sandbox_point_size3"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toEndOf="@+id/sandbox_point_size2"
+                android:layout_toRightOf="@+id/sandbox_point_size2"
+                android:layout_centerVertical="true"
+                android:layout_margin="3dp"
+                android:src="@drawable/point_size3_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+            <ImageButton
+                android:id="@+id/sandbox_point_size4"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toEndOf="@+id/sandbox_point_size3"
+                android:layout_toRightOf="@+id/sandbox_point_size3"
+                android:layout_centerVertical="true"
+                android:src="@drawable/point_size4_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+            </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

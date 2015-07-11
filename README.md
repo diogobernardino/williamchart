@@ -16,7 +16,7 @@ Check the [wiki][5] for further documentation.
 
 ###Gradle 
 ``` groovy
-   compile 'com.diogobernardino:williamchart:1.7.0'
+   compile 'com.diogobernardino:williamchart:2.0'
 ```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][6].

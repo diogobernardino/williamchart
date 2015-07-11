@@ -61,7 +61,11 @@ public class XController extends AxisController{
         defineLabels();
 
         // To manage horizontal width of the last axis label
-        mLastLabelWidth = chartView.style.labelsPaint.measureText(labels.get(nLabels - 1));
+        if (nLabels > 0){ // to fix possible crash on trying to access label by index -1.
+        	mLastLabelWidth = chartView.style.labelsPaint.measureText(labels.get(nLabels - 1));
+        } else {
+        	mLastLabelWidth = 0;
+        }
 
         defineMandatoryBorderSpacing(chartView.getInnerChartLeft(), getInnerChartRight());
         defineLabelsPos(chartView.getInnerChartLeft(), getInnerChartRight());

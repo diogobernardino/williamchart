@@ -109,12 +109,12 @@ public class LineSet extends ChartSet{
 
 	
 	
-	private void addPoint(String label, float value){
+	public void addPoint(String label, float value){
 		this.addPoint(new Point(label, value));
 	}
 	
 	
-	private void addPoint(Point point){
+	public void addPoint(Point point){
 		this.addEntry(point);
 	}
 

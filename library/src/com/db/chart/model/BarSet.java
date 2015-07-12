@@ -44,7 +44,7 @@ public class BarSet extends ChartSet{
 	
 	
 	
-	private void addBar(String label, float value){
+	public void addBar(String label, float value){
 		this.addBar(new Bar(label, value));
 	}
 	

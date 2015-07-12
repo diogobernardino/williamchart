@@ -107,35 +107,57 @@ public class LineSet extends ChartSet{
         mEnd = 0;
     }
 
-	
-	
+
+	/**
+	 *
+	 * @param label
+	 * @param value
+	 */
 	public void addPoint(String label, float value){
 		this.addPoint(new Point(label, value));
 	}
-	
-	
+
+
+	/**
+	 *
+	 * @param point
+	 */
 	public void addPoint(Point point){
 		this.addEntry(point);
 	}
 
 
-
+	/**
+	 *
+	 * @return true if dashed property defined.
+	 */
 	public boolean isDashed() {
 		return mIsDashed;
 	}
 
-	
+
+	/**
+	 *
+	 * @return true if smooth property defined.
+	 */
 	public boolean isSmooth() {
 		return mIsSmooth;
 	}
 
 
-
+	/**
+	 *
+	 * @return true if fill property defined.
+	 */
     public boolean hasFill() {
         return mHasFill;
     }
 
 
+	/**
+	 *
+	 * @return true if gradient fill property defined.
+	 */
     public boolean hasGradientFill(){
         return mHasGradientFill;
     }
@@ -148,37 +170,65 @@ public class LineSet extends ChartSet{
 	 * --------
 	 */
 
-	
+
+	/**
+	 *
+	 * @return line thickness.
+	 */
 	public float getThickness() {
 		return mThickness;
 	}
 
-	
+
+	/**
+	 *
+	 * @return line color.
+	 */
 	public int getColor() {
 		return mColor;
 	}
-	
-	
+
+
+	/**
+	 *
+	 * @return fill color. Fill property must have been previously defined.
+	 */
 	public int getFillColor() {
 		return mFillColor;
 	}
-	
-	
+
+
+	/**
+	 *
+	 * @return gradient colors. Gradient fill property must have been previously defined.
+	 */
 	public int[] getGradientColors(){
 		return mGradientColors;
 	}
-	
-	
+
+
+	/**
+	 *
+	 * @return gradient positions. Gradient fill must have been previously defined.
+	 */
 	public float[] getGradientPositions(){
 		return mGradientPositions;
 	}
-	
-	
+
+
+	/**
+	 *
+	 * @return first displayed {@link com.db.chart.model.Point}.
+	 */
 	public int getBegin() {
 		return mBegin;
   	}
 
-	
+
+	/**
+	 *
+	 * @return last displayed {@link com.db.chart.model.Point}.
+	 */
 	public int getEnd() {
 		if(mEnd == 0)
 			return size();
@@ -186,10 +236,19 @@ public class LineSet extends ChartSet{
 	}
 
 
+	/**
+	 *
+	 * @return line dashed intervals. Dashed property must have been previously defined.
+	 */
     public float[] getDashedIntervals(){
         return mDashedIntervals;
     }
-	
+
+
+	/**
+	 *
+	 * @return line dashed phase. Dashed property must have been previously defined.
+	 */
 	public int getDashedPhase(){
 		return mDashedPhase;
 	}
@@ -201,10 +260,16 @@ public class LineSet extends ChartSet{
 	 * Setters
 	 * --------
 	 */
-	
-	
-	public void setDashedPhase(int phase){
+
+
+	/**
+	 *
+	 * @param phase
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
+	 */
+	public LineSet setDashedPhase(int phase){
 		mDashedPhase = phase;
+		return this;
 	}
 
 
@@ -212,7 +277,7 @@ public class LineSet extends ChartSet{
      * Set a dashed effect to the line.
      *
      * @param intervals array of ON and OFF distances
-     * @return
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
      */
     public LineSet setDashed(float[] intervals) {
 
@@ -223,6 +288,11 @@ public class LineSet extends ChartSet{
     }
 
 
+	/**
+	 *
+	 * @param bool
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
+	 */
     public LineSet setSmooth(boolean bool) {
 
 		mIsSmooth = bool;
@@ -234,6 +304,7 @@ public class LineSet extends ChartSet{
 	 * Defines the thickness to be used when drawing the line.
      *
 	 * @param thickness   Line thickness. Can't be equal or less than 0
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
 	 */
 	public LineSet setThickness(float thickness) {
 		
@@ -243,8 +314,13 @@ public class LineSet extends ChartSet{
 		mThickness = thickness;
 		return this;
 	}
-	
-	
+
+
+	/**
+	 *
+	 * @param color
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
+	 */
 	public LineSet setColor(int color){
 
 		mColor = color;
@@ -252,6 +328,11 @@ public class LineSet extends ChartSet{
 	}
 
 
+	/**
+	 *
+	 * @param color
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
+	 */
     public LineSet setFill(int color){
 
         mHasFill = true;
@@ -264,7 +345,7 @@ public class LineSet extends ChartSet{
      *
      * @param colors   The colors to be distributed among gradient
      * @param positions
-     * @return
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
      */
     public LineSet setGradientFill(int colors[], float[] positions){
 
@@ -279,6 +360,7 @@ public class LineSet extends ChartSet{
      * Define at which index should the dataset begin.
      *
      * @param index   Index where the set begins
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
      */
     public LineSet beginAt(int index) {
 
@@ -294,6 +376,7 @@ public class LineSet extends ChartSet{
      * Define at which index should the dataset end.
      *
      * @param index   Where the set ends
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
      */
     public LineSet endAt(int index) {
 
@@ -304,7 +387,12 @@ public class LineSet extends ChartSet{
         return this;
     }
 
-	
+
+	/**
+	 *
+	 * @param color
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
+	 */
 	public LineSet setDotsColor(int color){
 
         for(ChartEntry e : getEntries())
@@ -313,6 +401,11 @@ public class LineSet extends ChartSet{
 	}
 
 
+	/**
+	 *
+	 * @param radius
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
+	 */
 	public LineSet setDotsRadius(float radius){
 
         for(ChartEntry e : getEntries())
@@ -324,6 +417,7 @@ public class LineSet extends ChartSet{
 	/**
      *
 	 * @param thickness   Grid thickness. Can't be equal or less than 0
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
 	 */
 	public LineSet setDotsStrokeThickness(float thickness){
 
@@ -333,6 +427,11 @@ public class LineSet extends ChartSet{
 	}
 
 
+	/**
+	 *
+	 * @param color
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
+	 */
 	public LineSet setDotsStrokeColor(int color){
 
         for(ChartEntry e : getEntries())
@@ -345,6 +444,7 @@ public class LineSet extends ChartSet{
 	 * Set a background drawable to each of the dataset's points.
      *
 	 * @param drawable
+	 * @return {@link com.db.chart.model.LineSet} self-reference.
 	 */
 	public LineSet setDotsDrawable(Drawable drawable){
 

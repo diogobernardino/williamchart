@@ -61,23 +61,23 @@ public abstract class ChartEntry {
 	 * Getters
 	 * --------
 	 */
-	
-	
+
+
 	public String getLabel() {
 		return mLabel;
 	}
-	
+
 
 	public float getValue() {
 		return mValue;
 	}
 
-	
+
 	public float getX() {
 		return mX;
 	}
 
-	
+
 	public float getY() {
 		return mY;
 	}

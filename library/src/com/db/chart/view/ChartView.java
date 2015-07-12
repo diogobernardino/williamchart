@@ -1050,7 +1050,7 @@ public abstract class ChartView extends RelativeLayout{
     /**
      *
      * @param color
-     * @return
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
     public ChartView setLabelsColor(int color) {
         style.labelsColor = color;
@@ -1061,7 +1061,7 @@ public abstract class ChartView extends RelativeLayout{
     /**
      *
      * @param size
-     * @return
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
     public ChartView setFontSize(int size) {
         style.fontSize = size;
@@ -1072,7 +1072,7 @@ public abstract class ChartView extends RelativeLayout{
     /**
      *
      * @param typeface
-     * @return
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
     public ChartView setTypeface(Typeface typeface) {
         style.typeface = typeface;
@@ -1085,6 +1085,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Show/Hide X axis.
      *
 	 * @param bool   If true axis won't be visible
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setXAxis(boolean bool){
 		horController.hasAxis = bool;
@@ -1097,6 +1098,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Show/Hide Y axis.
      *
 	 * @param bool   If true axis won't be visible
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setYAxis(boolean bool){
 		verController.hasAxis = bool;
@@ -1112,6 +1114,7 @@ public abstract class ChartView extends RelativeLayout{
      *
 	 * @param maxValue   The maximum value that Y axis will have as a label
 	 * @param step   (real) value distance from every label
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setAxisBorderValues(int minValue, int maxValue, int step){
 		
@@ -1136,6 +1139,7 @@ public abstract class ChartView extends RelativeLayout{
      * Define the thickness of the axis.
      *
      * @param thickness   size of the thickness
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
     public ChartView setAxisThickness(float thickness){
         style.axisThickness = thickness;
@@ -1147,7 +1151,7 @@ public abstract class ChartView extends RelativeLayout{
      * Define the color of the axis.
      *
      * @param color   color of the axis
-     * @return
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
     public ChartView setAxisColor(int color){
         style.axisColor = color;
@@ -1161,6 +1165,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * up with {0, 2, 4, 6} as labels.
      *
 	 * @param step   (real) value distance from every label
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setStep(int step){
 		
@@ -1203,6 +1208,7 @@ public abstract class ChartView extends RelativeLayout{
 	/**
      *
 	 * @param spacing   Spacing between left/right of the chart and the first/last label
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setBorderSpacing(float spacing){
 
@@ -1219,6 +1225,7 @@ public abstract class ChartView extends RelativeLayout{
 	/**
      *
 	 * @param spacing   Spacing between top of the chart and the first label
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setTopSpacing(float spacing){
 
@@ -1238,6 +1245,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param type   {@link GridType} for grid
 	 * @param paint   The Paint instance that will be used to draw the grid
      *                If null the grid won't be drawn
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setGrid(GridType type, Paint paint){
 		
@@ -1254,6 +1262,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param value   Threshold value.
 	 * @param paint   The Paint instance that will be used to draw the grid
      *                If null the grid won't be drawn
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setThresholdLine(float value, Paint paint){
 		
@@ -1267,6 +1276,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * Set spacing between Labels and Axis. Will be applied to both X and Y.
 	 *
 	 * @param spacing   Spacing between labels and axis
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setAxisLabelsSpacing(float spacing){
 

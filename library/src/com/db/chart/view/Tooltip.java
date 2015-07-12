@@ -137,7 +137,7 @@ public class Tooltip extends RelativeLayout{
 
     /**
      *
-     * @return
+     * @return true if {@link com.db.chart.view.Tooltip} has enter animation defined.
      */
     boolean hasEnterAnimation(){
         return mEnterAnimator != null;
@@ -145,7 +145,7 @@ public class Tooltip extends RelativeLayout{
 
     /**
      *
-     * @return
+     * @return true if {@link com.db.chart.view.Tooltip} has exit animation define.
      */
     boolean hasExitAnimation(){
         return mExitAnimator != null;
@@ -153,7 +153,7 @@ public class Tooltip extends RelativeLayout{
 
     /**
      *
-     * @return
+     * @return true if {@link com.db.chart.view.Tooltip} is currently displayed.
      */
     boolean on(){
         return mOn;

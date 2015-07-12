@@ -41,14 +41,22 @@ public class BarSet extends ChartSet{
         for(int i = 0; i < nEntries; i++)
             addBar(labels[i], values[i]);
     }
-	
-	
-	
+
+
+	/**
+	 *
+	 * @param label
+	 * @param value
+	 */
 	public void addBar(String label, float value){
 		this.addBar(new Bar(label, value));
 	}
-	
-	
+
+
+	/**
+	 *
+	 * @param point
+	 */
 	public void addBar(Bar point){
 		this.addEntry(point);
 	}
@@ -60,7 +68,11 @@ public class BarSet extends ChartSet{
 	 * Getters
 	 * --------
 	 */
-	
+
+	/**
+	 *
+	 * @return {@link com.db.chart.model.BarSet} color.
+	 */
 	public int getColor(){
 		return this.getEntry(0).getColor();
 	}
@@ -72,7 +84,12 @@ public class BarSet extends ChartSet{
 	 * Setters
 	 * -------------
 	 */
-	
+
+	/**
+	 *
+	 * @param color
+	 * @return {@link com.db.chart.model.BarSet} self-reference.
+	 */
 	public BarSet setColor(int color){
 		
 		for(ChartEntry e : getEntries())
@@ -80,6 +97,12 @@ public class BarSet extends ChartSet{
 		return this;
 	}
 
+	/**
+	 *
+	 * @param colors
+	 * @param positions
+	 * @return {@link com.db.chart.model.BarSet} self-reference.
+	 */
     public BarSet setGradientColor(int colors[], float[] positions){
 
         for(ChartEntry e : getEntries())

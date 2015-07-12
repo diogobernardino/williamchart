@@ -222,7 +222,6 @@ public abstract class BaseBarChartView extends ChartView {
      * @param dx
      * @param dy
      * @param color
-     * @return
      */
     public void setShadow(float radius, float dx, float dy, int color){
 

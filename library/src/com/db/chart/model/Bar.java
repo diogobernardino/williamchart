@@ -27,6 +27,7 @@ public class Bar extends ChartEntry{
     private int[] mGradientColors;
     private float[] mGradientPositions;
 
+
     public Bar(String label, float value){
 		super(label, value);
 
@@ -35,18 +36,28 @@ public class Bar extends ChartEntry{
 	}
 
 
-
+    /**
+     *
+     * @return true if gradient color define.
+     */
     public boolean hasGradientColor(){
         return mHasGradientColor;
     }
 
 
-
+    /**
+     *
+     * @return gradient colors. Gradient color must have been previously defined.
+     */
     public int[] getGradientColors(){
         return mGradientColors;
     }
 
 
+    /**
+     *
+     * @return gradient positions. Gradient color must have been previously defined.
+     */
     public float[] getGradientPositions(){
         return mGradientPositions;
     }
@@ -54,10 +65,11 @@ public class Bar extends ChartEntry{
 
 
     /**
-     * Set gradient colors to the fill of the {@link com.db.chart.model.Bar}
+     * Set gradient colors to the fill of the {@link com.db.chart.model.Bar}.
+     *
      * @param colors   The colors to be distributed among gradient
      * @param positions
-     * @return
+     * @return {@link com.db.chart.model.Bar} self-reference.
      */
     public Bar setGradientColor(int colors[], float[] positions){
 

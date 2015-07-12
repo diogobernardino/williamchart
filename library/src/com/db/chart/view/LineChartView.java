@@ -404,7 +404,7 @@ public class LineChartView extends ChartView {
      * @param dx
      * @param dy
      * @param color
-     * @return
+	 * @return {@link com.db.chart.view.LineChartView} self-reference.
      */
     public LineChartView setShadow(float radius, float dx, float dy, int color){
 
@@ -419,7 +419,7 @@ public class LineChartView extends ChartView {
     /**
      *
      * @param radius
-     * @return
+	 * @return {@link com.db.chart.view.LineChartView} self-reference.
      */
     public LineChartView setClickablePointRadius(float radius){
         mClickableRadius = radius;

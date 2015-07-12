@@ -50,7 +50,11 @@ public class Point extends ChartEntry{
     private Drawable mDrawable;
 
 
-
+    /**
+     *
+     * @param label
+     * @param value
+     */
 	public Point(String label, float value){
 		super(label, value);
 
@@ -66,7 +70,10 @@ public class Point extends ChartEntry{
 	}
 
 
-
+    /**
+     *
+     * @return true if point has stroke define.
+     */
     public boolean hasStroke() {
         return mHasStroke;
     }
@@ -80,21 +87,37 @@ public class Point extends ChartEntry{
 	 */
 
 
+    /**
+     *
+     * @return point's stroke thickness.
+     */
     public float getStrokeThickness() {
         return mStrokeThickness;
     }
 
 
+    /**
+     *
+     * @return point radius.
+     */
     public float getRadius() {
         return mRadius;
     }
 
 
+    /**
+     *
+     * @return point's stroke color.
+     */
     public int getStrokeColor() {
         return mStrokeColor;
     }
 
 
+    /**
+     *
+     * @return {@link android.graphics.drawable.Drawable} to be displayed.
+     */
     public Drawable getDrawable(){
         return mDrawable;
     }
@@ -108,6 +131,11 @@ public class Point extends ChartEntry{
 	 */
 
 
+    /**
+     *
+     * @param radius
+     * @return {@link com.db.chart.model.Point} self-reference.
+     */
     public Point setRadius(float radius){
 
         isVisible = true;
@@ -119,6 +147,7 @@ public class Point extends ChartEntry{
     /**
      *
      * @param thickness   Grid thickness. Can't be equal or less than 0
+     * @return {@link com.db.chart.model.Point} self-reference.
      */
     public Point setStrokeThickness(float thickness){
 
@@ -131,6 +160,11 @@ public class Point extends ChartEntry{
     }
 
 
+    /**
+     *
+     * @param color
+     * @return {@link com.db.chart.model.Point} self-reference.
+     */
     public Point setStrokeColor(int color){
 
         isVisible = true;
@@ -140,6 +174,11 @@ public class Point extends ChartEntry{
     }
 
 
+    /**
+     *
+     * @param drawable
+     * @return {@link com.db.chart.model.Point} self-reference.
+     */
     public Point setDrawable(Drawable drawable){
 
         isVisible = true;

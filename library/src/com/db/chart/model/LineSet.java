@@ -329,6 +329,9 @@ public class LineSet extends ChartSet{
 
 
 	/**
+	 * Set color to fill up the line area against the axis.
+	 * If no color has been previously defined to the line it will automatically be set to the
+	 * same color fill color.
 	 *
 	 * @param color
 	 * @return {@link com.db.chart.model.LineSet} self-reference.
@@ -337,6 +340,10 @@ public class LineSet extends ChartSet{
 
         mHasFill = true;
         mFillColor = color;
+
+		if(mColor == DEFAULT_COLOR)
+			mColor = color;
+
         return this;
     }
 

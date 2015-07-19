@@ -1,7 +1,5 @@
 package com.db.chart.view.animation.easing;
 
-import com.db.chart.view.animation.easing.BaseEasingMethod;
-
 public class QuadEase extends BaseEasingMethod {
     
 	public QuadEase() {
@@ -15,7 +13,7 @@ public class QuadEase extends BaseEasingMethod {
 
     @Override
     protected float easeIn(float time) {
-        return easeOut(1.f - time);
+        return time * time;
     }
 
 }

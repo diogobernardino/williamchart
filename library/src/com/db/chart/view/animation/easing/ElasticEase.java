@@ -1,7 +1,5 @@
 package com.db.chart.view.animation.easing;
 
-import com.db.chart.view.animation.easing.BaseEasingMethod;
-
 public class ElasticEase extends BaseEasingMethod {
 
     public ElasticEase() {
@@ -20,7 +18,13 @@ public class ElasticEase extends BaseEasingMethod {
 
     @Override
     protected float easeIn(float time) {
-        return easeOut(1.f - time);
+
+        if (time == 0) return 0.f;
+        if (time == 1) return 1.f;
+        float p=.3f;
+        float s=p/4;
+        return - ((float) Math.pow(2, 10.f * (time -= 1.f))
+                * (float) Math.sin( (time - s) * (2.f * Math.PI)/p ));
     }
 
 }

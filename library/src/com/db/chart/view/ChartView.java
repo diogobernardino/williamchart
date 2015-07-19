@@ -1035,6 +1035,7 @@ public abstract class ChartView extends RelativeLayout{
      * Set the format to be added to Y labels.
      *
      * @param format   Format to be applied
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
     public ChartView setLabelsFormat(DecimalFormat format){
 

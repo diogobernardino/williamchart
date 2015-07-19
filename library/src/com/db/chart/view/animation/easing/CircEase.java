@@ -1,7 +1,5 @@
 package com.db.chart.view.animation.easing;
 
-import com.db.chart.view.animation.easing.BaseEasingMethod;
-
 public class CircEase extends BaseEasingMethod {
 
     public CircEase() {
@@ -15,7 +13,7 @@ public class CircEase extends BaseEasingMethod {
 
     @Override
     protected float easeIn(float time) {
-        return easeOut(1.f - time);
+        return -((float) Math.sqrt(1.f - time * time) - 1.f);
     }
 
 }

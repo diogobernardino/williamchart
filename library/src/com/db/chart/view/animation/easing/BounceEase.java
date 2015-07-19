@@ -1,7 +1,5 @@
 package com.db.chart.view.animation.easing;
 
-import com.db.chart.view.animation.easing.BaseEasingMethod;
-
 public class BounceEase extends BaseEasingMethod {
 
     @Override
@@ -19,7 +17,7 @@ public class BounceEase extends BaseEasingMethod {
 
     @Override
     protected float easeIn(float time) {
-        return easeOut(1.f - time);
+        return 1.f - easeOut(1.f - time);
     }
 	
 }

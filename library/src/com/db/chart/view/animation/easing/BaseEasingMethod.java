@@ -20,7 +20,8 @@ public abstract class BaseEasingMethod {
     /**
      * Method that gives the next interpolated value to be processed by
      * the {@link com.db.chart.view.animation.Animation} object.
-     * @param time - time normalized between 0 and 1.
+     *
+     * @param time - time normalized between 0 and 1
      * @return the next interpolation.
      */
     public float next(float time){
@@ -38,6 +39,12 @@ public abstract class BaseEasingMethod {
         return mState;
     }
 
+
+    /**
+     * Whether interpolation should comply with ENTER, UPDATE, or EXIT animation.
+     *
+     * @param state
+     */
     public void setState(int state){
         mState = state;
     }

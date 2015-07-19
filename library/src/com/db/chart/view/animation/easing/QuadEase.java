@@ -12,6 +12,16 @@ public class QuadEase extends BaseEasingMethod {
     }
 
     @Override
+    protected float easeInOut(float time) {
+
+        float p = time / 0.5f;
+        if (p < 1.f)
+            return 0.5f * p * p;
+
+        return -0.5f * ((--p) * (p - 2.f) - 1.f);
+    }
+
+    @Override
     protected float easeIn(float time) {
         return time * time;
     }

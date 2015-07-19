@@ -14,6 +14,7 @@ public abstract class BaseEasingMethod {
 
 
     protected abstract float easeOut(float time);
+    protected abstract float easeInOut(float time);
     protected abstract float easeIn(float time);
 
 
@@ -29,7 +30,7 @@ public abstract class BaseEasingMethod {
         if(mState == BaseEasingMethod.ENTER)
             return easeOut(time);
         else if(mState == BaseEasingMethod.UPDATE)
-            return easeOut(time);
+            return easeInOut(time);
         else if(mState == BaseEasingMethod.EXIT)
             return easeIn(time);
         return 1;

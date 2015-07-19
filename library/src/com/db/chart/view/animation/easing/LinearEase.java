@@ -8,6 +8,11 @@ public class LinearEase extends BaseEasingMethod {
     }
 
     @Override
+    protected float easeInOut(float time) {
+        return time;
+    }
+
+    @Override
     protected float easeIn(float time) {
         return time;
     }

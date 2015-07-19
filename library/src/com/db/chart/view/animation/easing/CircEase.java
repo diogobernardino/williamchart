@@ -12,6 +12,15 @@ public class CircEase extends BaseEasingMethod {
     }
 
     @Override
+    protected float easeInOut(float time) {
+
+        float p = time / 0.5f;
+        if (p < 1.f)
+            return -0.5f * ((float) Math.sqrt(1.f - p * p) - 1.f);
+        return 0.5f * ((float) Math.sqrt(1.f - (p -= 2.f) * p) + 1.f);
+    }
+
+    @Override
     protected float easeIn(float time) {
         return -((float) Math.sqrt(1.f - time * time) - 1.f);
     }

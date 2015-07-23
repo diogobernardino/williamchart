@@ -67,10 +67,10 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/** Chart borders */
-	int chartTop;
-	int chartBottom;
-	int chartLeft;
-	int chartRight;
+	private int mChartTop;
+	private int mChartBottom;
+	private int mChartLeft;
+	private int mChartRight;
 	
 	
 	/** Horizontal and Vertical position controllers */
@@ -139,10 +139,10 @@ public abstract class ChartView extends RelativeLayout{
             style.init();
 
 			// Define chart frame
-			chartTop = getPaddingTop() + verController.getLabelHeight()/2;
-			chartBottom = getMeasuredHeight() - getPaddingBottom();
-			chartLeft = getPaddingLeft();
-			chartRight = getMeasuredWidth() - getPaddingRight();
+			mChartTop = getPaddingTop() + verController.getLabelHeight()/2;
+			mChartBottom = getMeasuredHeight() - getPaddingBottom();
+			mChartLeft = getPaddingLeft();
+			mChartRight = getMeasuredWidth() - getPaddingRight();
 	
 			// Initialize controllers now that we have the measures
 			verController.init();	
@@ -520,9 +520,9 @@ public abstract class ChartView extends RelativeLayout{
 	public void showTooltip(Tooltip tooltip, boolean correctPos) {
 
 		if (correctPos) {
-			tooltip.correctPosition(chartLeft - getPaddingLeft(),
-                    chartTop - getPaddingTop(),
-                    chartRight - getPaddingRight(),
+			tooltip.correctPosition(mChartLeft - getPaddingLeft(),
+					mChartTop - getPaddingTop(),
+					mChartRight - getPaddingRight(),
                     (int) (getInnerChartBottom() - getPaddingBottom()));
 		}
 
@@ -874,7 +874,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return Position of the inner top side of the chart
 	 */
 	public float getInnerChartTop(){
-		return chartTop;
+		return mChartTop;
 	}
 	
 	
@@ -916,9 +916,9 @@ public abstract class ChartView extends RelativeLayout{
     float getBorderSpacing(){
 
         if(orientation == Orientation.VERTICAL)
-            return verController.borderSpacing;
-        else
             return horController.borderSpacing;
+        else
+            return verController.borderSpacing;
     }
 
 
@@ -978,6 +978,22 @@ public abstract class ChartView extends RelativeLayout{
     }
 
 
+
+	protected int getChartTop(){
+		return mChartTop;
+	}
+
+	protected int getChartBottom(){
+		return mChartBottom;
+	}
+
+	protected int getChartLeft(){
+		return mChartLeft;
+	}
+
+	protected int getChartRight(){
+		return mChartRight;
+	}
 
 	/*
 	 * --------

@@ -70,9 +70,9 @@ public class YController extends AxisController{
             for(String label : labels)
                 if((aux = chartView.style.labelsPaint.measureText(label)) > maxLabelLength)
                     maxLabelLength = aux;
-            axisHorPosition = chartView.chartLeft + maxLabelLength + distLabelToAxis;
+            axisHorPosition = chartView.getChartLeft() + maxLabelLength + distLabelToAxis;
         }else
-            axisHorPosition = chartView.chartLeft;
+            axisHorPosition = chartView.getChartLeft();
     }
 
 
@@ -149,7 +149,7 @@ public class YController extends AxisController{
 		if(hasAxis)
 			// Draw axis line
 			canvas.drawLine(axisHorPosition,
-								chartView.chartTop,
+								chartView.getChartTop(),
 									axisHorPosition,
 										chartView.horController.getAxisVerticalPosition()
                                                 + chartView.style.axisThickness/2,

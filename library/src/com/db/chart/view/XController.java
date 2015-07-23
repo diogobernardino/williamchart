@@ -54,7 +54,7 @@ public class XController extends AxisController{
 	void init() {
 
         // Set the vertical display coordinate
-        mLabelVerCoord = chartView.chartBottom;
+        mLabelVerCoord = chartView.getChartBottom();
         if(labelsPositioning == LabelPosition.INSIDE)
             mLabelVerCoord -= distLabelToAxis;
 
@@ -67,7 +67,7 @@ public class XController extends AxisController{
         	mLastLabelWidth = 0;
         }
 
-        defineMandatoryBorderSpacing(chartView.getInnerChartLeft(), getInnerChartRight());
+        defineMandatoryBorderSpacing(chartView.getInnerChartLeft(), chartView.getChartRight());
         defineLabelsPos(chartView.getInnerChartLeft(), getInnerChartRight());
     }
 	
@@ -91,7 +91,7 @@ public class XController extends AxisController{
 		if(labelsPositioning != LabelPosition.NONE && borderSpacing + mandatoryBorderSpacing < mLastLabelWidth / 2)
 			rightBorder = mLastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);
 	
-		return chartView.chartRight - rightBorder;
+		return chartView.getChartRight() - rightBorder;
 	}
 
 	
@@ -101,9 +101,9 @@ public class XController extends AxisController{
 	float getAxisVerticalPosition(){
 		
 		if(labelsPositioning != LabelPosition.OUTSIDE)
-			return chartView.chartBottom;
+			return chartView.getChartBottom();
 		
-		return chartView.chartBottom - getLabelHeight() - distLabelToAxis;
+		return chartView.getChartBottom() - getLabelHeight() - distLabelToAxis;
 	}
 
 

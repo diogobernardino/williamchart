@@ -51,6 +51,10 @@ public abstract class ChartSet {
 
 	
 	void addEntry(ChartEntry e){
+
+		if(e == null)
+			Log.e(TAG, "Chart entry added can't be null object.", new IllegalArgumentException());
+
 		mEntries.add(e);
 	}
 

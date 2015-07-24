@@ -314,6 +314,9 @@ public abstract class ChartView extends RelativeLayout{
 		if(!data.isEmpty() && set.size() != data.get(0).size())
 			Log.e(TAG, "The number of entries between sets doesn't match.",
 					new IllegalArgumentException());
+		if(set == null)
+			Log.e(TAG, "Chart data set can't be null",
+					new IllegalArgumentException());
 
 		data.add(set);
 	}

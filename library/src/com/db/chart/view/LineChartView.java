@@ -342,7 +342,7 @@ public class LineChartView extends ChartView {
 	@Override
 	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data){
 
-		ArrayList<ArrayList<Region>> result = new ArrayList<>();
+		ArrayList<ArrayList<Region>> result = new ArrayList<>(data.size());
 		
 		ArrayList<Region> regionSet;
 		float x;

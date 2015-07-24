@@ -942,7 +942,7 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ArrayList<Rect> getEntriesArea(int index){
 
-		ArrayList<Rect> result = new ArrayList<>();
+		ArrayList<Rect> result = new ArrayList<>(mRegions.get(index).size());
 		for(Region r: mRegions.get(index))
 			result.add(getEntryRect(r));
 

@@ -55,10 +55,10 @@ public class BarSet extends ChartSet{
 
 	/**
 	 *
-	 * @param point
+	 * @param bar
 	 */
-	public void addBar(Bar point){
-		this.addEntry(point);
+	public void addBar(Bar bar){
+		this.addEntry(bar);
 	}
 	
 	

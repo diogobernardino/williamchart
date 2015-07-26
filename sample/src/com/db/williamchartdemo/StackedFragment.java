@@ -68,7 +68,7 @@ public class StackedFragment extends Fragment {
     private boolean mUpdateThree;
     private TextView mTooltipThree;
     private final String[] mLabelsThree= {"", "", "", ""};
-    private final float[][] mValuesThree = {{30f, 60f, 50f, 80f},{70f, 40f, 50f, 20f}};
+    private final float[][] mValuesThree = {{30f, 60f, 50f, 80f},{-70f, -40f, -50f, -20f}};
 
 
 
@@ -449,16 +449,16 @@ public class StackedFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mTooltipThree != null)
-                    dismissTooltipThree( -1, null);
+                    dismissTooltipThree(-1, null);
             }
         });
 
         BarSet dataset = new BarSet(mLabelsThree, mValuesThree[0]);
-        dataset.setColor(Color.parseColor("#FF5C8E67"));
+        dataset.setColor(Color.parseColor("#687E8E"));
         barChart.addData(dataset);
 
         dataset = new BarSet(mLabelsThree, mValuesThree[1]);
-        dataset.setColor(Color.parseColor("#687E8E"));
+        dataset.setColor(Color.parseColor("#FF5C8E67"));
         barChart.addData(dataset);
 
         barChart.setRoundCorners(Tools.fromDpToPx(5));
@@ -468,11 +468,10 @@ public class StackedFragment extends Fragment {
                 .setYLabels(AxisController.LabelPosition.NONE)
                 .setXLabels(AxisController.LabelPosition.NONE)
                 .setXAxis(false)
-                .setYAxis(false);
+                .setYAxis(false)
+                .setAxisBorderValues(-80, 80, 10);
 
         Animation anim = new Animation()
-                .setStartPoint(.5f, 0f)
-                .setAlpha(3)
                 .setEndAction(action);
 
         chart.show(anim);
@@ -480,17 +479,15 @@ public class StackedFragment extends Fragment {
 
     private void updateThree(ChartView chart){
 
-        chart.updateValues(0, mValuesThree[1]);
-        chart.updateValues(1, mValuesThree[0]);
+        final float[][] values= {{50f, 70f, 10f, 30f},{-40f, -70f, -60f, -50f}};
+        chart.updateValues(0, values[0]);
+        chart.updateValues(1, values[1]);
         chart.notifyDataUpdate();
     }
 
     private static void dismissThree(ChartView chart, Runnable action){
 
-        chart.dismiss(new Animation()
-                .setStartPoint(.5f, 0f)
-                .setAlpha(3)
-                .setEndAction(action));
+        chart.dismiss(chart.getChartAnimation().setEndAction(action));
     }
 
     @SuppressLint("NewApi")

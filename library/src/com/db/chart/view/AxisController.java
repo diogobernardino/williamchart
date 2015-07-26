@@ -91,7 +91,7 @@ public abstract class AxisController{
     boolean hasAxis;
 
     /** Starting X point of the axis */
-    float axisHorPosition;
+    float axisPosition;
 
 
     /** Spacing for top label */
@@ -133,7 +133,7 @@ public abstract class AxisController{
         step = DEFAULT_STEP;
         labelsPositioning = LabelPosition.OUTSIDE;
         labelFormat = new DecimalFormat();
-        axisHorPosition = 0;
+        axisPosition = 0;
         minLabelValue = 0;
         maxLabelValue = 0;
         labelHeight = -1;
@@ -312,7 +312,6 @@ public abstract class AxisController{
 
 
     public void setAxisLabelsSpacing(float spacing){
-
         distLabelToAxis = (int) spacing;
     }
 

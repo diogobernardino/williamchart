@@ -28,10 +28,6 @@ import android.graphics.Paint.Align;
 public class XController extends AxisController{
 
 
-	/** Vertical coordinate where label will be drawn */
-	private int mLabelVerCoord;
-
-	
 	/** Width of last label of sets */
 	private float mLastLabelWidth;
 
@@ -52,11 +48,7 @@ public class XController extends AxisController{
      * IMPORTANT: Method's order is crucial. Change it (or not) carefully.
      */
 	void init() {
-
-        // Set the vertical display coordinate
-        mLabelVerCoord = chartView.getChartBottom();
-        if(labelsPositioning == LabelPosition.INSIDE)
-            mLabelVerCoord -= distLabelToAxis;
+        //getLabelsVerticalPosition();
 
         defineLabels();
 
@@ -70,41 +62,6 @@ public class XController extends AxisController{
         defineMandatoryBorderSpacing(chartView.getInnerChartLeft(), chartView.getChartRight());
         defineLabelsPos(chartView.getInnerChartLeft(), getInnerChartRight());
     }
-	
-	
-	
-	/*
-	 * ---------
-	 *  Getters
-	 * ---------
-	 */
-	
-	/**
-	 * Inner Chart refers only to the area where chart data will be draw, 
-	 * excluding labels, axis, etc.
-     *
-	 * @return Position of the inner right side of the chart
-	 */
-	public float getInnerChartRight(){
-		
-		float rightBorder = 0;
-		if(labelsPositioning != LabelPosition.NONE && borderSpacing + mandatoryBorderSpacing < mLastLabelWidth / 2)
-			rightBorder = mLastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);
-	
-		return chartView.getChartRight() - rightBorder;
-	}
-
-	
-	/**
-	 * Get the vertical position of axis.
-	 */
-	float getAxisVerticalPosition(){
-		
-		if(labelsPositioning != LabelPosition.OUTSIDE)
-			return chartView.getChartBottom();
-		
-		return chartView.getChartBottom() - getLabelHeight() - distLabelToAxis;
-	}
 
 
 
@@ -121,6 +78,68 @@ public class XController extends AxisController{
                 (((value - minLabelValue) * screenStep) / (labelsValues.get(1) - minLabelValue)));
         else
             return labelsPos.get(index);
+    }
+
+
+
+    /*
+	 * ---------
+	 *  Getters
+	 * ---------
+	 */
+
+    /**
+     * Inner Chart refers only to the area where chart data will be draw,
+     * excluding labels, axis, etc.
+     *
+     * @return Position of the inner right side of the chart
+     */
+    public float getInnerChartRight(){
+
+        float rightBorder = 0;
+        if(labelsPositioning != LabelPosition.NONE && borderSpacing + mandatoryBorderSpacing < mLastLabelWidth / 2)
+            rightBorder = mLastLabelWidth/2 - (borderSpacing + mandatoryBorderSpacing);
+
+        return chartView.getChartRight() - rightBorder;
+    }
+
+
+    /**
+     * Get the vertical position of axis.
+     *
+     * @return
+     */
+    float getAxisVerticalPosition(){
+
+        if(axisPosition == 0) {
+
+            axisPosition = chartView.getChartBottom();
+
+            if (hasAxis)
+                axisPosition -= chartView.style.axisThickness / 2;
+
+            if (labelsPositioning == LabelPosition.OUTSIDE)
+                axisPosition -= getLabelHeight() + distLabelToAxis;
+        }
+        return axisPosition;
+    }
+
+
+    /**
+     * Get the vertical position of axis.
+     *
+     * @return
+     */
+    float getLabelsVerticalPosition(){
+
+        float result = chartView.getChartBottom();
+        if(labelsPositioning == LabelPosition.INSIDE) {
+            result -= distLabelToAxis;
+            if(hasAxis)
+                result -=  chartView.style.axisThickness;
+        }
+
+        return result;
     }
 
 
@@ -154,7 +173,7 @@ public class XController extends AxisController{
             for(int i = 0; i < nLabels; i++){
                 canvas.drawText(labels.get(i),
                                     labelsPos.get(i),
-                                        mLabelVerCoord,
+                        getLabelsVerticalPosition(),
                                             chartView.style.labelsPaint);
 
             }

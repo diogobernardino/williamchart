@@ -23,7 +23,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 
 
-
 /**
  * Class responsible to control vertical measures, positions, yadda yadda. 
  * If the drawing is requested it will also take care of it.
@@ -47,40 +46,9 @@ public class YController extends AxisController{
      */
 	void init(){
 
-        if(labelsPositioning == LabelPosition.INSIDE)
-            distLabelToAxis *= -1;
-
         defineLabels();
-        defineMandatoryBorderSpacing(chartView.getInnerChartTop(), getInnerChartBottom());
-        defineAxisHorizontalPosition();
+        defineMandatoryBorderSpacing(chartView.getInnerChartTop(), chartView.getChartBottom());
         defineLabelsPos(chartView.getInnerChartTop(), getInnerChartBottom());
-    }
-
-
-
-    /**
-     * Calculates the starting X point of the axis
-     */
-    private void defineAxisHorizontalPosition(){
-
-        // Just in case Y labels need to be drawn
-        if(labelsPositioning == LabelPosition.OUTSIDE){
-            float aux;
-            float maxLabelLength = 0;
-            for(String label : labels)
-                if((aux = chartView.style.labelsPaint.measureText(label)) > maxLabelLength)
-                    maxLabelLength = aux;
-            axisHorPosition = chartView.getChartLeft() + maxLabelLength + distLabelToAxis;
-        }else
-            axisHorPosition = chartView.getChartLeft();
-    }
-
-
-
-    @Override
-    void defineLabelsPos(float innerStart, float innerEnd) {
-        super.defineLabelsPos(innerStart, innerEnd);
-        Collections.reverse(labelsPos);
     }
 
 
@@ -110,7 +78,7 @@ public class YController extends AxisController{
 
     /**
      * Differentiates the inner left side of the chart depending if axis Y is drawn or not.
-     * If drawing axis give it gives half of the line thickness as margin.
+     * If drawing axis it gives half of the line thickness as margin.
      * Inner Chart refers only to the area where chart data will be draw,
      * excluding labels, axis, etc.
      *
@@ -119,9 +87,9 @@ public class YController extends AxisController{
     public float getInnerChartLeft(){
 
         if(hasAxis)
-            return axisHorPosition + chartView.style.axisThickness/2;
+            return getAxisHorizontalPosition() + chartView.style.axisThickness/2;
         else
-            return axisHorPosition;
+            return getAxisHorizontalPosition();
     }
 
 
@@ -132,9 +100,68 @@ public class YController extends AxisController{
      * @return Position of the inner left side of the chart
      */
     public float getInnerChartBottom(){
-        return chartView.horController.getAxisVerticalPosition() - chartView.style.axisThickness/2;
+        return chartView.horController.getAxisVerticalPosition();
     }
 
+
+    /**
+     * Calculates the starting X point of the axis
+     *
+     * @return
+     */
+    float getAxisHorizontalPosition(){
+
+        if(axisPosition == 0) {
+
+            axisPosition = chartView.getChartLeft();
+
+            if (hasAxis)
+                axisPosition += chartView.style.axisThickness / 2;
+
+            if (labelsPositioning == LabelPosition.OUTSIDE) {
+                float aux;
+                float maxLabelLength = 0;
+                for (String label : labels)
+                    if ((aux = chartView.style.labelsPaint.measureText(label)) > maxLabelLength)
+                        maxLabelLength = aux;
+                axisPosition += maxLabelLength + distLabelToAxis;
+            }
+        }
+        return axisPosition;
+    }
+
+
+    /**
+     * Get the horizontal position of axis.
+     *
+     * @return
+     */
+    /*float getLabelsHorizontalPosition(){
+
+        float result = chartView.getChartLeft();
+        if(labelsPositioning == LabelPosition.INSIDE) {
+            result += distLabelToAxis;
+            if(hasAxis)
+                result +=  chartView.style.axisThickness;
+        }
+
+        return result;
+    }*/
+    float getLabelsHorizontalPosition(){
+
+        float result = getAxisHorizontalPosition();
+        if(labelsPositioning == LabelPosition.INSIDE) {
+            result += distLabelToAxis;
+            if(hasAxis)
+                result +=  chartView.style.axisThickness/2;
+        }else if(labelsPositioning == LabelPosition.OUTSIDE) {
+            result -= distLabelToAxis;
+            if(hasAxis)
+                result -=  chartView.style.axisThickness/2;
+        }
+
+        return result;
+    }
 
 
     /*
@@ -144,28 +171,38 @@ public class YController extends AxisController{
 	 */
 
     @Override
+    void defineLabelsPos(float innerStart, float innerEnd) {
+        super.defineLabelsPos(innerStart, innerEnd);
+        Collections.reverse(labelsPos);
+    }
+
+
+    @Override
 	protected void draw(Canvas canvas){
 		
-		if(hasAxis)
-			// Draw axis line
-			canvas.drawLine(axisHorPosition,
-								chartView.getChartTop(),
-									axisHorPosition,
-										chartView.horController.getAxisVerticalPosition()
-                                                + chartView.style.axisThickness/2,
-											chartView.style.chartPaint);
+		if(hasAxis) {
+            // Draw axis line
+            float bottom = chartView.horController.getAxisVerticalPosition();
+            if (chartView.horController.hasAxis)
+                bottom += chartView.style.axisThickness / 2;
 
+            canvas.drawLine(getAxisHorizontalPosition(),
+                    chartView.getChartTop(),
+                    getAxisHorizontalPosition(),
+                    bottom,
+                    chartView.style.chartPaint);
+        }
 
 		if(labelsPositioning != LabelPosition.NONE){
-			
-			chartView.style.labelsPaint.setTextAlign(
-					(labelsPositioning == LabelPosition.OUTSIDE)
-						? Align.RIGHT : Align.LEFT);
+
+            chartView.style.labelsPaint.setTextAlign(
+                    (labelsPositioning == LabelPosition.OUTSIDE)
+                            ? Align.RIGHT : Align.LEFT);
 
 			// Draw labels
 			for(int i = 0; i < nLabels; i++){
 				canvas.drawText(labels.get(i),
-									axisHorPosition - chartView.style.axisThickness/2 - distLabelToAxis,
+                            getLabelsHorizontalPosition(),
 										labelsPos.get(i) + getLabelHeight()/2,
 											chartView.style.labelsPaint);
 			}

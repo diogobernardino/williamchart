@@ -7,6 +7,7 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:cardview-v7:21.0.0'
     compile 'com.larswerkman:HoloColorPicker:1.5'
+    testCompile 'junit:junit:4.12'
 }
 
 android {

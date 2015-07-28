@@ -12,11 +12,11 @@ At the moment it provides:
 
 It has been tested in Android 2.2 and above.
 
-Check the [wiki][5] for further documentation.
+Check the [javadoc][7] and [wiki][5] for further documentation.
 
 ###Gradle 
 ``` groovy
-   compile 'com.diogobernardino:williamchart:2.0'
+   compile 'com.diogobernardino:williamchart:2.0.1'
 ```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][6].
@@ -54,3 +54,4 @@ License
 [4]: https://github.com/diogobernardino/WilliamChart/wiki/%285%29-Stacked-Chart
 [5]: https://github.com/diogobernardino/WilliamChart/wiki
 [6]: https://twitter.com/dfbernardino
+[7]: http://diogobernardino.github.io/WilliamChart/javadoc/

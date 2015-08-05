@@ -285,12 +285,12 @@ public class SandboxFragment extends Fragment {
 
         code.append("dataset.setThickness(Tools.fromDpToPx("+ mLineThickness +"));\n");
         if(mLineColorId != DEFAULT_COLOR)
-            code.append("dataset.setColor("+ mLineColorId +");\n");
+            code.append("dataset.setColor(Color.parseColor('#"+ Integer.toHexString(mLineColorId).substring(2) +"'));\n");
 
         if(mPointsSizeId != -1)
             code.append("dataset.setDotsRadius(Tools.fromDpToPx("+ mPointsSize +"));\n");
         if(mPointColorId != DEFAULT_COLOR)
-            code.append("dataset.setDotsColor("+ mPointColorId +");\n");
+            code.append("dataset.setDotsColor(Color.parseColor('#"+ Integer.toHexString(mPointColorId).substring(2) +"'));\n");
 
         code.append("chart.addData(dataset);\n");
 
@@ -322,11 +322,11 @@ public class SandboxFragment extends Fragment {
 
         code.append("BarSet dataset = new BarSet(<labels>, <values>);\n");
         if(mBarColorId != DEFAULT_COLOR)
-            code.append("dataset.setColor("+ mBarColorId +");\n");
+            code.append("dataset.setColor(Color.parseColor('#"+ Integer.toHexString(mBarColorId).substring(2) +"'));\n");
         if(mBarSpacing != 0)
             code.append("chart.setBarSpacing("+ mBarSpacing +");\n");
         if(mHasBarBackground)
-            code.append("chart.setBarBackgroundColor("+ mBarBackgroundColorId +");\n");
+            code.append("chart.setBarBackgroundColor(Color.parseColor('#"+ Integer.toHexString(mBarBackgroundColorId).substring(2) +"'));\n");
 
         code.append("chart.addData(dataset);\n");
 
@@ -358,11 +358,11 @@ public class SandboxFragment extends Fragment {
 
         code.append("BarSet dataset = new BarSet(<labels>, <values>);\n");
         if(mBarColorId != DEFAULT_COLOR)
-            code.append("dataset.setColor("+ mBarColorId +");\n");
+            code.append("dataset.setColor(Color.parseColor('# "+ Integer.toHexString(mBarColorId).substring(2) +"'));\n");
         if(mBarSpacing != 0)
             code.append("chart.setBarSpacing("+ mBarSpacing +");\n");
         if(mHasBarBackground)
-            code.append("chart.setBarBackground("+ mBarBackgroundColorId +");\n");
+            code.append("chart.setBarBackground(Color.parseColor('#"+ Integer.toHexString(mBarBackgroundColorId).substring(2) +"'));\n");
 
         code.append("chart.addData(dataset);\n");
 
@@ -429,24 +429,24 @@ public class SandboxFragment extends Fragment {
         if(!mHasXAxis) code.append("chart.setXAxis(false);\n");
         if(!mHasYAxis) code.append("chart.setYAxis(false);\n");
         if((mHasXAxis || mHasYAxis) && mAxisColorId !=  DEFAULT_COLOR)
-            code.append("chart.setAxisColor("+ mAxisColorId +");\n");
+            code.append("chart.setAxisColor(Color.parseColor('#"+ Integer.toHexString(mAxisColorId).substring(2) +"'));\n");
         if(mXLabelPosition != AxisController.LabelPosition.OUTSIDE)
             code.append("chart.setXLabels("+ mXLabelPosition +");\n");
         if(mYLabelPosition != AxisController.LabelPosition.OUTSIDE)
             code.append("chart.setYLabels("+ mYLabelPosition +");\n");
         if((mXLabelPosition != AxisController.LabelPosition.NONE || mYLabelPosition != AxisController.LabelPosition.NONE)
                 && mLabelColorId !=  DEFAULT_COLOR)
-            code.append("chart.setLabelsColor("+ mLabelColorId +");\n");
+            code.append("chart.setLabelsColor(Color.parseColor('#"+ Integer.toHexString(mLabelColorId).substring(2) +"'));\n");
         if(mGridType != null) {
             code.append("// Paint object used to draw Grid\n"+
                     "Paint gridPaint = new Paint();\n"+
-                    "gridPaint.setColor("+ mGridColorId +"));\n"+
+                    "gridPaint.setColor(Color.parseColor('#"+ Integer.toHexString(mGridColorId).substring(2)+"'));\n"+
                     "gridPaint.setStyle(Paint.Style.STROKE);\n"+
                     "gridPaint.setAntiAlias(true);\n"+
                     "gridPaint.setStrokeWidth(Tools.fromDpToPx("+ mGridThickness +"));\n");
             if (mIsGridDashed)
                 code.append("gridPaint.setPathEffect(new DashPathEffect("+ mGridDashType +", 0));\n");
-            code.append("chart.setGrid(" + mGridType + ", gridPaint);\n");
+            code.append("chart.setGrid(ChartView.GridType." + mGridType + ", gridPaint);\n");
         }
 
         System.out.println(mLabelFormat != "");

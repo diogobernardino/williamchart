@@ -34,6 +34,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Typeface;
+import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -63,7 +66,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 
 	/** Chart orientation */
-    private Orientation orientation;
+    private Orientation mOrientation;
 
 
 	/** Chart borders */
@@ -830,7 +833,7 @@ public abstract class ChartView extends RelativeLayout{
 	
 
     public Orientation getOrientation(){
-        return orientation;
+        return mOrientation;
     }
 
 
@@ -889,7 +892,7 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public float getZeroPosition(){
 
-        if(orientation == Orientation.VERTICAL)
+        if(mOrientation == Orientation.VERTICAL)
 		    return verController.parsePos(0, 0);
         else
             return horController.parsePos(0, 0);
@@ -904,7 +907,7 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	int getStep(){
 
-        if(orientation == Orientation.VERTICAL)
+        if(mOrientation == Orientation.VERTICAL)
             return verController.step;
         else
             return horController.step;
@@ -918,7 +921,7 @@ public abstract class ChartView extends RelativeLayout{
      */
     float getBorderSpacing(){
 
-        if(orientation == Orientation.VERTICAL)
+        if(mOrientation == Orientation.VERTICAL)
             return horController.borderSpacing;
         else
             return verController.borderSpacing;
@@ -1012,8 +1015,8 @@ public abstract class ChartView extends RelativeLayout{
      */
     void setOrientation(Orientation orien){
 
-        orientation = orien;
-        if(orientation == Orientation.VERTICAL) {
+		mOrientation = orien;
+        if(mOrientation == Orientation.VERTICAL) {
             verController.handleValues = true;
         }else{
             horController.handleValues = true;
@@ -1058,7 +1061,7 @@ public abstract class ChartView extends RelativeLayout{
      */
     public ChartView setLabelsFormat(DecimalFormat format){
 
-        if(orientation == Orientation.VERTICAL)
+        if(mOrientation == Orientation.VERTICAL)
             verController.labelFormat = format;
         else
             horController.labelFormat = format;
@@ -1072,7 +1075,7 @@ public abstract class ChartView extends RelativeLayout{
      * @param color
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
-    public ChartView setLabelsColor(int color) {
+    public ChartView setLabelsColor(@ColorInt int color) {
         style.labelsColor = color;
         return this;
     }
@@ -1083,7 +1086,7 @@ public abstract class ChartView extends RelativeLayout{
      * @param size
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
-    public ChartView setFontSize(int size) {
+    public ChartView setFontSize(@IntRange(from=0) int size) {
         style.fontSize = size;
         return this;
     }
@@ -1143,7 +1146,7 @@ public abstract class ChartView extends RelativeLayout{
 					"minValue and maxValue");
 		setStep(step);
 
-        if(orientation == Orientation.VERTICAL) {
+        if(mOrientation == Orientation.VERTICAL) {
             verController.maxLabelValue = maxValue;
             verController.minLabelValue = minValue;
         }else {
@@ -1161,7 +1164,7 @@ public abstract class ChartView extends RelativeLayout{
      * @param thickness   size of the thickness
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
-    public ChartView setAxisThickness(float thickness){
+    public ChartView setAxisThickness(@FloatRange(from=0.f) float thickness){
         style.axisThickness = thickness;
         return this;
     }
@@ -1173,7 +1176,7 @@ public abstract class ChartView extends RelativeLayout{
      * @param color   color of the axis
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
      */
-    public ChartView setAxisColor(int color){
+    public ChartView setAxisColor(@ColorInt int color){
         style.axisColor = color;
         return this;
     }
@@ -1192,7 +1195,7 @@ public abstract class ChartView extends RelativeLayout{
 		if(step <= 0)
 			throw new IllegalArgumentException("Step can't be lower or equal to 0");
 
-        if(orientation == Orientation.VERTICAL)
+        if(mOrientation == Orientation.VERTICAL)
             verController.step = step;
         else
             horController.step = step;
@@ -1232,7 +1235,7 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public ChartView setBorderSpacing(float spacing){
 
-        if(orientation == Orientation.VERTICAL)
+        if(mOrientation == Orientation.VERTICAL)
             horController.borderSpacing = spacing;
         else
             verController.borderSpacing = spacing;
@@ -1249,7 +1252,7 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public ChartView setTopSpacing(float spacing){
 
-        if(orientation == Orientation.VERTICAL)
+        if(mOrientation == Orientation.VERTICAL)
             verController.topSpacing = spacing;
         else
             horController.borderSpacing = spacing;
@@ -1313,7 +1316,7 @@ public abstract class ChartView extends RelativeLayout{
      */
 	ChartView setMandatoryBorderSpacing(){
 
-        if(orientation == Orientation.VERTICAL)
+        if(mOrientation == Orientation.VERTICAL)
 		    horController.mandatoryBorderSpacing = 1;
         else
             verController.mandatoryBorderSpacing = 1;

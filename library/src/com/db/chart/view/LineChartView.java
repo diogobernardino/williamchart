@@ -35,6 +35,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
+import android.support.annotation.FloatRange;
 import android.util.AttributeSet;
 import android.graphics.Shader;
 
@@ -421,7 +422,7 @@ public class LineChartView extends ChartView {
      * @param radius
 	 * @return {@link com.db.chart.view.LineChartView} self-reference.
      */
-    public LineChartView setClickablePointRadius(float radius){
+    public LineChartView setClickablePointRadius(@FloatRange(from=0.f) float radius){
         mClickableRadius = radius;
         return this;
     }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import android.graphics.Path;
 import android.graphics.PathMeasure;
+import android.support.annotation.FloatRange;
 import android.util.Log;
 
 import com.db.chart.model.ChartSet;
@@ -517,7 +518,7 @@ public class Animation{
      *               1 - all entries animate in parallel (default)
 	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
 	 */
-	private Animation setOverlap(float factor){
+	private Animation setOverlap(@FloatRange(from=0.f, to=1.f) float factor){
 
 		if(factor > 1 || factor < 0)
 			throw new IllegalArgumentException("Overlap's factor must be between 0 and 1, " +
@@ -539,7 +540,7 @@ public class Animation{
      *              { 0, 1, 2, 3, ...} - default order
 	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
 	 */
-	public Animation setOverlap(float factor, int[] order){
+	public Animation setOverlap(@FloatRange(from=0.f, to=1.f) float factor, int[] order){
 
 		setOverlap(factor);
 		mOrder = order;
@@ -568,7 +569,8 @@ public class Animation{
 	 * @param yFactor   vertical factor between 0 and 1
 	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
 	 */
-	public Animation setStartPoint(float xFactor, float yFactor){
+	public Animation setStartPoint(@FloatRange(from=0.f, to=1.f) float xFactor,
+								   @FloatRange(from=0.f, to=1.f) float yFactor){
 		
 		mStartXFactor = xFactor;
 		mStartYFactor = yFactor;

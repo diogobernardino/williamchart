@@ -24,6 +24,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
 import android.util.AttributeSet;
 
 import com.db.chart.model.ChartSet;
@@ -197,7 +199,7 @@ public abstract class BaseBarChartView extends ChartView {
      *
 	 * @param color   Color of background in case setBarBackground has been set to True
 	 */
-	public void setBarBackgroundColor(int color){
+	public void setBarBackgroundColor(@ColorInt int color){
 
         style.hasBarBackground = true;
 		style.mBarBackgroundColor = color;
@@ -211,7 +213,7 @@ public abstract class BaseBarChartView extends ChartView {
      *
 	 * @param radius   Radius applied to the corners of {@link com.db.chart.model.Bar}
 	 */
-	public void setRoundCorners(float radius){
+	public void setRoundCorners(@FloatRange(from=0.f) float radius){
 		style.cornerRadius = radius;
 	}
 

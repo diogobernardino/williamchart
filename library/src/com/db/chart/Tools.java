@@ -22,6 +22,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 public class Tools {
 
@@ -43,7 +44,7 @@ public class Tools {
      * @param drawable   {@link android.graphics.drawable.Drawable} to be converted
      * @return {@link android.graphics.Bitmap} object
      */
-	public static Bitmap drawableToBitmap (Drawable drawable) {
+	public static Bitmap drawableToBitmap (@NonNull Drawable drawable) {
 		
 	    if (drawable instanceof BitmapDrawable)
 	        return ((BitmapDrawable)drawable).getBitmap();

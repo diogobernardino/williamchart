@@ -320,7 +320,7 @@ public class BarFragment extends Fragment {
 
         barChart.setBorderSpacing(5)
                 .setAxisBorderValues(0, 10, 2)
-                .setGrid(BarChartView.GridType.FULL, gridPaint)
+                .setGrid(BarChartView.GridType.FULL, gridPaint, 10, 10)
                 .setYAxis(false)
                 .setXLabels(XController.LabelPosition.OUTSIDE)
                 .setYLabels(YController.LabelPosition.NONE)
@@ -452,15 +452,8 @@ public class BarFragment extends Fragment {
         horChart.addData(barSet);
         horChart.setBarSpacing(Tools.fromDpToPx(5));
 
-        Paint gridPaint = new Paint();
-        gridPaint.setColor(Color.parseColor("#aab6b2ac"));
-        gridPaint.setStyle(Paint.Style.STROKE);
-        gridPaint.setAntiAlias(true);
-        gridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
-
         horChart.setBorderSpacing(0)
                 .setAxisBorderValues(0, 100, 5)
-                .setGrid(HorizontalBarChartView.GridType.FULL, gridPaint)
                 .setXAxis(false)
                 .setYAxis(false)
                 .setLabelsColor(Color.parseColor("#FF8E8A84"))

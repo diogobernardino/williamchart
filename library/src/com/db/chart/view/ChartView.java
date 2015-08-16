@@ -1277,12 +1277,15 @@ public abstract class ChartView extends RelativeLayout{
 	 * Apply grid to chart.
 	 *
 	 * @param type   {@link GridType} for grid
+	 * @param rows   Grid's number of rows
+	 * @param columns Grid's number of columns
 	 * @param paint   The Paint instance that will be used to draw the grid
 	 *                If null the grid won't be drawn
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setGrid(GridType type, Paint paint,
-							 @IntRange(from=1) int rows, @IntRange(from=1) int columns){
+	public ChartView setGrid(GridType type,
+							 @IntRange(from=1) int rows, @IntRange(from=1) int columns,
+							 Paint paint){
 
 		if(rows < 1 || columns < 1)
 			throw new IllegalArgumentException("Number of rows/columns can't be lesser than 1.");

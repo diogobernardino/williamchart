@@ -44,7 +44,13 @@ public abstract class ChartEntry {
     /** Defines if entry is visible */
     boolean isVisible;
 
-	
+
+	/**
+	 * Constructor.
+	 *
+	 * @param label
+	 * @param value
+	 */
 	ChartEntry(String label, float value){
 		mLabel = label;
 		mValue = value;
@@ -57,7 +63,8 @@ public abstract class ChartEntry {
         return isVisible;
     }
 	
-	
+
+
 	/*
 	 * --------
 	 * Getters
@@ -111,8 +118,8 @@ public abstract class ChartEntry {
 	/**
 	 * Set the parsed display coordinates.
      *
-	 * @param x
-	 * @param y
+	 * @param x   display x coordinate.
+	 * @param y   display y coordinate.
 	 */
 	public void setCoordinates(float x, float y){
 
@@ -121,11 +128,27 @@ public abstract class ChartEntry {
 	}
 
 
-    public void setColor(@ColorInt int mColor) {
+	/**
+	 * Define the color of the entry.
+	 *
+	 * @param color   Color to be set.
+	 */
+    public void setColor(@ColorInt int color) {
 
         isVisible = true;
-        this.mColor = mColor;
+        mColor = color;
     }
+
+
+	/**
+	 * Define whether this entry will be drawn or not.
+	 *
+	 * @param visible   True if entry should be displayed.
+	 */
+	public void setVisible(boolean visible){
+
+		isVisible = visible;
+	}
 
 
 	public String toString(){

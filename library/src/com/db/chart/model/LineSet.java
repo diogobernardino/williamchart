@@ -25,7 +25,6 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.db.chart.Tools;
 
@@ -97,9 +96,9 @@ public class LineSet extends ChartSet{
         init();
 
 		if(labels == null || values == null)
-			Log.e(TAG, "Labels or/and values can't be null.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Labels or/and values can't be null.");
         if(labels.length != values.length)
-            Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Arrays size doesn't match.");
 
         int nEntries = labels.length;
         for(int i = 0; i < nEntries; i++)
@@ -327,7 +326,7 @@ public class LineSet extends ChartSet{
     public LineSet setDashed(@NonNull float[] intervals) {
 
 		if(intervals == null)
-			Log.e(TAG, "Argument can't be null.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Argument can't be null.");
 
         mIsDashed = true;
         mDashedIntervals = intervals;
@@ -357,7 +356,7 @@ public class LineSet extends ChartSet{
 	public LineSet setThickness(@FloatRange(from=0.f) float thickness) {
 		
 		if(thickness < 0)
-			Log.e(TAG, "Line thickness can't be <= 0.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Line thickness can't be <= 0.");
 
 		mThickness = thickness;
 		return this;
@@ -409,7 +408,7 @@ public class LineSet extends ChartSet{
     public LineSet setGradientFill(@NonNull int colors[], float[] positions){
 
 		if(colors == null || colors.length == 0)
-			Log.e(TAG, "Colors argument can't be null or empty.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Colors argument can't be null or empty.");
 
         mHasGradientFill = true;
         mGradientColors = colors;
@@ -431,7 +430,7 @@ public class LineSet extends ChartSet{
     public LineSet beginAt(@IntRange(from=0) int index) {
 
         if(index < 0 || index > size())
-            Log.e(TAG, "Index is negative or greater than set's size.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Index is negative or greater than set's size.");
 
         mBegin = index;
         return this;
@@ -448,11 +447,10 @@ public class LineSet extends ChartSet{
     public LineSet endAt(@IntRange(from=0) int index) {
 
 		if(index < 0 || index > size())
-            Log.e(TAG, "Index is negative or greater than set's size.",
-					new IllegalArgumentException());
+			throw new IllegalArgumentException("Index is negative or greater than set's size.");
 		if(index < mBegin)
-			Log.e(TAG, "Index cannot be lesser than the start entry defined in beginAt(index).",
-					new IllegalArgumentException());
+			throw new IllegalArgumentException("Index cannot be lesser than the start entry " +
+					"defined in beginAt(index).");
 
         mEnd = index;
         return this;
@@ -486,7 +484,7 @@ public class LineSet extends ChartSet{
 	public LineSet setDotsRadius(@FloatRange(from=0.f) float radius){
 
 		if(radius < 0.f)
-			Log.e(TAG, "Dots radius can't be < 0.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Dots radius can't be < 0.");
 
         for(ChartEntry e : getEntries())
             ((Point) e).setRadius(radius);
@@ -505,7 +503,7 @@ public class LineSet extends ChartSet{
 	public LineSet setDotsStrokeThickness(@FloatRange(from=0.f) float thickness){
 
 		if(thickness < 0.f)
-			Log.e(TAG, "Dots thickness can't be < 0.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Dots thickness can't be < 0.");
 
         for(ChartEntry e : getEntries())
             ((Point) e).setStrokeThickness(thickness);
@@ -539,7 +537,7 @@ public class LineSet extends ChartSet{
 	public LineSet setDotsDrawable(@NonNull Drawable drawable){
 
 		if(drawable == null)
-			Log.e(TAG, "Drawable argument can't be null.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Drawable argument can't be null.");
 
         for(ChartEntry e : getEntries())
             ((Point) e).setDrawable(drawable);

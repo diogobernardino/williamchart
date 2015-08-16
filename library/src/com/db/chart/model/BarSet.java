@@ -19,7 +19,6 @@ package com.db.chart.model;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 
-import android.util.Log;
 
 /**
  * Data model containing a set of {@link Bar} to be used by {@link com.db.chart.view.BaseBarChartView}.
@@ -48,9 +47,9 @@ public class BarSet extends ChartSet{
         super();
 
 		if(labels == null || values == null)
-			Log.e(TAG, "Labels or/and values can't be null.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Labels or/and values can't be null.");
 		if(labels.length != values.length)
-			Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Arrays size doesn't match.");
 
         int nEntries = labels.length;
         for(int i = 0; i < nEntries; i++)
@@ -127,7 +126,7 @@ public class BarSet extends ChartSet{
     public BarSet setGradientColor(@NonNull int colors[], float[] positions){
 
 		if(colors == null || colors.length == 0)
-			Log.e(TAG, "Colors argument can't be null or empty.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Colors argument can't be null or empty.");
 
         for(ChartEntry e : getEntries())
             ((Bar) e).setGradientColor(colors, positions);

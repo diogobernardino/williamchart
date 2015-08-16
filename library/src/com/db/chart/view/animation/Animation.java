@@ -206,8 +206,7 @@ public class Animation{
 			// In case the animation order has been defined,
 			// check if size equal than set's entries size
 			if(mOrder.length != nEntries)
-				Log.e(TAG, "Size of overlap order different than set's entries size.",
-						new IllegalArgumentException());
+				throw new IllegalArgumentException("Size of overlap order different than set's entries size.");
 		}
 		
 		// Calculates the expected duration as there was with no overlap (factor = 0)
@@ -521,8 +520,8 @@ public class Animation{
 	private Animation setOverlap(float factor){
 
 		if(factor > 1 || factor < 0)
-			Log.e(TAG, "Overlap's factor must be between 0 and 1, the current defined is "+factor,
-					new IllegalArgumentException());
+			throw new IllegalArgumentException("Overlap's factor must be between 0 and 1, " +
+					"the current defined is "+factor);
 
 		mOverlapingFactor = factor;
 		return this;

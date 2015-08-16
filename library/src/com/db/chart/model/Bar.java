@@ -18,8 +18,6 @@ package com.db.chart.model;
 
 import android.support.annotation.NonNull;
 
-import android.util.Log;
-
 
 /**
  * Data model that represents a bar in {@link com.db.chart.view.BaseBarChartView}
@@ -101,7 +99,7 @@ public class Bar extends ChartEntry{
     public Bar setGradientColor(@NonNull int colors[], float[] positions){
 
         if(colors == null || colors.length == 0)
-            Log.e(TAG, "Colors argument can't be null or empty.", new IllegalArgumentException());
+            throw new IllegalArgumentException("Colors argument can't be null or empty.");
 
         mHasGradientColor = true;
         mGradientColors = colors;

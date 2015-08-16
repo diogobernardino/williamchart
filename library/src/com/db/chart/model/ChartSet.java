@@ -18,8 +18,6 @@ package com.db.chart.model;
 
 import android.support.annotation.FloatRange;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 
@@ -55,7 +53,7 @@ public abstract class ChartSet {
 	void addEntry(ChartEntry e){
 
 		if(e == null)
-			Log.e(TAG, "Chart entry added can't be null object.", new IllegalArgumentException());
+			throw new IllegalArgumentException("Chart entry added can't be null object.");
 
 		mEntries.add(e);
 	}
@@ -72,8 +70,8 @@ public abstract class ChartSet {
 
 		int nEntries = size();
 		if(newValues.length != nEntries)
-			Log.e(TAG, "New set values given doesn't match previous number of entries.",
-					new IllegalArgumentException());
+			throw new IllegalArgumentException("New set values given doesn't match previous " +
+					"number of entries.");
 
 		float[][] result = new float[nEntries][2];
 		for(int i = 0; i < nEntries; i++){

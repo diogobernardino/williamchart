@@ -19,9 +19,7 @@ package com.db.chart.model;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
-import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.db.chart.Tools;
 
@@ -150,7 +148,7 @@ public class Point extends ChartEntry{
     public Point setRadius(@FloatRange(from=0.f) float radius){
 
         if(radius < 0.f)
-            Log.e(TAG, "Dot radius can't be < 0.", new IllegalArgumentException());
+            throw new IllegalArgumentException("Dot radius can't be < 0.");
 
         isVisible = true;
         mRadius = radius;
@@ -167,7 +165,7 @@ public class Point extends ChartEntry{
     public Point setStrokeThickness(@FloatRange(from=0.f) float thickness){
 
         if(thickness < 0)
-            Log.e(TAG, "Grid thickness < 0.", new IllegalArgumentException());
+            throw new IllegalArgumentException("Grid thickness < 0.");
 
         isVisible = true;
         mHasStroke = true;
@@ -200,7 +198,7 @@ public class Point extends ChartEntry{
     public Point setDrawable(@NonNull Drawable drawable){
 
         if(drawable == null)
-            Log.e(TAG, "Drawable argument can't be null.", new IllegalArgumentException());
+            throw new IllegalArgumentException("Drawable argument can't be null.");
 
         isVisible = true;
         mDrawable = drawable;

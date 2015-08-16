@@ -397,7 +397,7 @@ public class StackedFragment extends Fragment {
         horChart.setBarSpacing(Tools.fromDpToPx(8));
 
         horChart.setBorderSpacing(0)
-                .setGrid(ChartView.GridType.VERTICAL, gridPaint, 1, 10)
+                .setGrid(ChartView.GridType.VERTICAL, 1, 10, gridPaint)
                 .setXAxis(false)
                 .setYAxis(false)
                 .setLabelsFormat(new DecimalFormat("##'M'"))

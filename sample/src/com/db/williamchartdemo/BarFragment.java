@@ -320,7 +320,7 @@ public class BarFragment extends Fragment {
 
         barChart.setBorderSpacing(5)
                 .setAxisBorderValues(0, 10, 2)
-                .setGrid(BarChartView.GridType.FULL, gridPaint, 10, 10)
+                .setGrid(BarChartView.GridType.FULL, 10, 10, gridPaint)
                 .setYAxis(false)
                 .setXLabels(XController.LabelPosition.OUTSIDE)
                 .setYLabels(YController.LabelPosition.NONE)

@@ -16,6 +16,8 @@
 
 package com.db.chart.model;
 
+import android.support.annotation.FloatRange;
+
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -181,18 +183,25 @@ public abstract class ChartSet {
 
 	/**
 	 * Set set's alpha.
+	 *
+	 * @param alpha   alpha value from 0 to 1.
+	 *                   If you need to make the set invisible than consider
+	 *                   using the method setVisible().
 	 */
-	public void setAlpha(float alpha){
+	public void setAlpha(@FloatRange(from=0.f, to=1.f) float alpha){
 		mAlpha = (alpha < 1) ? alpha : 1;
 	}
 
 	
 	/**
 	 * Set whether the set should be visible or not.
+	 *
+	 * @param visible   false if set should not be visible.
 	 */
 	public void setVisible(boolean visible){
 		mIsVisible = visible;
 	}
+
 
 
 	public int size() {

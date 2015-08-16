@@ -16,6 +16,8 @@
 
 package com.db.chart.model;
 
+import android.support.annotation.ColorInt;
+
 /**
  * Generic Data model of a {@link com.db.chart.view.ChartView} entry
  */
@@ -119,7 +121,7 @@ public abstract class ChartEntry {
 	}
 
 
-    public void setColor(int mColor) {
+    public void setColor(@ColorInt int mColor) {
 
         isVisible = true;
         this.mColor = mColor;

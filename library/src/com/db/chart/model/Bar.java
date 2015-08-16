@@ -16,18 +16,29 @@
 
 package com.db.chart.model;
 
+import android.support.annotation.NonNull;
+
+import android.util.Log;
+
 
 /**
  * Data model that represents a bar in {@link com.db.chart.view.BaseBarChartView}
  */
 public class Bar extends ChartEntry{
 
+    private static final String TAG = "chart.model.Bar";
 
     private boolean mHasGradientColor;
     private int[] mGradientColors;
     private float[] mGradientPositions;
 
 
+    /**
+     * Constructor.
+     *
+     * @param label
+     * @param value
+     */
     public Bar(String label, float value){
 		super(label, value);
 
@@ -37,17 +48,26 @@ public class Bar extends ChartEntry{
 
 
     /**
+     * If bar has gradient fill color defined.
      *
-     * @return true if gradient color define.
+     * @return true if gradient fill property defined.
      */
     public boolean hasGradientColor(){
         return mHasGradientColor;
     }
 
 
+    /*
+	 * -------------
+	 * Getters
+	 * -------------
+	 */
+
     /**
+     * Retrieve set of colors defining the gradient of bar's fill.
+     * Gradient fill property must have been previously defined.
      *
-     * @return gradient colors. Gradient color must have been previously defined.
+     * @return Gradient colors array.
      */
     public int[] getGradientColors(){
         return mGradientColors;
@@ -55,23 +75,33 @@ public class Bar extends ChartEntry{
 
 
     /**
+     * Retrieve set of positions to define the gradient of bar's fill.
+     * Gradient fill property must have been previously defined.
      *
-     * @return gradient positions. Gradient color must have been previously defined.
+     * @return Gradient positions.
      */
     public float[] getGradientPositions(){
         return mGradientPositions;
     }
 
 
+	/*
+	 * -------------
+	 * Setters
+	 * -------------
+	 */
 
     /**
      * Set gradient colors to the fill of the {@link com.db.chart.model.Bar}.
      *
      * @param colors   The colors to be distributed among gradient
-     * @param positions
+     * @param positions   Position/order from which the colors will be place
      * @return {@link com.db.chart.model.Bar} self-reference.
      */
-    public Bar setGradientColor(int colors[], float[] positions){
+    public Bar setGradientColor(@NonNull int colors[], float[] positions){
+
+        if(colors == null || colors.length == 0)
+            Log.e(TAG, "Colors argument can't be null or empty.", new IllegalArgumentException());
 
         mHasGradientColor = true;
         mGradientColors = colors;

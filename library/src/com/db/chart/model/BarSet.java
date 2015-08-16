@@ -16,6 +16,9 @@
 
 package com.db.chart.model;
 
+import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
+
 import android.util.Log;
 
 /**
@@ -25,17 +28,29 @@ public class BarSet extends ChartSet{
 	
 	
 	private static final String TAG = "chart.model.BarSet";
-	
-	
+
+
+	/**
+	 * Constructor.
+	 */
 	public BarSet(){
 		super();
 	}
 
-    public BarSet(String[] labels, float[] values){
+
+	/**
+	 * Constructor.
+	 *
+	 * @param labels
+	 * @param values
+	 */
+    public BarSet(@NonNull String[] labels, @NonNull float[] values){
         super();
 
-        if(labels.length != values.length)
-            Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
+		if(labels == null || values == null)
+			Log.e(TAG, "Labels or/and values can't be null.", new IllegalArgumentException());
+		if(labels.length != values.length)
+			Log.e(TAG, "Arrays size doesn't match.", new IllegalArgumentException());
 
         int nEntries = labels.length;
         for(int i = 0; i < nEntries; i++)
@@ -44,9 +59,10 @@ public class BarSet extends ChartSet{
 
 
 	/**
+	 * Add new {@link com.db.chart.model.Bar} from a string and a float.
 	 *
-	 * @param label
-	 * @param value
+	 * @param label   new {@link com.db.chart.model.Bar}'s label
+	 * @param value   new {@link com.db.chart.model.Bar}'s value
 	 */
 	public void addBar(String label, float value){
 		this.addBar(new Bar(label, value));
@@ -54,10 +70,11 @@ public class BarSet extends ChartSet{
 
 
 	/**
+	 * Add new {@link com.db.chart.model.Bar}.
 	 *
-	 * @param bar
+	 * @param bar   new nonnull {@link com.db.chart.model.Bar}
 	 */
-	public void addBar(Bar bar){
+	public void addBar(@NonNull Bar bar){
 		this.addEntry(bar);
 	}
 	
@@ -70,6 +87,7 @@ public class BarSet extends ChartSet{
 	 */
 
 	/**
+	 * Retrieve line's color.
 	 *
 	 * @return {@link com.db.chart.model.BarSet} color.
 	 */
@@ -86,24 +104,30 @@ public class BarSet extends ChartSet{
 	 */
 
 	/**
+	 * Define the color of bars. Previously defined colors will be overridden.
 	 *
 	 * @param color
 	 * @return {@link com.db.chart.model.BarSet} self-reference.
 	 */
-	public BarSet setColor(int color){
+	public BarSet setColor(@ColorInt int color){
 		
 		for(ChartEntry e : getEntries())
 			e.setColor(color);
 		return this;
 	}
 
+
 	/**
+	 * Define a gradient color to the bars. Previously defined colors will be overridden.
 	 *
-	 * @param colors
-	 * @param positions
+	 * @param colors   The colors to be distributed among gradient
+	 * @param positions   Position/order from which the colors will be place
 	 * @return {@link com.db.chart.model.BarSet} self-reference.
 	 */
-    public BarSet setGradientColor(int colors[], float[] positions){
+    public BarSet setGradientColor(@NonNull int colors[], float[] positions){
+
+		if(colors == null || colors.length == 0)
+			Log.e(TAG, "Colors argument can't be null or empty.", new IllegalArgumentException());
 
         for(ChartEntry e : getEntries())
             ((Bar) e).setGradientColor(colors, positions);

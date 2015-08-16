@@ -34,4 +34,8 @@ android {
     }
 }
 
+dependencies {
+    compile 'com.android.support:support-annotations:22.2.0'
+}
+
 //apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'

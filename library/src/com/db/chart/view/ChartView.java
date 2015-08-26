@@ -242,6 +242,25 @@ public abstract class ChartView extends RelativeLayout{
 
 		style.clean();
 	}
+
+
+	@Override
+	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+		int tmpWidth = widthMeasureSpec;
+		int tmpHeight = heightMeasureSpec;
+
+		if (widthMode == MeasureSpec.AT_MOST)
+			tmpWidth = 200;
+
+		if (heightMode == MeasureSpec.AT_MOST)
+			tmpHeight = 100;
+
+		setMeasuredDimension(tmpWidth, tmpHeight);
+	}
 	
 
 	

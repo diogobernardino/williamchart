@@ -55,6 +55,9 @@ public abstract class ChartView extends RelativeLayout{
 
 	private static final String TAG = "chart.view.ChartView";
 
+	private static final int DEFAULT_GRID_ROWS = 5;
+	private static final int DEFAULT_GRID_COLUMNS = 5;
+
 
 	public enum GridType {
 		FULL, VERTICAL, HORIZONTAL, NONE
@@ -220,8 +223,8 @@ public abstract class ChartView extends RelativeLayout{
 		data = new ArrayList<>();
 		mRegions = new ArrayList<>();
 		mGridType = GridType.NONE;
-		mGridNRows = 5;
-		mGridNColumns = 5;
+		mGridNRows = DEFAULT_GRID_ROWS;
+		mGridNColumns = DEFAULT_GRID_COLUMNS;
 	}
 
 
@@ -246,6 +249,7 @@ public abstract class ChartView extends RelativeLayout{
 
 	@Override
 	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
 		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -569,6 +573,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param tip   tooltip to be added to chart
 	 */
 	private void addTooltip(Tooltip tip){
+
 		this.addView(tip);
 		tip.setOn(true);
 	}

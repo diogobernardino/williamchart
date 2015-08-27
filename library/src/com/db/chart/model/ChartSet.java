@@ -64,22 +64,16 @@ public abstract class ChartSet {
 	 * Updates set values.
      *
 	 * @param newValues
-	 * @return float[] with X and Y coordinates of old values
 	 */
-	public float[][] updateValues(float[] newValues){
+	public void updateValues(float[] newValues){
 
 		int nEntries = size();
 		if(newValues.length != nEntries)
 			throw new IllegalArgumentException("New set values given doesn't match previous " +
 					"number of entries.");
 
-		float[][] result = new float[nEntries][2];
-		for(int i = 0; i < nEntries; i++){
-			result[i][0] = mEntries.get(i).getX();
-			result[i][1] = mEntries.get(i).getY();
+		for(int i = 0; i < nEntries; i++)
 			setValue(i, newValues[i]);
-		}
-		return result;
 	}
 	
 	

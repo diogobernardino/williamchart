@@ -109,7 +109,7 @@ public class YController extends AxisController{
      *
      * @return
      */
-    float getAxisHorizontalPosition(){
+    private float getAxisHorizontalPosition(){
 
         if(axisPosition == 0) {
 
@@ -136,18 +136,7 @@ public class YController extends AxisController{
      *
      * @return
      */
-    /*float getLabelsHorizontalPosition(){
-
-        float result = chartView.getChartLeft();
-        if(labelsPositioning == LabelPosition.INSIDE) {
-            result += distLabelToAxis;
-            if(hasAxis)
-                result +=  chartView.style.axisThickness;
-        }
-
-        return result;
-    }*/
-    float getLabelsHorizontalPosition(){
+    private float getLabelsHorizontalPosition(){
 
         float result = getAxisHorizontalPosition();
         if(labelsPositioning == LabelPosition.INSIDE) {

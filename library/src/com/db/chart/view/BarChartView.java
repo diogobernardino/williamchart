@@ -65,7 +65,6 @@ public class BarChartView extends BaseBarChartView {
 		
 		final int nSets = data.size();
 		final int nEntries = data.get(0).size();
-		final int yZeroCoord = (int) this.getZeroPosition();
 		
 		float offset;
 		BarSet barSet;
@@ -91,7 +90,7 @@ public class BarChartView extends BaseBarChartView {
                     style.barPaint.setShader(
                             new LinearGradient(
                                     bar.getX(),
-                                    yZeroCoord,
+									this.getZeroPosition(),
                                     bar.getX(),
                                     bar.getY(),
                                     bar.getGradientColors(),
@@ -111,11 +110,11 @@ public class BarChartView extends BaseBarChartView {
 					// Draw positive bar
                     drawBar(canvas,
                             offset, bar.getY(),
-                            offset + barWidth, yZeroCoord);
+                            offset + barWidth, this.getZeroPosition());
 				else
 					// Draw negative bar
                     drawBar(canvas,
-                            offset, yZeroCoord,
+                            offset, this.getZeroPosition(),
                             offset + barWidth, bar.getY());
 
                 offset += barWidth;
@@ -171,7 +170,6 @@ public class BarChartView extends BaseBarChartView {
 		
 		final int nSets = data.size();
 		final int nEntries = data.get(0).size();
-		final int yZeroCoord = (int) this.getZeroPosition();
 		
 		ArrayList<ArrayList<Region>> result = new ArrayList<>(nSets);
 		
@@ -197,11 +195,11 @@ public class BarChartView extends BaseBarChartView {
                             (int) offset,
                             (int) bar.getY(),
                             (int) (offset += barWidth),
-                            yZeroCoord));
+							(int) this.getZeroPosition()));
 				else
 					result.get(j).add(new Region(
                             (int) offset,
-                            yZeroCoord,
+							(int) this.getZeroPosition(),
                             (int) (offset += barWidth),
                             (int) bar.getY()));
 				

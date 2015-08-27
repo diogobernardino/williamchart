@@ -111,9 +111,9 @@ public abstract class AxisController{
 
 
 
-    AxisController(ChartView view) {
+    AxisController(ChartView chartview) {
 
-        chartView = view;
+        chartView = chartview;
         reset();
     }
 
@@ -239,8 +239,7 @@ public abstract class AxisController{
             }
         }
 
-        float[] result = {min, max};
-        return result;
+        return new float[]{min, max};
     }
 
 

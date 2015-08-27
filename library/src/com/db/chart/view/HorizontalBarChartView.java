@@ -64,7 +64,6 @@ public class HorizontalBarChartView extends BaseBarChartView {
 
 		final int nSets = data.size();
 		final int nEntries = data.get(0).size();
-		final int yZeroCoord = (int) this.getZeroPosition();
 		
 		float offset;
 		BarSet barSet;
@@ -98,13 +97,13 @@ public class HorizontalBarChartView extends BaseBarChartView {
 				if(bar.getValue() > 0)
 					// Draw positive bar
                     drawBar(canvas,
-                            yZeroCoord, offset,
+							this.getZeroPosition(), offset,
                             bar.getX(), offset + barWidth);
 				else
 					// Draw negative bar
                     drawBar(canvas,
                             bar.getX(), offset,
-                            yZeroCoord, offset + barWidth);
+							this.getZeroPosition(), offset + barWidth);
 
                 offset += barWidth;
 				
@@ -118,7 +117,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 
 
     /**
-     * (Optional) To be overriden in case the view needs to execute some code before
+     * (Optional) To be overridden in case the view needs to execute some code before
      * starting the drawing.
      *
      * @param data   Array of {@link ChartSet} to do the necessary preparation just before onDraw
@@ -159,7 +158,6 @@ public class HorizontalBarChartView extends BaseBarChartView {
 		
 		int nSets = data.size();
 		int nEntries = data.get(0).size();
-		int yZeroCoord = (int) this.getZeroPosition();
 		
 		final ArrayList<ArrayList<Region>> result = new ArrayList<>(nSets);
 		
@@ -182,7 +180,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 				
 				if(bar.getValue() > 0)
 					result.get(j).add(new Region(
-                            yZeroCoord,
+							(int) this.getZeroPosition(),
                             (int) offset,
                             (int) bar.getX(),
                             (int) (offset + barWidth)));
@@ -190,7 +188,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 					result.get(j).add(new Region(
                             (int) bar.getX(),
                             (int) offset,
-                            yZeroCoord,
+							(int) this.getZeroPosition(),
                             (int) (offset + barWidth)));
 				
 				// If last bar of group no set spacing is necessary

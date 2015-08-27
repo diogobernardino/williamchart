@@ -60,7 +60,7 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
      * @param x1   Coordinate(n+1)
      */
     @Override
-    protected void calculateBarsWidth(int nSets, float x0, float x1) {
+    void calculateBarsWidth(int nSets, float x0, float x1) {
         barWidth = x1 - x0 - style.barSpacing;
     }
 
@@ -186,7 +186,7 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
 
 	/*
 	 * --------------------------------
-	 * Overriden methods from ChartView
+	 * Overridden methods from ChartView
 	 * --------------------------------
 	 */
 

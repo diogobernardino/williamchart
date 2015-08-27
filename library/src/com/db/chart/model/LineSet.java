@@ -528,7 +528,7 @@ public class LineSet extends ChartSet{
 	
 	
 	/**
-	 * Define a background drawable to each of the dataset's points to be
+	 * Define a background drawable to each of the dataset points to be
 	 * drawn instead of the usual dot.
      *
 	 * @param drawable

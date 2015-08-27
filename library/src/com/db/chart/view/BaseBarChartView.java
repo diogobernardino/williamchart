@@ -264,7 +264,7 @@ public abstract class BaseBarChartView extends ChartView {
 
 
 		/** Radius to round corners **/
-		protected float cornerRadius;
+		float cornerRadius;
 		
 		
 		/** Shadow related variables */

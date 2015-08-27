@@ -230,8 +230,8 @@ public class LineChartView extends ChartView {
 		float thisPointY;
 		float nextPointX;
 		float nextPointY;
-		float startdiffX;
-		float startdiffY;
+		float startDiffX;
+		float startDiffY;
 		float endDiffX;
 		float endDiffY;
 		float firstControlX;
@@ -264,14 +264,14 @@ public class LineChartView extends ChartView {
 			nextPointX = set.getEntry(i + 1).getX();
 			nextPointY = set.getEntry(i + 1).getY();
 
-			startdiffX = (nextPointX - set.getEntry(si(set.size(), i - 1)).getX());
-			startdiffY = (nextPointY - set.getEntry(si(set.size(), i - 1)).getY());
+			startDiffX = (nextPointX - set.getEntry(si(set.size(), i - 1)).getX());
+			startDiffY = (nextPointY - set.getEntry(si(set.size(), i - 1)).getY());
 
 			endDiffX = (set.getEntry(si(set.size(), i + 2)).getX() - thisPointX);
 			endDiffY = (set.getEntry(si(set.size(), i + 2)).getY() - thisPointY);
 
-			firstControlX = thisPointX + (0.15f * startdiffX);
-			firstControlY = thisPointY + (0.15f * startdiffY);
+			firstControlX = thisPointX + (0.15f * startDiffX);
+			firstControlY = thisPointY + (0.15f * startDiffY);
 
 			secondControlX = nextPointX - (0.15f * endDiffX);
 			secondControlY = nextPointY - (0.15f * endDiffY);

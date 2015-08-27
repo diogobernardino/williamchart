@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.support.annotation.FloatRange;
-import android.util.Log;
 
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;
@@ -521,7 +520,7 @@ public class Animation{
 	private Animation setOverlap(@FloatRange(from=0.f, to=1.f) float factor){
 
 		if(factor > 1 || factor < 0)
-			throw new IllegalArgumentException("Overlap's factor must be between 0 and 1, " +
+			throw new IllegalArgumentException("Overlap factor must be between 0 and 1, " +
 					"the current defined is "+factor);
 
 		mOverlapingFactor = factor;

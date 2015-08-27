@@ -48,7 +48,6 @@ public class XController extends AxisController{
      * IMPORTANT: Method's order is crucial. Change it (or not) carefully.
      */
 	void init() {
-        //getLabelsVerticalPosition();
 
         defineLabels();
 
@@ -130,7 +129,7 @@ public class XController extends AxisController{
      *
      * @return
      */
-    float getLabelsVerticalPosition(){
+    private float getLabelsVerticalPosition(){
 
         float result = chartView.getChartBottom();
         if(labelsPositioning == LabelPosition.INSIDE) {

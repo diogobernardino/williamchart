@@ -30,6 +30,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Region;
@@ -37,9 +38,9 @@ import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Pair;
 
 import android.view.MotionEvent;
 import android.view.View;
@@ -271,9 +272,9 @@ public abstract class ChartView extends RelativeLayout{
 	
 	
 	/*
-	 * -----------------------
-	 * Methods to be overriden
-	 * -----------------------
+	 * -------------------------
+	 * Methods to be overridden
+	 * -------------------------
 	 */
 
 
@@ -295,7 +296,7 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/**
-	 * (Optional) To be overriden in case the view needs to execute some code before 
+	 * (Optional) To be overridden in case the view needs to execute some code before
 	 * starting the drawing.
 	 *
 	 * @param data   Array of {@link ChartSet} to do the necessary preparation just before onDraw
@@ -384,7 +385,7 @@ public abstract class ChartView extends RelativeLayout{
 	/**
 	 * Show only a specific chart dataset.
 	 *
-	 * @param setIndex   Dataset's index to be displayed
+	 * @param setIndex   Dataset index to be displayed
 	 */
 	public void show(int setIndex){
 
@@ -415,7 +416,7 @@ public abstract class ChartView extends RelativeLayout{
 	/**
 	 * Dismiss a specific chart dataset.
 	 *
-	 * @param setIndex   Dataset's index to be dismissed
+	 * @param setIndex   Dataset index to be dismissed
 	 */
 	public void dismiss(int setIndex){
 
@@ -782,7 +783,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * to return the region's index. 
 	 */
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	public boolean onTouchEvent(@NonNull MotionEvent event) {
 
 		if(mAnim == null || !mAnim.isPlaying())
 
@@ -1004,19 +1005,19 @@ public abstract class ChartView extends RelativeLayout{
 
 
 
-	protected int getChartTop(){
+	int getChartTop(){
 		return mChartTop;
 	}
 
-	protected int getChartBottom(){
+	int getChartBottom(){
 		return mChartBottom;
 	}
 
-	protected int getChartLeft(){
+	int getChartLeft(){
 		return mChartLeft;
 	}
 
-	protected int getChartRight(){
+	int getChartRight(){
 		return mChartRight;
 	}
 
@@ -1358,13 +1359,12 @@ public abstract class ChartView extends RelativeLayout{
 	 * e.g. If orientation is VERTICAL it means that this attribute must be handled
 	 * by horizontal axis and not the vertical axis.
 	 */
-	ChartView setMandatoryBorderSpacing(){
+	void setMandatoryBorderSpacing(){
 
 		if(mOrientation == Orientation.VERTICAL)
 			horController.mandatoryBorderSpacing = 1;
 		else
 			verController.mandatoryBorderSpacing = 1;
-		return this;
 	}
 
 
@@ -1382,7 +1382,7 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	class Style {
 
-		private final static int DEFAULT_COLOR = -16777216;
+		private final static int DEFAULT_COLOR = Color.BLACK;
 
 
 		/** Chart */

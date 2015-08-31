@@ -399,6 +399,10 @@ public class SandboxFragment extends Fragment {
 
         StringBuilder code = new StringBuilder();
 
+        code.append("// Do not assume the code below as final. " +
+                "For a complete customization and well behaviour of your " +
+                "chart please check the documentation, wiki, and code examples.\n");
+
         switch(mChartId){
             case R.id.sandbox_chart_line:
                 code.append("LineChartView chart = (LineChartView) <layout>.findViewById(<chart_id>);\n");

@@ -136,6 +136,7 @@ public class LineFragment extends Fragment {
      * @param btn    Play button
      */
     private void showChart(final int tag, final LineChartView chart, final ImageButton btn){
+
         dismissPlay(btn);
         Runnable action =  new Runnable() {
             @Override
@@ -221,6 +222,7 @@ public class LineFragment extends Fragment {
      * @param btn    Play button
      */
     private void showPlay(ImageButton btn){
+
         btn.setEnabled(true);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             btn.animate().alpha(1).scaleX(1).scaleY(1);
@@ -234,6 +236,7 @@ public class LineFragment extends Fragment {
      * @param btn    Play button
      */
     private void dismissPlay(ImageButton btn){
+
         btn.setEnabled(false);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             btn.animate().alpha(0).scaleX(0).scaleY(0);
@@ -271,7 +274,7 @@ public class LineFragment extends Fragment {
 
         chart.setTopSpacing(Tools.fromDpToPx(15))
                 .setBorderSpacing(Tools.fromDpToPx(0))
-                .setAxisBorderValues(0, 10, 1)
+                .setAxisBorderValues(0, 9, 1)
                 .setXLabels(AxisController.LabelPosition.INSIDE)
                 .setYLabels(AxisController.LabelPosition.NONE)
                 .setLabelsColor(Color.parseColor("#e08b36"))
@@ -285,6 +288,7 @@ public class LineFragment extends Fragment {
 
 
     public void updateOne(LineChartView chart){
+
         float[][] newValues = {{3.5f, 4.7f, 4.3f, 8f, 6.5f, 10f, 7f, 8.3f, 7.0f, 7.3f, 5f},
                 {1f, 2f, 2f, 3.5f, 2f, 5f, 4.5f, 4.8f, 4.3f, 4.8f, 2.5f}};
         chart.updateValues(1, newValues[0]);
@@ -340,6 +344,7 @@ public class LineFragment extends Fragment {
     }
 
     public void updateTwo(LineChartView chart){
+
         chart.updateValues(0, mValuesTwo[1]);
         chart.updateValues(1, mValuesTwo[0]);
         chart.notifyDataUpdate();
@@ -402,13 +407,12 @@ public class LineFragment extends Fragment {
         gridPaint.setStrokeWidth(Tools.fromDpToPx(1f));
 
         chart.setBorderSpacing(1)
-                .setAxisBorderValues(0, 10, 1)
+                .setAxisBorderValues(0, 10, 2)
                 .setXLabels(AxisController.LabelPosition.OUTSIDE)
                 .setYLabels(AxisController.LabelPosition.OUTSIDE)
                 .setLabelsColor(Color.parseColor("#FF8E9196"))
                 .setXAxis(false)
                 .setYAxis(false)
-                .setStep(2)
                 .setBorderSpacing(Tools.fromDpToPx(5))
                 .setGrid(ChartView.GridType.VERTICAL, gridPaint);
 
@@ -418,6 +422,7 @@ public class LineFragment extends Fragment {
     }
 
     public void updateThree(LineChartView chart){
+
         chart.dismissAllTooltips();
         chart.updateValues(0, mValuesThree[2]);
         chart.updateValues(1, mValuesThree[0]);
@@ -426,6 +431,7 @@ public class LineFragment extends Fragment {
     }
 
     public static void dismissThree(LineChartView chart, Runnable action){
+
         chart.dismissAllTooltips();
         chart.dismiss(new Animation().setEndAction(action));
     }

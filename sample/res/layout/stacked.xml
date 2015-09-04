@@ -20,60 +20,71 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ImageButton
-                android:id="@+id/play1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/play_chart"
-                android:background="@android:color/transparent"/>
-            <TextView
-                android:id="@+id/state_one"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/toolbar1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/state_two"
-                android:layout_toStartOf="@+id/state_two"
-                android:layout_margin="5dp"
-                android:drawableLeft="@drawable/stacked_one_point1_bck"
-                android:drawableStart="@drawable/stacked_one_point1_bck"
-                android:drawablePadding="4dp"
-                android:text="STATE 1"
-                android:textSize="12sp"
-                android:textColor="#ff2b2b2b"/>
-            <TextView
-                android:id="@+id/state_two"
-                android:layout_width="wrap_content"
+                android:gravity="end">
+                <ImageButton
+                    android:id="@+id/play1"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/play_chart"
+                    android:background="@android:color/transparent"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/legend"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="5dp"
-                android:drawableLeft="@drawable/stacked_one_point2_bck"
-                android:drawableStart="@drawable/stacked_one_point2_bck"
-                android:drawablePadding="4dp"
-                android:text="STATE 2"
-                android:textSize="12sp"
-                android:textColor="#ff2b2b2b"/>
-            <TextView
-                android:id="@+id/state_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/state_two"
-                android:layout_toEndOf="@+id/state_two"
-                android:layout_margin="5dp"
-                android:drawableLeft="@drawable/stacked_one_point3_bck"
-                android:drawableStart="@drawable/stacked_one_point3_bck"
-                android:drawablePadding="4dp"
-                android:text="STATE 3"
-                android:textSize="12sp"
-                android:textColor="#ff2b2b2b"/>
-
+                android:layout_below="@id/toolbar1">
+                <TextView
+                    android:id="@+id/state_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/state_two"
+                    android:layout_toStartOf="@+id/state_two"
+                    android:layout_margin="5dp"
+                    android:drawableLeft="@drawable/stacked_one_point1_bck"
+                    android:drawableStart="@drawable/stacked_one_point1_bck"
+                    android:drawablePadding="4dp"
+                    android:text="STATE 1"
+                    android:textSize="10sp"
+                    android:textColor="#ff2b2b2b"/>
+                <TextView
+                    android:id="@+id/state_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="5dp"
+                    android:drawableLeft="@drawable/stacked_one_point2_bck"
+                    android:drawableStart="@drawable/stacked_one_point2_bck"
+                    android:drawablePadding="4dp"
+                    android:text="STATE 2"
+                    android:textSize="10sp"
+                    android:textColor="#ff2b2b2b"/>
+                <TextView
+                    android:id="@+id/state_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/state_two"
+                    android:layout_toEndOf="@+id/state_two"
+                    android:layout_margin="5dp"
+                    android:drawableLeft="@drawable/stacked_one_point3_bck"
+                    android:drawableStart="@drawable/stacked_one_point3_bck"
+                    android:drawablePadding="4dp"
+                    android:text="STATE 3"
+                    android:textSize="10sp"
+                    android:textColor="#ff2b2b2b"/>
+            </RelativeLayout>
             <com.db.chart.view.StackBarChartView
                 xmlns:chart="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/stackedchart1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="8dp"
-                android:layout_below="@+id/state_one"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_below="@+id/legend"
                 android:layout_alignParentBottom="true"
                 chart:chart_labelColor="#929b88"
                 chart:chart_fontSize="7dp"/>
@@ -88,29 +99,33 @@
         android:layout_marginTop="@dimen/card_margin"
         card_view:cardBackgroundColor="#2f2f30"
         card_view:cardCornerRadius="4dp">
-        <com.db.chart.view.HorizontalStackBarChartView
-            xmlns:chart="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/stackedchart2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="25dp"
-            android:paddingEnd="25dp"
-            chart:chart_labelColor="#e7e7e7"
-            chart:chart_fontSize="9dp"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ImageButton
-                android:id="@+id/play2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/play_chart"
-                android:background="@android:color/transparent"/>
+            <RelativeLayout
+                android:id="@+id/toolbar2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+                <ImageButton
+                    android:id="@+id/play2"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/play_chart"
+                    android:background="@android:color/transparent"/>
+            </RelativeLayout>
+            <com.db.chart.view.HorizontalStackBarChartView
+                xmlns:chart="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/stackedchart2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="25dp"
+                android:paddingEnd="25dp"
+                android:layout_below="@+id/toolbar2"
+                chart:chart_labelColor="#e7e7e7"
+                chart:chart_fontSize="9dp"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
@@ -125,22 +140,28 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/toolbar3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+                <ImageButton
+                    android:id="@+id/play3"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/play_chart"
+                    android:background="@android:color/transparent"/>
+            </RelativeLayout>
+
             <com.db.chart.view.HorizontalStackBarChartView
                 android:id="@+id/stackedchart3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
+                android:layout_below="@+id/toolbar3"
                 android:layout_above="@+id/electric_text"/>
-
-            <ImageButton
-                android:id="@+id/play3"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/play_chart"
-                android:background="@android:color/transparent"/>
 
             <TextView
                 android:id="@+id/electric_text"

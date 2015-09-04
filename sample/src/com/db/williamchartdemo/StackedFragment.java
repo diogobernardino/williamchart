@@ -394,7 +394,7 @@ public class StackedFragment extends Fragment {
         gridPaint.setAntiAlias(true);
         gridPaint.setStrokeWidth(Tools.fromDpToPx(.7f));
 
-        horChart.setBarSpacing(Tools.fromDpToPx(8));
+        horChart.setBarSpacing(Tools.fromDpToPx(6));
 
         horChart.setBorderSpacing(0)
                 .setGrid(ChartView.GridType.VERTICAL, gridPaint)

@@ -269,9 +269,7 @@ public class LineFragment extends Fragment {
                 .setSmooth(true);
         chart.addData(dataset);
 
-        chart.setTopSpacing(Tools.fromDpToPx(15))
-                .setBorderSpacing(Tools.fromDpToPx(0))
-                .setAxisBorderValues(0, 10, 1)
+        chart.setBorderSpacing(Tools.fromDpToPx(0))
                 .setXLabels(AxisController.LabelPosition.INSIDE)
                 .setYLabels(AxisController.LabelPosition.NONE)
                 .setLabelsColor(Color.parseColor("#e08b36"))

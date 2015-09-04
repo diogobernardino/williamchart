@@ -78,7 +78,7 @@
             android:layout_toEndOf="@+id/sandbox_play_play"
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
-            android:src="@drawable/share"
+            android:src="@drawable/ic_code"
             android:background="@drawable/send_btn_bck"
             android:onClick="onPlay"
             android:elevation="3dp"

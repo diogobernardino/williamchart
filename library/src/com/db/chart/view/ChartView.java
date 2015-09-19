@@ -1155,24 +1155,35 @@ public abstract class ChartView extends RelativeLayout{
 	 * example a step of 2 with a maxAxisValue of 6 will end up with 
 	 * {0, 2, 4, 6} as labels.
 	 *
+	 * @param minValue   The minimum value that Y axis will have as a label
 	 * @param maxValue   The maximum value that Y axis will have as a label
 	 * @param step   (real) value distance from every label
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setAxisBorderValues(int minValue, int maxValue, int step){
 
-		if((maxValue - minValue) % step != 0)
-			throw new IllegalArgumentException("Step value must be a divisor of distance between " +
-					"minValue and maxValue");
-		setStep(step);
+		if(mOrientation == Orientation.VERTICAL)
+			verController.setBorderValues(minValue, maxValue, step);
+		else
+			horController.setBorderValues(minValue, maxValue, step);
 
-		if(mOrientation == Orientation.VERTICAL) {
-			verController.maxLabelValue = maxValue;
-			verController.minLabelValue = minValue;
-		}else {
-			horController.maxLabelValue = maxValue;
-			horController.minLabelValue = minValue;
-		}
+		return this;
+	}
+
+
+
+	/**
+	 *
+	 * @param minValue   The minimum value that Y axis will have as a label
+	 * @param maxValue   The maximum value that Y axis will have as a label
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
+	 */
+	public ChartView setAxisBorderValues(int minValue, int maxValue){
+
+		if(mOrientation == Orientation.VERTICAL)
+			verController.setBorderValues(minValue, maxValue);
+		else
+			horController.setBorderValues(minValue, maxValue);
 
 		return this;
 	}

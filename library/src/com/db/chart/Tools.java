@@ -56,5 +56,18 @@ public class Tools {
 	 
 	    return bitmap;
 	}
+
+
+	/**
+	 * Find the Greatest Common Denominator.
+	 * https://en.wikipedia.org/wiki/Euclidean_algorithm
+	 *
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	public static int GCD(int a, int b) {
+		return b==0 ? a : GCD(b, a%b);
+	}
 	
 }

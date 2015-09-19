@@ -23,6 +23,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import com.db.chart.Tools;
 import com.db.williamchart.R;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
@@ -311,6 +312,43 @@ public abstract class AxisController{
 
     public void setAxisLabelsSpacing(float spacing){
         distLabelToAxis = (int) spacing;
+    }
+
+
+    /**
+     * A step is seen as the step to be defined between 2 labels. As an
+     * example a step of 2 with a maxAxisValue of 6 will end up with
+     * {0, 2, 4, 6} as labels.
+     *
+     * @param minValue   The minimum value that Y axis will have as a label
+     * @param maxValue   The maximum value that Y axis will have as a label
+     * @param step   (real) value distance from every label
+     */
+    public void setBorderValues(int minValue, int maxValue, int step){
+
+        if((maxValue - minValue) % step != 0)
+            throw new IllegalArgumentException("Step value must be a divisor of distance between " +
+                    "minValue and maxValue");
+        this.step = step;
+
+        maxLabelValue = maxValue;
+        minLabelValue = minValue;
+    }
+
+
+    /**
+     *
+     * @param minValue   The minimum value that Y axis will have as a label
+     * @param maxValue   The maximum value that Y axis will have as a label
+     * @return {@link com.db.chart.view.ChartView} self-reference.
+     */
+    public void setBorderValues(int minValue, int maxValue){
+
+        if(minValue > 0)
+            step = Tools.GCD(minValue, maxValue);
+
+        maxLabelValue = maxValue;
+        minLabelValue = minValue;
     }
 
 

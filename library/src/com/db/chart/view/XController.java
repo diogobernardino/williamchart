@@ -125,19 +125,20 @@ public class XController extends AxisController{
 
 
     /**
-     * Get the vertical position of axis.
+     * Get the vertical position of labels.
      *
-     * @return
+     * @return vertical labels coordinate
      */
     private float getLabelsVerticalPosition(){
 
         float result = chartView.getChartBottom();
-        if(labelsPositioning == LabelPosition.INSIDE) {
+        if(labelsPositioning == LabelPosition.INSIDE) { // Labels sit inside of chart
             result -= distLabelToAxis;
             if(hasAxis)
                 result -=  chartView.style.axisThickness;
+        }if (labelsPositioning == LabelPosition.OUTSIDE){ // Labels sit outside of chart
+            result -= chartView.style.labelsPaint.descent();
         }
-
         return result;
     }
 
@@ -167,13 +168,14 @@ public class XController extends AxisController{
 
         // Draw labels
         if(labelsPositioning != LabelPosition.NONE){
-
             chartView.style.labelsPaint.setTextAlign(Align.CENTER);
+
+            final float labelsVerticalCoord = getLabelsVerticalPosition();
             for(int i = 0; i < nLabels; i++){
                 canvas.drawText(labels.get(i),
-                                    labelsPos.get(i),
-                        getLabelsVerticalPosition(),
-                                            chartView.style.labelsPaint);
+                        labelsPos.get(i),
+                        labelsVerticalCoord,
+                        chartView.style.labelsPaint);
 
             }
         }

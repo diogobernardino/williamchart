@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import com.db.williamchart.R;
 import com.db.chart.model.ChartEntry;
@@ -292,19 +293,17 @@ public abstract class AxisController{
 
 
 
+    /**
+     * Get the height of the text based on the font style defined.
+     * Includes uppercase height and bottom padding of special lowercase letter such as g, p, etc.
+     *
+     * @return height of text
+     */
     int getLabelHeight(){
 
-        if(labelHeight == -1){
-
-            int result = 0;
-            for(ChartEntry e : chartView.data.get(0).getEntries()){
-                result = chartView.style.getTextHeightBounds(e.getLabel());
-                if(result != 0)
-                    break;
-            }
-            labelHeight = result;
-        }
-
+        if(labelHeight == -1)
+            labelHeight = (int) (chartView.style.labelsPaint.descent()
+                    - chartView.style.labelsPaint.ascent());
         return labelHeight;
     }
 

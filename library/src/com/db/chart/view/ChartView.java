@@ -1463,21 +1463,6 @@ public abstract class ChartView extends RelativeLayout{
 			thresholdPaint = null;
 		}
 
-
-		int getTextHeightBounds(String text){
-
-			if(!text.equals("")){
-				Rect bounds = new Rect();
-				style.labelsPaint
-						.getTextBounds(text,
-								0,
-								text.length(),
-								bounds);
-				return bounds.height();
-			}
-			return 0;
-		}
-
 	}
 
 

@@ -248,21 +248,6 @@ public abstract class BaseBarChartView extends ChartView {
 
 		/** Radius to round corners **/
 		float cornerRadius;
-		
-		
-		/** Shadow related variables */
-		private float mShadowRadius;
-		private float mShadowDx;
-		private float mShadowDy;
-		private int mShadowColor;
-		
-		
-		/** Shadow color */
-		private int mAlpha;
-		private int mRed;
-		private int mBlue;
-		private int mGreen;
-
 
 		
 	    Style() {
@@ -280,11 +265,9 @@ public abstract class BaseBarChartView extends ChartView {
 	    	mBarBackgroundColor = DEFAULT_COLOR;
 	    	hasBarBackground = false;
 	    	
-	    	barSpacing = attrs.getDimension(
-	    			R.styleable.BarChartAttrs_chart_barSpacing, 
+	    	barSpacing = attrs.getDimension( R.styleable.BarChartAttrs_chart_barSpacing,
 	    				getResources().getDimension(R.dimen.bar_spacing));
-	    	setSpacing = attrs.getDimension(
-	    			R.styleable.BarChartAttrs_chart_barSpacing, 
+	    	setSpacing = attrs.getDimension(R.styleable.BarChartAttrs_chart_barSpacing,
 	    				getResources().getDimension(R.dimen.set_spacing));
 	    }	
 	    
@@ -292,11 +275,8 @@ public abstract class BaseBarChartView extends ChartView {
 	    
 		private void init(){
 			
-			
 	    	barPaint = new Paint();
 	    	barPaint.setStyle(Paint.Style.FILL);
-	    	barPaint.setShadowLayer(mShadowRadius, mShadowDx, 
-	    								mShadowDy, mShadowColor);
 	    	
 	    	barBackgroundPaint = new Paint();
 	    	barBackgroundPaint.setColor(mBarBackgroundColor);

@@ -195,6 +195,20 @@ public abstract class ChartSet {
 	}
 
 
+	/**
+	 *
+	 * @param radius
+	 * @param dx
+	 * @param dy
+	 * @param color
+	 */
+	public void setShadow(float radius, float dx, float dy, int color) {
+
+		for(ChartEntry e : getEntries())
+			e.setShadow(radius, dx, dy, color);
+	}
+
+
 
 	public int size() {
 		return mEntries.size();

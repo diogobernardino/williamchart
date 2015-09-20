@@ -1364,6 +1364,7 @@ public abstract class ChartView extends RelativeLayout{
 		return this;
 	}
 
+
 	/**
 	 * Mandatory horizontal border when necessary (ex: BarCharts)
 	 * Sets the attribute depending on the chart's orientation.
@@ -1378,6 +1379,25 @@ public abstract class ChartView extends RelativeLayout{
 			verController.mandatoryBorderSpacing = 1;
 	}
 
+
+
+	/**
+	 * Applies an alpha to the paint object.
+	 *
+	 * @param paint   {@link android.graphics.Paint} object to apply alpha.
+	 * @param alpha   Alpha value (opacity).
+	 * @param entry   Entry containing shadow customization.
+	 */
+	protected void applyShadow(Paint paint, float alpha, ChartEntry entry){
+
+		paint.setShadowLayer(entry.getShadowRadius(), entry.getShadowDx(), entry.getShadowDy(),
+				Color.argb(((int)(alpha * 255) < entry.getShadowColor()[0])
+								? (int)(alpha * 255)
+								: entry.getShadowColor()[0],
+						entry.getShadowColor()[1],
+						entry.getShadowColor()[2],
+						entry.getShadowColor()[3]));
+	}
 
 
 	

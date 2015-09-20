@@ -218,23 +218,6 @@ public abstract class BaseBarChartView extends ChartView {
 	}
 
 
-    /**
-     *
-     * @param radius
-     * @param dx
-     * @param dy
-     * @param color
-     */
-    public void setShadow(float radius, float dx, float dy, int color){
-
-        style.mShadowRadius = radius;
-        style.mShadowDx = dx;
-        style.mShadowDy = dy;
-        style.mShadowColor = color;
-    }
-
-
-
 
 	/*
 	 * ----------
@@ -289,11 +272,6 @@ public abstract class BaseBarChartView extends ChartView {
 	    	
 	    	barSpacing = getResources().getDimension(R.dimen.bar_spacing);
 	    	setSpacing = getResources().getDimension(R.dimen.set_spacing);
-	    	
-	    	mShadowRadius = 0;
-	    	mShadowDx = 0;
-	    	mShadowDy = 0;
-	    	mShadowColor = DEFAULT_COLOR;
 	    }
 	    
 	    
@@ -308,25 +286,11 @@ public abstract class BaseBarChartView extends ChartView {
 	    	setSpacing = attrs.getDimension(
 	    			R.styleable.BarChartAttrs_chart_barSpacing, 
 	    				getResources().getDimension(R.dimen.set_spacing));
-	    	
-	    	mShadowRadius = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowRadius, 0);
-	    	mShadowDx = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowDx, 0);
-	    	mShadowDy = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowDy, 0);
-	    	mShadowColor = attrs.getColor(
-	    			R.styleable.ChartAttrs_chart_shadowColor, 0);
 	    }	
 	    
 	    
 	    
 		private void init(){
-	    	
-			mAlpha = Color.alpha(mShadowColor);
-			mRed = Color.red(mShadowColor);
-			mBlue = Color.blue(mShadowColor);
-			mGreen = Color.green(mShadowColor);
 			
 			
 	    	barPaint = new Paint();
@@ -345,25 +309,6 @@ public abstract class BaseBarChartView extends ChartView {
 	    	barPaint = null;
 	    	barBackgroundPaint = null;
 	    }
-
-
-        /**
-         * Applies an alpha to the paint object.
-         *
-         * @param paint   {@link android.graphics.Paint} object to apply alpha.
-         * @param alpha   Alpha value (opacity).
-         */
-        void applyAlpha(Paint paint, float alpha){
-
-            paint.setAlpha((int)(alpha * 255));
-            paint.setShadowLayer( style.mShadowRadius, style.mShadowDx, style.mShadowDy,
-                    Color.argb(((int)(alpha * 255) < style.mAlpha)
-                                    ? (int)(alpha * 255)
-                                    : style.mAlpha,
-                            style.mRed,
-                            style.mGreen,
-                            style.mBlue));
-        }
 
 	}
 

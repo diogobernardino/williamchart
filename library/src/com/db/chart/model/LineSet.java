@@ -19,6 +19,7 @@ package com.db.chart.model;
 
 import java.lang.IllegalArgumentException;
 
+import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
@@ -73,6 +74,14 @@ public class LineSet extends ChartSet{
     private float[] mDashedIntervals;
     /** Phase of the line (useful for animations) */
 	private int mDashedPhase;
+
+
+	/** Shadow variables */
+	protected float mShadowRadius;
+	protected float mShadowDx;
+	protected float mShadowDy;
+	private int[] mShadowColor;
+
 
 
 	/**
@@ -130,6 +139,11 @@ public class LineSet extends ChartSet{
 
         mBegin = 0;
         mEnd = 0;
+
+		mShadowRadius = 0;
+		mShadowDx = 0;
+		mShadowDy = 0;
+		mShadowColor = new int[4];
     }
 
 
@@ -192,6 +206,11 @@ public class LineSet extends ChartSet{
     public boolean hasGradientFill(){
         return mHasGradientFill;
     }
+
+
+	public boolean hasShadow(){
+		return mShadowRadius != 0;
+	}
 
 
 	
@@ -296,9 +315,26 @@ public class LineSet extends ChartSet{
 	public int getDashedPhase(){
 		return mDashedPhase;
 	}
+
+
+	public float getShadowRadius() {
+		return mShadowRadius;
+	}
+
+	public float getShadowDx() {
+		return mShadowDx;
+	}
+
+	public float getShadowDy() {
+		return mShadowDy;
+	}
+
+	public int[] getShadowColor() {
+		return mShadowColor;
+	}
 	
-	
-	
+
+
 	/*
 	 * --------
 	 * Setters
@@ -542,6 +578,21 @@ public class LineSet extends ChartSet{
         for(ChartEntry e : getEntries())
             ((Point) e).setDrawable(drawable);
         return this;
+	}
+
+
+	@Override
+	public void setShadow(float radius, float dx, float dy, int color) {
+		super.setShadow(radius, dx, dy, color);
+
+		mShadowRadius = radius;
+		mShadowDx = dx;
+		mShadowDy = dy;
+
+		mShadowColor[0] = Color.alpha(color);
+		mShadowColor[1] = Color.red(color);
+		mShadowColor[2] = Color.blue(color);
+		mShadowColor[3] = Color.green(color);
 	}
 	
 }

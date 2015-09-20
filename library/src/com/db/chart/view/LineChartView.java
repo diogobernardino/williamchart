@@ -101,7 +101,7 @@ public class LineChartView extends ChartView {
 				
 				mStyle.mLinePaint.setColor(lineSet.getColor());
 				mStyle.mLinePaint.setStrokeWidth(lineSet.getThickness());
-				applyAlpha(mStyle.mLinePaint, lineSet.getAlpha());
+				applyShadow(mStyle.mLinePaint, lineSet);
 				
 				if(lineSet.isDashed())
 					mStyle.mLinePaint
@@ -141,18 +141,20 @@ public class LineChartView extends ChartView {
 
                 // Style dot
                 mStyle.mDotsPaint.setColor(dot.getColor());
-                applyAlpha(mStyle.mDotsPaint, set.getAlpha());
+				mStyle.mDotsPaint.setAlpha((int) (set.getAlpha() * 255));
+				applyShadow(mStyle.mDotsPaint, set.getAlpha(), dot);
 
-                // Draw dot
+				// Draw dot
                 canvas.drawCircle(dot.getX(), dot.getY(), dot.getRadius(), mStyle.mDotsPaint);
 
                 //Draw dots stroke
-                if(dot.hasStroke()) {
+				if (dot.hasStroke()) {
 
                     // Style stroke
-                    mStyle.mDotsStrokePaint.setStrokeWidth(dot.getStrokeThickness());
-                    mStyle.mDotsStrokePaint.setColor(dot.getStrokeColor());
-                    applyAlpha(mStyle.mDotsStrokePaint, set.getAlpha());
+					mStyle.mDotsStrokePaint.setStrokeWidth(dot.getStrokeThickness());
+					mStyle.mDotsStrokePaint.setColor(dot.getStrokeColor());
+					mStyle.mDotsStrokePaint.setAlpha((int) (set.getAlpha() * 255));
+					applyShadow(mStyle.mDotsStrokePaint, set.getAlpha(), dot);
 
                     canvas.drawCircle(dot.getX(), dot.getY(), dot.getRadius(), mStyle.mDotsStrokePaint);
                 }
@@ -369,16 +371,16 @@ public class LineChartView extends ChartView {
 
 
 
-    private void applyAlpha(Paint paint, float alpha){
+    private void applyShadow(Paint paint, LineSet set){
 
-		paint.setAlpha((int)(alpha * 255));
-		paint.setShadowLayer(mStyle.mShadowRadius, mStyle.mShadowDx, mStyle.mShadowDy,
-                Color.argb(((int)(alpha * 255) < mStyle.mAlpha)
-							    ? (int)(alpha * 255)
-							    : mStyle.mAlpha,
-						mStyle.mRed,
-						mStyle.mGreen,
-						mStyle.mBlue));
+		paint.setAlpha((int)(set.getAlpha() * 255));
+		paint.setShadowLayer(set.getShadowRadius(), set.getShadowDx(), set.getShadowDy(),
+                Color.argb(((int)(set.getAlpha() * 255) < set.getShadowColor()[0])
+							    ? (int)(set.getAlpha() * 255)
+							    : set.getShadowColor()[0],
+						set.getShadowColor()[1],
+						set.getShadowColor()[2],
+						set.getShadowColor()[3]));
     }
 
 
@@ -397,24 +399,6 @@ public class LineChartView extends ChartView {
         return i;
     }
 
-
-
-    /**
-     *
-     * @param radius
-     * @param dx
-     * @param dy
-     * @param color
-	 * @return {@link com.db.chart.view.LineChartView} self-reference.
-     */
-    public LineChartView setShadow(float radius, float dx, float dy, int color){
-
-        mStyle.mShadowRadius = radius;
-        mStyle.mShadowDx = dx;
-        mStyle.mShadowDy = dy;
-        mStyle.mShadowColor = color;
-        return this;
-    }
 
 
     /**
@@ -443,48 +427,14 @@ public class LineChartView extends ChartView {
 		private Paint mFillPaint;
 
 
-		/** Shadow variables */
-		private int mShadowColor;
-		private float mShadowRadius;
-		private float mShadowDx;
-		private float mShadowDy;
-
-		/** Shadow color */
-		private int mAlpha;
-		private int mRed;
-		private int mBlue;
-		private int mGreen;
+		Style() {}
 
 
-		Style() {
-
-			mShadowRadius = 0;
-	    	mShadowDx = 0;
-	    	mShadowDy = 0;
-			mShadowColor = 0;
-		}
-
-
-		Style(TypedArray attrs) {
-
-			mShadowRadius = attrs.getDimension(
-					R.styleable.ChartAttrs_chart_shadowRadius, 0);
-	    	mShadowDx = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowDx, 0);
-	    	mShadowDy = attrs.getDimension(
-	    			R.styleable.ChartAttrs_chart_shadowDy, 0);
-			mShadowColor = attrs.getColor(
-					R.styleable.ChartAttrs_chart_shadowColor, 0);
-	    }
+		Style(TypedArray attrs) {}
 
 
 
 		private void init(){
-
-			mAlpha = Color.alpha(mShadowColor);
-			mRed = Color.red(mShadowColor);
-			mBlue = Color.blue(mShadowColor);
-			mGreen = Color.green(mShadowColor);
 
 			mDotsPaint = new Paint();
 			mDotsPaint.setStyle(Paint.Style.FILL_AND_STROKE);

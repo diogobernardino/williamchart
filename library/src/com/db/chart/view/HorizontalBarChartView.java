@@ -84,7 +84,8 @@ public class HorizontalBarChartView extends BaseBarChartView {
 					continue;
 
 				style.barPaint.setColor(bar.getColor());
-				style.applyAlpha(style.barPaint, barSet.getAlpha());
+				style.barPaint.setAlpha((int)(barSet.getAlpha() * 255));
+				applyShadow(style.barPaint, barSet.getAlpha(), bar);
 				
 				// If bar needs background
 				if(style.hasBarBackground)

@@ -16,6 +16,7 @@
 
 package com.db.chart.model;
 
+import android.graphics.Color;
 import android.support.annotation.ColorInt;
 
 /**
@@ -45,6 +46,14 @@ public abstract class ChartEntry {
     boolean isVisible;
 
 
+	/** Shadow variables */
+	protected float mShadowRadius;
+	protected float mShadowDx;
+	protected float mShadowDy;
+	private int[] mShadowColor;
+
+
+
 	/**
 	 * Constructor.
 	 *
@@ -56,13 +65,23 @@ public abstract class ChartEntry {
 		mValue = value;
 
         mColor = DEFAULT_COLOR;
+
+		mShadowRadius = 0;
+		mShadowDx = 0;
+		mShadowDy = 0;
+		mShadowColor = new int[4];
 	}
 
 
     public boolean isVisible(){
         return isVisible;
     }
-	
+
+
+	public boolean hasShadow(){
+		return mShadowRadius != 0;
+	}
+
 
 
 	/*
@@ -95,7 +114,24 @@ public abstract class ChartEntry {
     public int getColor() {
         return mColor;
     }
-	
+
+
+	public float getShadowRadius() {
+		return mShadowRadius;
+	}
+
+	public float getShadowDx() {
+		return mShadowDx;
+	}
+
+	public float getShadowDy() {
+		return mShadowDy;
+	}
+
+	public int[] getShadowColor() {
+		return mShadowColor;
+	}
+
 
 	
 	/*
@@ -149,6 +185,26 @@ public abstract class ChartEntry {
 
 		isVisible = visible;
 	}
+
+
+	/**
+	 *
+	 * @param radius
+	 * @param dx
+	 * @param dy
+	 * @param color
+	 */
+	public void setShadow(float radius, float dx, float dy, @ColorInt int color) {
+
+		mShadowRadius = radius;
+		mShadowDx = dx;
+		mShadowDy = dy;
+		mShadowColor[0] = Color.alpha(color);
+		mShadowColor[1] = Color.red(color);
+		mShadowColor[2] = Color.blue(color);
+		mShadowColor[3] = Color.green(color);
+	}
+
 
 
 	public String toString(){

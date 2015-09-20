@@ -96,7 +96,8 @@ public class BarChartView extends BaseBarChartView {
                                     bar.getGradientColors(),
                                     bar.getGradientPositions(),
                                     Shader.TileMode.MIRROR));
-				style.applyAlpha(style.barPaint, barSet.getAlpha());
+				style.barPaint.setAlpha((int)(barSet.getAlpha() * 255));
+				applyShadow(style.barPaint, barSet.getAlpha(), bar);
 				
 				// If bar needs background
 				if(style.hasBarBackground) {

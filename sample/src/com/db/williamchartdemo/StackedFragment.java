@@ -344,7 +344,7 @@ public class StackedFragment extends Fragment {
                 .setXLabels(XController.LabelPosition.OUTSIDE)
                 .setYAxis(false)
                 .setYLabels(YController.LabelPosition.NONE)
-                .setThresholdLine(89, thresPaint);
+                .setValueThreshold(89.f, 89.f, thresPaint);
 
         int[] order = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
         stackedChart.show(new Animation()

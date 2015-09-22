@@ -93,9 +93,13 @@ public abstract class ChartView extends RelativeLayout{
 	final Style style;
 
 
-
 	/** Threshold limit line value */
-	private float mThresholdValue;
+	private boolean mHasThresholdValue;
+	private float mThresholdStartValue;
+	private float mThresholdEndValue;
+	private boolean mHasThresholdLabel;
+	private int mThresholdStartLabel;
+	private int mThresholdEndLabel;
 
 
 	/** Chart data to be displayed */
@@ -155,7 +159,12 @@ public abstract class ChartView extends RelativeLayout{
 
 			// Initialize controllers now that we have the measures
 			verController.init();
-			mThresholdValue = verController.parsePos(0, mThresholdValue);
+
+			if(mHasThresholdValue) {
+				mThresholdStartValue = verController.parsePos(0, mThresholdStartValue);
+				mThresholdEndValue = verController.parsePos(0, mThresholdEndValue);
+			}
+
 			// Mandatory: X axis after Y axis!
 			horController.init();
 
@@ -219,7 +228,8 @@ public abstract class ChartView extends RelativeLayout{
 		mReadyToDraw = false;
 		mSetClicked = -1;
 		mIndexClicked = -1;
-		mThresholdValue = 0;
+		mHasThresholdValue = false;
+		mHasThresholdLabel = false;
 		mIsDrawing = false;
 		data = new ArrayList<>();
 		mRegions = new ArrayList<>();
@@ -472,7 +482,10 @@ public abstract class ChartView extends RelativeLayout{
 			verController.reset();
 		}
 
+		mHasThresholdLabel = false;
+		mHasThresholdValue = false;
 		style.thresholdPaint = null;
+
 		style.gridPaint = null;
 	}
 
@@ -688,15 +701,26 @@ public abstract class ChartView extends RelativeLayout{
 			// Draw Axis Y
 			verController.draw(canvas);
 
+			// Draw threshold
+			if (mHasThresholdValue)
+				drawThreshold(canvas,
+						getInnerChartLeft(),
+						mThresholdStartValue,
+						getInnerChartRight(),
+						mThresholdEndValue);
+			if (mHasThresholdLabel)
+				drawThreshold(canvas,
+						data.get(0).getEntry(mThresholdStartLabel).getX(),
+						getInnerChartTop(),
+						data.get(0).getEntry(mThresholdEndLabel).getX(),
+						getInnerChartBottom());
+
 			// Draw data
 			if(!data.isEmpty())
 				onDrawChart(canvas, data);
 
 			// Draw axis X
 			horController.draw(canvas);
-
-			if(style.thresholdPaint != null)
-				drawThresholdLine(canvas);
 
 			//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
 		}
@@ -706,13 +730,22 @@ public abstract class ChartView extends RelativeLayout{
 
 
 
-	private void drawThresholdLine(Canvas canvas) {
+	/**
+	 * Draw a threshold line or band on the labels or values axis. If same values or same label
+	 * index have been given then a line will be drawn rather than a band.
+	 *
+	 * @param canvas   Canvas to draw line/band on.
+	 * @param left   The left side of the line/band to be drawn
+	 * @param top    The top side of the line/band to be drawn
+	 * @param right  The right side of the line/band to be drawn
+	 * @param bottom The bottom side of the line/band to be drawn
+	 */
+	private void drawThreshold(Canvas canvas, float left, float top, float right, float bottom) {
 
-		canvas.drawLine(getInnerChartLeft(),
-				mThresholdValue,
-				getInnerChartRight(),
-				mThresholdValue,
-				style.thresholdPaint);
+		if(left == right || top == bottom)
+			canvas.drawLine(left, top, right, bottom, style.thresholdPaint);
+		else
+			canvas.drawRect(left, top, right, bottom, style.thresholdPaint);
 	}
 
 
@@ -1336,16 +1369,40 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/**
-	 * To set a threshold line to the chart.
+	 * Display a value threshold either in a form of line or band.
+	 * In order to produce a line, the start and end value will be equal.
 	 *
-	 * @param value   Threshold value.
+	 * @param startValue   Threshold value.
+	 * @param endValue   Threshold value.
 	 * @param paint   The Paint instance that will be used to draw the grid
 	 *                If null the grid won't be drawn
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setThresholdLine(float value, Paint paint){
+	public ChartView setValueThreshold(float startValue, float endValue, Paint paint){
 
-		mThresholdValue = value;
+		mHasThresholdValue = true;
+		mThresholdStartValue = startValue;
+		mThresholdEndValue = endValue;
+		style.thresholdPaint = paint;
+		return this;
+	}
+
+
+	/**
+	 * Display a label threshold either in a form of line or band.
+	 * In order to produce a line, the start and end label will be equal.
+	 *
+	 * @param startLabel   Threshold start label index.
+	 * @param endLabel   Threshold end label index.
+	 * @param paint   The Paint instance that will be used to draw the grid
+	 *                If null the grid won't be drawn
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
+	 */
+	public ChartView setLabelThreshold(int startLabel, int endLabel, Paint paint){
+
+		mHasThresholdLabel = true;
+		mThresholdStartLabel = startLabel;
+		mThresholdEndLabel = endLabel;
 		style.thresholdPaint = paint;
 		return this;
 	}
@@ -1426,9 +1483,8 @@ public abstract class ChartView extends RelativeLayout{
 		Paint gridPaint;
 
 
-		/** Threshold Line **/
-		private Paint thresholdPaint;
-
+		/** Threshold **/
+		Paint thresholdPaint;
 
 		/** Font */
 		Paint labelsPaint;

@@ -29,6 +29,7 @@
                     android:id="@+id/play1"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:paddingRight="5dp"
                     android:src="@drawable/play_chart"
                     android:background="@android:color/transparent"/>
             </RelativeLayout>
@@ -111,6 +112,7 @@
                     android:id="@+id/play2"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:paddingRight="5dp"
                     android:src="@drawable/play_chart"
                     android:background="@android:color/transparent"/>
             </RelativeLayout>
@@ -150,6 +152,7 @@
                     android:id="@+id/play3"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:paddingRight="5dp"
                     android:src="@drawable/play_chart"
                     android:background="@android:color/transparent"/>
             </RelativeLayout>

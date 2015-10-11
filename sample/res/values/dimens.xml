@@ -30,6 +30,6 @@
 
     <dimen name="play_chart_padding">15dp</dimen>
 
-    <dimen name="card_toolbar_btn">25dp</dimen>
+    <dimen name="card_toolbar_btn">30dp</dimen>
 
 </resources>

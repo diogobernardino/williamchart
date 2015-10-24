@@ -403,7 +403,7 @@ public class LineChartView extends ChartView {
 
     /**
      *
-     * @param radius
+     * @param radius   Point's radius where touch event will be detected
 	 * @return {@link com.db.chart.view.LineChartView} self-reference.
      */
     public LineChartView setClickablePointRadius(@FloatRange(from=0.f) float radius){

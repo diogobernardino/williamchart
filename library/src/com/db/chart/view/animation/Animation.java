@@ -327,6 +327,7 @@ public class Animation{
      *
 	 * @param chartView   {@link ChartView} to be invalidate each time the animation wants to update
      *                    values and to get the {@link ChartSet} containing the target values
+	 * @return
 	 */
 	public ArrayList<ChartSet> prepareEnterAnimation(ChartView chartView){
 		
@@ -340,6 +341,7 @@ public class Animation{
      *
      * @param chartView   {@link ChartView} to be invalidate each time the animation wants to update
      *                    values and to get the {@link ChartSet} containing the target values
+	 * @return
      */
     public ArrayList<ChartSet> prepareUpdateAnimation(ChartView chartView,
 													  ArrayList<float[][]> start, ArrayList<float[][]> end){
@@ -354,6 +356,7 @@ public class Animation{
      *
 	 * @param chartView   {@link ChartView} to be invalidate each time the animation wants to
      *                  update values and to get the {@link ChartSet} containing the target values
+	 * @return
 	 */
 	public ArrayList<ChartSet> prepareExitAnimation(ChartView chartView){
 		

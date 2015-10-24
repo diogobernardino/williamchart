@@ -340,7 +340,6 @@ public abstract class AxisController{
      *
      * @param minValue   The minimum value that Y axis will have as a label
      * @param maxValue   The maximum value that Y axis will have as a label
-     * @return {@link com.db.chart.view.ChartView} self-reference.
      */
     public void setBorderValues(int minValue, int maxValue){
 

@@ -495,6 +495,7 @@ public abstract class ChartView extends RelativeLayout{
 	 *
 	 * @param setIndex   Index of set to be updated
 	 * @param values   Array of new values. Array length must match current data
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView updateValues(int setIndex, float[] values){
 
@@ -666,6 +667,8 @@ public abstract class ChartView extends RelativeLayout{
 
 	/**
 	 * Asks the view if it is able to draw now.
+	 *
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public boolean canIPleaseAskYouToDraw(){
 		return !mIsDrawing;
@@ -1084,6 +1087,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param position   NONE - No labels
 	 *                   OUTSIDE - Labels will be positioned outside the chart
 	 *                   INSIDE - Labels will be positioned inside the chart
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setYLabels(YController.LabelPosition position){
 		verController.labelsPositioning = position;
@@ -1098,6 +1102,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @param position   NONE - No labels
 	 *                   OUTSIDE - Labels will be positioned outside the chart
 	 *                   INSIDE - Labels will be positioned inside the chart
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setXLabels(XController.LabelPosition position){
 		horController.labelsPositioning = position;

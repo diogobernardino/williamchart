@@ -87,6 +87,8 @@ public abstract class ChartSet {
 	
 	/**
 	 * Get set of {@link ChartEntry}s.
+	 *
+	 * @return List of entries contained in the set.
 	 */
 	public ArrayList<ChartEntry> getEntries(){
 		return mEntries;
@@ -96,7 +98,8 @@ public abstract class ChartSet {
 	/**
 	 * Get {@link ChartEntry} from specific index.
      *
-	 * @param index - Entry's index
+	 * @param index   Entry's index
+	 * @return {@link com.db.chart.model.ChartSet} self-reference.
 	 */
 	public ChartEntry getEntry(int index) {
 		return mEntries.get(index);
@@ -107,6 +110,7 @@ public abstract class ChartSet {
 	 * Get {@link ChartEntry} value from specific index.
      *
 	 * @param index   Value's index
+	 * @return   Value of given index.
 	 */
 	public float getValue(int index){
 		return mEntries.get(index).getValue();
@@ -117,6 +121,7 @@ public abstract class ChartSet {
 	 * Get {@link ChartEntry} label from specific index.
      *
 	 * @param index   Label's index
+	 * @return   Label of given index.
 	 */
 	public String getLabel(int index) {
 		return mEntries.get(index).getLabel();
@@ -125,6 +130,8 @@ public abstract class ChartSet {
 	
 	/**
 	 * Get screen points.
+	 *
+	 * @return   Display coordinates of all entries.
 	 */
 	public float[][] getScreenPoints(){
 		
@@ -141,6 +148,8 @@ public abstract class ChartSet {
 
 	/**
 	 * Get current set's alpha.
+	 *
+	 * @return   Set's alpha.
 	 */
 	public float getAlpha(){
 		return mAlpha;
@@ -149,6 +158,8 @@ public abstract class ChartSet {
 	
 	/**
 	 * Get whether the set should be presented or not.
+	 *
+	 * @return   True if set visible, False if not.
 	 */
 	public boolean isVisible(){
 		return mIsVisible;

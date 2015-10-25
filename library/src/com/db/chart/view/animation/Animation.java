@@ -567,12 +567,12 @@ public class Animation{
      * Eg. xFactor=0; yFactor=0; starts the animation on the bottom left
 	 * corner of the inner chart area.
 	 *
-	 * @param xFactor   horizontal factor between 0 and 1
-	 * @param yFactor   vertical factor between 0 and 1
+	 * @param xFactor   horizontal factor between 0 and 1. If not applied then -1 can be set.
+	 * @param yFactor   vertical factor between 0 and 1. If not applied then -1 can be set.
 	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
 	 */
-	public Animation setStartPoint(@FloatRange(from=0.f, to=1.f) float xFactor,
-								   @FloatRange(from=0.f, to=1.f) float yFactor){
+	public Animation setStartPoint(@FloatRange(from=-1.f, to=1.f) float xFactor,
+								   @FloatRange(from=-1.f, to=1.f) float yFactor){
 		
 		mStartXFactor = xFactor;
 		mStartYFactor = yFactor;

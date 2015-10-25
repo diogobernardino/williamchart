@@ -68,8 +68,8 @@ public class HorizontalBarChartView extends BaseBarChartView {
 		float offset;
 		BarSet barSet;
 		Bar bar;
-		
-		for (int i = nEntries - 1; i >= 0; i--) {
+
+		for (int i = 0; i < nEntries; i++){
 			
 			// Set first offset to draw a group of bars
             offset = data.get(0).getEntry(i).getY() - drawingOffset;
@@ -168,8 +168,8 @@ public class HorizontalBarChartView extends BaseBarChartView {
 		float offset;
 		BarSet barSet;
 		Bar bar;
-		
-		for (int i = nEntries - 1; i >= 0; i--) {
+
+		for (int i = 0; i < nEntries; i++){
 			
 			// Set first offset to draw a group of bars
             offset = data.get(0).getEntry(i).getY() - drawingOffset;

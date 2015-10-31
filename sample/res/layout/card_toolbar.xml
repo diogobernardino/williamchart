@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/play"
+        android:layout_width="@dimen/card_toolbar_btn"
+        android:layout_height="@dimen/card_toolbar_btn"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/play_chart"
+        android:background="@android:color/transparent"/>
+    <ImageButton
+        android:id="@+id/update"
+        android:layout_width="@dimen/card_toolbar_btn"
+        android:layout_height="@dimen/card_toolbar_btn"
+        android:layout_toLeftOf="@+id/play"
+        android:layout_toStartOf="@+id/play"
+        android:src="@drawable/refresh_card"
+        android:background="@android:color/transparent"/>
+</RelativeLayout>

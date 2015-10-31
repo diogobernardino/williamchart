@@ -12,6 +12,7 @@
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -21,25 +22,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:id="@+id/toolbar1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end">
-                <ImageButton
-                    android:id="@+id/play1"
-                    android:layout_width="@dimen/card_toolbar_btn"
-                    android:layout_height="@dimen/card_toolbar_btn"
-                    android:paddingRight="5dp"
-                    android:src="@drawable/play_chart"
-                    android:background="@android:color/transparent"/>
-            </RelativeLayout>
+            <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
 
             <com.db.chart.view.BarChartView
-                android:id="@+id/barchart1"
+                android:id="@+id/chart1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/toolbar1"
+                android:layout_below="@+id/toolbar"
                 android:paddingRight="12dp"
                 android:paddingLeft="12dp"
                 android:paddingBottom="8dp"/>
@@ -49,6 +38,7 @@
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -60,27 +50,15 @@
             android:layout_height="match_parent"
             android:paddingBottom="12dp">
 
-            <RelativeLayout
-                android:id="@+id/toolbar2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end">
-                <ImageButton
-                    android:id="@+id/play2"
-                    android:layout_width="@dimen/card_toolbar_btn"
-                    android:layout_height="@dimen/card_toolbar_btn"
-                    android:paddingRight="5dp"
-                    android:src="@drawable/play_chart"
-                    android:background="@android:color/transparent"/>
-            </RelativeLayout>
+            <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
 
             <com.db.chart.view.HorizontalBarChartView
-                android:id="@+id/barchart2"
+                android:id="@+id/chart2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:layout_below="@+id/toolbar2"/>
+                android:layout_below="@+id/toolbar"/>
 
             <TextView
                 android:id="@+id/value"
@@ -110,6 +88,7 @@
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -120,25 +99,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:id="@+id/toolbar3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end">
-                <ImageButton
-                    android:id="@+id/play3"
-                    android:layout_width="@dimen/card_toolbar_btn"
-                    android:layout_height="@dimen/card_toolbar_btn"
-                    android:paddingRight="5dp"
-                    android:src="@drawable/play_chart"
-                    android:background="@android:color/transparent"/>
-            </RelativeLayout>
+            <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
 
             <com.db.chart.view.BarChartView
-                android:id="@+id/barchart3"
+                android:id="@+id/chart3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/toolbar3"/>
+                android:layout_below="@id/toolbar"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

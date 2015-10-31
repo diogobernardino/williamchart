@@ -10,7 +10,7 @@
         android:layout_marginEnd="5dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_play"
+        android:src="@drawable/ic_play_grey"
         android:background="@android:color/transparent"/>
     <ImageButton
         android:id="@+id/update"
@@ -18,6 +18,6 @@
         android:layout_height="@dimen/card_toolbar_btn"
         android:layout_toLeftOf="@+id/play"
         android:layout_toStartOf="@+id/play"
-        android:src="@drawable/ic_refresh"
+        android:src="@drawable/ic_refresh_grey"
         android:background="@android:color/transparent"/>
 </RelativeLayout>

@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
+            <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
 
             <com.db.chart.view.BarChartView
                 android:id="@+id/chart1"
@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:paddingBottom="12dp">
 
-            <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
+            <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
 
             <com.db.chart.view.HorizontalBarChartView
                 android:id="@+id/chart2"

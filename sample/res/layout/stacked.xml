@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
+            <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
 
             <RelativeLayout
                 android:id="@+id/legend"
@@ -126,7 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
+            <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
 
             <com.db.chart.view.HorizontalStackBarChartView
                 android:id="@+id/chart3"

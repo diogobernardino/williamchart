@@ -73,7 +73,7 @@ public abstract class ChartView extends RelativeLayout{
 	private Orientation mOrientation;
 
 
-	/** Chart borders */
+	/** Chart borders including padding */
 	private int mChartTop;
 	private int mChartBottom;
 	private int mChartLeft;
@@ -558,20 +558,22 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/**
-	 * Adds a tooltip to {@link ChartView}. If is not the case already,
-	 * the whole tooltip is forced to be inside {@link ChartView} bounds.
+	 * Adds a tooltip to {@link ChartView}.
+	 * If is not the case already, the whole tooltip is forced to be inside {@link ChartView}
+	 * bounds. The area used to apply the correction exclude any padding applied, the whole view
+	 * size in the layout is take into account.
 	 *
 	 * @param tooltip   {@link Tooltip} view to be added
 	 * @param correctPos   False if tooltip should not be forced to be inside ChartView.
-	 *               You may want to take care of it
+	 *               You may want to take care of it.
 	 */
 	public void showTooltip(Tooltip tooltip, boolean correctPos) {
 
 		if (correctPos) {
-			tooltip.correctPosition(mChartLeft - getPaddingLeft(),
-					mChartTop - getPaddingTop(),
-					mChartRight - getPaddingRight(),
-					(int) (getInnerChartBottom() - getPaddingBottom()));
+			tooltip.correctPosition(mChartLeft,
+					mChartTop,
+					mChartRight,
+					mChartBottom);
 		}
 
 		if(tooltip.hasEnterAnimation())
@@ -692,7 +694,6 @@ public abstract class ChartView extends RelativeLayout{
 		super.onDraw(canvas);
 
 		if(mReadyToDraw){
-
 			//long time = System.currentTimeMillis();
 
 			// Draw grid
@@ -1020,6 +1021,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return   {@link android.graphics.Rect} specifying the area of an Entry
 	 */
 	private Rect getEntryRect(Region region){
+		// Subtract the view left/top padding to correct position
 		return new Rect(region.getBounds().left - getPaddingLeft(),
 				region.getBounds().top - getPaddingTop(),
 				region.getBounds().right - getPaddingLeft(),

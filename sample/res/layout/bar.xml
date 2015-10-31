@@ -47,8 +47,7 @@
         card_view:cardBackgroundColor="#E0E0E0">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="12dp">
+            android:layout_height="match_parent">
 
             <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
 
@@ -58,6 +57,7 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
+                android:paddingBottom="12dp"
                 android:layout_below="@+id/toolbar"/>
 
             <TextView

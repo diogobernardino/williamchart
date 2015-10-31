@@ -112,9 +112,9 @@ public class Tooltip extends RelativeLayout{
         if (layoutParams.topMargin < top)
             layoutParams.topMargin = top;
         if (layoutParams.leftMargin + layoutParams.width > right)
-            layoutParams.leftMargin -= layoutParams.width - (right - layoutParams.leftMargin);
+            layoutParams.leftMargin = right - layoutParams.width;
         if (layoutParams.topMargin + layoutParams.height > bottom)
-            layoutParams.topMargin -= layoutParams.height - (bottom - layoutParams.topMargin);
+            layoutParams.topMargin = bottom - layoutParams.height;
         setLayoutParams(layoutParams);
     }
 

@@ -32,7 +32,7 @@ public class BarCardOne extends CardController {
     private final BarChartView mChart;
 
     private final String[] mLabels= {"10-15", "15-20", "20-25", "25-30", "30-35"};
-    private final float [][] mValues = {{9.5f, 7.5f, 5.5f, 4.5f, 10f},
+    private final float [][] mValues = {{9f, 7.5f, 5.5f, 4.5f, 9.5f},
             {6.5f, 3.5f, 3.5f, 2.5f, 7.5f},
             {8.5f, 6.5f, 4.5f, 3.5f, 9f},
             {5.5f, 3.0f, 3.0f, 2.5f, 7.5f}};
@@ -84,7 +84,8 @@ public class BarCardOne extends CardController {
 
         mChart.setBorderSpacing(5)
                 .setAxisBorderValues(0, 10, 2)
-                .setGrid(BarChartView.GridType.FULL, 10, 10, gridPaint)
+                .setGrid(BarChartView.GridType.FULL, 5, 10, gridPaint)
+                .setXAxis(false)
                 .setYAxis(false)
                 .setXLabels(XController.LabelPosition.OUTSIDE)
                 .setYLabels(YController.LabelPosition.NONE)

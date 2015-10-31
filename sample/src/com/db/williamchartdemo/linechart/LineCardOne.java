@@ -62,7 +62,7 @@ public class LineCardOne extends CardController {
                 .setXAxis(false)
                 .setYAxis(false);
 
-        Animation anim = new Animation().setStartPoint(-1, 1).setEndAction(action);
+        Animation anim = new Animation().setEndAction(action);
 
         mChart.show(anim);
     }
@@ -87,7 +87,7 @@ public class LineCardOne extends CardController {
     public void dismiss(Runnable action) {
         super.dismiss(action);
 
-        mChart.dismiss(new Animation().setStartPoint(-1, 0).setEndAction(action));
+        mChart.dismiss(new Animation().setEndAction(action));
     }
 
 

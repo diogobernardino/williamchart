@@ -44,7 +44,7 @@ public class StackedCardThree extends CardController {
         mChart.addData(dataset);
 
         mChart.setRoundCorners(Tools.fromDpToPx(5));
-        mChart.setBarSpacing(Tools.fromDpToPx(8));
+        mChart.setBarSpacing(Tools.fromDpToPx(5));
 
         mChart.setBorderSpacing(Tools.fromDpToPx(5))
                 .setYLabels(AxisController.LabelPosition.NONE)

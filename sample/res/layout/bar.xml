@@ -1,112 +1,114 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
     tools:context="com.db.william.BarFragment">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card1"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        card_view:cardCornerRadius="@dimen/card_margin"
-        card_view:cardBackgroundColor="#cec1b2">
-        <RelativeLayout
+        android:layout_height="match_parent"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
-
-            <com.db.chart.view.BarChartView
-                android:id="@+id/chart1"
+            android:layout_height="200dp"
+            card_view:cardCornerRadius="@dimen/card_margin"
+            card_view:cardBackgroundColor="#cec1b2">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/toolbar"
-                android:paddingRight="12dp"
-                android:paddingLeft="12dp"
-                android:paddingBottom="8dp"/>
+                android:layout_height="match_parent">
 
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+                <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="@dimen/card_margin"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardBackgroundColor="#E0E0E0">
-        <RelativeLayout
+                <com.db.chart.view.BarChartView
+                    android:id="@+id/chart1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/toolbar"
+                    android:paddingRight="12dp"
+                    android:paddingLeft="12dp"
+                    android:paddingBottom="8dp"/>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
-
-            <com.db.chart.view.HorizontalBarChartView
-                android:id="@+id/chart2"
+            android:layout_height="125dp"
+            android:layout_marginTop="@dimen/card_margin"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardBackgroundColor="#E0E0E0">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingBottom="12dp"
-                android:layout_below="@+id/toolbar"/>
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_toLeftOf="@+id/metric"
-                android:layout_toStartOf="@+id/metric"
-                android:layout_marginBottom="0dp"
-                android:textSize="50sp"
-                android:textColor="#FF8E8A84"/>
-            <TextView
-                android:id="@+id/metric"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginBottom="6dp"
-                android:layout_marginRight="26dp"
-                android:layout_marginEnd="26dp"
-                android:text="h"
-                android:textSize="25sp"
-                android:textColor="#FF8E8A84"/>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+                <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card3"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="@dimen/card_margin"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardBackgroundColor="#363a44">
-        <RelativeLayout
+                <com.db.chart.view.HorizontalBarChartView
+                    android:id="@+id/chart2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingBottom="12dp"
+                    android:layout_below="@+id/toolbar"/>
+
+                <TextView
+                    android:id="@+id/value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/metric"
+                    android:layout_toStartOf="@+id/metric"
+                    android:layout_marginBottom="0dp"
+                    android:textSize="50sp"
+                    android:textColor="#FF8E8A84"/>
+                <TextView
+                    android:id="@+id/metric"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginRight="26dp"
+                    android:layout_marginEnd="26dp"
+                    android:text="h"
+                    android:textSize="25sp"
+                    android:textColor="#FF8E8A84"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
-
-            <com.db.chart.view.BarChartView
-                android:id="@+id/chart3"
+            android:layout_height="100dp"
+            android:layout_marginTop="@dimen/card_margin"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardBackgroundColor="#363a44">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/toolbar"/>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+                android:layout_height="match_parent">
 
-</LinearLayout>
+                <include layout="@layout/card_toolbar" android:id="@+id/toolbar"/>
+
+                <com.db.chart.view.BarChartView
+                    android:id="@+id/chart3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/toolbar"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>

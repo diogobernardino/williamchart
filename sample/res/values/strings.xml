@@ -30,5 +30,28 @@
 		<item>3000ms</item>
 		<item>3500ms</item>
 	</string-array>
+	
+	<!-- Drawer -->
+	<string name="line_drawer">Line</string>
+	<string name="bar_drawer">Bar</string>
+	<string name="stacked_drawer">Stacked</string>
+	<string name="sandbox_drawer">Sandbox \u03B2</string>
+
+	<!-- Stacked chart one -->
+	<string name="stacked_one_1">STATE 1</string>
+	<string name="stacked_one_2">STATE 2</string>
+	<string name="stacked_one_3">STATE 3</string>
+
+	<!-- Stacked chart three -->
+	<string name="stacked_three_electric">electric</string>
+	<string name="stacked_three_fuel">fuel</string>
+
+	<!-- Sandbox axis -->
+	<string name="sandbox_axis_x">X</string>
+	<string name="sandbox_axis_y">Y</string>
+	<string name="sandbox_axis_metric">metric</string>
+
+	<!-- Bar -->
+	<string name="bar_two_metric">h</string>
 
 </resources>

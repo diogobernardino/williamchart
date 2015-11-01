@@ -283,14 +283,14 @@ public class SandboxFragment extends Fragment {
         if(mIsLineSmooth)
             code.append("dataset.setSmooth(true);\n");
 
-        code.append("dataset.setThickness(Tools.fromDpToPx("+ mLineThickness +"));\n");
+        code.append("dataset.setThickness(Tools.fromDpToPx(" + mLineThickness + "));\n");
         if(mLineColorId != DEFAULT_COLOR)
-            code.append("dataset.setColor(Color.parseColor('#"+ Integer.toHexString(mLineColorId).substring(2) +"'));\n");
+            code.append("dataset.setColor(Color.parseColor('#").append(Integer.toHexString(mLineColorId).substring(2)).append("'));\n");
 
         if(mPointsSizeId != -1)
-            code.append("dataset.setDotsRadius(Tools.fromDpToPx("+ mPointsSize +"));\n");
+            code.append("dataset.setDotsRadius(Tools.fromDpToPx(").append(mPointsSize).append("));\n");
         if(mPointColorId != DEFAULT_COLOR)
-            code.append("dataset.setDotsColor(Color.parseColor('#"+ Integer.toHexString(mPointColorId).substring(2) +"'));\n");
+            code.append("dataset.setDotsColor(Color.parseColor('#").append(Integer.toHexString(mPointColorId).substring(2)).append("'));\n");
 
         code.append("chart.addData(dataset);\n");
 
@@ -322,11 +322,11 @@ public class SandboxFragment extends Fragment {
 
         code.append("BarSet dataset = new BarSet(<labels>, <values>);\n");
         if(mBarColorId != DEFAULT_COLOR)
-            code.append("dataset.setColor(Color.parseColor('#"+ Integer.toHexString(mBarColorId).substring(2) +"'));\n");
+            code.append("dataset.setColor(Color.parseColor('#").append(Integer.toHexString(mBarColorId).substring(2)).append("'));\n");
         if(mBarSpacing != 0)
-            code.append("chart.setBarSpacing("+ mBarSpacing +");\n");
+            code.append("chart.setBarSpacing(").append(mBarSpacing).append(");\n");
         if(mHasBarBackground)
-            code.append("chart.setBarBackgroundColor(Color.parseColor('#"+ Integer.toHexString(mBarBackgroundColorId).substring(2) +"'));\n");
+            code.append("chart.setBarBackgroundColor(Color.parseColor('#").append(Integer.toHexString(mBarBackgroundColorId).substring(2)).append("'));\n");
 
         code.append("chart.addData(dataset);\n");
 
@@ -358,11 +358,11 @@ public class SandboxFragment extends Fragment {
 
         code.append("BarSet dataset = new BarSet(<labels>, <values>);\n");
         if(mBarColorId != DEFAULT_COLOR)
-            code.append("dataset.setColor(Color.parseColor('# "+ Integer.toHexString(mBarColorId).substring(2) +"'));\n");
+            code.append("dataset.setColor(Color.parseColor('# ").append(Integer.toHexString(mBarColorId).substring(2)).append("'));\n");
         if(mBarSpacing != 0)
-            code.append("chart.setBarSpacing("+ mBarSpacing +");\n");
+            code.append("chart.setBarSpacing(").append(mBarSpacing).append(");\n");
         if(mHasBarBackground)
-            code.append("chart.setBarBackground(Color.parseColor('#"+ Integer.toHexString(mBarBackgroundColorId).substring(2) +"'));\n");
+            code.append("chart.setBarBackground(Color.parseColor('#").append(Integer.toHexString(mBarBackgroundColorId).substring(2)).append("'));\n");
 
         code.append("chart.addData(dataset);\n");
 
@@ -433,30 +433,23 @@ public class SandboxFragment extends Fragment {
         if(!mHasXAxis) code.append("chart.setXAxis(false);\n");
         if(!mHasYAxis) code.append("chart.setYAxis(false);\n");
         if((mHasXAxis || mHasYAxis) && mAxisColorId !=  DEFAULT_COLOR)
-            code.append("chart.setAxisColor(Color.parseColor('#"+ Integer.toHexString(mAxisColorId).substring(2) +"'));\n");
+            code.append("chart.setAxisColor(Color.parseColor('#").append(Integer.toHexString(mAxisColorId).substring(2)).append("'));\n");
         if(mXLabelPosition != AxisController.LabelPosition.OUTSIDE)
-            code.append("chart.setXLabels("+ mXLabelPosition +");\n");
+            code.append("chart.setXLabels(").append(mXLabelPosition).append(");\n");
         if(mYLabelPosition != AxisController.LabelPosition.OUTSIDE)
-            code.append("chart.setYLabels("+ mYLabelPosition +");\n");
+            code.append("chart.setYLabels(").append(mYLabelPosition).append(");\n");
         if((mXLabelPosition != AxisController.LabelPosition.NONE || mYLabelPosition != AxisController.LabelPosition.NONE)
                 && mLabelColorId !=  DEFAULT_COLOR)
-            code.append("chart.setLabelsColor(Color.parseColor('#"+ Integer.toHexString(mLabelColorId).substring(2) +"'));\n");
+            code.append("chart.setLabelsColor(Color.parseColor('#").append(Integer.toHexString(mLabelColorId).substring(2)).append("'));\n");
         if(mGridType != null) {
-            code.append("// Paint object used to draw Grid\n"+
-                    "Paint gridPaint = new Paint();\n"+
-                    "gridPaint.setColor(Color.parseColor('#"+ Integer.toHexString(mGridColorId).substring(2)+"'));\n"+
-                    "gridPaint.setStyle(Paint.Style.STROKE);\n"+
-                    "gridPaint.setAntiAlias(true);\n"+
-                    "gridPaint.setStrokeWidth(Tools.fromDpToPx("+ mGridThickness +"));\n");
+            code.append("// Paint object used to draw Grid\n" + "Paint gridPaint = new Paint();\n" + "gridPaint.setColor(Color.parseColor('#").append(Integer.toHexString(mGridColorId).substring(2)).append("'));\n").append("gridPaint.setStyle(Paint.Style.STROKE);\n").append("gridPaint.setAntiAlias(true);\n").append("gridPaint.setStrokeWidth(Tools.fromDpToPx(").append(mGridThickness).append("));\n");
             if (mIsGridDashed)
-                code.append("gridPaint.setPathEffect(new DashPathEffect("+ mGridDashType +", 0));\n");
-            code.append("chart.setGrid(ChartView.GridType." + mGridType + ", gridPaint);\n");
+                code.append("gridPaint.setPathEffect(new DashPathEffect(").append(mGridDashType).append(", 0));\n");
+            code.append("chart.setGrid(ChartView.GridType.").append(mGridType).append(", gridPaint);\n");
         }
 
-        System.out.println(mLabelFormat != "");
-        System.out.println("L "+mLabelFormat);
         if(mLabelFormat != "")
-            code.append("chart.setLabelsFormat(new DecimalFormat('#'+"+ mLabelFormat +"));\n");
+            code.append("chart.setLabelsFormat(new DecimalFormat('#'+").append(mLabelFormat).append("));\n");
 
         code.append(buildAnimationCode());
 
@@ -522,7 +515,7 @@ public class SandboxFragment extends Fragment {
         StringBuilder code = new StringBuilder("\n// Animation customization\n");
 
         if(mDuration != 1000)
-            code.append("Animation anim = new Animation("+ mDuration +");\n");
+            code.append("Animation anim = new Animation(").append(mDuration).append(");\n");
         else
             code.append("Animation anim = new Animation();\n");
 
@@ -541,18 +534,18 @@ public class SandboxFragment extends Fragment {
         }
 
         if(mAlpha != -1)
-            code.append("anim.setAlpha("+ mAlpha +");\n");
+            code.append("anim.setAlpha(").append(mAlpha).append(");\n");
 
         if(mOverlapOrder[0] != 0 || mOverlapFactor != 1){
             String order = "{ ";
             for(int i = 0; i < mOverlapOrder.length; i++)
                 order += mOverlapOrder[i]+", ";
             order +="}";
-            code.append("anim.setOverlap("+ mOverlapFactor +", "+ order +");\n");
+            code.append("anim.setOverlap(").append(mOverlapFactor).append(", ").append(order).append(");\n");
         }
 
         if(mStartX != -1 && mStartY != 0)
-            code.append("anim.setStartPoint("+ mStartX +", "+ mStartY +");\n");
+            code.append("anim.setStartPoint(").append(mStartX).append(", ").append(mStartY).append(");\n");
 
         return code.toString();
     }
@@ -563,7 +556,7 @@ public class SandboxFragment extends Fragment {
         mCurrFragment.onStateChange(view.getId());
     }
 
-    protected void onPlay(View view){
+    void onPlay(View view){
 
         if(view.getId() == R.id.sandbox_play_play) {
             generateChart();

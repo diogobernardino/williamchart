@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 
 import com.db.chart.Tools;
 import com.db.williamchart.R;

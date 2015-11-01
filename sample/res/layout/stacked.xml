@@ -7,7 +7,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -41,7 +41,7 @@
                         android:drawableLeft="@drawable/stacked_one_point1_bck"
                         android:drawableStart="@drawable/stacked_one_point1_bck"
                         android:drawablePadding="4dp"
-                        android:text="STATE 1"
+                        android:text="@string/stacked_one_1"
                         android:textSize="10sp"
                         android:textColor="#ff2b2b2b"/>
                     <TextView
@@ -53,7 +53,7 @@
                         android:drawableLeft="@drawable/stacked_one_point2_bck"
                         android:drawableStart="@drawable/stacked_one_point2_bck"
                         android:drawablePadding="4dp"
-                        android:text="STATE 2"
+                        android:text="@string/stacked_one_2"
                         android:textSize="10sp"
                         android:textColor="#ff2b2b2b"/>
                     <TextView
@@ -66,7 +66,7 @@
                         android:drawableLeft="@drawable/stacked_one_point3_bck"
                         android:drawableStart="@drawable/stacked_one_point3_bck"
                         android:drawablePadding="4dp"
-                        android:text="STATE 3"
+                        android:text="@string/stacked_one_3"
                         android:textSize="10sp"
                         android:textColor="#ff2b2b2b"/>
                 </RelativeLayout>
@@ -105,6 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
                     android:paddingBottom="10dp"
                     android:paddingRight="25dp"
                     android:paddingEnd="25dp"
@@ -146,7 +147,7 @@
                     android:layout_toStartOf="@+id/label_sep"
                     android:layout_marginRight="5dp"
                     android:layout_marginEnd="5dp"
-                    android:text="electric"
+                    android:text="@string/stacked_three_electric"
                     android:textColor="#FF5C8E67"
                     android:textSize="18sp"/>
                 <View
@@ -167,7 +168,7 @@
                     android:layout_toEndOf="@+id/label_sep"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:text="fuel"
+                    android:text="@string/stacked_three_fuel"
                     android:textColor="#687E8E"
                     android:textSize="18sp"/>
             </RelativeLayout>

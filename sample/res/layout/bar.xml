@@ -84,7 +84,7 @@
                     android:layout_marginBottom="9dp"
                     android:layout_marginRight="26dp"
                     android:layout_marginEnd="26dp"
-                    android:text="h"
+                    android:text="@string"
                     android:textSize="25sp"
                     android:textColor="#FF8E8A84"/>
             </RelativeLayout>

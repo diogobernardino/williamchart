@@ -77,9 +77,9 @@ public class LineSet extends ChartSet{
 
 
 	/** Shadow variables */
-	protected float mShadowRadius;
-	protected float mShadowDx;
-	protected float mShadowDy;
+	private float mShadowRadius;
+	private float mShadowDx;
+	private float mShadowDy;
 	private int[] mShadowColor;
 
 

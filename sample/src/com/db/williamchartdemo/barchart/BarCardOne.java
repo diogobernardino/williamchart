@@ -77,7 +77,7 @@ public class BarCardOne extends CardController {
         mChart.setRoundCorners(Tools.fromDpToPx(2));
 
         Paint gridPaint = new Paint();
-        gridPaint.setColor(Color.parseColor("#8986705C"));
+        gridPaint.setColor(Color.parseColor("#6d86705c"));
         gridPaint.setStyle(Paint.Style.STROKE);
         gridPaint.setAntiAlias(true);
         gridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));

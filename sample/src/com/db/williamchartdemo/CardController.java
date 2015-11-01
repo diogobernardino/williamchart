@@ -25,8 +25,8 @@ import android.widget.RelativeLayout;
 public class CardController {
 
 
-	private ImageButton mPlayBtn;
-	private ImageButton mUpdateBtn;
+	private final ImageButton mPlayBtn;
+	private final ImageButton mUpdateBtn;
 
 
 	private final Runnable showAction = new Runnable() {
@@ -55,7 +55,7 @@ public class CardController {
 	protected boolean firstStage;
 
 
-	public CardController(CardView card){
+	protected CardController(CardView card){
 		super();
 
 		RelativeLayout toolbar = (RelativeLayout) card.findViewById(R.id.toolbar);
@@ -85,17 +85,17 @@ public class CardController {
 	}
 
 
-	public void show(Runnable action){
+	protected void show(Runnable action){
 		lock();
 		firstStage = false;
 	}
 
-	public void update(){
+	protected void update(){
 		lock();
 		firstStage = !firstStage;
 	}
 
-	public void dismiss(Runnable action){
+	protected void dismiss(Runnable action){
 		lock();
 	}
 

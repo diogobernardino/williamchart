@@ -28,8 +28,8 @@ public class BarCardTwo extends CardController {
     private final Context mContext;
 
 
-    private TextView mTextViewValue;
-    private TextView mTextViewMetric;
+    private final TextView mTextViewValue;
+    private final TextView mTextViewMetric;
 
 
     private final HorizontalBarChartView mChart;

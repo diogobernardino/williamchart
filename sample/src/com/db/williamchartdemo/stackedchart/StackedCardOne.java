@@ -23,9 +23,9 @@ import com.db.williamchartdemo.R;
 public class StackedCardOne extends CardController {
 
 
-    private TextView mLegendOneRed;
-    private TextView mLegendOneYellow;
-    private TextView mLegendOneGreen;
+    private final TextView mLegendOneRed;
+    private final TextView mLegendOneYellow;
+    private final TextView mLegendOneGreen;
 
 
     private final StackBarChartView mChart;

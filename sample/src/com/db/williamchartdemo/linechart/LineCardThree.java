@@ -4,9 +4,11 @@ import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
@@ -46,6 +48,10 @@ public class LineCardThree extends CardController {
         super.show(action);
 
         Tooltip tip = new Tooltip(mContext, R.layout.linechart_three_tooltip, R.id.value);
+
+        ((TextView) tip.findViewById(R.id.value))
+                .setTypeface(Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Semibold.ttf"));
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 
             tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1),

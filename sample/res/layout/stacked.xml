@@ -17,7 +17,7 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card1"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="175dp"
             card_view:cardCornerRadius="@dimen/card_margin"
             card_view:cardBackgroundColor="#ffffff">
             <RelativeLayout
@@ -89,7 +89,7 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card2"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="175dp"
             android:layout_marginTop="@dimen/card_margin"
             card_view:cardBackgroundColor="#2f2f30"
             card_view:cardCornerRadius="4dp">
@@ -120,7 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="125dp"
             android:layout_marginTop="@dimen/card_margin"
-            card_view:cardBackgroundColor="#E0EFDC"
+            card_view:cardBackgroundColor="#b8c7b4"
             card_view:cardCornerRadius="4dp">
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -157,8 +157,9 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:background="#E0EFDC"/>
+                    android:background="#b8c7b4"/>
                 <TextView
+                    android:id="@+id/fuel_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"

@@ -45,7 +45,7 @@ public class StackedFragment extends Fragment {
 
         (new StackedCardOne((CardView) layout.findViewById(R.id.card1))).init();
         (new StackedCardTwo((CardView) layout.findViewById(R.id.card2))).init();
-        (new StackedCardThree((CardView) layout.findViewById(R.id.card3))).init();
+        (new StackedCardThree((CardView) layout.findViewById(R.id.card3), getContext())).init();
 
         return layout;
     }

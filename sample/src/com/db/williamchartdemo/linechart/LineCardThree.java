@@ -50,11 +50,11 @@ public class LineCardThree extends CardController {
 
             tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1),
                     PropertyValuesHolder.ofFloat(View.SCALE_X, 1f),
-                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f));
+                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f)).setDuration(200);
 
             tip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA,0),
                     PropertyValuesHolder.ofFloat(View.SCALE_X,0f),
-                    PropertyValuesHolder.ofFloat(View.SCALE_Y,0f));
+                    PropertyValuesHolder.ofFloat(View.SCALE_Y,0f)).setDuration(200);
         }
         mChart.setTooltips(tip);
 
@@ -62,21 +62,21 @@ public class LineCardThree extends CardController {
         dataset.setColor(Color.parseColor("#FF58C674"))
                 .setDotsStrokeThickness(Tools.fromDpToPx(2))
                 .setDotsStrokeColor(Color.parseColor("#FF58C674"))
-                .setDotsColor(Color.parseColor("#eef1f6"));
+                .setDotsColor(Color.parseColor("#e3e7ec"));
         mChart.addData(dataset);
 
         dataset = new LineSet(mLabelsThree, mValuesThree[1]);
         dataset.setColor(Color.parseColor("#FFA03436"))
                 .setDotsStrokeThickness(Tools.fromDpToPx(2))
                 .setDotsStrokeColor(Color.parseColor("#FFA03436"))
-                .setDotsColor(Color.parseColor("#eef1f6"));
+                .setDotsColor(Color.parseColor("#e3e7ec"));
         mChart.addData(dataset);
 
         dataset = new LineSet(mLabelsThree, mValuesThree[2]);
         dataset.setColor(Color.parseColor("#FF365EAF"))
                 .setDotsStrokeThickness(Tools.fromDpToPx(2))
                 .setDotsStrokeColor(Color.parseColor("#FF365EAF"))
-                .setDotsColor(Color.parseColor("#eef1f6"));
+                .setDotsColor(Color.parseColor("#e3e7ec"));
         mChart.addData(dataset);
 
         Paint gridPaint = new Paint();

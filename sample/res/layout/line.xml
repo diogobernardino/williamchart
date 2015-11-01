@@ -56,7 +56,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingBottom="8dp"
-                    android:layout_below="@id/toolbar"/>
+                    android:layout_below="@id/toolbar"
+                    chart:chart_typeface="OpenSans-Semibold.ttf"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
@@ -66,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="@dimen/card_margin"
-            card_view:cardBackgroundColor="#eef1f6"
+            card_view:cardBackgroundColor="#e3e7ec"
             card_view:cardCornerRadius="4dp">
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -83,7 +84,8 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:layout_below="@+id/toolbar"
-                    chart:chart_axisColor="#30547d99"/>
+                    chart:chart_axisColor="#30547d99"
+                    chart:chart_typeface="OpenSans-Regular.ttf"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 

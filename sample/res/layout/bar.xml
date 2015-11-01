@@ -42,7 +42,7 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card2"
             android:layout_width="match_parent"
-            android:layout_height="125dp"
+            android:layout_height="150dp"
             android:layout_marginTop="@dimen/card_margin"
             card_view:cardCornerRadius="4dp"
             card_view:cardBackgroundColor="#E0E0E0">
@@ -53,13 +53,16 @@
                 <include layout="@layout/card_toolbar_grey" android:id="@+id/toolbar"/>
 
                 <com.db.chart.view.HorizontalBarChartView
+                    xmlns:chart="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/chart2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp"
                     android:paddingBottom="12dp"
-                    android:layout_below="@+id/toolbar"/>
+                    android:layout_below="@+id/toolbar"
+                    chart:chart_fontSize="12dp"
+                    chart:chart_typeface="Ponsi-Regular.otf"/>
 
                 <TextView
                     android:id="@+id/value"
@@ -78,7 +81,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="6dp"
+                    android:layout_marginBottom="9dp"
                     android:layout_marginRight="26dp"
                     android:layout_marginEnd="26dp"
                     android:text="h"

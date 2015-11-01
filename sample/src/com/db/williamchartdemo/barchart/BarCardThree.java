@@ -57,10 +57,10 @@ public class BarCardThree extends CardController {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat(View.ALPHA, 1);
-            tip.setEnterAnimation(alpha);
+            tip.setEnterAnimation(alpha).setDuration(150);
 
             alpha = PropertyValuesHolder.ofFloat(View.ALPHA,0);
-            tip.setExitAnimation(alpha);
+            tip.setExitAnimation(alpha).setDuration(150);
         }
 
         mChart.setTooltips(tip);

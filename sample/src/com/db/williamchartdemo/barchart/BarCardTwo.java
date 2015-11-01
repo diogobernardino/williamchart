@@ -4,6 +4,7 @@ import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -45,6 +46,10 @@ public class BarCardTwo extends CardController {
         mTextViewValue = (TextView) card.findViewById(R.id.value);
         mTextViewMetric = (TextView) card.findViewById(R.id.metric);
 
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"Ponsi-Regular.otf");
+        mTextViewValue.setTypeface(typeface);
+        mTextViewMetric.setTypeface(typeface);
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
             mTextViewValue.animate().alpha(0).setDuration(100);
             mTextViewMetric.animate().alpha(0).setDuration(100);
@@ -62,8 +67,8 @@ public class BarCardTwo extends CardController {
         Tooltip tip = new Tooltip(mContext, R.layout.barchart_two_tooltip);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1));
-            tip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA,0));
+            tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1)).setDuration(150);
+            tip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA,0)).setDuration(150);
         }
 
         mChart.setTooltips(tip);

@@ -1,7 +1,10 @@
 package com.db.williamchartdemo.stackedchart;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
+import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
@@ -24,10 +27,14 @@ public class StackedCardThree extends CardController {
             {-40f, -70f, -60f, -50f}};
 
 
-    public StackedCardThree(CardView card){
+    public StackedCardThree(CardView card, Context context){
         super(card);
 
         mChart = (HorizontalStackBarChartView) card.findViewById(R.id.chart3);
+        ((TextView) card.findViewById(R.id.electric_text))
+                .setTypeface(Typeface.createFromAsset(context.getAssets(), "Ponsi-Regular.otf"));
+        ((TextView) card.findViewById(R.id.fuel_text))
+                .setTypeface(Typeface.createFromAsset(context.getAssets(), "Ponsi-Regular.otf"));
     }
 
 

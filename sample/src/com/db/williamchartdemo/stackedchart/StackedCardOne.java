@@ -40,7 +40,7 @@ public class StackedCardOne extends CardController {
     public StackedCardOne(CardView card){
         super(card);
 
-        mChart = (StackBarChartView) card.findViewById(R.id.chart1);
+        mChart = (StackBarChartView) card.findViewById(R.id.chart5);
         mLegendOneRed = (TextView) card.findViewById(R.id.state_one);
         mLegendOneYellow = (TextView) card.findViewById(R.id.state_two);
         mLegendOneGreen = (TextView) card.findViewById(R.id.state_three);
@@ -58,8 +58,8 @@ public class StackedCardOne extends CardController {
                 public void onClick(int setIndex, int entryIndex, Rect rect) {
                     if(setIndex == 2)
                         mLegendOneRed.animate()
-                                .scaleY(1.1f)
-                                .scaleX(1.1f)
+                                .scaleY(1.3f)
+                                .scaleX(1.3f)
                                 .setDuration(100)
                                 .withEndAction(new Runnable() {
                                     @Override
@@ -72,8 +72,8 @@ public class StackedCardOne extends CardController {
                                 });
                     else if(setIndex == 1){
                         mLegendOneYellow.animate()
-                                .scaleY(1.1f)
-                                .scaleX(1.1f)
+                                .scaleY(1.3f)
+                                .scaleX(1.3f)
                                 .setDuration(100)
                                 .withEndAction(new Runnable(){
                                     @Override
@@ -86,8 +86,8 @@ public class StackedCardOne extends CardController {
                                 });
                     }else{
                         mLegendOneGreen.animate()
-                                .scaleY(1.1f)
-                                .scaleX(1.1f)
+                                .scaleY(1.3f)
+                                .scaleX(1.3f)
                                 .setDuration(100)
                                 .withEndAction(new Runnable(){
                                     @Override

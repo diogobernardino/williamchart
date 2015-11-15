@@ -31,7 +31,7 @@ public class StackedCardTwo extends CardController {
     public StackedCardTwo(CardView card){
         super(card);
 
-        mChart = (HorizontalStackBarChartView) card.findViewById(R.id.chart2);
+        mChart = (HorizontalStackBarChartView) card.findViewById(R.id.chart8);
     }
 
 
@@ -53,7 +53,7 @@ public class StackedCardTwo extends CardController {
         gridPaint.setAntiAlias(true);
         gridPaint.setStrokeWidth(Tools.fromDpToPx(.7f));
 
-        mChart.setBarSpacing(Tools.fromDpToPx(6));
+        mChart.setBarSpacing(Tools.fromDpToPx(10));
 
         mChart.setBorderSpacing(0)
                 .setGrid(ChartView.GridType.VERTICAL, 1, 10, gridPaint)

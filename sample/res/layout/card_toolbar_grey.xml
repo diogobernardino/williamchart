@@ -11,7 +11,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_play_grey"
-        android:background="@android:color/transparent"/>
+        android:background="?attr/selectableItemBackgroundBorderless"/>
     <ImageButton
         android:id="@+id/update"
         android:layout_width="@dimen/card_toolbar_btn"
@@ -19,5 +19,5 @@
         android:layout_toLeftOf="@+id/play"
         android:layout_toStartOf="@+id/play"
         android:src="@drawable/ic_refresh_grey"
-        android:background="@android:color/transparent"/>
+        android:background="?attr/selectableItemBackgroundBorderless"/>
 </RelativeLayout>

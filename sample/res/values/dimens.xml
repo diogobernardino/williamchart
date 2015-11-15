@@ -4,10 +4,6 @@
     <dimen name="activity_horizontal_margin">8dp</dimen>
     <dimen name="activity_vertical_margin">8dp</dimen>
 
-    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
-         https://developer.android.com/design/patterns/navigation-drawer.html -->
-    <dimen name="navigation_drawer_width">100dp</dimen>
-
     <dimen name="card_margin">8dp</dimen>
 
     <dimen name="button_size">40dp</dimen>
@@ -30,6 +26,10 @@
 
     <dimen name="play_chart_padding">15dp</dimen>
 
-    <dimen name="card_toolbar_btn">35dp</dimen>
+    <dimen name="card_toolbar_btn">40dp</dimen>
+
+    <dimen name="card_view_padding">1dp</dimen>
+    <dimen name="card_layout_padding">.5dp</dimen>
+    <dimen name="card_view_roundcorner">0dp</dimen>
 
 </resources>

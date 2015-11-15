@@ -157,7 +157,7 @@
             android:layout_centerVertical="true"
             android:textSize="50sp"
             android:textColor="@color/primary_text"
-            android:hint="metric"
+            android:hint="@string/sandbox_axis_metric"
             android:inputType="text" />
 
     </RelativeLayout>

@@ -3,7 +3,7 @@
 	<string name="app_name">WilliamChart</string>
 	
 	<string name="github_str">Github</string>
-	<string name="gplay_str">Google Play</string>
+	<string name="google_play_str">Google Play</string>
 
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
@@ -53,5 +53,14 @@
 
 	<!-- Bar -->
 	<string name="bar_two_metric">h</string>
+
+	<string-array name="spinner_options">
+		<item>Showroom</item>
+		<item>Sandbox</item>
+	</string-array>
+
+	<string name="chart_label">AVERAGE TIME</string>
+	<string name="chart_label2">Bycicles</string>
+	<string name="chart_label3">00:15:39</string>
 
 </resources>

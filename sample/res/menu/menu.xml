@@ -3,12 +3,16 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:context=".MainActivity">
+	<item android:id="@+id/spinner"
+		android:title="Showroom"
+		app:showAsAction="ifRoom"
+		app:actionViewClass="android.widget.Spinner" />
 	<item android:id="@+id/github"
 		android:title="@string/github_str"
 		android:icon="@drawable/github"
-		app:showAsAction="ifRoom"/>
+		app:showAsAction="never"/>
 	<item android:id="@+id/play"
-		android:title="@string/gplay_str"
+		android:title="@string/google_play_str"
 		android:icon="@drawable/ic_favorite"
-		app:showAsAction="ifRoom"/>
+		app:showAsAction="never"/>
 </menu>

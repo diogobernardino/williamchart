@@ -45,7 +45,7 @@ public class BarCardThree extends CardController {
         super(card);
 
         mContext = context;
-        mChart = (BarChartView) card.findViewById(R.id.chart3);
+        mChart = (BarChartView) card.findViewById(R.id.chart6);
     }
 
 

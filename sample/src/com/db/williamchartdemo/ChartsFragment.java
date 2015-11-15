@@ -26,9 +26,15 @@ import android.view.ViewGroup;
 import com.db.williamchartdemo.barchart.BarCardOne;
 import com.db.williamchartdemo.barchart.BarCardThree;
 import com.db.williamchartdemo.barchart.BarCardTwo;
+import com.db.williamchartdemo.linechart.LineCardOne;
+import com.db.williamchartdemo.linechart.LineCardThree;
+import com.db.williamchartdemo.linechart.LineCardTwo;
+import com.db.williamchartdemo.stackedchart.StackedCardOne;
+import com.db.williamchartdemo.stackedchart.StackedCardThree;
+import com.db.williamchartdemo.stackedchart.StackedCardTwo;
 
 
-public class BarFragment extends Fragment {
+public class ChartsFragment extends Fragment {
 
 
     @Override
@@ -41,13 +47,20 @@ public class BarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View layout = inflater.inflate(R.layout.bar, container, false);
+        View layout = inflater.inflate(R.layout.charts, container, false);
 
-        (new BarCardOne((CardView) layout.findViewById(R.id.card1), getContext())).init();
-        (new BarCardTwo((CardView) layout.findViewById(R.id.card2), getContext())).init();
-        (new BarCardThree((CardView) layout.findViewById(R.id.card3), getContext())).init();
+        (new LineCardOne((CardView) layout.findViewById(R.id.card1), getContext())).init();
+        (new LineCardThree((CardView) layout.findViewById(R.id.card2), getContext())).init();
+        (new BarCardOne((CardView) layout.findViewById(R.id.card3), getContext())).init();
+        (new StackedCardThree((CardView) layout.findViewById(R.id.card4), getContext())).init();
+        (new StackedCardOne((CardView) layout.findViewById(R.id.card5))).init();
+        (new BarCardThree((CardView) layout.findViewById(R.id.card6), getContext())).init();
+        (new BarCardTwo((CardView) layout.findViewById(R.id.card7), getContext())).init();
+        (new StackedCardTwo((CardView) layout.findViewById(R.id.card8))).init();
+        (new LineCardTwo((CardView) layout.findViewById(R.id.card9))).init();
 
         return layout;
     }
+
 
 }

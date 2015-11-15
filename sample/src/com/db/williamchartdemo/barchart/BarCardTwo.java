@@ -29,7 +29,6 @@ public class BarCardTwo extends CardController {
 
 
     private final TextView mTextViewValue;
-    private final TextView mTextViewMetric;
 
 
     private final HorizontalBarChartView mChart;
@@ -42,21 +41,16 @@ public class BarCardTwo extends CardController {
         super(card);
 
         mContext = context;
-        mChart = (HorizontalBarChartView) card.findViewById(R.id.chart2);
+        mChart = (HorizontalBarChartView) card.findViewById(R.id.chart7);
         mTextViewValue = (TextView) card.findViewById(R.id.value);
-        mTextViewMetric = (TextView) card.findViewById(R.id.metric);
 
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"Ponsi-Regular.otf");
+        Typeface typeface = Typeface.createFromAsset(context.getAssets(),"OpenSans-Semibold.ttf");
         mTextViewValue.setTypeface(typeface);
-        mTextViewMetric.setTypeface(typeface);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
             mTextViewValue.animate().alpha(0).setDuration(100);
-            mTextViewMetric.animate().alpha(0).setDuration(100);
-        }else{
+        else
             mTextViewValue.setVisibility(View.INVISIBLE);
-            mTextViewMetric.setVisibility(View.INVISIBLE);
-        }
     }
 
 
@@ -77,26 +71,20 @@ public class BarCardTwo extends CardController {
             @Override
             public void onClick(int setIndex, int entryIndex, Rect rect) {
                 mTextViewValue.setText(Integer.toString((int) mValues[0][entryIndex]));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
                     mTextViewValue.animate().alpha(1).setDuration(200);
-                    mTextViewMetric.animate().alpha(1).setDuration(200);
-                } else {
+                else
                     mTextViewValue.setVisibility(View.VISIBLE);
-                    mTextViewMetric.setVisibility(View.VISIBLE);
-                }
             }
         });
 
         mChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
                     mTextViewValue.animate().alpha(0).setDuration(100);
-                    mTextViewMetric.animate().alpha(0).setDuration(100);
-                } else {
+                else
                     mTextViewValue.setVisibility(View.INVISIBLE);
-                    mTextViewMetric.setVisibility(View.INVISIBLE);
-                }
             }
         });
 
@@ -105,19 +93,21 @@ public class BarCardTwo extends CardController {
         Bar bar;
         for(int i = 0; i < mLabels.length; i++){
             bar = new Bar(mLabels[i], mValues[0][i]);
-            if(i == mLabels.length - 1 )
-                bar.setColor(Color.parseColor("#b26657"));
-            else if (i == 0)
-                bar.setColor(Color.parseColor("#998d6e"));
-            else
-                bar.setColor(Color.parseColor("#506a6e"));
+            switch (i){
+                case 0: bar.setColor(Color.parseColor("#77c63d")); break;
+                case 1: bar.setColor(Color.parseColor("#27ae60")); break;
+                case 2: bar.setColor(Color.parseColor("#47bac1")); break;
+                case 3: bar.setColor(Color.parseColor("#16a085")); break;
+                case 4: bar.setColor(Color.parseColor("#3498db")); break;
+                default: break;
+            }
             barSet.addBar(bar);
         }
+
         mChart.addData(barSet);
-        mChart.setBarSpacing(Tools.fromDpToPx(5));
+        mChart.setBarSpacing(Tools.fromDpToPx(8));
 
         mChart.setBorderSpacing(0)
-                .setAxisBorderValues(0, 100, 5)
                 .setXAxis(false)
                 .setYAxis(false)
                 .setLabelsColor(Color.parseColor("#FF8E8A84"))
@@ -136,13 +126,10 @@ public class BarCardTwo extends CardController {
         super.update();
 
         mChart.dismissAllTooltips();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
             mTextViewValue.animate().alpha(0).setDuration(100);
-            mTextViewMetric.animate().alpha(0).setDuration(100);
-        }else{
+        else
             mTextViewValue.setVisibility(View.INVISIBLE);
-            mTextViewMetric.setVisibility(View.INVISIBLE);
-        }
 
         if(firstStage)
             mChart.updateValues(0, mValues[1]);
@@ -156,13 +143,10 @@ public class BarCardTwo extends CardController {
     public void dismiss(Runnable action) {
         super.dismiss(action);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
             mTextViewValue.animate().alpha(0).setDuration(100);
-            mTextViewMetric.animate().alpha(0).setDuration(100);
-        }else{
+        else
             mTextViewValue.setVisibility(View.INVISIBLE);
-            mTextViewMetric.setVisibility(View.INVISIBLE);
-        }
 
         mChart.dismissAllTooltips();
 

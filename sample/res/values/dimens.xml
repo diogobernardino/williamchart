@@ -4,8 +4,6 @@
     <dimen name="activity_horizontal_margin">8dp</dimen>
     <dimen name="activity_vertical_margin">8dp</dimen>
 
-    <dimen name="card_margin">8dp</dimen>
-
     <dimen name="button_size">40dp</dimen>
     <dimen name="color_button_size">35dp</dimen>
 

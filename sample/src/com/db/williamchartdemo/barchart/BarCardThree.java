@@ -53,7 +53,8 @@ public class BarCardThree extends CardController {
     public void show(Runnable action) {
         super.show(action);
 
-        Tooltip tip = new Tooltip(mContext, R.layout.barchart_three_tooltip);
+        Tooltip tip = new Tooltip(mContext);
+        tip.setBackgroundColor(Color.parseColor("#CC7B1F"));
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat(View.ALPHA, 1);

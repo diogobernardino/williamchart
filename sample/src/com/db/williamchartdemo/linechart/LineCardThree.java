@@ -1,28 +1,19 @@
 package com.db.williamchartdemo.linechart;
 
-import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.support.v7.widget.CardView;
-import android.view.View;
-import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
-import com.db.chart.view.Tooltip;
 import com.db.chart.view.animation.Animation;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
 
 public class LineCardThree extends CardController {
-
-
-    private final Context mContext;
 
 
     private final LineChartView mChart;
@@ -35,7 +26,6 @@ public class LineCardThree extends CardController {
     public LineCardThree(CardView card, Context context){
         super(card);
 
-        mContext = context;
         mChart = (LineChartView) card.findViewById(R.id.chart2);
     }
 

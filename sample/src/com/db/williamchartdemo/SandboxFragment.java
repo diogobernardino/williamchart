@@ -12,9 +12,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -156,7 +156,7 @@ public class SandboxFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
 
@@ -166,19 +166,20 @@ public class SandboxFragment extends Fragment {
 
         View mLayout = inflater.inflate(R.layout.sandbox, container, false);
 
+        Toolbar toolbar = (Toolbar) mLayout.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         // Pager
         mSectionsPagerAdapter = new SandboxPagerAdapter(this.getChildFragmentManager());
 
         mViewPager = (ViewPager) mLayout.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        //getActivity().setupViewPager(viewPager);
+
         TabLayout tabLayout = (TabLayout) mLayout.findViewById(R.id.tab_layout);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(mViewPager);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if(actionBar != null)
-            actionBar.setElevation(0);
 
         // Defaults
         mChartId = R.id.sandbox_chart_line;

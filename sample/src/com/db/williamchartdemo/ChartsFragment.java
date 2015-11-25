@@ -18,7 +18,9 @@ package com.db.williamchartdemo;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,7 @@ public class ChartsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -48,6 +50,9 @@ public class ChartsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View layout = inflater.inflate(R.layout.charts, container, false);
+
+        Toolbar toolbar = (Toolbar) layout.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         (new LineCardOne((CardView) layout.findViewById(R.id.card1), getContext())).init();
         (new LineCardThree((CardView) layout.findViewById(R.id.card2), getContext())).init();

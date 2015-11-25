@@ -58,7 +58,8 @@ public class BarCardTwo extends CardController {
     public void show(Runnable action) {
         super.show(action);
 
-        Tooltip tip = new Tooltip(mContext, R.layout.barchart_two_tooltip);
+        Tooltip tip = new Tooltip(mContext);
+        tip.setBackgroundColor(Color.parseColor("#f39c12"));
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1)).setDuration(150);

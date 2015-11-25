@@ -5,9 +5,6 @@
 	<string name="github_str">Github</string>
 	<string name="google_play_str">Google Play</string>
 
-	<string name="navigation_drawer_open">Open navigation drawer</string>
-	<string name="navigation_drawer_close">Close navigation drawer</string>
-
 	<string-array name="easing">
 		<item>CUBIC</item>
 		<item>QUART</item>
@@ -30,12 +27,6 @@
 		<item>3000ms</item>
 		<item>3500ms</item>
 	</string-array>
-	
-	<!-- Drawer -->
-	<string name="line_drawer">Line</string>
-	<string name="bar_drawer">Bar</string>
-	<string name="stacked_drawer">Stacked</string>
-	<string name="sandbox_drawer">Sandbox \u03B2</string>
 
 	<!-- Stacked chart one -->
 	<string name="stacked_one_1">STATE 1</string>
@@ -51,16 +42,13 @@
 	<string name="sandbox_axis_y">Y</string>
 	<string name="sandbox_axis_metric">metric</string>
 
-	<!-- Bar -->
-	<string name="bar_two_metric">h</string>
-
 	<string-array name="spinner_options">
 		<item>Showroom</item>
 		<item>Sandbox</item>
 	</string-array>
 
 	<string name="chart_label">AVERAGE TIME</string>
-	<string name="chart_label2">Bycicles</string>
+	<string name="chart_label2">Bicycles</string>
 	<string name="chart_label3">00:15:39</string>
 
 </resources>

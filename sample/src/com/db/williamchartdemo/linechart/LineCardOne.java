@@ -45,6 +45,7 @@ public class LineCardOne extends CardController {
     public void show(Runnable action) {
         super.show(action);
 
+        // Tooltip
         Tooltip tip = new Tooltip(mContext, R.layout.linechart_three_tooltip, R.id.value);
 
         ((TextView) tip.findViewById(R.id.value))
@@ -60,8 +61,11 @@ public class LineCardOne extends CardController {
                     PropertyValuesHolder.ofFloat(View.SCALE_X,0f),
                     PropertyValuesHolder.ofFloat(View.SCALE_Y,0f)).setDuration(200);
         }
+        tip.setVerticalAlignment(Tooltip.Alignment.BOTTOM_TOP);
+        tip.setDimensions((int) Tools.fromDpToPx(55), (int) Tools.fromDpToPx(30));
         mChart.setTooltips(tip);
 
+        // Data
         LineSet dataset = new LineSet(mLabels, mValues[0]);
         dataset.setColor(Color.parseColor("#758cbb"))
                 .setFill(Color.parseColor("#2d374c"))
@@ -79,6 +83,7 @@ public class LineCardOne extends CardController {
                 .endAt(6);
         mChart.addData(dataset);
 
+        // Chart
         mChart.setBorderSpacing(Tools.fromDpToPx(0))
                 .setYLabels(AxisController.LabelPosition.NONE)
                 .setLabelsColor(Color.parseColor("#6a84c3"))
@@ -95,6 +100,7 @@ public class LineCardOne extends CardController {
     public void update() {
         super.update();
 
+        mChart.dismissAllTooltips();
         if (firstStage) {
             mChart.updateValues(0, mValues[1]);
             mChart.updateValues(1, mValues[1]);
@@ -110,6 +116,7 @@ public class LineCardOne extends CardController {
     public void dismiss(Runnable action) {
         super.dismiss(action);
 
+        mChart.dismissAllTooltips();
         mChart.dismiss(new Animation().setEndAction(action));
     }
 

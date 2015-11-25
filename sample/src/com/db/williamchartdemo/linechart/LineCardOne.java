@@ -29,8 +29,8 @@ public class LineCardOne extends CardController {
 
 
     private final String[] mLabels= {"Jan", "Fev", "Mar", "Apr", "Jun", "May", "Jul", "Aug", "Sep"};
-    private final float[][] mValues = {{3.5f, 4.7f, 4.3f, 8f, 6.5f, 10f, 7f, 8.3f, 7.0f},
-            {2.5f, 3.5f, 3.5f, 7f, 5.5f, 8.5f, 6f, 6.3f, 5.8f}};
+    private final float[][] mValues = {{3.5f, 4.7f, 4.3f, 8f, 6.5f, 9.9f, 7f, 8.3f, 7.0f},
+            {4.5f, 2.5f, 2.5f, 9f, 4.5f, 9.5f, 5f, 8.3f, 1.8f}};
 
 
     public LineCardOne(CardView card, Context context){
@@ -51,18 +51,23 @@ public class LineCardOne extends CardController {
         ((TextView) tip.findViewById(R.id.value))
                 .setTypeface(Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Semibold.ttf"));
 
+        tip.setVerticalAlignment(Tooltip.Alignment.BOTTOM_TOP);
+        tip.setDimensions((int) Tools.fromDpToPx(65), (int) Tools.fromDpToPx(30));
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 
             tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1),
-                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1f),
-                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f)).setDuration(200);
+                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f),
+                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1f)).setDuration(200);
 
-            tip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA,0),
-                    PropertyValuesHolder.ofFloat(View.SCALE_X,0f),
-                    PropertyValuesHolder.ofFloat(View.SCALE_Y,0f)).setDuration(200);
+            tip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 0),
+                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f),
+                    PropertyValuesHolder.ofFloat(View.SCALE_X, 0f)).setDuration(200);
+
+            tip.setPivotX(Tools.fromDpToPx(65) / 2);
+            tip.setPivotY(Tools.fromDpToPx(30));
         }
-        tip.setVerticalAlignment(Tooltip.Alignment.BOTTOM_TOP);
-        tip.setDimensions((int) Tools.fromDpToPx(55), (int) Tools.fromDpToPx(30));
+
         mChart.setTooltips(tip);
 
         // Data
@@ -84,7 +89,8 @@ public class LineCardOne extends CardController {
         mChart.addData(dataset);
 
         // Chart
-        mChart.setBorderSpacing(Tools.fromDpToPx(0))
+        mChart.setBorderSpacing(Tools.fromDpToPx(15))
+                .setAxisBorderValues(0, 20)
                 .setYLabels(AxisController.LabelPosition.NONE)
                 .setLabelsColor(Color.parseColor("#6a84c3"))
                 .setXAxis(false)

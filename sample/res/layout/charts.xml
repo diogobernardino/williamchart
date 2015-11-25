@@ -37,7 +37,7 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card1"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:layout_margin="@dimen/card_view_padding"
                 card_view:cardBackgroundColor="#343f57"
                 card_view:cardCornerRadius="@dimen/card_view_roundcorner">
@@ -51,9 +51,9 @@
                         android:id="@+id/chart1_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="12dp"
                         android:text="@string/chart_label2"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textColor="#ffffff"
                         android:layout_centerHorizontal="true"/>
 
@@ -65,7 +65,7 @@
                         android:layout_below="@id/chart_toolbar"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="15dp"/>
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>

@@ -48,7 +48,7 @@
 	</string-array>
 
 	<string name="chart_label">AVERAGE TIME</string>
-	<string name="chart_label2">Bicycles</string>
+	<string name="chart_label2">Bicycle Commuting</string>
 	<string name="chart_label3">00:15:39</string>
 
 </resources>

@@ -11,6 +11,8 @@ import com.db.chart.model.BarSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.HorizontalStackBarChartView;
 import com.db.chart.view.animation.Animation;
+import com.db.chart.view.animation.easing.ExpoEase;
+import com.db.chart.view.animation.easing.SineEase;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -61,6 +63,7 @@ public class StackedCardThree extends CardController {
                 .setAxisBorderValues(-80, 80, 10);
 
         Animation anim = new Animation()
+                .setEasing(new ExpoEase())
                 .setEndAction(action);
 
         mChart.show(anim);

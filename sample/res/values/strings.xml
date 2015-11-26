@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">WilliamChart</string>
+	<string name="app_name">williamchart</string>
 	
 	<string name="github_str">Github</string>
 	<string name="google_play_str">Google Play</string>
@@ -43,8 +43,8 @@
 	<string name="sandbox_axis_metric">metric</string>
 
 	<string-array name="spinner_options">
-		<item>Showroom</item>
-		<item>Sandbox</item>
+		<item>showroom</item>
+		<item>sandbox</item>
 	</string-array>
 
 	<string name="chart_label">AVERAGE TIME</string>

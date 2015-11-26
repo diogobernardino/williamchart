@@ -151,7 +151,7 @@
                         android:layout_below="@+id/chart_toolbar"
                         android:layout_marginRight="12dp"
                         android:layout_marginLeft="12dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="12dp"
                         chart:chart_fontSize="15sp"/>
 
                 </RelativeLayout>
@@ -161,7 +161,7 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card4"
                 android:layout_width="match_parent"
-                android:layout_height="125dp"
+                android:layout_height="130dp"
                 android:layout_below="@id/card3"
                 android:layout_margin="@dimen/card_view_padding"
                 card_view:cardBackgroundColor="#b8c7b4"
@@ -190,6 +190,7 @@
                         android:layout_toStartOf="@+id/label_sep"
                         android:layout_marginRight="5dp"
                         android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
                         android:text="@string/stacked_three_electric"
                         android:textColor="#FF5C8E67"
                         android:textSize="18sp"/>
@@ -211,6 +212,7 @@
                         android:layout_toEndOf="@+id/label_sep"
                         android:layout_marginLeft="5dp"
                         android:layout_marginStart="5dp"
+                        android:layout_marginBottom="5dp"
                         android:text="@string/stacked_three_fuel"
                         android:textColor="#687E8E"
                         android:textSize="18sp"/>

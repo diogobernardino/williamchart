@@ -15,6 +15,7 @@ import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.Tooltip;
 import com.db.chart.view.animation.Animation;
+import com.db.chart.view.animation.easing.BounceEase;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -52,7 +53,7 @@ public class LineCardOne extends CardController {
                 .setTypeface(Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Semibold.ttf"));
 
         tip.setVerticalAlignment(Tooltip.Alignment.BOTTOM_TOP);
-        tip.setDimensions((int) Tools.fromDpToPx(65), (int) Tools.fromDpToPx(30));
+        tip.setDimensions((int) Tools.fromDpToPx(65), (int) Tools.fromDpToPx(25));
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 
@@ -65,7 +66,7 @@ public class LineCardOne extends CardController {
                     PropertyValuesHolder.ofFloat(View.SCALE_X, 0f)).setDuration(200);
 
             tip.setPivotX(Tools.fromDpToPx(65) / 2);
-            tip.setPivotY(Tools.fromDpToPx(30));
+            tip.setPivotY(Tools.fromDpToPx(25));
         }
 
         mChart.setTooltips(tip);
@@ -96,7 +97,9 @@ public class LineCardOne extends CardController {
                 .setXAxis(false)
                 .setYAxis(false);
 
-        Animation anim = new Animation().setEndAction(action);
+        Animation anim = new Animation()
+                .setEasing(new BounceEase())
+                .setEndAction(action);
 
         mChart.show(anim);
     }
@@ -123,7 +126,9 @@ public class LineCardOne extends CardController {
         super.dismiss(action);
 
         mChart.dismissAllTooltips();
-        mChart.dismiss(new Animation().setEndAction(action));
+        mChart.dismiss(new Animation()
+                .setEasing(new BounceEase())
+                .setEndAction(action));
     }
 
 

@@ -29,6 +29,8 @@ import android.widget.TextView;
 
 import com.db.chart.listener.OnTooltipEventListener;
 
+import java.text.DecimalFormat;
+
 
 /**
  * Class representing chart's tooltips. It works basically as a wrapper.
@@ -74,6 +76,9 @@ public class Tooltip extends RelativeLayout{
     private boolean mOn;
 
 
+    private DecimalFormat mValueFormat;
+
+
 
     public Tooltip(Context context){
         super(context);
@@ -109,6 +114,7 @@ public class Tooltip extends RelativeLayout{
         mRightMargin = 0;
         mBottomMargin = 0;
         mOn = false;
+        mValueFormat = new DecimalFormat();
     }
 
 
@@ -157,7 +163,7 @@ public class Tooltip extends RelativeLayout{
         setLayoutParams(layoutParams);
 
         if (mTooltipValue != null)
-            mTooltipValue.setText(Float.toString(value));
+            mTooltipValue.setText(mValueFormat.format(value));
     }
 
 
@@ -166,10 +172,10 @@ public class Tooltip extends RelativeLayout{
      * Corrects the position of a tooltip and forces it to
      * be within {@link com.db.chart.view.ChartView}.
      *
-     * @param left
-     * @param top
-     * @param right
-     * @param bottom
+     * @param left    left coordinate of {@link com.db.chart.view.ChartView}
+     * @param top    top coordinate of {@link com.db.chart.view.ChartView}
+     * @param right    right coordinate of {@link com.db.chart.view.ChartView}
+     * @param bottom    bottom coordinate of {@link com.db.chart.view.ChartView}
      */
     void correctPosition(int left, int top, int right, int bottom){
 
@@ -190,6 +196,7 @@ public class Tooltip extends RelativeLayout{
 
     /**
      * Starts enter animation.
+     *
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     void animateEnter(){
@@ -223,6 +230,7 @@ public class Tooltip extends RelativeLayout{
 
 
     /**
+     * Check if enter animation of type {@link ObjectAnimator} exists.
      *
      * @return true if {@link com.db.chart.view.Tooltip} has enter animation defined.
      */
@@ -232,6 +240,7 @@ public class Tooltip extends RelativeLayout{
 
 
     /**
+     * Check if exit animation of type {@link ObjectAnimator} exists.
      *
      * @return true if {@link com.db.chart.view.Tooltip} has exit animation define.
      */
@@ -241,6 +250,7 @@ public class Tooltip extends RelativeLayout{
 
 
     /**
+     * Maintain information about whether the tooltip is being displayed or not.
      *
      * @return true if {@link com.db.chart.view.Tooltip} is currently displayed.
      */
@@ -255,7 +265,7 @@ public class Tooltip extends RelativeLayout{
      * Ex. Alignment.LEFT_RIGHT means that the left side of the tooltip
      * will be aligned with the right side of the entry.
      *
-     * @param alignment
+     * @param alignment    horizontal alignment wrt entry's position.
      * @return {@link com.db.chart.view.Tooltip} self-reference.
      */
     public Tooltip setHorizontalAlignment(Alignment alignment){
@@ -269,7 +279,7 @@ public class Tooltip extends RelativeLayout{
      * Ex. Alignment.TOP_TOP means that the top side of the tooltip
      * will be aligned with the top side of the entry.
      *
-     * @param alignment
+     * @param alignment    vertical alignment wrt entry's position.
      * @return {@link com.db.chart.view.Tooltip} self-reference.
      */
     public Tooltip setVerticalAlignment(Alignment alignment){
@@ -279,10 +289,10 @@ public class Tooltip extends RelativeLayout{
 
 
     /**
-     * Set the size of the tooltip.
+     * Set the dimensions of the tooltip.
      *
-     * @param width
-     * @param height
+     * @param width    width dimension
+     * @param height    height dimension
      * @return {@link com.db.chart.view.Tooltip} self-reference.
      */
     public Tooltip setDimensions(int width, int height){
@@ -296,10 +306,10 @@ public class Tooltip extends RelativeLayout{
     /**
      * Set the margins of the tooltip wrt entry.
      *
-     * @param left
-     * @param top
-     * @param right
-     * @param bottom
+     * @param left    left margin dimension.
+     * @param top    top margin dimension.
+     * @param right    right margin dimension.
+     * @param bottom    bottom margin dimension.
      * @return {@link com.db.chart.view.Tooltip} self-reference.
      */
     public Tooltip setMargins(int left, int top, int right, int bottom){
@@ -319,6 +329,19 @@ public class Tooltip extends RelativeLayout{
      */
     void setOn(boolean on){
         mOn = on;
+    }
+
+
+    /**
+     * Set the format to be applied to tooltip's value.
+     *
+     * @param format   value format to be used once the tooltip is displayed.
+     * @return {@link com.db.chart.view.Tooltip} self-reference.
+     */
+    public Tooltip setValueFormat(DecimalFormat format){
+
+        mValueFormat = format;
+        return this;
     }
 
 

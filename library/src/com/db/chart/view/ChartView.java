@@ -1208,6 +1208,21 @@ public abstract class ChartView extends RelativeLayout{
 		return this;
 	}
 
+	/**
+	 * Sets an specific step to the orientation specified.
+	 * @param orientation
+	 * @param step
+	 * @return
+	 */
+	public ChartView setSpecificStep(Orientation orientation,int step){
+		if(orientation == Orientation.VERTICAL)
+			verController.step=step;
+		else
+			horController.step=step;
+
+		return this;
+	}
+
 
 
 	/**

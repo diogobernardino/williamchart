@@ -148,11 +148,12 @@ public abstract class AxisController{
      */
     void defineLabels() {
 
-        labelsValues = calcLabels();
-        if(handleValues)
+        if(handleValues) {
+            labelsValues = calcLabels();
             labels = getLabelsFromValues();
-        else
+        }else {
             labels = getLabelsFromData();
+        }
         nLabels = labels.size();
     }
 

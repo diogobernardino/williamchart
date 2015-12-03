@@ -512,21 +512,31 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public void notifyDataUpdate(){
 
-		ArrayList<float[][]> oldCoords = new ArrayList<>(data.size());
-		ArrayList<float[][]> newCoords = new ArrayList<>(data.size());
+		// Ignore update if chart is not even ready to draw or if it is still animating
+		if(mAnim != null && !mAnim.isPlaying() && mReadyToDraw
+				|| mAnim == null && mReadyToDraw) {
 
-		for(ChartSet set : data)
-			oldCoords.add(set.getScreenPoints());
+			ArrayList<float[][]> oldCoords = new ArrayList<>(data.size());
+			ArrayList<float[][]> newCoords = new ArrayList<>(data.size());
 
-		digestData();
-		for(ChartSet set : data)
-			newCoords.add(set.getScreenPoints());
+			for(ChartSet set : data)
+				oldCoords.add(set.getScreenPoints());
 
-		mRegions = defineRegions(data);
-		if(mAnim != null)
-			data = mAnim.prepareUpdateAnimation(this, oldCoords, newCoords);
+			digestData();
+			for(ChartSet set : data)
+				newCoords.add(set.getScreenPoints());
 
-		invalidate();
+			mRegions = defineRegions(data);
+			if(mAnim != null)
+				data = mAnim.prepareUpdateAnimation(this, oldCoords, newCoords);
+
+			invalidate();
+
+		}else{
+			Log.w(TAG, "Unexpected data update notification. " +
+					"Chart is still not displayed or still displaying.");
+		}
+
 	}
 
 

@@ -33,6 +33,7 @@ public class LineCardOne extends CardController {
     private final float[][] mValues = {{3.5f, 4.7f, 4.3f, 8f, 6.5f, 9.9f, 7f, 8.3f, 7.0f},
             {4.5f, 2.5f, 2.5f, 9f, 4.5f, 9.5f, 5f, 8.3f, 1.8f}};
 
+    private Tooltip mTip;
 
     public LineCardOne(CardView card, Context context){
         super(card);
@@ -47,29 +48,29 @@ public class LineCardOne extends CardController {
         super.show(action);
 
         // Tooltip
-        Tooltip tip = new Tooltip(mContext, R.layout.linechart_three_tooltip, R.id.value);
+        mTip = new Tooltip(mContext, R.layout.linechart_three_tooltip, R.id.value);
 
-        ((TextView) tip.findViewById(R.id.value))
+        ((TextView) mTip.findViewById(R.id.value))
                 .setTypeface(Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Semibold.ttf"));
 
-        tip.setVerticalAlignment(Tooltip.Alignment.BOTTOM_TOP);
-        tip.setDimensions((int) Tools.fromDpToPx(65), (int) Tools.fromDpToPx(25));
+        mTip.setVerticalAlignment(Tooltip.Alignment.BOTTOM_TOP);
+        mTip.setDimensions((int) Tools.fromDpToPx(65), (int) Tools.fromDpToPx(25));
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 
-            tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1),
+            mTip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1),
                     PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f),
                     PropertyValuesHolder.ofFloat(View.SCALE_X, 1f)).setDuration(200);
 
-            tip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 0),
+            mTip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 0),
                     PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f),
                     PropertyValuesHolder.ofFloat(View.SCALE_X, 0f)).setDuration(200);
 
-            tip.setPivotX(Tools.fromDpToPx(65) / 2);
-            tip.setPivotY(Tools.fromDpToPx(25));
+            mTip.setPivotX(Tools.fromDpToPx(65) / 2);
+            mTip.setPivotY(Tools.fromDpToPx(25));
         }
 
-        mChart.setTooltips(tip);
+        mChart.setTooltips(mTip);
 
         // Data
         LineSet dataset = new LineSet(mLabels, mValues[0]);
@@ -97,9 +98,19 @@ public class LineCardOne extends CardController {
                 .setXAxis(false)
                 .setYAxis(false);
 
+        final Runnable auxAction = action;
+        Runnable chartAction = new Runnable() {
+            @Override
+            public void run() {
+                auxAction.run();
+                mTip.prepare(mChart.getEntriesArea(0).get(3), 0);
+                mChart.showTooltip(mTip, true);
+            }
+        };
+
         Animation anim = new Animation()
                 .setEasing(new BounceEase())
-                .setEndAction(action);
+                .setEndAction(chartAction);
 
         mChart.show(anim);
     }
@@ -130,6 +141,5 @@ public class LineCardOne extends CardController {
                 .setEasing(new BounceEase())
                 .setEndAction(action));
     }
-
 
 }

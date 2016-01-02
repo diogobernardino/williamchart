@@ -60,9 +60,11 @@ public abstract class AxisController{
     /** Labels position */
     ArrayList<Float> labelsPos;
 
+    /** Refers to the coordinate X in case of Axis Y and coordinate Y in case of Axis X */
+    float labelsStaticPos;
+
     /** Number of labels */
     int nLabels;
-
 
     /** none/inside/outside */
     LabelPosition labelsPositioning;
@@ -124,6 +126,54 @@ public abstract class AxisController{
     }
 
 
+    /**
+     * Init axis elements.
+     *
+     */
+    void init() {
+
+        defineLabels();
+    }
+
+
+    /**
+     * Positioning axis elements.
+     *
+     */
+    void dispose(){
+
+        defineAxisPosition();
+        defineStaticLabelsPosition();
+    }
+
+
+
+    /**
+     * Get position of axis.
+     *
+     */
+    protected abstract void defineAxisPosition();
+
+
+    /**
+     * Get position of labels.
+     *
+     */
+    protected abstract void defineStaticLabelsPosition();
+
+
+    /**
+     * Method called from onDraw method to draw AxisController data.
+     *
+     * @param canvas   {@link android.graphics.Canvas} to use while drawing the data
+     */
+    abstract protected void draw(Canvas canvas);
+
+
+
+    /**
+     *
+     */
     void reset(){
 
         //Set DEFAULTS
@@ -132,6 +182,7 @@ public abstract class AxisController{
         borderSpacing = 0;
         topSpacing = 0;
         step = DEFAULT_STEP;
+        labelsStaticPos = 0;
         labelsPositioning = LabelPosition.OUTSIDE;
         labelFormat = new DecimalFormat();
         axisPosition = 0;
@@ -143,8 +194,10 @@ public abstract class AxisController{
     }
 
 
+
     /**
-     * Defines what will be the axis labels
+     * Defines what will be the axis labels.
+     *
      */
     void defineLabels() {
 
@@ -158,15 +211,14 @@ public abstract class AxisController{
     }
 
 
-
     /**
-     * In case of a Chart that requires a mandatory border spacing (ex. BarChart)
+     * In case of a Chart that requires a mandatory border spacing (ex. BarChart).
+     *
      */
     void defineMandatoryBorderSpacing(float innerStart, float innerEnd){
         if(mandatoryBorderSpacing == 1)
             mandatoryBorderSpacing = (innerEnd - innerStart - borderSpacing * 2) / nLabels / 2;
     }
-
 
 
     /**
@@ -175,7 +227,7 @@ public abstract class AxisController{
      * @param innerStart   Start inner position the chart
      * @param innerEnd   End inned position of chart
      */
-    void defineLabelsPos(float innerStart, float innerEnd) {
+    void defineLabelsPosition(float innerStart, float innerEnd) {
 
         labelsPos = new ArrayList<>(nLabels);
 
@@ -197,6 +249,7 @@ public abstract class AxisController{
 
     /**
      * Get labels from values calculated before.
+     *
      */
     private ArrayList<String> getLabelsFromValues() {
 
@@ -210,6 +263,7 @@ public abstract class AxisController{
 
     /**
      * Get labels from chart data.
+     *
      */
     private ArrayList<String> getLabelsFromData() {
 
@@ -310,12 +364,18 @@ public abstract class AxisController{
 
 
 
+    /**
+     * Define spacing between axis and labels.
+     *
+     * @param spacing   Spacing between axis and labels
+     */
     public void setAxisLabelsSpacing(float spacing){
         distLabelToAxis = (int) spacing;
     }
 
 
     /**
+     * Force axis range of values.
      * A step is seen as the step to be defined between 2 labels. As an
      * example a step of 2 with a maxAxisValue of 6 will end up with
      * {0, 2, 4, 6} as labels.
@@ -337,6 +397,7 @@ public abstract class AxisController{
 
 
     /**
+     * Force axis range of values.
      *
      * @param minValue   The minimum value that Y axis will have as a label
      * @param maxValue   The maximum value that Y axis will have as a label
@@ -349,14 +410,5 @@ public abstract class AxisController{
         maxLabelValue = maxValue;
         minLabelValue = minValue;
     }
-
-
-
-    /**
-     * Method called from onDraw method to draw AxisController data.
-     *
-     * @param canvas   {@link android.graphics.Canvas} to use while drawing the data
-     */
-    abstract protected void draw(Canvas canvas);
 
 }

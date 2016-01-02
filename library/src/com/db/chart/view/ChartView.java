@@ -80,6 +80,14 @@ public abstract class ChartView extends RelativeLayout{
 	private int mChartRight;
 
 
+	/** Inner chart borders (inner chart means the
+	 * chart's content where the datasets are drawn */
+	private float mInnerChartTop;
+	private float mInnerChartBottom;
+	private float mInnerChartLeft;
+	private float mInnerChartRight;
+
+
 	/** Horizontal and Vertical position controllers */
 	final XController horController;
 	final YController verController;
@@ -157,16 +165,27 @@ public abstract class ChartView extends RelativeLayout{
 			mChartLeft = getPaddingLeft();
 			mChartRight = getMeasuredWidth() - getPaddingRight();
 
-			// Initialize controllers now that we have the measures
+			mInnerChartTop = mChartTop;
+			mInnerChartBottom = mChartBottom;
+			mInnerChartLeft = mChartLeft;
+			mInnerChartRight = mChartRight;
+
+			// Initiate axis labels
 			verController.init();
+			horController.init();
+
+			// Measure space and inner chart borders
+			verController.measure();
+			horController.measure();
+
+			// Positioning axis elements
+			verController.dispose();
+			horController.dispose();
 
 			if(mHasThresholdValue) {
 				mThresholdStartValue = verController.parsePos(0, mThresholdStartValue);
 				mThresholdEndValue = verController.parsePos(0, mThresholdEndValue);
 			}
-
-			// Mandatory: X axis after Y axis!
-			horController.init();
 
 			// Process data to define screen positions
 			digestData();
@@ -891,7 +910,6 @@ public abstract class ChartView extends RelativeLayout{
 
 	
 	
-	
 	/*
 	 * --------
 	 * Getters
@@ -899,9 +917,17 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 
 
+	/**
+	 * Get orientation of chart.
+	 *
+	 * @return Object of type {@link com.db.chart.view.ChartView.Orientation}
+	 * defining an horizontal or vertical orientation.
+	 * Orientation.HORIZONTAL | Orientation.VERTICAL
+	 */
 	public Orientation getOrientation(){
 		return mOrientation;
 	}
+
 
 
 	/**
@@ -911,9 +937,8 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return Position of the inner bottom side of the chart
 	 */
 	public float getInnerChartBottom(){
-		return verController.getInnerChartBottom();
+		return mInnerChartBottom;
 	}
-
 
 
 	/**
@@ -923,9 +948,8 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return Position of the inner left side of the chart
 	 */
 	public float getInnerChartLeft(){
-		return verController.getInnerChartLeft();
+		return mInnerChartLeft;
 	}
-
 
 
 	/**
@@ -935,9 +959,8 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return Position of the inner right side of the chart
 	 */
 	public float getInnerChartRight(){
-		return horController.getInnerChartRight();
+		return mInnerChartRight;
 	}
-
 
 
 	/**
@@ -1053,21 +1076,46 @@ public abstract class ChartView extends RelativeLayout{
 
 
 
+	/**
+	 * Get top coordinate of chart.
+	 *
+	 * @return top coordinate of chart available frame.
+	 */
 	int getChartTop(){
 		return mChartTop;
 	}
 
+
+	/**
+	 * Get bottom coordinate of chart.
+	 *
+	 * @return bottom coordinate of chart available frame.
+	 */
 	int getChartBottom(){
 		return mChartBottom;
 	}
 
+
+	/**
+	 * Get left coordinate of chart.
+	 *
+	 * @return left coordinate of chart available frame.
+	 */
 	int getChartLeft(){
 		return mChartLeft;
 	}
 
+
+	/**
+	 * Get right coordinate of chart.
+	 *
+	 * @return right coordinate of chart available frame.
+	 */
 	int getChartRight(){
 		return mChartRight;
 	}
+
+
 
 	/*
 	 * --------
@@ -1186,7 +1234,6 @@ public abstract class ChartView extends RelativeLayout{
 	}
 
 
-
 	/**
 	 * Show/Hide Y axis.
 	 *
@@ -1219,7 +1266,6 @@ public abstract class ChartView extends RelativeLayout{
 
 		return this;
 	}
-
 
 
 	/**
@@ -1451,6 +1497,50 @@ public abstract class ChartView extends RelativeLayout{
 			horController.mandatoryBorderSpacing = 1;
 		else
 			verController.mandatoryBorderSpacing = 1;
+	}
+
+
+	/**
+	 *
+	 * @param innerTop
+	 */
+	void setInnerChartTop(float innerTop){
+
+		if(innerTop > mInnerChartTop)
+			mInnerChartTop = innerTop;
+	}
+
+
+	/**
+	 *
+	 * @param innerBottom
+	 */
+	void setInnerChartBottom(float innerBottom){
+
+		if(innerBottom < mInnerChartBottom)
+			mInnerChartBottom = innerBottom;
+	}
+
+
+	/**
+	 *
+	 * @param innerRight
+	 */
+	void setInnerChartRight(float innerRight){
+
+		if(innerRight < mInnerChartRight)
+			mInnerChartRight = innerRight;
+	}
+
+
+	/**
+	 *
+	 * @param innerLeft
+	 */
+	void setInnerChartLeft(float innerLeft){
+
+		if(innerLeft > mInnerChartLeft)
+			mInnerChartLeft = innerLeft;
 	}
 
 

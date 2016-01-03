@@ -35,6 +35,9 @@ public class LineCardOne extends CardController {
 
     private Tooltip mTip;
 
+    private Runnable mBaseAction;
+
+
     public LineCardOne(CardView card, Context context){
         super(card);
 
@@ -98,12 +101,12 @@ public class LineCardOne extends CardController {
                 .setXAxis(false)
                 .setYAxis(false);
 
-        final Runnable auxAction = action;
+        mBaseAction = action;
         Runnable chartAction = new Runnable() {
             @Override
             public void run() {
-                auxAction.run();
-                mTip.prepare(mChart.getEntriesArea(0).get(3), 0);
+                mBaseAction.run();
+                mTip.prepare(mChart.getEntriesArea(0).get(3), mValues[0][3]);
                 mChart.showTooltip(mTip, true);
             }
         };
@@ -128,6 +131,7 @@ public class LineCardOne extends CardController {
             mChart.updateValues(0, mValues[0]);
             mChart.updateValues(1, mValues[0]);
         }
+        mChart.getChartAnimation().setEndAction(mBaseAction);
         mChart.notifyDataUpdate();
     }
 

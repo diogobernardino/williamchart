@@ -74,9 +74,10 @@
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card2"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_below="@id/card1"
+                android:layout_toLeftOf="@+id/card3"
                 android:layout_margin="@dimen/card_view_padding"
                 card_view:cardBackgroundColor="#364d5a"
                 card_view:cardCornerRadius="@dimen/card_view_roundcorner">
@@ -104,7 +105,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/chart_label3"
-                        android:textSize="40sp"
+                        android:textSize="30sp"
                         android:includeFontPadding="false"
                         android:textColor="#ffffff"
                         android:layout_below="@+id/chart2_legend"
@@ -129,11 +130,11 @@
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card3"
-                android:layout_width="match_parent"
+                android:layout_width="140dp"
                 android:layout_height="200dp"
                 android:layout_below="@id/card1"
-                android:layout_toRightOf="@id/card2"
-                android:layout_toEndOf="@id/card2"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/card_view_padding"
                 card_view:cardCornerRadius="@dimen/card_view_roundcorner"
                 card_view:cardBackgroundColor="#362126">

@@ -160,7 +160,7 @@ public abstract class ChartView extends RelativeLayout{
 			style.init();
 
 			// Define chart frame
-			mChartTop = getPaddingTop() + verController.getLabelHeight()/2;
+			mChartTop = getPaddingTop() + verController.getLabelsMaxHeight()/2;
 			mChartBottom = getMeasuredHeight() - getPaddingBottom();
 			mChartLeft = getPaddingLeft();
 			mChartRight = getMeasuredWidth() - getPaddingRight();

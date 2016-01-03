@@ -354,7 +354,7 @@ public abstract class AxisController{
      *
      * @return height of text
      */
-    int getLabelHeight(){
+    int getLabelsMaxHeight(){
 
         if(labelHeight == -1)
             labelHeight = (int) (chartView.style.labelsPaint.descent()

@@ -131,7 +131,7 @@ public class XController extends AxisController{
             result -= chartView.style.axisThickness;
 
         if (labelsPositioning == LabelPosition.OUTSIDE)
-            result -= getLabelHeight() + distLabelToAxis;
+            result -= getLabelsMaxHeight() + distLabelToAxis;
 
         return result;
     }
@@ -168,7 +168,7 @@ public class XController extends AxisController{
 
         }else if (labelsPositioning == LabelPosition.OUTSIDE){ // Labels sit outside of chart
             labelsStaticPos += distLabelToAxis;
-            labelsStaticPos += getLabelHeight() - chartView.style.labelsPaint.descent();
+            labelsStaticPos += getLabelsMaxHeight() - chartView.style.labelsPaint.descent();
             if(hasAxis)
                 labelsStaticPos +=  chartView.style.axisThickness/2;
         }

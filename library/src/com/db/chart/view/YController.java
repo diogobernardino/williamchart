@@ -21,6 +21,7 @@ import java.util.Collections;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
+import android.graphics.Rect;
 
 
 /**
@@ -118,8 +119,8 @@ public class YController extends AxisController{
      */
     public float measureInnerChartBottom(){
 
-        if (labelsPositioning != LabelPosition.NONE && borderSpacing < getLabelHeight()/2)
-            return chartView.getChartBottom() - getLabelHeight()/2;
+        if (labelsPositioning != LabelPosition.NONE && borderSpacing < getLabelsMaxHeight()/2)
+            return chartView.getChartBottom() - getLabelsMaxHeight()/2;
         return chartView.getChartBottom();
     }
 
@@ -167,6 +168,19 @@ public class YController extends AxisController{
     }
 
 
+    /**
+     * Get the height of a label.
+     *
+     * @param text   Label to measure
+     * @return   height of label
+     */
+    private int getLabelHeight(String text){
+        final Rect rect = new Rect();
+        chartView.style.labelsPaint.getTextBounds(text, 0, text.length(), rect);
+        return rect.height();
+    }
+
+
     @Override
 	protected void draw(Canvas canvas){
 		
@@ -193,7 +207,7 @@ public class YController extends AxisController{
 			for(int i = 0; i < nLabels; i++){
 				canvas.drawText(labels.get(i),
                         labelsStaticPos,
-                        labelsPos.get(i) + getLabelHeight()/2,
+                        labelsPos.get(i) + getLabelHeight(labels.get(i))/2,
                         chartView.style.labelsPaint);
 			}
 		}

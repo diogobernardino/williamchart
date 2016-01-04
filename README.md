@@ -16,7 +16,7 @@ Check the [javadoc][7] and [wiki][5] for further documentation.
 
 ###Gradle 
 ``` groovy
-   compile 'com.diogobernardino:williamchart:2.1'
+   compile 'com.diogobernardino:williamchart:2.2'
 ```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][6].
@@ -32,7 +32,7 @@ If you find this library useful and decide to use it in your projects please dro
 License
 -------
 
-    Copyright 2015 Diogo Bernardino
+    Copyright 2016 Diogo Bernardino
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

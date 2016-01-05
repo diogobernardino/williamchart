@@ -572,7 +572,7 @@ public class SandboxFragment extends Fragment {
 
 
 
-    public class SandboxPagerAdapter extends FragmentStatePagerAdapter {
+    public static class SandboxPagerAdapter extends FragmentStatePagerAdapter {
 
         public SandboxPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -680,8 +680,8 @@ public class SandboxFragment extends Fragment {
 
     public static class SandBoxChartFragment extends BaseSandBoxFragment {
 
-        private static View mLayout;
-        private static AlertDialog.Builder mDialogBuilder;
+        private  View mLayout;
+        private  AlertDialog.Builder mDialogBuilder;
 
 
         @Override
@@ -708,9 +708,9 @@ public class SandboxFragment extends Fragment {
 
     public static class SandBoxAxisFragment extends BaseSandBoxFragment {
 
-        private static View mLayout;
-        private static ViewGroup mViewGroup;
-        private static AlertDialog.Builder mDialogBuilder;
+        private  View mLayout;
+        private  ViewGroup mViewGroup;
+        private  AlertDialog.Builder mDialogBuilder;
 
 
         @Override
@@ -848,9 +848,9 @@ public class SandboxFragment extends Fragment {
 
     public static class SandBoxGridFragment extends BaseSandBoxFragment {
 
-        private static View mLayout;
-        private static ViewGroup mViewGroup;
-        private static AlertDialog.Builder mDialogBuilder;
+        private  View mLayout;
+        private  ViewGroup mViewGroup;
+        private  AlertDialog.Builder mDialogBuilder;
 
 
         @Override
@@ -957,9 +957,9 @@ public class SandboxFragment extends Fragment {
 
     public static class SandBoxLineFragment extends BaseSandBoxFragment {
 
-        private static View mLayout;
-        private static ViewGroup mViewGroup;
-        private static AlertDialog.Builder mDialogBuilder;
+        private  View mLayout;
+        private  ViewGroup mViewGroup;
+        private  AlertDialog.Builder mDialogBuilder;
 
 
         @Override
@@ -1092,9 +1092,9 @@ public class SandboxFragment extends Fragment {
 
     public static class SandBoxBarFragment extends BaseSandBoxFragment {
 
-        private static View mLayout;
-        private static ViewGroup mViewGroup;
-        private static AlertDialog.Builder mDialogBuilder;
+        private  View mLayout;
+        private  ViewGroup mViewGroup;
+        private  AlertDialog.Builder mDialogBuilder;
 
 
         @Override
@@ -1210,7 +1210,7 @@ public class SandboxFragment extends Fragment {
 
     public static class SandBoxAnimationFragment extends BaseSandBoxFragment {
 
-        private static View mLayout;
+        private View mLayout;
 
 
         @Override
@@ -1373,7 +1373,7 @@ public class SandboxFragment extends Fragment {
 
     public static class SandBoxPlayFragment extends BaseSandBoxFragment {
 
-        private static View mLayout;
+        private View mLayout;
 
 
         @Override

@@ -859,8 +859,8 @@ public abstract class ChartView extends RelativeLayout{
 
 				//Check if ACTION_DOWN over any ScreenPoint region.
 				int nSets = mRegions.size();
-				int nEntries = mRegions.get(0).size();
 				for(int i = 0; i < nSets ; i++){
+					int nEntries = mRegions.get(i).size();
 					for(int j = 0; j < nEntries; j++){
 
 						if(mRegions.get(i).get(j)

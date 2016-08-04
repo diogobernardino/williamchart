@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        System.out.println(position);
+
         if(position != currSpinnerSelection ) {
             switch (position) {
                 case 0:

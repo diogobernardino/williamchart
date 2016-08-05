@@ -1,20 +1,11 @@
 apply plugin: 'com.android.application'
 
-dependencies {
-    compile project(':library')
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support:design:23.0.1'
-    compile 'com.android.support:cardview-v7:23.0.1'
-    compile 'com.larswerkman:HoloColorPicker:1.5'
-    testCompile 'junit:junit:4.12'
-}
-
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionName project.VERSION_NAME
         versionCode Integer.parseInt(project.VERSION_CODE)
@@ -44,4 +35,13 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+}
+
+dependencies {
+    compile project(':library')
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:cardview-v7:24.1.1'
+    compile 'com.larswerkman:HoloColorPicker:1.5'
+    testCompile 'junit:junit:4.12'
 }

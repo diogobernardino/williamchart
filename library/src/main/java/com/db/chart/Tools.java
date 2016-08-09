@@ -34,7 +34,11 @@ public class Tools {
      * @return Pixel size
      */
 	public static float fromDpToPx(float dp) {
-        return dp * Resources.getSystem().getDisplayMetrics().density;
+		try {
+			return dp * Resources.getSystem().getDisplayMetrics().density;
+		}catch(Exception e){
+			return dp;
+		}
     }
 
 

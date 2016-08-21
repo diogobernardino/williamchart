@@ -13,9 +13,9 @@ import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.BarSet;
 import com.db.chart.view.StackBarChartView;
-import com.db.chart.view.XController;
-import com.db.chart.view.YController;
-import com.db.chart.view.animation.Animation;
+import com.db.chart.renderer.XRenderer;
+import com.db.chart.renderer.YRenderer;
+import com.db.chart.animation.Animation;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -125,9 +125,9 @@ public class StackedCardOne extends CardController {
         mChart.setRoundCorners(Tools.fromDpToPx(1));
 
         mChart.setXAxis(false)
-                .setXLabels(XController.LabelPosition.OUTSIDE)
+                .setXLabels(XRenderer.LabelPosition.OUTSIDE)
                 .setYAxis(false)
-                .setYLabels(YController.LabelPosition.NONE)
+                .setYLabels(YRenderer.LabelPosition.NONE)
                 .setValueThreshold(89.f, 89.f, thresPaint);
 
         int[] order = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};

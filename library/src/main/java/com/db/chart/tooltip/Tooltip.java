@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.db.chart.view;
+package com.db.chart.tooltip;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -177,7 +177,7 @@ public class Tooltip extends RelativeLayout{
      * @param right    right coordinate of {@link com.db.chart.view.ChartView}
      * @param bottom    bottom coordinate of {@link com.db.chart.view.ChartView}
      */
-    void correctPosition(int left, int top, int right, int bottom){
+    public void correctPosition(int left, int top, int right, int bottom){
 
         final LayoutParams layoutParams = (LayoutParams) getLayoutParams();
 
@@ -199,7 +199,7 @@ public class Tooltip extends RelativeLayout{
      *
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    void animateEnter(){
+    public void animateEnter(){
         mEnterAnimator.start();
     }
 
@@ -210,7 +210,7 @@ public class Tooltip extends RelativeLayout{
      * @param endAction   Action to be executed at the end of the animation.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    void animateExit(final Runnable endAction){
+    public void animateExit(final Runnable endAction){
 
         mExitAnimator.addListener(new Animator.AnimatorListener() {
             @Override
@@ -232,9 +232,9 @@ public class Tooltip extends RelativeLayout{
     /**
      * Check if enter animation of type {@link ObjectAnimator} exists.
      *
-     * @return true if {@link com.db.chart.view.Tooltip} has enter animation defined.
+     * @return true if {@link Tooltip} has enter animation defined.
      */
-    boolean hasEnterAnimation(){
+    public boolean hasEnterAnimation(){
         return mEnterAnimator != null;
     }
 
@@ -242,9 +242,9 @@ public class Tooltip extends RelativeLayout{
     /**
      * Check if exit animation of type {@link ObjectAnimator} exists.
      *
-     * @return true if {@link com.db.chart.view.Tooltip} has exit animation define.
+     * @return true if {@link Tooltip} has exit animation define.
      */
-    boolean hasExitAnimation(){
+    public boolean hasExitAnimation(){
         return mExitAnimator != null;
     }
 
@@ -252,9 +252,9 @@ public class Tooltip extends RelativeLayout{
     /**
      * Maintain information about whether the tooltip is being displayed or not.
      *
-     * @return true if {@link com.db.chart.view.Tooltip} is currently displayed.
+     * @return true if {@link Tooltip} is currently displayed.
      */
-    boolean on(){
+    public boolean on(){
         return mOn;
     }
 
@@ -266,7 +266,7 @@ public class Tooltip extends RelativeLayout{
      * will be aligned with the right side of the entry.
      *
      * @param alignment    horizontal alignment wrt entry's position.
-     * @return {@link com.db.chart.view.Tooltip} self-reference.
+     * @return {@link Tooltip} self-reference.
      */
     public Tooltip setHorizontalAlignment(Alignment alignment){
         mHorizontalAlignment = alignment;
@@ -280,7 +280,7 @@ public class Tooltip extends RelativeLayout{
      * will be aligned with the top side of the entry.
      *
      * @param alignment    vertical alignment wrt entry's position.
-     * @return {@link com.db.chart.view.Tooltip} self-reference.
+     * @return {@link Tooltip} self-reference.
      */
     public Tooltip setVerticalAlignment(Alignment alignment){
         mVerticalAlignment = alignment;
@@ -293,7 +293,7 @@ public class Tooltip extends RelativeLayout{
      *
      * @param width    width dimension
      * @param height    height dimension
-     * @return {@link com.db.chart.view.Tooltip} self-reference.
+     * @return {@link Tooltip} self-reference.
      */
     public Tooltip setDimensions(int width, int height){
 
@@ -310,7 +310,7 @@ public class Tooltip extends RelativeLayout{
      * @param top    top margin dimension.
      * @param right    right margin dimension.
      * @param bottom    bottom margin dimension.
-     * @return {@link com.db.chart.view.Tooltip} self-reference.
+     * @return {@link Tooltip} self-reference.
      */
     public Tooltip setMargins(int left, int top, int right, int bottom){
 
@@ -327,7 +327,7 @@ public class Tooltip extends RelativeLayout{
      *
      * @param on   True if displayed, False if not.
      */
-    void setOn(boolean on){
+    public void setOn(boolean on){
         mOn = on;
     }
 
@@ -336,7 +336,7 @@ public class Tooltip extends RelativeLayout{
      * Set the format to be applied to tooltip's value.
      *
      * @param format   value format to be used once the tooltip is displayed.
-     * @return {@link com.db.chart.view.Tooltip} self-reference.
+     * @return {@link Tooltip} self-reference.
      */
     public Tooltip setValueFormat(DecimalFormat format){
 

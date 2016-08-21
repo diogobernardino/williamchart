@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.db.chart.view.animation.easing;
+package com.db.chart.animation.easing;
 
 public class ElasticEase extends BaseEasingMethod {
 

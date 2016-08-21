@@ -2,9 +2,6 @@
     
     
     <!-- ChartView -->
-    
-	<!-- Distance from vertical label to vertical axis -->
-    <dimen name="axis_dist_from_label">5dp</dimen>
 
     <!-- Axis thickness-->
     <dimen name="axis_thickness">2dp</dimen>

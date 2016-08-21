@@ -8,8 +8,8 @@ import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
 import com.db.chart.view.ChartView;
 import com.db.chart.view.HorizontalStackBarChartView;
-import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.ExpoEase;
+import com.db.chart.animation.Animation;
+import com.db.chart.animation.easing.ExpoEase;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 

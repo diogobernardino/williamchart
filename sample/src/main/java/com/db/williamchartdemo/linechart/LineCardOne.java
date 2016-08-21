@@ -11,11 +11,11 @@ import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
-import com.db.chart.view.AxisController;
+import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.LineChartView;
-import com.db.chart.view.Tooltip;
-import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.BounceEase;
+import com.db.chart.tooltip.Tooltip;
+import com.db.chart.animation.Animation;
+import com.db.chart.animation.easing.BounceEase;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -96,7 +96,7 @@ public class LineCardOne extends CardController {
         // Chart
         mChart.setBorderSpacing(Tools.fromDpToPx(15))
                 .setAxisBorderValues(0, 20)
-                .setYLabels(AxisController.LabelPosition.NONE)
+                .setYLabels(AxisRenderer.LabelPosition.NONE)
                 .setLabelsColor(Color.parseColor("#6a84c3"))
                 .setXAxis(false)
                 .setYAxis(false);

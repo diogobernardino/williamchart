@@ -9,11 +9,11 @@ import android.view.View;
 
 import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
-import com.db.chart.view.AxisController;
+import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.BarChartView;
-import com.db.chart.view.Tooltip;
-import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.ElasticEase;
+import com.db.chart.tooltip.Tooltip;
+import com.db.chart.animation.Animation;
+import com.db.chart.animation.easing.ElasticEase;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -72,8 +72,8 @@ public class BarCardThree extends CardController {
 
         mChart.setBarSpacing(Tools.fromDpToPx(3));
 
-        mChart.setXLabels(AxisController.LabelPosition.NONE)
-                .setYLabels(AxisController.LabelPosition.NONE)
+        mChart.setXLabels(AxisRenderer.LabelPosition.NONE)
+                .setYLabels(AxisRenderer.LabelPosition.NONE)
                 .setXAxis(false)
                 .setYAxis(false);
 

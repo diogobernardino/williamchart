@@ -29,7 +29,7 @@ import android.widget.Spinner;
 import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
 import com.db.chart.model.LineSet;
-import com.db.chart.view.AxisController;
+import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.BaseBarChartView;
 import com.db.chart.view.BaseStackBarChartView;
@@ -38,18 +38,18 @@ import com.db.chart.view.HorizontalBarChartView;
 import com.db.chart.view.HorizontalStackBarChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.StackBarChartView;
-import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.BaseEasingMethod;
-import com.db.chart.view.animation.easing.BounceEase;
-import com.db.chart.view.animation.easing.CircEase;
-import com.db.chart.view.animation.easing.CubicEase;
-import com.db.chart.view.animation.easing.ElasticEase;
-import com.db.chart.view.animation.easing.ExpoEase;
-import com.db.chart.view.animation.easing.LinearEase;
-import com.db.chart.view.animation.easing.QuadEase;
-import com.db.chart.view.animation.easing.QuartEase;
-import com.db.chart.view.animation.easing.QuintEase;
-import com.db.chart.view.animation.easing.SineEase;
+import com.db.chart.animation.Animation;
+import com.db.chart.animation.easing.BaseEasingMethod;
+import com.db.chart.animation.easing.BounceEase;
+import com.db.chart.animation.easing.CircEase;
+import com.db.chart.animation.easing.CubicEase;
+import com.db.chart.animation.easing.ElasticEase;
+import com.db.chart.animation.easing.ExpoEase;
+import com.db.chart.animation.easing.LinearEase;
+import com.db.chart.animation.easing.QuadEase;
+import com.db.chart.animation.easing.QuartEase;
+import com.db.chart.animation.easing.QuintEase;
+import com.db.chart.animation.easing.SineEase;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.ValueBar;
 
@@ -110,9 +110,9 @@ public class SandboxFragment extends Fragment {
 
     /** Axis */
     private static boolean mHasYAxis;
-    private static AxisController.LabelPosition mYLabelPosition;
+    private static AxisRenderer.LabelPosition mYLabelPosition;
     private static boolean mHasXAxis;
-    private static AxisController.LabelPosition mXLabelPosition;
+    private static AxisRenderer.LabelPosition mXLabelPosition;
     private static int mAxisColorId;
     private static int mLabelColorId;
     private static String mLabelFormat;
@@ -217,9 +217,9 @@ public class SandboxFragment extends Fragment {
         mBarCornersSizeId = R.id.sandbox_bar_corner1;
 
         mHasYAxis = true;
-        mYLabelPosition = AxisController.LabelPosition.OUTSIDE;
+        mYLabelPosition = AxisRenderer.LabelPosition.OUTSIDE;
         mHasXAxis = true;
-        mXLabelPosition = AxisController.LabelPosition.OUTSIDE;
+        mXLabelPosition = AxisRenderer.LabelPosition.OUTSIDE;
 
         mGridType = null;
         mIsGridDashed = false;
@@ -435,11 +435,11 @@ public class SandboxFragment extends Fragment {
         if(!mHasYAxis) code.append("chart.setYAxis(false);\n");
         if((mHasXAxis || mHasYAxis) && mAxisColorId !=  DEFAULT_COLOR)
             code.append("chart.setAxisColor(Color.parseColor('#").append(Integer.toHexString(mAxisColorId).substring(2)).append("'));\n");
-        if(mXLabelPosition != AxisController.LabelPosition.OUTSIDE)
+        if(mXLabelPosition != AxisRenderer.LabelPosition.OUTSIDE)
             code.append("chart.setXLabels(").append(mXLabelPosition).append(");\n");
-        if(mYLabelPosition != AxisController.LabelPosition.OUTSIDE)
+        if(mYLabelPosition != AxisRenderer.LabelPosition.OUTSIDE)
             code.append("chart.setYLabels(").append(mYLabelPosition).append(");\n");
-        if((mXLabelPosition != AxisController.LabelPosition.NONE || mYLabelPosition != AxisController.LabelPosition.NONE)
+        if((mXLabelPosition != AxisRenderer.LabelPosition.NONE || mYLabelPosition != AxisRenderer.LabelPosition.NONE)
                 && mLabelColorId !=  DEFAULT_COLOR)
             code.append("chart.setLabelsColor(Color.parseColor('#").append(Integer.toHexString(mLabelColorId).substring(2)).append("'));\n");
         if(mGridType != null) {
@@ -764,16 +764,16 @@ public class SandboxFragment extends Fragment {
                 /** Label Y **/
                 case R.id.sandbox_axis_y_outside:
                     if(id == mLabelYId)
-                        mYLabelPosition = AxisController.LabelPosition.NONE;
+                        mYLabelPosition = AxisRenderer.LabelPosition.NONE;
                     else
-                        mYLabelPosition = AxisController.LabelPosition.OUTSIDE;
+                        mYLabelPosition = AxisRenderer.LabelPosition.OUTSIDE;
                     mLabelYId = swapState(mLayout, mLabelYId, id, false);
                     break;
                 case R.id.sandbox_axis_y_inside:
                     if(id == mLabelYId)
-                        mYLabelPosition = AxisController.LabelPosition.NONE;
+                        mYLabelPosition = AxisRenderer.LabelPosition.NONE;
                     else
-                        mYLabelPosition = AxisController.LabelPosition.INSIDE;
+                        mYLabelPosition = AxisRenderer.LabelPosition.INSIDE;
                     mLabelYId = swapState(mLayout, mLabelYId, id, false);
                     break;
 
@@ -786,16 +786,16 @@ public class SandboxFragment extends Fragment {
                 /** Label X **/
                 case R.id.sandbox_axis_x_inside:
                     if(id == mLabelXId)
-                        mXLabelPosition = AxisController.LabelPosition.NONE;
+                        mXLabelPosition = AxisRenderer.LabelPosition.NONE;
                     else
-                        mXLabelPosition = AxisController.LabelPosition.INSIDE;
+                        mXLabelPosition = AxisRenderer.LabelPosition.INSIDE;
                     mLabelXId = swapState(mLayout, mLabelXId, id, false);
                     break;
                 case R.id.sandbox_axis_x_outside:
                     if(id == mLabelXId)
-                        mXLabelPosition = AxisController.LabelPosition.NONE;
+                        mXLabelPosition = AxisRenderer.LabelPosition.NONE;
                     else
-                        mXLabelPosition = AxisController.LabelPosition.OUTSIDE;
+                        mXLabelPosition = AxisRenderer.LabelPosition.OUTSIDE;
                     mLabelXId = swapState(mLayout, mLabelXId, id, false);
                     break;
 

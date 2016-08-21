@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.db.chart.view.animation.easing;
+package com.db.chart.animation.easing;
 
-public class QuartEase extends BaseEasingMethod {
+public class CircEase extends BaseEasingMethod {
 
-	public QuartEase() {
+    public CircEase() {
         super();
     }
 
     @Override
     protected float easeOut(float time) {
-        return (float) -(Math.pow( time - 1, 4) - 1);
+        return 1 * (float) Math.sqrt( 1 - ( time = time - 1) * time);
     }
 
     @Override
@@ -32,15 +32,13 @@ public class QuartEase extends BaseEasingMethod {
 
         float p = time / 0.5f;
         if (p < 1.f)
-            return 0.5f * p * p * p * p;
-
-        p -= 2.f;
-        return -0.5f * (p * p * p * p - 2.f);
+            return -0.5f * ((float) Math.sqrt(1.f - p * p) - 1.f);
+        return 0.5f * ((float) Math.sqrt(1.f - (p -= 2.f) * p) + 1.f);
     }
 
     @Override
     protected float easeIn(float time) {
-        return time * time * time * time;
+        return -((float) Math.sqrt(1.f - time * time) - 1.f);
     }
 
 }

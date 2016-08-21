@@ -8,11 +8,10 @@ import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
-import com.db.chart.view.AxisController;
+import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.HorizontalStackBarChartView;
-import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.ExpoEase;
-import com.db.chart.view.animation.easing.SineEase;
+import com.db.chart.animation.Animation;
+import com.db.chart.animation.easing.ExpoEase;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -56,8 +55,8 @@ public class StackedCardThree extends CardController {
         mChart.setBarSpacing(Tools.fromDpToPx(5));
 
         mChart.setBorderSpacing(Tools.fromDpToPx(5))
-                .setYLabels(AxisController.LabelPosition.NONE)
-                .setXLabels(AxisController.LabelPosition.NONE)
+                .setYLabels(AxisRenderer.LabelPosition.NONE)
+                .setXLabels(AxisRenderer.LabelPosition.NONE)
                 .setXAxis(false)
                 .setYAxis(false)
                 .setAxisBorderValues(-80, 80, 10);

@@ -10,10 +10,10 @@ import android.view.View;
 import com.db.chart.Tools;
 import com.db.chart.model.BarSet;
 import com.db.chart.view.BarChartView;
-import com.db.chart.view.Tooltip;
-import com.db.chart.view.XController;
-import com.db.chart.view.YController;
-import com.db.chart.view.animation.Animation;
+import com.db.chart.tooltip.Tooltip;
+import com.db.chart.renderer.XRenderer;
+import com.db.chart.renderer.YRenderer;
+import com.db.chart.animation.Animation;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -53,8 +53,8 @@ public class BarCardOne extends CardController {
         // Chart
         mChart.setXAxis(false)
                 .setYAxis(false)
-                .setXLabels(XController.LabelPosition.OUTSIDE)
-                .setYLabels(YController.LabelPosition.NONE)
+                .setXLabels(XRenderer.LabelPosition.OUTSIDE)
+                .setYLabels(YRenderer.LabelPosition.NONE)
                 .setLabelsColor(Color.parseColor("#86705c"))
                 .setAxisColor(Color.parseColor("#86705c"));
 

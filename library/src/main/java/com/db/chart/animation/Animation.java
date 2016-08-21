@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.db.chart.view.animation;
+package com.db.chart.animation;
 
 import java.util.ArrayList;
 
@@ -24,8 +24,8 @@ import android.support.annotation.FloatRange;
 
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;
-import com.db.chart.view.animation.easing.BaseEasingMethod;
-import com.db.chart.view.animation.easing.QuintEase;
+import com.db.chart.animation.easing.BaseEasingMethod;
+import com.db.chart.animation.easing.QuintEase;
 
 
 /**
@@ -489,10 +489,10 @@ public class Animation{
 	 * Also , depending of which operation gets applied to the chart - enter, exit and update - the
 	 * easing will interpolate accordingly, as following described: enter animation with easeOut;
 	 * exit animation with easeIn; and update with easeInOut. In order to force a different
-	 * behaviour one can extend {@link com.db.chart.view.animation.easing.BaseEasingMethod}.
+	 * behaviour one can extend {@link com.db.chart.animation.easing.BaseEasingMethod}.
 	 *
 	 * @param easing   Easing object responsible to interpolate animation values
-	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
+	 * @return {@link com.db.chart.animation.Animation} self-reference.
 	 */
 	public Animation setEasing(BaseEasingMethod easing){
 		mEasing = easing;
@@ -503,7 +503,7 @@ public class Animation{
 	/**
 	 *
 	 * @param duration
-	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
+	 * @return {@link com.db.chart.animation.Animation} self-reference.
 	 */
 	public Animation setDuration(int duration){
 		mGlobalDuration = duration;
@@ -518,7 +518,7 @@ public class Animation{
      *               animation according to the previous one.
      *               0 - no overlap
      *               1 - all entries animate in parallel (default)
-	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
+	 * @return {@link com.db.chart.animation.Animation} self-reference.
 	 */
 	private Animation setOverlap(@FloatRange(from=0.f, to=1.f) float factor){
 
@@ -540,7 +540,7 @@ public class Animation{
      *               1 - all entries animate in parallel (default)
 	 * @param order   order from which the entries will be animated
      *              { 0, 1, 2, 3, ...} - default order
-	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
+	 * @return {@link com.db.chart.animation.Animation} self-reference.
 	 */
 	public Animation setOverlap(@FloatRange(from=0.f, to=1.f) float factor, int[] order){
 
@@ -554,7 +554,7 @@ public class Animation{
 	 * Sets an action to be executed once the animation finishes.
      *
 	 * @param runnable to be executed once the animation finishes
-	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
+	 * @return {@link com.db.chart.animation.Animation} self-reference.
 	 */
 	public Animation setEndAction(Runnable runnable){
 		mRunnable = runnable;
@@ -569,7 +569,7 @@ public class Animation{
 	 *
 	 * @param xFactor   horizontal factor between 0 and 1. If not applied then -1 can be set.
 	 * @param yFactor   vertical factor between 0 and 1. If not applied then -1 can be set.
-	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
+	 * @return {@link com.db.chart.animation.Animation} self-reference.
 	 */
 	public Animation setStartPoint(@FloatRange(from=-1.f, to=1.f) float xFactor,
 								   @FloatRange(from=-1.f, to=1.f) float yFactor){
@@ -586,7 +586,7 @@ public class Animation{
 	 * Eg. If speed 2 alpha goes twice faster than translation.
 	 *
 	 * @param speed   speed of alpha animation values according with translation.
-	 * @return {@link com.db.chart.view.animation.Animation} self-reference.
+	 * @return {@link com.db.chart.animation.Animation} self-reference.
 	 */
 	public Animation setAlpha(int speed){	
 		mAlphaSpeed = speed;

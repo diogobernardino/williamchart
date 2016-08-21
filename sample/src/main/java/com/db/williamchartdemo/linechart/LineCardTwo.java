@@ -8,10 +8,10 @@ import android.support.v7.widget.CardView;
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
 import com.db.chart.model.Point;
-import com.db.chart.view.AxisController;
+import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
-import com.db.chart.view.animation.Animation;
+import com.db.chart.animation.Animation;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -75,9 +75,9 @@ public class LineCardTwo extends CardController {
         gridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
 
         mChart.setBorderSpacing(Tools.fromDpToPx(0))
-                .setXLabels(AxisController.LabelPosition.OUTSIDE)
+                .setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
                 .setLabelsColor(Color.parseColor("#304a00"))
-                .setYLabels(AxisController.LabelPosition.NONE)
+                .setYLabels(AxisRenderer.LabelPosition.NONE)
                 .setXAxis(false)
                 .setYAxis(false)
                 .setGrid(ChartView.GridType.VERTICAL, 1, 7, gridPaint)

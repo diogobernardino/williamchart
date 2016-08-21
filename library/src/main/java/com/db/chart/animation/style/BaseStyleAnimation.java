@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.db.chart.view.animation.style;
+package com.db.chart.animation.style;
 
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;

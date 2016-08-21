@@ -15,9 +15,9 @@ import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.Bar;
 import com.db.chart.model.BarSet;
 import com.db.chart.view.HorizontalBarChartView;
-import com.db.chart.view.Tooltip;
-import com.db.chart.view.XController;
-import com.db.chart.view.animation.Animation;
+import com.db.chart.tooltip.Tooltip;
+import com.db.chart.renderer.XRenderer;
+import com.db.chart.animation.Animation;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -112,7 +112,7 @@ public class BarCardTwo extends CardController {
                 .setXAxis(false)
                 .setYAxis(false)
                 .setLabelsColor(Color.parseColor("#FF8E8A84"))
-                .setXLabels(XController.LabelPosition.NONE);
+                .setXLabels(XRenderer.LabelPosition.NONE);
 
         int[] order = {4, 3, 2, 1, 0};
         mChart.show(new Animation()

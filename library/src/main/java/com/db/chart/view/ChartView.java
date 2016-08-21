@@ -19,12 +19,15 @@ package com.db.chart.view;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import com.db.chart.renderer.XRenderer;
+import com.db.chart.renderer.YRenderer;
+import com.db.chart.tooltip.Tooltip;
 import com.db.williamchart.R;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
-import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.style.BaseStyleAnimation;
+import com.db.chart.animation.Animation;
+import com.db.chart.animation.style.BaseStyleAnimation;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -69,28 +72,23 @@ public abstract class ChartView extends RelativeLayout{
 	}
 
 
+	/** Context */
+	Context ctx;
+
 	/** Chart orientation */
 	private Orientation mOrientation;
 
 
 	/** Chart borders including padding */
-	private int mChartTop;
-	private int mChartBottom;
 	private int mChartLeft;
+	private int mChartTop;
 	private int mChartRight;
-
-
-	/** Inner chart borders (inner chart means the
-	 * chart's content where the datasets are drawn */
-	private float mInnerChartTop;
-	private float mInnerChartBottom;
-	private float mInnerChartLeft;
-	private float mInnerChartRight;
+	private int mChartBottom;
 
 
 	/** Horizontal and Vertical position controllers */
-	final XController horController;
-	final YController verController;
+	final XRenderer xRndr;
+	final YRenderer yRndr;
 
 
 	/** Chart data to be displayed */
@@ -136,11 +134,13 @@ public abstract class ChartView extends RelativeLayout{
 	private Animation mAnim;
 
 
+	/** Grid attributes */
 	private GridType mGridType;
 	private int mGridNRows;
 	private int mGridNColumns;
 
 
+	/** Tooltip */
 	private Tooltip mTooltip;
 
 
@@ -157,47 +157,52 @@ public abstract class ChartView extends RelativeLayout{
 		public boolean onPreDraw() {
 			ChartView.this.getViewTreeObserver().removeOnPreDrawListener(this);
 
+			// Generate Paint object with style attributes
 			style.init();
 
-			// Define chart frame
-			mChartTop = getPaddingTop() + verController.getLabelsMaxHeight()/2;
-			mChartBottom = getMeasuredHeight() - getPaddingBottom();
+			// Initiate axis labels with data and style
+			yRndr.init(data, style);
+			xRndr.init(data, style);
+
+			// Set the positioning of the whole chart's frame
 			mChartLeft = getPaddingLeft();
+			mChartTop = getPaddingTop() + style.fontMaxHeight/2;
 			mChartRight = getMeasuredWidth() - getPaddingRight();
+			mChartBottom = getMeasuredHeight() - getPaddingBottom();
 
-			mInnerChartTop = mChartTop;
-			mInnerChartBottom = mChartBottom;
-			mInnerChartLeft = mChartLeft;
-			mInnerChartRight = mChartRight;
+			// Measure space and set the positioning of the inner border.
+			// Inner borders will be chart's frame excluding the space needed by axis.
+			// They define the actual area where chart's content will be drawn.
+			yRndr.measure(mChartLeft, mChartTop, mChartRight, mChartBottom);
+			xRndr.measure(mChartLeft, mChartTop, mChartRight, mChartBottom);
 
-			// Initiate axis labels
-			verController.init();
-			horController.init();
+			// Negotiate chart inner boundaries.
+			// Both renderers may require different space to draw axis stuff.
+			final float[] bounds = negotiateInnerChartBounds(yRndr.getInnerChartBounds(),
+					xRndr.getInnerChartBounds());
+			yRndr.setInnerChartBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
+			xRndr.setInnerChartBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
 
-			// Measure space and inner chart borders
-			verController.measure();
-			horController.measure();
+			// Dispose the various axis elements in their positions
+			yRndr.dispose();
+			xRndr.dispose();
 
-			// Positioning axis elements
-			verController.dispose();
-			horController.dispose();
-
+			// Parse threshold screen coordinates
 			if(mHasThresholdValue) {
-				mThresholdStartValue = verController.parsePos(0, mThresholdStartValue);
-				mThresholdEndValue = verController.parsePos(0, mThresholdEndValue);
+				mThresholdStartValue = yRndr.parsePos(0, mThresholdStartValue);
+				mThresholdEndValue = yRndr.parsePos(0, mThresholdEndValue);
 			}
 
-			// Process data to define screen positions
+			// Process data to define screen coordinates
 			digestData();
 
-			// Tells view to execute code before starting drawing
+			// In case Views extending ChartView need to pre process data before the onDraw
 			onPreDrawChart(data);
 
-			// Define regions
+			// Define entries regions
 			mRegions = defineRegions(data);
 
-			// Prepares the animation if needed and gets the first dump 
-			// of data to be drawn
+			// Prepare the animation retrieving the first dump of coordinates to be used
 			if(mAnim != null)
 				data = mAnim.prepareEnterAnimation(ChartView.this);
 
@@ -214,31 +219,24 @@ public abstract class ChartView extends RelativeLayout{
 	public ChartView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		horController = new XController(this,
-				context.getTheme().obtainStyledAttributes(attrs,
-						R.styleable.ChartAttrs, 0, 0));
-		verController = new YController(this,
-				context.getTheme().obtainStyledAttributes(attrs,
-						R.styleable.ChartAttrs, 0, 0));
-
+		init();
+		ctx = context;
+		xRndr = new XRenderer();
+		yRndr = new YRenderer();
 		style = new Style(context.getTheme().obtainStyledAttributes(attrs,
 				R.styleable.ChartAttrs, 0, 0));
-
-		init();
 	}
 
 
 	public ChartView(Context context) {
 		super(context);
 
-		horController = new XController(this);
-		verController = new YController(this);
-
-		style = new Style();
-
 		init();
+		ctx = context;
+		xRndr = new XRenderer();
+		yRndr = new YRenderer();
+		style = new Style();
 	}
-
 
 
 
@@ -298,8 +296,6 @@ public abstract class ChartView extends RelativeLayout{
 	
 
 	
-	
-	
 	/*
 	 * -------------------------
 	 * Methods to be overridden
@@ -316,8 +312,8 @@ public abstract class ChartView extends RelativeLayout{
 		for(ChartSet set: data){
 			for(int i = 0; i < nEntries; i++){
 				set.getEntry(i)
-						.setCoordinates(horController.parsePos(i, set.getValue(i)),
-								verController.parsePos(i, set.getValue(i)));
+						.setCoordinates(xRndr.parsePos(i, set.getValue(i)),
+								yRndr.parsePos(i, set.getValue(i)));
 			}
 		}
 	}
@@ -493,13 +489,10 @@ public abstract class ChartView extends RelativeLayout{
 			mAnim.cancel();
 
 		init();
-		if(horController.mandatoryBorderSpacing != 0) {
-			horController.reset();
-		}
-
-		if(verController.mandatoryBorderSpacing != 0) {
-			verController.reset();
-		}
+		if(xRndr.hasMandatoryBorderSpacing())
+			xRndr.reset();
+		if(yRndr.hasMandatoryBorderSpacing())
+			yRndr.reset();
 
 		mHasThresholdLabel = false;
 		mHasThresholdValue = false;
@@ -559,15 +552,11 @@ public abstract class ChartView extends RelativeLayout{
 	}
 
 
-	/**
-	 * Set the {@link Tooltip} object which will be used to create chart tooltips.
-	 *
-	 * @param tip   {@link Tooltip} object in order to produce chart tooltips
+	/*
+	 * -------
+	 * Tooltip
+	 * -------
 	 */
-	public void setTooltips(Tooltip tip){
-		mTooltip = tip;
-	}
-
 
 	/**
 	 * Toggles {@link Tooltip} between show and dismiss.
@@ -598,12 +587,8 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public void showTooltip(Tooltip tooltip, boolean correctPos) {
 
-		if (correctPos) {
-			tooltip.correctPosition(mChartLeft,
-					mChartTop,
-					mChartRight,
-					mChartBottom);
-		}
+		if (correctPos)
+			tooltip.correctPosition(mChartLeft, mChartTop, mChartRight, mChartBottom);
 
 		if(tooltip.hasEnterAnimation())
 			tooltip.animateEnter();
@@ -668,9 +653,6 @@ public abstract class ChartView extends RelativeLayout{
 			if(rect != null)
 				this.toggleTooltip(rect, value);
 		}
-
-
-
 	}
 
 
@@ -704,9 +686,23 @@ public abstract class ChartView extends RelativeLayout{
 	public boolean canIPleaseAskYouToDraw(){
 		return !mIsDrawing;
 	}
-	
-	
-	
+
+
+	/**
+	 * Negotiates the inner bounds required by renderers.
+	 *
+	 * @param innersA   Inner bounds require by element A
+	 * @param innersB   Inned bound required by element B
+     * @return float vector with size equal to 4 containing agreed
+	 * 			inner bounds (left, top, right, bottom).
+     */
+	float[] negotiateInnerChartBounds(float[] innersA, float[] innersB){
+
+		return new float[]{ (innersA[0] > innersB[0]) ? innersA[0] : innersB[0],
+				(innersA[1] > innersB[1]) ? innersA[1] : innersB[1],
+				(innersA[2] < innersB[2]) ? innersA[2] : innersB[2],
+				(innersA[3] < innersB[3]) ? innersA[3] : innersB[3]};
+	}
 	
 	
 	/*
@@ -714,7 +710,6 @@ public abstract class ChartView extends RelativeLayout{
 	 * Draw Methods
 	 * -------------
 	 */
-
 
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -732,7 +727,7 @@ public abstract class ChartView extends RelativeLayout{
 				drawHorizontalGrid(canvas);
 
 			// Draw Axis Y
-			verController.draw(canvas);
+			yRndr.draw(canvas);
 
 			// Draw threshold
 			if (mHasThresholdValue)
@@ -753,7 +748,7 @@ public abstract class ChartView extends RelativeLayout{
 				onDrawChart(canvas, data);
 
 			// Draw axis X
-			horController.draw(canvas);
+			xRndr.draw(canvas);
 
 			//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
 		}
@@ -793,7 +788,7 @@ public abstract class ChartView extends RelativeLayout{
 		final float offset = (getInnerChartRight() - getInnerChartLeft()) / mGridNColumns;
 		float marker = getInnerChartLeft();
 
-		if(verController.hasAxis)
+		if(style.hasYAxis)
 			marker += offset;
 
 		while (marker < getInnerChartRight()){
@@ -824,7 +819,7 @@ public abstract class ChartView extends RelativeLayout{
 			marker += offset;
 		}
 
-		if(!horController.hasAxis)
+		if(!style.hasXAxis)
 			canvas.drawLine(getInnerChartLeft(),
 				getInnerChartBottom(),
 				getInnerChartRight(),
@@ -832,16 +827,13 @@ public abstract class ChartView extends RelativeLayout{
 				style.gridPaint);
 	}
 	
-	
-	
-	
+
 	
 	/*
 	 * --------------
 	 * Click Handler
 	 * --------------
 	 */
-
 
 	/**
 	 * The method listens chart clicks and checks whether it intercepts
@@ -937,7 +929,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return Position of the inner bottom side of the chart
 	 */
 	public float getInnerChartBottom(){
-		return mInnerChartBottom;
+		return yRndr.getInnerChartBottom();
 	}
 
 
@@ -948,7 +940,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return Position of the inner left side of the chart
 	 */
 	public float getInnerChartLeft(){
-		return mInnerChartLeft;
+		return xRndr.getInnerChartLeft();
 	}
 
 
@@ -959,7 +951,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return Position of the inner right side of the chart
 	 */
 	public float getInnerChartRight(){
-		return mInnerChartRight;
+		return xRndr.getInnerChartRight();
 	}
 
 
@@ -970,7 +962,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return Position of the inner top side of the chart
 	 */
 	public float getInnerChartTop(){
-		return mChartTop;
+		return yRndr.getInnerChartTop();
 	}
 
 
@@ -983,9 +975,9 @@ public abstract class ChartView extends RelativeLayout{
 	public float getZeroPosition(){
 
 		if(mOrientation == Orientation.VERTICAL)
-			return verController.parsePos(0, 0);
+			return yRndr.parsePos(0, 0);
 		else
-			return horController.parsePos(0, 0);
+			return xRndr.parsePos(0, 0);
 	}
 
 
@@ -998,9 +990,9 @@ public abstract class ChartView extends RelativeLayout{
 	int getStep(){
 
 		if(mOrientation == Orientation.VERTICAL)
-			return verController.step;
+			return yRndr.getStep();
 		else
-			return horController.step;
+			return xRndr.getStep();
 	}
 
 
@@ -1012,9 +1004,9 @@ public abstract class ChartView extends RelativeLayout{
 	float getBorderSpacing(){
 
 		if(mOrientation == Orientation.VERTICAL)
-			return horController.borderSpacing;
+			return xRndr.getBorderSpacing();
 		else
-			return verController.borderSpacing;
+			return yRndr.getBorderSpacing();
 	}
 
 
@@ -1050,8 +1042,8 @@ public abstract class ChartView extends RelativeLayout{
 	/**
 	 * Get the area, {@link android.graphics.Rect}, of an entry from the entry's {@link android.graphics.Region}
 	 *
-	 * @param region
-	 * @return   {@link android.graphics.Rect} specifying the area of an Entry
+	 * @param region   Region covering {@link ChartEntry} area
+	 * @return   {@link android.graphics.Rect} specifying the area of an {@link ChartEntry}
 	 */
 	private Rect getEntryRect(Region region){
 		// Subtract the view left/top padding to correct position
@@ -1064,55 +1056,14 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/**
-	 * Get the current {@link com.db.chart.view.animation.Animation}
+	 * Get the current {@link com.db.chart.animation.Animation}
 	 * held by {@link com.db.chart.view.ChartView}.
 	 * Useful, for instance, to define another endAction.
 	 *
-	 * @return   Current {@link com.db.chart.view.animation.Animation}
+	 * @return   Current {@link com.db.chart.animation.Animation}
 	 */
 	public Animation getChartAnimation(){
 		return mAnim;
-	}
-
-
-
-	/**
-	 * Get top coordinate of chart.
-	 *
-	 * @return top coordinate of chart available frame.
-	 */
-	int getChartTop(){
-		return mChartTop;
-	}
-
-
-	/**
-	 * Get bottom coordinate of chart.
-	 *
-	 * @return bottom coordinate of chart available frame.
-	 */
-	int getChartBottom(){
-		return mChartBottom;
-	}
-
-
-	/**
-	 * Get left coordinate of chart.
-	 *
-	 * @return left coordinate of chart available frame.
-	 */
-	int getChartLeft(){
-		return mChartLeft;
-	}
-
-
-	/**
-	 * Get right coordinate of chart.
-	 *
-	 * @return right coordinate of chart available frame.
-	 */
-	int getChartRight(){
-		return mChartRight;
 	}
 
 
@@ -1133,9 +1084,9 @@ public abstract class ChartView extends RelativeLayout{
 
 		mOrientation = orien;
 		if(mOrientation == Orientation.VERTICAL) {
-			verController.handleValues = true;
+			yRndr.setHandleValues(true);
 		}else{
-			horController.handleValues = true;
+			xRndr.setHandleValues(true);
 		}
 	}
 
@@ -1149,8 +1100,8 @@ public abstract class ChartView extends RelativeLayout{
 	 *                   INSIDE - Labels will be positioned inside the chart
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setYLabels(YController.LabelPosition position){
-		verController.labelsPositioning = position;
+	public ChartView setYLabels(YRenderer.LabelPosition position){
+		yRndr.setLabelsPositioning(position);
 		return this;
 	}
 
@@ -1164,8 +1115,8 @@ public abstract class ChartView extends RelativeLayout{
 	 *                   INSIDE - Labels will be positioned inside the chart
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setXLabels(XController.LabelPosition position){
-		horController.labelsPositioning = position;
+	public ChartView setXLabels(XRenderer.LabelPosition position){
+		xRndr.setLabelsPositioning(position);
 		return this;
 	}
 
@@ -1180,17 +1131,18 @@ public abstract class ChartView extends RelativeLayout{
 	public ChartView setLabelsFormat(DecimalFormat format){
 
 		if(mOrientation == Orientation.VERTICAL)
-			verController.labelFormat = format;
+			yRndr.setLabelsFormat(format);
 		else
-			horController.labelFormat = format;
+			xRndr.setLabelsFormat(format);
 
 		return this;
 	}
 
 
 	/**
+	 * Set color to be used in labels.
 	 *
-	 * @param color
+	 * @param color   Color to be applied to labels
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setLabelsColor(@ColorInt int color) {
@@ -1200,8 +1152,9 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/**
+	 * Set size of font to be used in labels.
 	 *
-	 * @param size
+	 * @param size   Font size to be applied to labels
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setFontSize(@IntRange(from=0) int size) {
@@ -1211,8 +1164,9 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/**
+	 * Set typeface to be used in labels.
 	 *
-	 * @param typeface
+	 * @param typeface   To be applied to labels
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setTypeface(Typeface typeface) {
@@ -1229,7 +1183,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setXAxis(boolean bool){
-		horController.hasAxis = bool;
+		style.hasXAxis = bool;
 		return this;
 	}
 
@@ -1241,7 +1195,7 @@ public abstract class ChartView extends RelativeLayout{
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
 	public ChartView setYAxis(boolean bool){
-		verController.hasAxis = bool;
+		style.hasYAxis = bool;
 		return this;
 	}
 
@@ -1260,9 +1214,9 @@ public abstract class ChartView extends RelativeLayout{
 	public ChartView setAxisBorderValues(int minValue, int maxValue, int step){
 
 		if(mOrientation == Orientation.VERTICAL)
-			verController.setBorderValues(minValue, maxValue, step);
+			yRndr.setBorderValues(minValue, maxValue, step);
 		else
-			horController.setBorderValues(minValue, maxValue, step);
+			xRndr.setBorderValues(minValue, maxValue, step);
 
 		return this;
 	}
@@ -1277,9 +1231,9 @@ public abstract class ChartView extends RelativeLayout{
 	public ChartView setAxisBorderValues(int minValue, int maxValue){
 
 		if(mOrientation == Orientation.VERTICAL)
-			verController.setBorderValues(minValue, maxValue);
+			yRndr.setBorderValues(minValue, maxValue);
 		else
-			horController.setBorderValues(minValue, maxValue);
+			xRndr.setBorderValues(minValue, maxValue);
 
 		return this;
 	}
@@ -1323,9 +1277,9 @@ public abstract class ChartView extends RelativeLayout{
 			throw new IllegalArgumentException("Step can't be lower or equal to 0");
 
 		if(mOrientation == Orientation.VERTICAL)
-			verController.step = step;
+			yRndr.setStep(step);
 		else
-			horController.step = step;
+			xRndr.setStep(step);
 
 		return this;
 	}
@@ -1333,9 +1287,9 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/**
-	 * Register a listener to be called when the chart is clicked.
+	 * Register a listener to be called when an {@link ChartEntry} is clicked.
 	 *
-	 * @param listener
+	 * @param listener   Listener to be used for callback.
 	 */
 	public void setOnEntryClickListener(OnEntryClickListener listener){
 		this.mEntryListener = listener;
@@ -1344,9 +1298,9 @@ public abstract class ChartView extends RelativeLayout{
 
 
 	/**
-	 * Register a listener to be called when the chart is clicked.
+	 * Register a listener to be called when the {@link ChartView} is clicked.
 	 *
-	 * @param listener
+	 * @param listener   Listener to be used for callback.
 	 */
 	@Override
 	public void setOnClickListener(OnClickListener listener){
@@ -1363,9 +1317,9 @@ public abstract class ChartView extends RelativeLayout{
 	public ChartView setBorderSpacing(float spacing){
 
 		if(mOrientation == Orientation.VERTICAL)
-			horController.borderSpacing = spacing;
+			xRndr.setBorderSpacing(spacing);
 		else
-			verController.borderSpacing = spacing;
+			yRndr.setBorderSpacing(spacing);
 
 		return this;
 	}
@@ -1380,9 +1334,9 @@ public abstract class ChartView extends RelativeLayout{
 	public ChartView setTopSpacing(float spacing){
 
 		if(mOrientation == Orientation.VERTICAL)
-			verController.topSpacing = spacing;
+			yRndr.setTopSpacing(spacing);
 		else
-			horController.borderSpacing = spacing;
+			xRndr.setBorderSpacing(spacing);
 
 		return this;
 	}
@@ -1479,8 +1433,8 @@ public abstract class ChartView extends RelativeLayout{
 	 */
 	public ChartView setAxisLabelsSpacing(float spacing){
 
-		horController.setAxisLabelsSpacing(spacing);
-		verController.setAxisLabelsSpacing(spacing);
+		xRndr.setAxisLabelsSpacing(spacing);
+		yRndr.setAxisLabelsSpacing(spacing);
 		return this;
 	}
 
@@ -1494,54 +1448,21 @@ public abstract class ChartView extends RelativeLayout{
 	void setMandatoryBorderSpacing(){
 
 		if(mOrientation == Orientation.VERTICAL)
-			horController.mandatoryBorderSpacing = 1;
+			xRndr.setMandatoryBorderSpacing(true);
 		else
-			verController.mandatoryBorderSpacing = 1;
+			yRndr.setMandatoryBorderSpacing(true);
 	}
 
 
 	/**
+	 * Set the {@link Tooltip} object which will be used to create chart tooltips.
 	 *
-	 * @param innerTop
+	 * @param tip   {@link Tooltip} object in order to produce chart tooltips
 	 */
-	void setInnerChartTop(float innerTop){
-
-		if(innerTop > mInnerChartTop)
-			mInnerChartTop = innerTop;
+	public void setTooltips(Tooltip tip){
+		mTooltip = tip;
 	}
 
-
-	/**
-	 *
-	 * @param innerBottom
-	 */
-	void setInnerChartBottom(float innerBottom){
-
-		if(innerBottom < mInnerChartBottom)
-			mInnerChartBottom = innerBottom;
-	}
-
-
-	/**
-	 *
-	 * @param innerRight
-	 */
-	void setInnerChartRight(float innerRight){
-
-		if(innerRight < mInnerChartRight)
-			mInnerChartRight = innerRight;
-	}
-
-
-	/**
-	 *
-	 * @param innerLeft
-	 */
-	void setInnerChartLeft(float innerLeft){
-
-		if(innerLeft > mInnerChartLeft)
-			mInnerChartLeft = innerLeft;
-	}
 
 
 
@@ -1575,38 +1496,47 @@ public abstract class ChartView extends RelativeLayout{
 	 * Class responsible to style the Graph!
 	 * Can be instantiated with or without attributes.
 	 */
-	class Style {
+	public class Style {
 
 		private final static int DEFAULT_COLOR = Color.BLACK;
 
 
 		/** Chart */
-		Paint chartPaint;
-		float axisThickness;
-		int axisColor;
+		private Paint chartPaint;
 
+		/** Axis */
+		private float axisThickness;
+		private int axisColor;
+		private boolean hasXAxis;
+		private boolean hasYAxis;
 
 		/** Grid */
-		Paint gridPaint;
-
+		private Paint gridPaint;
 
 		/** Threshold **/
-		Paint thresholdPaint;
+		private Paint thresholdPaint;
 
 		/** Font */
-		Paint labelsPaint;
-		int labelsColor;
-		float fontSize;
-		Typeface typeface;
+		private Paint labelsPaint;
+		private int labelsColor;
+		private float fontSize;
+		private Typeface typeface;
+
+		/** Height of the text based on the font style defined.
+		 * Includes uppercase height and bottom padding of special
+		 * lowercase letter such as g, p, etc. */
+		private int fontMaxHeight;
 
 
 		Style() {
 
 			axisColor = DEFAULT_COLOR;
-			axisThickness = getResources().getDimension(R.dimen.grid_thickness);
+			axisThickness = ctx.getResources().getDimension(R.dimen.grid_thickness);
+			hasXAxis = true;
+			hasYAxis = true;
 
 			labelsColor = DEFAULT_COLOR;
-			fontSize = getResources().getDimension(R.dimen.font_size);
+			fontSize = ctx.getResources().getDimension(R.dimen.font_size);
 		}
 
 
@@ -1646,6 +1576,8 @@ public abstract class ChartView extends RelativeLayout{
 			labelsPaint.setAntiAlias(true);
 			labelsPaint.setTextSize(fontSize);
 			labelsPaint.setTypeface(typeface);
+
+			fontMaxHeight = (int) (style.labelsPaint.descent() - style.labelsPaint.ascent());
 		}
 
 
@@ -1657,6 +1589,42 @@ public abstract class ChartView extends RelativeLayout{
 			thresholdPaint = null;
 		}
 
+
+		/**
+		 * Get label's height.
+		 *
+		 * @param text   Label to measure
+		 * @return Height of label
+		 */
+		public int getLabelHeight(String text){
+			final Rect rect = new Rect();
+			style.labelsPaint.getTextBounds(text, 0, text.length(), rect);
+			return rect.height();
+		}
+
+		public Paint getChartPaint() {
+			return chartPaint;
+		}
+
+		public float getAxisThickness() {
+			return axisThickness;
+		}
+
+		public boolean hasXAxis() {
+			return hasXAxis;
+		}
+
+		public boolean hasYAxis() {
+			return hasYAxis;
+		}
+
+		public Paint getLabelsPaint() {
+			return labelsPaint;
+		}
+
+		public int getFontMaxHeight() {
+			return fontMaxHeight;
+		}
 	}
 
 

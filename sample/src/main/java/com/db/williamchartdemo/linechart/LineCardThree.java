@@ -6,9 +6,9 @@ import android.support.v7.widget.CardView;
 
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
-import com.db.chart.view.AxisController;
+import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.LineChartView;
-import com.db.chart.view.animation.Animation;
+import com.db.chart.animation.Animation;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
@@ -41,8 +41,8 @@ public class LineCardThree extends CardController {
         mChart.addData(dataset);
 
         mChart.setBorderSpacing(1)
-                .setXLabels(AxisController.LabelPosition.NONE)
-                .setYLabels(AxisController.LabelPosition.NONE)
+                .setXLabels(AxisRenderer.LabelPosition.NONE)
+                .setYLabels(AxisRenderer.LabelPosition.NONE)
                 .setXAxis(false)
                 .setYAxis(false)
                 .setBorderSpacing(Tools.fromDpToPx(5));

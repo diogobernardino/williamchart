@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.db.chart.view.animation.easing;
+package com.db.chart.animation.easing;
 
 /**
  * Interface that gives the abstract methods to any possible
@@ -36,7 +36,7 @@ public abstract class BaseEasingMethod {
 
     /**
      * Method that gives the next interpolated value to be processed by
-     * the {@link com.db.chart.view.animation.Animation} object.
+     * the {@link com.db.chart.animation.Animation} object.
      *
      * @param time - time normalized between 0 and 1
      * @return the next interpolation.

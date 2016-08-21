@@ -14,31 +14,34 @@
  * limitations under the License.
  */
 
-package com.db.chart.view.animation.easing;
+package com.db.chart.animation.easing;
 
-public class CircEase extends BaseEasingMethod {
-
-    public CircEase() {
-        super();
-    }
+public class BounceEase extends BaseEasingMethod {
 
     @Override
     protected float easeOut(float time) {
-        return 1 * (float) Math.sqrt( 1 - ( time = time - 1) * time);
+
+        if ((time/=1) < (1/2.75f))
+            return (7.5625f*time*time);
+        else if (time < (2/2.75f))
+            return (7.5625f*(time-=(1.5f/2.75f))*time + .75f);
+        else if (time < (2.5/2.75))
+            return (7.5625f*(time-=(2.25f/2.75f))*time + .9375f);
+        else
+            return (7.5625f*(time-=(2.625f/2.75f))*time + .984375f);
     }
 
     @Override
     protected float easeInOut(float time) {
 
-        float p = time / 0.5f;
-        if (p < 1.f)
-            return -0.5f * ((float) Math.sqrt(1.f - p * p) - 1.f);
-        return 0.5f * ((float) Math.sqrt(1.f - (p -= 2.f) * p) + 1.f);
+        if (time < 0.5f)
+            return easeIn(time * 2) * .5f;
+        return easeOut(time * 2 - 1f) * .5f + .5f;
     }
 
     @Override
     protected float easeIn(float time) {
-        return -((float) Math.sqrt(1.f - time * time) - 1.f);
+        return 1.f - easeOut(1.f - time);
     }
-
+	
 }

@@ -68,7 +68,7 @@ public class LineChartView extends ChartView {
 
         setOrientation(Orientation.VERTICAL);
 		mStyle = new Style();
-        mClickableRadius = getResources().getDimension(R.dimen.dot_region_radius);
+        mClickableRadius = ctx.getResources().getDimension(R.dimen.dot_region_radius);
 	}
 
 	@Override

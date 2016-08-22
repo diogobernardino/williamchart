@@ -317,7 +317,7 @@ public abstract class AxisRenderer {
 		}
 
 		// Set max Y axis label in case isn't already there
-		if (result.get(result.size() - 1) < max) result.add(max);
+		if (result.get(result.size() - 1) < max) result.add(pos);
 
 		return result;
 	}

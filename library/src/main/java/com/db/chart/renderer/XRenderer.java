@@ -49,7 +49,7 @@ public class XRenderer extends AxisRenderer {
 	@Override
 	public void measure(int left, int top, int right, int bottom) {
 
-		mInnerChartLeft = measureInnerChartLeft();
+		mInnerChartLeft = measureInnerChartLeft(left);
 		mInnerChartTop = measureInnerChartTop(top);
 		mInnerChartRight = measureInnerChartRight(right);
 		mInnerChartBottom = measureInnerChartBottom(bottom);
@@ -79,8 +79,7 @@ public class XRenderer extends AxisRenderer {
 		if (labelsPositioning == LabelPosition.INSIDE) { // Labels sit inside of chart
 			result -= distanceToAxis;
 			result -= style.getLabelsPaint().descent();
-			if (style.hasXAxis()) result -= style.getAxisThickness() /
-					  2;//TODO este codigo esta repetido no if debaixo, da para melhorar isto
+			if (style.hasXAxis()) result -= style.getAxisThickness() / 2;
 
 		} else if (labelsPositioning == LabelPosition.OUTSIDE) { // Labels sit outside of chart
 			result += distanceToAxis;
@@ -140,11 +139,11 @@ public class XRenderer extends AxisRenderer {
 	 *
 	 * @return Coordinate of the inner left side of the chart
 	 */
-	protected float measureInnerChartLeft() {
+	protected float measureInnerChartLeft(int left) {
 
 		return (labelsPositioning != LabelPosition.NONE) ?
 				  style.getLabelsPaint().measureText(labels.get(0)) / 2 :
-				  0.f; //TODO faz mais sentido devolver o mChartLeft do que 0
+				  left;
 	}
 
 

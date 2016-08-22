@@ -18,29 +18,34 @@ package com.db.chart.animation.easing;
 
 public class CubicEase extends BaseEasingMethod {
 
-    public CubicEase() {
-        super();
-    }
+	public CubicEase() {
 
-    @Override
-    protected float easeOut(float time) {
-        return (float) Math.pow( time - 1, 3) + 1;
-    }
+		super();
+	}
 
-    @Override
-    protected float easeInOut(float time) {
 
-        float p = time / 0.5f;
-        if (p < 1.f)
-            return 0.5f * p * p * p;
+	@Override
+	protected float easeOut(float time) {
 
-        p -= 2.f;
-        return 0.5f * (p * p * p + 2.f);
-    }
+		return (float) Math.pow(time - 1, 3) + 1;
+	}
 
-    @Override
-    protected float easeIn(float time) {
-        return time * time * time;
-    }
+
+	@Override
+	protected float easeInOut(float time) {
+
+		float p = time / 0.5f;
+		if (p < 1.f) return 0.5f * p * p * p;
+
+		p -= 2.f;
+		return 0.5f * (p * p * p + 2.f);
+	}
+
+
+	@Override
+	protected float easeIn(float time) {
+
+		return time * time * time;
+	}
 
 }

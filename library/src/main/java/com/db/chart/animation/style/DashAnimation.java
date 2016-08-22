@@ -19,13 +19,15 @@ package com.db.chart.animation.style;
 import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
 
+
 public class DashAnimation extends BaseStyleAnimation {
-	
-	
+
+
 	@Override
 	public void nextUpdate(ChartSet set) {
+
 		LineSet line = (LineSet) set;
-			line.setDashedPhase(line.getDashedPhase() - 4);
+		line.setDashedPhase(line.getDashedPhase() - 4);
 	}
-	
+
 }

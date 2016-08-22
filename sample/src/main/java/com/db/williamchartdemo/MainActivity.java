@@ -14,97 +14,105 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
-    private android.support.v4.app.Fragment mCurrFragment;
+	private android.support.v4.app.Fragment mCurrFragment;
 
-    private int currSpinnerSelection = 0;
-    private ArrayAdapter<CharSequence> mAdapter;
+	private int currSpinnerSelection = 0;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-
-        mAdapter = ArrayAdapter.createFromResource(this, R.array.spinner_options, android.R.layout.simple_spinner_item);
-        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        mCurrFragment = new ChartsFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.container, mCurrFragment)
-                .commit();
-    }
+	private ArrayAdapter<CharSequence> mAdapter;
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
 
-        switch (item.getItemId()) {
-            case R.id.github:
-                startActivity(new Intent("android.intent.action.VIEW",
-                        Uri.parse("https://github.com/diogobernardino/WilliamChart")));
-                return true;
-            case R.id.play:
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("market://details?id="
-                                    + this.getApplicationContext().getPackageName())));
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://play.google.com/store/apps/details?id=" +
-                                    "https://play.google.com/store/apps/details?id=com.db.williamchartdemo")));
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        MenuItem item = menu.findItem(R.id.spinner);
+		mAdapter = ArrayAdapter.createFromResource(this, R.array.spinner_options,
+				  android.R.layout.simple_spinner_item);
+		mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-        spinner.setAdapter(mAdapter);
-        spinner.setSelection(currSpinnerSelection);
-        spinner.setOnItemSelectedListener(this);
+		mCurrFragment = new ChartsFragment();
+		getSupportFragmentManager().beginTransaction().add(R.id.container, mCurrFragment).commit();
+	}
 
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    public void onMenuClick(View view){
-        ((SandboxFragment) mCurrFragment).onMenuClick(view);
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
 
-    public void onPlay(View view){
-        ((SandboxFragment) mCurrFragment).onPlay(view);
-    }
+		getMenuInflater().inflate(R.menu.menu, menu);
+		MenuItem item = menu.findItem(R.id.spinner);
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+		spinner.setAdapter(mAdapter);
+		spinner.setSelection(currSpinnerSelection);
+		spinner.setOnItemSelectedListener(this);
 
-        if(position != currSpinnerSelection ) {
-            switch (position) {
-                case 0:
-                    mCurrFragment = new ChartsFragment();
-                    break;
-                case 1:
-                    mCurrFragment = new SandboxFragment();
-                    break;
-                default:
-                    break;
-            }
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, mCurrFragment).commit();
-            currSpinnerSelection  = position;
-        }
-    }
+		return super.onCreateOptionsMenu(menu);
+	}
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+			case R.id.github:
+				startActivity(new Intent("android.intent.action.VIEW",
+						  Uri.parse("https://github.com/diogobernardino/WilliamChart")));
+				return true;
+			case R.id.play:
+				try {
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+							  "market://details?id=" + this.getApplicationContext().getPackageName())));
+				} catch (ActivityNotFoundException e) {
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(
+							  "http://play.google.com/store/apps/details?id=" +
+										 "https://play.google.com/store/apps/details?id=com.db.williamchartdemo")));
+				}
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+
+	public void onMenuClick(View view) {
+
+		((SandboxFragment) mCurrFragment).onMenuClick(view);
+	}
+
+
+	public void onPlay(View view) {
+
+		((SandboxFragment) mCurrFragment).onPlay(view);
+	}
+
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+		if (position != currSpinnerSelection) {
+			switch (position) {
+				case 0:
+					mCurrFragment = new ChartsFragment();
+					break;
+				case 1:
+					mCurrFragment = new SandboxFragment();
+					break;
+				default:
+					break;
+			}
+			getSupportFragmentManager().beginTransaction()
+					  .replace(R.id.container, mCurrFragment)
+					  .commit();
+			currSpinnerSelection = position;
+		}
+	}
+
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {}
 
 }

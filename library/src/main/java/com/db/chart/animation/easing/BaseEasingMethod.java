@@ -22,48 +22,53 @@ package com.db.chart.animation.easing;
  */
 public abstract class BaseEasingMethod {
 
-    public final static int ENTER = 0;
-    public final static int UPDATE = 1;
-    public final static int EXIT = 2;
+	public final static int ENTER = 0;
 
-    private static int mState;
+	public final static int UPDATE = 1;
 
+	public final static int EXIT = 2;
 
-    protected abstract float easeOut(float time);
-    protected abstract float easeInOut(float time);
-    protected abstract float easeIn(float time);
+	private static int mState;
 
 
-    /**
-     * Method that gives the next interpolated value to be processed by
-     * the {@link com.db.chart.animation.Animation} object.
-     *
-     * @param time - time normalized between 0 and 1
-     * @return the next interpolation.
-     */
-    public float next(float time){
+	protected abstract float easeOut(float time);
 
-        if(mState == BaseEasingMethod.ENTER)
-            return easeOut(time);
-        else if(mState == BaseEasingMethod.UPDATE)
-            return easeInOut(time);
-        else if(mState == BaseEasingMethod.EXIT)
-            return easeIn(time);
-        return 1;
-    }
+	protected abstract float easeInOut(float time);
 
-    public int getState(){
-        return mState;
-    }
+	protected abstract float easeIn(float time);
 
 
-    /**
-     * Whether interpolation should comply with ENTER, UPDATE, or EXIT animation.
-     *
-     * @param state
-     */
-    public void setState(int state){
-        mState = state;
-    }
+	/**
+	 * Method that gives the next interpolated value to be processed by
+	 * the {@link com.db.chart.animation.Animation} object.
+	 *
+	 * @param time - time normalized between 0 and 1
+	 *
+	 * @return the next interpolation.
+	 */
+	public float next(float time) {
+
+		if (mState == BaseEasingMethod.ENTER) return easeOut(time);
+		else if (mState == BaseEasingMethod.UPDATE) return easeInOut(time);
+		else if (mState == BaseEasingMethod.EXIT) return easeIn(time);
+		return 1;
+	}
+
+
+	public int getState() {
+
+		return mState;
+	}
+
+
+	/**
+	 * Whether interpolation should comply with ENTER, UPDATE, or EXIT animation.
+	 *
+	 * @param state
+	 */
+	public void setState(int state) {
+
+		mState = state;
+	}
 
 }

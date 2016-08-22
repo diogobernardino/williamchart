@@ -19,39 +19,40 @@ package com.db.chart.model;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 
+
 /**
  * Generic Data model of a {@link com.db.chart.view.ChartView} entry
  */
 public abstract class ChartEntry {
 
-    /** Default bar color */
-    private static final int DEFAULT_COLOR = -16777216;
+	/** Default bar color */
+	private static final int DEFAULT_COLOR = -16777216;
 
-	
+
 	/** Input from user */
 	final private String mLabel;
+
+	/** Defines if entry is visible */
+	boolean isVisible;
+
 	private float mValue;
 
-	
 	/** Display coordinates */
 	private float mX;
+
 	private float mY;
 
-
-    /** Bar color */
-    private int mColor;
-
-
-    /** Defines if entry is visible */
-    boolean isVisible;
-
+	/** Bar color */
+	private int mColor;
 
 	/** Shadow variables */
 	private float mShadowRadius;
-	private float mShadowDx;
-	private float mShadowDy;
-	private int[] mShadowColor;
 
+	private float mShadowDx;
+
+	private float mShadowDy;
+
+	private int[] mShadowColor;
 
 
 	/**
@@ -60,11 +61,12 @@ public abstract class ChartEntry {
 	 * @param label
 	 * @param value
 	 */
-	ChartEntry(String label, float value){
+	ChartEntry(String label, float value) {
+
 		mLabel = label;
 		mValue = value;
 
-        mColor = DEFAULT_COLOR;
+		mColor = DEFAULT_COLOR;
 
 		mShadowRadius = 0;
 		mShadowDx = 0;
@@ -73,12 +75,14 @@ public abstract class ChartEntry {
 	}
 
 
-    public boolean isVisible(){
-        return isVisible;
-    }
+	public boolean isVisible() {
+
+		return isVisible;
+	}
 
 
-	public boolean hasShadow(){
+	public boolean hasShadow() {
+
 		return mShadowRadius != 0;
 	}
 
@@ -92,43 +96,55 @@ public abstract class ChartEntry {
 
 
 	public String getLabel() {
+
 		return mLabel;
 	}
 
 
 	public float getValue() {
+
 		return mValue;
 	}
 
 
 	public float getX() {
+
 		return mX;
 	}
 
 
 	public float getY() {
+
 		return mY;
 	}
 
 
-    public int getColor() {
-        return mColor;
-    }
+	public int getColor() {
+
+		return mColor;
+	}
 
 
 	public float getShadowRadius() {
+
 		return mShadowRadius;
 	}
 
+
 	public float getShadowDx() {
+
 		return mShadowDx;
 	}
 
+
 	public float getShadowDy() {
+
 		return mShadowDy;
 	}
 
+
 	public int[] getShadowColor() {
+
 		return mShadowColor;
 	}
 
@@ -139,25 +155,26 @@ public abstract class ChartEntry {
 	 * Setters
 	 * --------
 	 */
-	
-	
+
+
 	/**
 	 * Set new entry value.
-     *
-	 * @param value   New value
+	 *
+	 * @param value New value
 	 */
-	public void setValue(float value){
+	public void setValue(float value) {
+
 		mValue = value;
 	}
-	
-	
+
+
 	/**
 	 * Set the parsed display coordinates.
-     *
-	 * @param x   display x coordinate.
-	 * @param y   display y coordinate.
+	 *
+	 * @param x display x coordinate.
+	 * @param y display y coordinate.
 	 */
-	public void setCoordinates(float x, float y){
+	public void setCoordinates(float x, float y) {
 
 		mX = x;
 		mY = y;
@@ -167,28 +184,27 @@ public abstract class ChartEntry {
 	/**
 	 * Define the color of the entry.
 	 *
-	 * @param color   Color to be set.
+	 * @param color Color to be set.
 	 */
-    public void setColor(@ColorInt int color) {
+	public void setColor(@ColorInt int color) {
 
-        isVisible = true;
-        mColor = color;
-    }
+		isVisible = true;
+		mColor = color;
+	}
 
 
 	/**
 	 * Define whether this entry will be drawn or not.
 	 *
-	 * @param visible   True if entry should be displayed.
+	 * @param visible True if entry should be displayed.
 	 */
-	public void setVisible(boolean visible){
+	public void setVisible(boolean visible) {
 
 		isVisible = visible;
 	}
 
 
 	/**
-	 *
 	 * @param radius
 	 * @param dx
 	 * @param dy
@@ -206,10 +222,10 @@ public abstract class ChartEntry {
 	}
 
 
+	public String toString() {
 
-	public String toString(){
-		return "Label="+mLabel+" \n" + "Value="+mValue+"\n" +
-				"X = "+mX+"\n" + "Y = "+mY;
+		return "Label=" + mLabel + " \n" + "Value=" + mValue + "\n" +
+				  "X = " + mX + "\n" + "Y = " + mY;
 	}
 
 }

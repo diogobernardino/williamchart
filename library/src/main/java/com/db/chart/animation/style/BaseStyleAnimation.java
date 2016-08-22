@@ -19,40 +19,43 @@ package com.db.chart.animation.style;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;
 
+
 public abstract class BaseStyleAnimation {
 
 	private static final long DELAY_BETWEEN_UPDATES = 100;
-	
+
 	private ChartView mChartView;
-	
+
 	private ChartSet mSet;
-	
+
 	/** Control animation updates */
-    final private Runnable mAnimator = new Runnable() {
-        @Override
-        public void run() {
-        	if(mChartView.canIPleaseAskYouToDraw()){
-        		mChartView.postInvalidate();
-        		getUpdate(mSet);
-        	}
-        }
-    };
-	
-    
-    
-	public void play(ChartView lineChartView, ChartSet set){
+	final private Runnable mAnimator = new Runnable() {
+		@Override
+		public void run() {
+
+			if (mChartView.canIPleaseAskYouToDraw()) {
+				mChartView.postInvalidate();
+				getUpdate(mSet);
+			}
+		}
+	};
+
+
+	public void play(ChartView lineChartView, ChartSet set) {
+
 		mChartView = lineChartView;
 		mSet = set;
 		getUpdate(mSet);
 	}
-	
-	
-	private void getUpdate(ChartSet set){
+
+
+	private void getUpdate(ChartSet set) {
+
 		nextUpdate(set);
 		mChartView.postDelayed(mAnimator, DELAY_BETWEEN_UPDATES);
 	}
-	
-	
+
+
 	protected abstract void nextUpdate(ChartSet set);
-	
+
 }

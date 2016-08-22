@@ -18,12 +18,14 @@ package com.db.chart.listener;
 
 import android.view.View;
 
+
 /**
  * Interface to define a listener when an chart entry has been clicked
  */
 public interface OnTooltipEventListener {
 
 	void onEnter(View view);
+
 	void onExit(View view);
-	
+
 }

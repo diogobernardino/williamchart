@@ -39,33 +39,35 @@ import com.db.williamchartdemo.stackedchart.StackedCardTwo;
 public class ChartsFragment extends Fragment {
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
-        View layout = inflater.inflate(R.layout.charts, container, false);
 
-        Toolbar toolbar = (Toolbar) layout.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			  Bundle savedInstanceState) {
 
-        (new LineCardOne((CardView) layout.findViewById(R.id.card1), getContext())).init();
-        (new LineCardThree((CardView) layout.findViewById(R.id.card2), getContext())).init();
-        (new BarCardOne((CardView) layout.findViewById(R.id.card3), getContext())).init();
-        (new StackedCardThree((CardView) layout.findViewById(R.id.card4), getContext())).init();
-        (new StackedCardOne((CardView) layout.findViewById(R.id.card5))).init();
-        (new BarCardThree((CardView) layout.findViewById(R.id.card6), getContext())).init();
-        (new BarCardTwo((CardView) layout.findViewById(R.id.card7), getContext())).init();
-        (new StackedCardTwo((CardView) layout.findViewById(R.id.card8))).init();
-        (new LineCardTwo((CardView) layout.findViewById(R.id.card9))).init();
+		View layout = inflater.inflate(R.layout.charts, container, false);
 
-        return layout;
-    }
+		Toolbar toolbar = (Toolbar) layout.findViewById(R.id.toolbar);
+		((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+		(new LineCardOne((CardView) layout.findViewById(R.id.card1), getContext())).init();
+		(new LineCardThree((CardView) layout.findViewById(R.id.card2), getContext())).init();
+		(new BarCardOne((CardView) layout.findViewById(R.id.card3), getContext())).init();
+		(new StackedCardThree((CardView) layout.findViewById(R.id.card4), getContext())).init();
+		(new StackedCardOne((CardView) layout.findViewById(R.id.card5))).init();
+		(new BarCardThree((CardView) layout.findViewById(R.id.card6), getContext())).init();
+		(new BarCardTwo((CardView) layout.findViewById(R.id.card7), getContext())).init();
+		(new StackedCardTwo((CardView) layout.findViewById(R.id.card8))).init();
+		(new LineCardTwo((CardView) layout.findViewById(R.id.card9))).init();
+
+		return layout;
+	}
 
 
 }

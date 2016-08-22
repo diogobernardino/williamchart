@@ -104,10 +104,8 @@ public abstract class ChartView extends RelativeLayout {
 	/** Chart data to be displayed */
 	private ArrayList<ArrayList<Region>> mRegions;
 
-	/** Index of last point clicked */
-	private int mIndexClicked;
-
-	private int mSetClicked;
+	/** Keeps the clicked set and entry index */
+	private int[] mEntryClicked;
 
 	/** Listeners to for touch events */
 	private OnEntryClickListener mEntryListener;
@@ -231,8 +229,7 @@ public abstract class ChartView extends RelativeLayout {
 	private void init() {
 
 		mReadyToDraw = false;
-		mSetClicked = -1;
-		mIndexClicked = -1;
+		mEntryClicked = new int[]{-1, -1};
 		mHasThresholdValue = false;
 		mHasThresholdLabel = false;
 		mIsDrawing = false;
@@ -1153,45 +1150,35 @@ public abstract class ChartView extends RelativeLayout {
 					  (mTooltip != null || mEntryListener != null) &&
 					  mRegions != null) {
 
-				//Check if ACTION_DOWN over any ScreenPoint region.
+				// Check if action down intersects any entry region
 				int nSets = mRegions.size();
 				int nEntries = mRegions.get(0).size();
-				for (int i = 0; i < nSets; i++) {
-					for (int j = 0; j < nEntries; j++) {
-
-						if (mRegions.get(i).get(j).contains((int) event.getX(), (int) event.getY())) {
-							mSetClicked = i;
-							mIndexClicked = j;
-						}
-					}
-				}
+				for (int i = 0; i < nSets; i++)
+					for (int j = 0; j < nEntries; j++)
+						if (mRegions.get(i).get(j).contains((int) event.getX(), (int) event.getY()))
+							mEntryClicked = new int[] {i, j};
 
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 
-				if (mSetClicked != -1 && mIndexClicked != -1) {
-					if (mRegions.get(mSetClicked)
-							  .get(mIndexClicked)
+				if (mEntryClicked[0] != -1 && mEntryClicked[1] != -1) {
+					if (mRegions.get(mEntryClicked[0])
+							  .get(mEntryClicked[1])
 							  .contains((int) event.getX(), (int) event.getY())) {
 
-						if (mEntryListener != null) {
-							mEntryListener.onClick(mSetClicked, mIndexClicked,
-									  new Rect(getEntryRect(mRegions.get(mSetClicked).get(mIndexClicked))));
-						}
+						if (mEntryListener != null)  // Trigger entry callback
+							mEntryListener.onClick(mEntryClicked[0], mEntryClicked[1], new Rect(
+									  getEntryRect(mRegions.get(mEntryClicked[0]).get(mEntryClicked[1]))));
 
-						if (mTooltip != null) {
-							toggleTooltip(getEntryRect(mRegions.get(mSetClicked).get(mIndexClicked)),
-									  data.get(mSetClicked).getValue(mIndexClicked));
-						}
-
+						if (mTooltip != null)  // Toggle tooltip
+							toggleTooltip(
+									  getEntryRect(mRegions.get(mEntryClicked[0]).get(mEntryClicked[1])),
+									  data.get(mEntryClicked[0]).getValue(mEntryClicked[1]));
 					}
-					mSetClicked = -1;
-					mIndexClicked = -1;
+					mEntryClicked = new int[] {-1, -1};
 
 				} else {
-
-					if (mChartListener != null) mChartListener.onClick(this);
-
-					if (mTooltip != null && mTooltip.on()) dismissTooltip(mTooltip);
+					if (mChartListener != null) mChartListener.onClick(this);  // Trigger chart callback
+					if (mTooltip != null && mTooltip.on()) dismissTooltip(mTooltip);  // Dismiss tooltip
 				}
 			}
 

@@ -175,15 +175,13 @@ public class XRenderer extends AxisRenderer {
 
 		// To manage horizontal width of the last axis label
 		float lastLabelWidth = 0;
-		if (nLabels > 0) // to fix possible crash on trying to access label by index -1.
-			lastLabelWidth = style.getLabelsPaint().measureText(labels.get(nLabels - 1));
+		// to fix possible crash on trying to access label by index -1.
+		if (nLabels > 0) lastLabelWidth = style.getLabelsPaint().measureText(labels.get(nLabels - 1));
 
-		float rightBorder = 0; //TODO doesn't make sense without nLabels <= 0
+		float rightBorder = 0;
 		if (labelsPositioning != LabelPosition.NONE &&
-				  borderSpacing + mandatoryBorderSpacing < lastLabelWidth / 2) rightBorder =
-				  lastLabelWidth / 2 -
-							 (borderSpacing +
-										mandatoryBorderSpacing); //TODO dá para melhorar codigo, subtract lastLabelWidht directly
+				  borderSpacing + mandatoryBorderSpacing < lastLabelWidth / 2)
+			rightBorder = lastLabelWidth / 2 - (borderSpacing + mandatoryBorderSpacing);
 
 		return right - rightBorder;
 	}

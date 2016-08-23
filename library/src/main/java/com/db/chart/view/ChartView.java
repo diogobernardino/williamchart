@@ -341,9 +341,8 @@ public abstract class ChartView extends RelativeLayout {
 	public void addData(ChartSet set) {
 
 		if (!data.isEmpty() && set.size() != data.get(0).size())
-			Log.e(TAG, "The number of entries between sets doesn't match.",
-					  new IllegalArgumentException());
-		if (set == null) Log.e(TAG, "Chart data set can't be null", new IllegalArgumentException());
+			throw new IllegalArgumentException("The number of entries between sets doesn't match.");
+		if (set == null) throw new IllegalArgumentException("Chart data set can't be null.");
 
 		data.add(set);
 	}
@@ -486,8 +485,7 @@ public abstract class ChartView extends RelativeLayout {
 	public ChartView updateValues(int setIndex, float[] values) {
 
 		if (values.length != data.get(setIndex).size())
-			Log.e(TAG, "New values size doesn't match current dataset size.",
-					  new IllegalArgumentException());
+			throw new IllegalArgumentException("New values size doesn't match current dataset size.");
 
 		data.get(setIndex).updateValues(values);
 		return this;

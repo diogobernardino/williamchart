@@ -135,10 +135,7 @@ public class YRenderer extends AxisRenderer {
 	 */
 	public float parsePos(int index, double value) {
 
-		float bottom = mInnerChartBottom;
-		if (style.hasXAxis()) bottom += style.getAxisThickness() / 2;
-
-		if (handleValues) return (float) (bottom -
+		if (handleValues) return (float) (mInnerChartBottom -
 				  (((value - minLabelValue) * screenStep) / (labelsValues.get(1) - minLabelValue)));
 		else return labelsPos.get(index);
 	}

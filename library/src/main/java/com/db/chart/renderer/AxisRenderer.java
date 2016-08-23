@@ -560,10 +560,13 @@ public abstract class AxisRenderer {
 	 */
 	public void setBorderValues(int min, int max, int step) {
 
+		if (min >= max) throw new IllegalArgumentException(
+				  "Minimum border value must be greater than maximum values");
 		if ((max - min) % step != 0) throw new IllegalArgumentException(
-				  "Step value must be a divisor of distance between " + "minValue and maxValue");
-		this.step = step;
+				  "Step value must be a divisor of distance between minimum " +
+							 "border value and maximum border value");
 
+		this.step = step;
 		maxLabelValue = max;
 		minLabelValue = min;
 	}
@@ -571,17 +574,16 @@ public abstract class AxisRenderer {
 
 	/**
 	 * Force axis range of values. If minimum greater than 0
-	 * the GCD between minimum and maximum will be set automatically as the step.
+	 * the largest divisor between the delta maximum - minimum will be set automatically as
+	 * the step.
 	 *
 	 * @param min The minimum value that Y axis will have as a label
 	 * @param max The maximum value that Y axis will have as a label
 	 */
 	public void setBorderValues(int min, int max) {
 
-		if (min > 0) step = Tools.GCD(min, max);
-
-		maxLabelValue = max;
-		minLabelValue = min;
+		if (min >= 0) step = Tools.largestDivisor(max - min);
+		setBorderValues(min, max, step);
 	}
 
 

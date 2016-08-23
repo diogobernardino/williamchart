@@ -81,4 +81,19 @@ public class Tools {
 		return max == 0 ? min : GCD(max, min % max);
 	}
 
+
+	/**
+	 * Finds the largest divisor of a number.
+	 *
+	 * @param num Value to be found the largest divisor
+	 *
+	 * @return Largest divisor of parameter given
+	 */
+	public static int largestDivisor(int num) {
+
+		for (int i = num / 2; i >= 0; i--)
+			if (num % i == 0) return i;
+		return 1;
+	}
+
 }

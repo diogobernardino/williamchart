@@ -1,41 +1,38 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-    }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
-
-        // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
-
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
-        // by a similar customization.
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:23.0.1'
+    compile 'com.android.support:support-annotations:24.2.0'
+    testCompile 'com.android.support:support-annotations:24.2.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
+ext {
+    bintrayRepo = project.BINTRAY_REPO
+    bintrayName = project.BINTRAY_NAME
+    publishedGroupId = project.GROUP
+    libraryName = project.LIB_NAME
+    artifact = project.LIB_ARTIFACT
+    libraryDescription = project.LIB_DESCRIPTION
+    siteUrl = project.WEBSITE
+    gitUrl = project.GIT_URL
+    libraryVersion = project.VERSION_NAME
+    developerId = project.DEV_ID
+    developerName = project.DEV_NAME
+    developerEmail = project.DEV_MAIL
+    licenseName = project.LICENSE_NAME
+    licenseUrl = project.LICENSE_URL
+    allLicenses = ["Apache-2.0"]
+}

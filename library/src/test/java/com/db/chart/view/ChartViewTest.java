@@ -115,7 +115,7 @@ public class ChartViewTest {
 	public void updateValues_LesserValues_ThrowIllegalArgumentException() {
 
 		mChartView.addData(mData);
-		mChartView.updateValues(0, new float[]{10});
+		mChartView.updateValues(0, new float[] {10});
 	}
 
 

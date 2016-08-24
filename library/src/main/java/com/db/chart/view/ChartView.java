@@ -280,6 +280,95 @@ public abstract class ChartView extends RelativeLayout {
 
 
 	/**
+	 * The method listens chart clicks and checks whether it intercepts
+	 * a known Region. It will then use the registered Listener.onClick
+	 * to return the region's index.
+	 */
+	@Override
+	public boolean onTouchEvent(@NonNull MotionEvent event) {
+
+		if (mAnim == null || !mAnim.isPlaying())
+
+			if (event.getAction() == MotionEvent.ACTION_DOWN &&
+					  (mTooltip != null || mEntryListener != null) &&
+					  mRegions != null) {
+
+				// Check if action down intersects any entry region
+				int nSets = mRegions.size();
+				int nEntries = mRegions.get(0).size();
+				for (int i = 0; i < nSets; i++)
+					for (int j = 0; j < nEntries; j++)
+						if (mRegions.get(i).get(j).contains((int) event.getX(), (int) event.getY()))
+							mEntryClicked = new int[] {i, j};
+
+			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+				if (mEntryClicked[0] != -1 && mEntryClicked[1] != -1) {
+					if (mRegions.get(mEntryClicked[0])
+							  .get(mEntryClicked[1])
+							  .contains((int) event.getX(), (int) event.getY())) {
+
+						if (mEntryListener != null)  // Trigger entry callback
+							mEntryListener.onClick(mEntryClicked[0], mEntryClicked[1],
+									  getEntryRect(mRegions.get(mEntryClicked[0]).get(mEntryClicked[1])));
+
+						if (mTooltip != null)  // Toggle tooltip
+							toggleTooltip(
+									  getEntryRect(mRegions.get(mEntryClicked[0]).get(mEntryClicked[1])),
+									  data.get(mEntryClicked[0]).getValue(mEntryClicked[1]));
+					}
+					mEntryClicked = new int[] {-1, -1};
+
+				} else {
+					if (mChartListener != null) mChartListener.onClick(this);  // Trigger chart callback
+					if (mTooltip != null && mTooltip.on()) dismissTooltip(mTooltip);  // Dismiss tooltip
+				}
+			}
+
+		return true;
+	}
+
+
+	@Override
+	protected void onDraw(Canvas canvas) {
+
+		mIsDrawing = true;
+		super.onDraw(canvas);
+
+		if (mReadyToDraw) {
+			//long time = System.currentTimeMillis();
+
+			// Draw grid
+			if (mGridType == GridType.FULL || mGridType == GridType.VERTICAL) drawVerticalGrid(canvas);
+			if (mGridType == GridType.FULL || mGridType == GridType.HORIZONTAL)
+				drawHorizontalGrid(canvas);
+
+			// Draw Axis Y
+			yRndr.draw(canvas);
+
+			// Draw threshold
+			if (mHasThresholdValue)
+				drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValue, getInnerChartRight(),
+						  mThresholdEndValue);
+			if (mHasThresholdLabel)
+				drawThreshold(canvas, data.get(0).getEntry(mThresholdStartLabel).getX(),
+						  getInnerChartTop(), data.get(0).getEntry(mThresholdEndLabel).getX(),
+						  getInnerChartBottom());
+
+			// Draw data
+			if (!data.isEmpty()) onDrawChart(canvas, data);
+
+			// Draw axis X
+			xRndr.draw(canvas);
+
+			//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
+		}
+
+		mIsDrawing = false;
+	}
+
+
+	/**
 	 * Convert {@link ChartEntry} values into screen points.
 	 */
 	private void digestData() {
@@ -865,7 +954,7 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link android.graphics.Rect} specifying the area of an {@link ChartEntry}
 	 */
-	private Rect getEntryRect(Region region) {
+	Rect getEntryRect(Region region) {
 		// Subtract the view left/top padding to correct position
 		return new Rect(region.getBounds().left - getPaddingLeft(),
 				  region.getBounds().top - getPaddingTop(), region.getBounds().right - getPaddingLeft(),
@@ -948,14 +1037,6 @@ public abstract class ChartView extends RelativeLayout {
 
 		return this;
 	}
-
-
-
-	/*
-	 * --------
-	 * Setters
-	 * --------
-	 */
 
 
 	/**
@@ -1135,95 +1216,6 @@ public abstract class ChartView extends RelativeLayout {
 
 
 	/**
-	 * The method listens chart clicks and checks whether it intercepts
-	 * a known Region. It will then use the registered Listener.onClick
-	 * to return the region's index.
-	 */
-	@Override
-	public boolean onTouchEvent(@NonNull MotionEvent event) {
-
-		if (mAnim == null || !mAnim.isPlaying())
-
-			if (event.getAction() == MotionEvent.ACTION_DOWN &&
-					  (mTooltip != null || mEntryListener != null) &&
-					  mRegions != null) {
-
-				// Check if action down intersects any entry region
-				int nSets = mRegions.size();
-				int nEntries = mRegions.get(0).size();
-				for (int i = 0; i < nSets; i++)
-					for (int j = 0; j < nEntries; j++)
-						if (mRegions.get(i).get(j).contains((int) event.getX(), (int) event.getY()))
-							mEntryClicked = new int[] {i, j};
-
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-
-				if (mEntryClicked[0] != -1 && mEntryClicked[1] != -1) {
-					if (mRegions.get(mEntryClicked[0])
-							  .get(mEntryClicked[1])
-							  .contains((int) event.getX(), (int) event.getY())) {
-
-						if (mEntryListener != null)  // Trigger entry callback
-							mEntryListener.onClick(mEntryClicked[0], mEntryClicked[1], new Rect(
-									  getEntryRect(mRegions.get(mEntryClicked[0]).get(mEntryClicked[1]))));
-
-						if (mTooltip != null)  // Toggle tooltip
-							toggleTooltip(
-									  getEntryRect(mRegions.get(mEntryClicked[0]).get(mEntryClicked[1])),
-									  data.get(mEntryClicked[0]).getValue(mEntryClicked[1]));
-					}
-					mEntryClicked = new int[] {-1, -1};
-
-				} else {
-					if (mChartListener != null) mChartListener.onClick(this);  // Trigger chart callback
-					if (mTooltip != null && mTooltip.on()) dismissTooltip(mTooltip);  // Dismiss tooltip
-				}
-			}
-
-		return true;
-	}
-
-
-	@Override
-	protected void onDraw(Canvas canvas) {
-
-		mIsDrawing = true;
-		super.onDraw(canvas);
-
-		if (mReadyToDraw) {
-			//long time = System.currentTimeMillis();
-
-			// Draw grid
-			if (mGridType == GridType.FULL || mGridType == GridType.VERTICAL) drawVerticalGrid(canvas);
-			if (mGridType == GridType.FULL || mGridType == GridType.HORIZONTAL)
-				drawHorizontalGrid(canvas);
-
-			// Draw Axis Y
-			yRndr.draw(canvas);
-
-			// Draw threshold
-			if (mHasThresholdValue)
-				drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValue, getInnerChartRight(),
-						  mThresholdEndValue);
-			if (mHasThresholdLabel)
-				drawThreshold(canvas, data.get(0).getEntry(mThresholdStartLabel).getX(),
-						  getInnerChartTop(), data.get(0).getEntry(mThresholdEndLabel).getX(),
-						  getInnerChartBottom());
-
-			// Draw data
-			if (!data.isEmpty()) onDrawChart(canvas, data);
-
-			// Draw axis X
-			xRndr.draw(canvas);
-
-			//System.out.println("Time drawing "+(System.currentTimeMillis() - time));
-		}
-
-		mIsDrawing = false;
-	}
-
-
-	/**
 	 * @param spacing Spacing between left/right of the chart and the first/last label
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
@@ -1367,10 +1359,26 @@ public abstract class ChartView extends RelativeLayout {
 	 * Set the {@link Tooltip} object which will be used to create chart tooltips.
 	 *
 	 * @param tip {@link Tooltip} object in order to produce chart tooltips
+	 *
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public void setTooltips(Tooltip tip) {
+	public ChartView setTooltips(Tooltip tip) {
 
 		mTooltip = tip;
+		return this;
+	}
+
+
+	/**
+	 * Manually set chart clickable regions.
+	 * Normally the system sets the regions matching the entries position in the screen.
+	 * See method defineRegions for more information.
+	 *
+	 * @param regions Clickable regions where touch event will be detected.
+	 */
+	void setClickableRegions(ArrayList<ArrayList<Region>> regions) {
+
+		mRegions = regions;
 	}
 
 

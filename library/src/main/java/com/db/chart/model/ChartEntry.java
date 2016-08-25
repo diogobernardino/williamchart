@@ -227,8 +227,10 @@ public abstract class ChartEntry implements Comparable<ChartEntry> {
 		return "Label=" + mLabel + " \n" + "Value=" + mValue + "\n" +
 				  "X = " + mX + "\n" + "Y = " + mY;
 	}
-	
+
+
 	public int compareTo(ChartEntry other) {
+
 		return Float.compare(this.getValue(), other.getValue());
 	}
 

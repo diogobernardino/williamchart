@@ -23,7 +23,7 @@ import android.support.annotation.ColorInt;
 /**
  * Generic Data model of a {@link com.db.chart.view.ChartView} entry
  */
-public abstract class ChartEntry {
+public abstract class ChartEntry implements Comparable<ChartEntry> {
 
 	/** Default bar color */
 	private static final int DEFAULT_COLOR = -16777216;
@@ -226,6 +226,10 @@ public abstract class ChartEntry {
 
 		return "Label=" + mLabel + " \n" + "Value=" + mValue + "\n" +
 				  "X = " + mX + "\n" + "Y = " + mY;
+	}
+	
+	public int compareTo(ChartEntry other) {
+		return Float.compare(this.getValue(), other.getValue());
 	}
 
 }

@@ -19,6 +19,7 @@ package com.db.chart.model;
 import android.support.annotation.FloatRange;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**
@@ -132,8 +133,22 @@ public abstract class ChartSet {
 
 		return mEntries.get(index).getLabel();
 	}
-
-
+	
+	/**
+	 * Get {@link ChartEntry} with the highest value.
+	 */
+	public ChartEntry getMax() {
+		return Collections.max(mEntries);
+	}
+	
+	/**
+	 * Get {@link ChartEntry} with the lowest value.
+	 */
+	public ChartEntry getMin() {
+		return Collections.min(mEntries);
+	}
+	
+	
 	/**
 	 * Get screen points.
 	 *

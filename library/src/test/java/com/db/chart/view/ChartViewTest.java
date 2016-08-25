@@ -128,38 +128,6 @@ public class ChartViewTest {
 	}
 
 
-	@Test
-	public void onTouchEvent_EntryClick_EntryListenerAndTooltipToggle() {
-
-		mChartView = spy(new LineChartView(mMockContext));
-		doReturn(new Rect(0, 0, 0, 0)).when(mChartView).getEntryRect(any(Region.class));
-		when(mMockMotionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN)
-				  .thenReturn(MotionEvent.ACTION_UP);
-		when(mMockMotionEvent.getX()).thenReturn(5.f);
-		when(mMockMotionEvent.getY()).thenReturn(5.f);
-		when(mMockRegion.contains(5, 5)).thenReturn(true);
-		when(mMockRegion.getBounds()).thenReturn(new Rect(0, 0, 0, 0));
-
-		ArrayList<ArrayList<Region>> regions_sets = new ArrayList();
-		ArrayList<Region> regions_entries = new ArrayList();
-		regions_entries.add(mMockRegion);
-		regions_sets.add(regions_entries);
-		mChartView.setOnEntryClickListener(mMockEntryListener);
-		mChartView.setOnClickListener(mMockChartListener);
-		mChartView.setClickableRegions(regions_sets);
-
-		mChartView.onTouchEvent(mMockMotionEvent);
-		verify(mMockEntryListener, times(0)).onClick(anyInt(), anyInt(), any(Rect.class));
-
-		mChartView.onTouchEvent(mMockMotionEvent);
-		verify(mMockEntryListener, times(1)).onClick(anyInt(), anyInt(), any(Rect.class));
-
-		mChartView.onTouchEvent(mMockMotionEvent);
-		verify(mMockEntryListener, times(1)).onClick(anyInt(), anyInt(), any(Rect.class));
-		verify(mMockChartListener, times(1)).onClick(mChartView);
-	}
-
-
 	@Test(expected = IllegalArgumentException.class)
 	public void setGrid_RowsLesserOne_ThrowIllegalArgException() {
 

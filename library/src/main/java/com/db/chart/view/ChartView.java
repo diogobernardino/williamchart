@@ -31,6 +31,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver.OnPreDrawListener;
@@ -104,12 +105,13 @@ public abstract class ChartView extends RelativeLayout {
 	/** Chart data to be displayed */
 	private ArrayList<ArrayList<Region>> mRegions;
 
-	/** Keeps the clicked set and entry index */
-	private int[] mEntryClicked;
+	/** Gestures detector to trigger listeners callback */
+	private GestureDetector mGestureDetector;
 
-	/** Listeners to for touch events */
+	/** Listener callback on entry click */
 	private OnEntryClickListener mEntryListener;
 
+	/** Listener callback on chart click, no entry intersection */
 	private OnClickListener mChartListener;
 
 	/** Drawing flag */
@@ -229,7 +231,6 @@ public abstract class ChartView extends RelativeLayout {
 	private void init() {
 
 		mReadyToDraw = false;
-		mEntryClicked = new int[]{-1, -1};
 		mHasThresholdValue = false;
 		mHasThresholdLabel = false;
 		mIsDrawing = false;
@@ -238,6 +239,7 @@ public abstract class ChartView extends RelativeLayout {
 		mGridType = GridType.NONE;
 		mGridNRows = DEFAULT_GRID_ROWS;
 		mGridNColumns = DEFAULT_GRID_COLUMNS;
+		mGestureDetector = new GestureDetector(ctx, new GestureListener());
 	}
 
 
@@ -287,43 +289,9 @@ public abstract class ChartView extends RelativeLayout {
 	@Override
 	public boolean onTouchEvent(@NonNull MotionEvent event) {
 
+		System.out.println(mGestureDetector);
 		if (mAnim == null || !mAnim.isPlaying())
-
-			if (event.getAction() == MotionEvent.ACTION_DOWN &&
-					  (mTooltip != null || mEntryListener != null) &&
-					  mRegions != null) {
-
-				// Check if action down intersects any entry region
-				int nSets = mRegions.size();
-				int nEntries = mRegions.get(0).size();
-				for (int i = 0; i < nSets; i++)
-					for (int j = 0; j < nEntries; j++)
-						if (mRegions.get(i).get(j).contains((int) event.getX(), (int) event.getY()))
-							mEntryClicked = new int[] {i, j};
-
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-
-				if (mEntryClicked[0] != -1 && mEntryClicked[1] != -1) {
-					if (mRegions.get(mEntryClicked[0])
-							  .get(mEntryClicked[1])
-							  .contains((int) event.getX(), (int) event.getY())) {
-
-						if (mEntryListener != null)  // Trigger entry callback
-							mEntryListener.onClick(mEntryClicked[0], mEntryClicked[1],
-									  getEntryRect(mRegions.get(mEntryClicked[0]).get(mEntryClicked[1])));
-
-						if (mTooltip != null)  // Toggle tooltip
-							toggleTooltip(
-									  getEntryRect(mRegions.get(mEntryClicked[0]).get(mEntryClicked[1])),
-									  data.get(mEntryClicked[0]).getValue(mEntryClicked[1]));
-					}
-					mEntryClicked = new int[] {-1, -1};
-
-				} else {
-					if (mChartListener != null) mChartListener.onClick(this);  // Trigger chart callback
-					if (mTooltip != null && mTooltip.on()) dismissTooltip(mTooltip);  // Dismiss tooltip
-				}
-			}
+				return mGestureDetector.onTouchEvent(event);
 
 		return true;
 	}
@@ -1408,14 +1376,6 @@ public abstract class ChartView extends RelativeLayout {
 	}
 
 
-	
-	/*
-	 * ----------
-	 *    Style
-	 * ----------
-	 */
-
-
 	/**
 	 * Class responsible to style the Graph!
 	 * Can be instantiated with or without attributes.
@@ -1567,5 +1527,37 @@ public abstract class ChartView extends RelativeLayout {
 		}
 	}
 
+
+	private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+		@Override
+		public boolean onSingleTapUp(MotionEvent ev) {
+
+			// Check if tap on any entry
+			int nSets = mRegions.size();
+			int nEntries = mRegions.get(0).size();
+			for (int i = 0; i < nSets; i++)
+				for (int j = 0; j < nEntries; j++)
+					if (mRegions.get(i).get(j).contains((int) ev.getX(), (int) ev.getY())) {
+						if (mEntryListener != null)  // Trigger entry callback
+							mEntryListener.onClick(i, j, getEntryRect(mRegions.get(i).get(j)));
+						if (mTooltip != null)  // Toggle tooltip
+							toggleTooltip(getEntryRect(mRegions.get(i).get(j)), data.get(i).getValue(j));
+						return true;
+					}
+
+			if (mChartListener != null) mChartListener.onClick(ChartView.this);
+			if (mTooltip != null && mTooltip.on()) dismissTooltip(mTooltip);
+			return true;
+		}
+
+
+		@Override
+		public boolean onDown(MotionEvent e) {
+
+			return true;
+		}
+
+	}
 
 }

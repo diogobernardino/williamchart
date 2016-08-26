@@ -1532,18 +1532,19 @@ public abstract class ChartView extends RelativeLayout {
 		@Override
 		public boolean onSingleTapUp(MotionEvent ev) {
 
-			// Check if tap on any entry
-			int nSets = mRegions.size();
-			int nEntries = mRegions.get(0).size();
-			for (int i = 0; i < nSets; i++)
-				for (int j = 0; j < nEntries; j++)
-					if (mRegions.get(i).get(j).contains((int) ev.getX(), (int) ev.getY())) {
-						if (mEntryListener != null)  // Trigger entry callback
-							mEntryListener.onClick(i, j, getEntryRect(mRegions.get(i).get(j)));
-						if (mTooltip != null)  // Toggle tooltip
-							toggleTooltip(getEntryRect(mRegions.get(i).get(j)), data.get(i).getValue(j));
-						return true;
-					}
+			if (mEntryListener != null || mTooltip != null) { // Check if tap on any entry
+				int nSets = mRegions.size();
+				int nEntries = mRegions.get(0).size();
+				for (int i = 0; i < nSets; i++)
+					for (int j = 0; j < nEntries; j++)
+						if (mRegions.get(i).get(j).contains((int) ev.getX(), (int) ev.getY())) {
+							if (mEntryListener != null)  // Trigger entry callback
+								mEntryListener.onClick(i, j, getEntryRect(mRegions.get(i).get(j)));
+							if (mTooltip != null)  // Toggle tooltip
+								toggleTooltip(getEntryRect(mRegions.get(i).get(j)), data.get(i).getValue(j));
+							return true;
+						}
+			}
 
 			if (mChartListener != null) mChartListener.onClick(ChartView.this);
 			if (mTooltip != null && mTooltip.on()) dismissTooltip(mTooltip);

@@ -289,7 +289,6 @@ public abstract class ChartView extends RelativeLayout {
 	@Override
 	public boolean onTouchEvent(@NonNull MotionEvent event) {
 
-		System.out.println(mGestureDetector);
 		if (mAnim == null || !mAnim.isPlaying())
 				return mGestureDetector.onTouchEvent(event);
 

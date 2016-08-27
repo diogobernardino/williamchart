@@ -179,9 +179,12 @@ public class BarChartView extends BaseBarChartView {
 				if (bar.getValue() > 0) result.get(j)
 						  .add(new Region((int) offset, (int) bar.getY(), (int) (offset += barWidth),
 									 (int) this.getZeroPosition()));
-				else result.get(j)
+				else if (bar.getValue() < 0) result.get(j)
 						  .add(new Region((int) offset, (int) this.getZeroPosition(),
 									 (int) (offset += barWidth), (int) bar.getY()));
+				else result.get(j) // If value == 0, force region to 1 pixel
+							  .add(new Region((int) offset, (int) this.getZeroPosition(),
+										 (int) (offset += barWidth), (int) this.getZeroPosition() + 1));
 
 				// If last bar of group no set spacing is necessary
 				if (j != nSets - 1) offset += style.setSpacing;

@@ -173,9 +173,12 @@ public class HorizontalBarChartView extends BaseBarChartView {
 				if (bar.getValue() > 0) result.get(j)
 						  .add(new Region((int) this.getZeroPosition(), (int) offset, (int) bar.getX(),
 									 (int) (offset + barWidth)));
-				else result.get(j)
+				else if (bar.getValue() < 0) result.get(j)
 						  .add(new Region((int) bar.getX(), (int) offset, (int) this.getZeroPosition(),
 									 (int) (offset + barWidth)));
+				else result.get(j) // If bar.getValue() == 0, force region to 1 pixel
+							  .add(new Region((int) this.getZeroPosition() - 1, (int) offset,
+										 (int) this.getZeroPosition(), (int) (offset + barWidth)));
 
 				// If last bar of group no set spacing is necessary
 				if (j != nSets - 1) offset += style.setSpacing;

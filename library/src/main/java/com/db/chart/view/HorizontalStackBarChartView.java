@@ -267,29 +267,30 @@ public class HorizontalStackBarChartView extends BaseStackBarChartView {
 
 				// If:
 				// Bar not visible OR
-				// Bar value equal to 0 OR
-				// Size of bar < 2 (Due to the loss of precision)
 				// Then no need to have region
-				if (!barSet.isVisible() || bar.getValue() == 0 || barSize < 2) continue;
+				if (!barSet.isVisible()) continue;
 
 				if (bar.getValue() > 0) {
-
 					x1 = zeroPosition + (barSize - offset);
 					result.get(j)
 							  .add(new Region((int) currBottom, (int) (bar.getY() - barWidth / 2),
 										 (int) x1, (int) (bar.getY() + barWidth / 2)));
-
 					currBottom = x1;
 					offset -= barSize - 2;
-				} else {
 
+				} else if (bar.getValue() < 0) {
 					x1 = zeroPosition - (barSize + negOffset);
 					result.get(j)
 							  .add(new Region((int) x1, (int) (bar.getY() - barWidth / 2),
 										 (int) negCurrBottom, (int) (bar.getY() + barWidth / 2)));
-
 					negCurrBottom = x1;
 					negOffset += barSize;
+
+				} else {  // If bar.getValue() == 0, force region to 1 pixel
+					x1 = zeroPosition + (1 - offset);
+					result.get(j)
+							  .add(new Region((int) currBottom, (int) (bar.getY() - barWidth / 2),
+										 (int) x1, (int) (bar.getY() + barWidth / 2)));
 				}
 			}
 		}

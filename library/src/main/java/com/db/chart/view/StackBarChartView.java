@@ -269,26 +269,29 @@ public class StackBarChartView extends BaseStackBarChartView {
 				// Bar value equal to 0 OR
 				// Size of bar < 2 (Due to the loss of precision)
 				// Then no need to have region
-				if (!barSet.isVisible() || bar.getValue() == 0 || barSize < 2) continue;
+				if (!barSet.isVisible()) continue;
 
 				if (bar.getValue() > 0) {
-
 					y1 = zeroPosition - (barSize + verticalOffset);
 					result.get(j)
 							  .add(new Region((int) (bar.getX() - barWidth / 2), (int) y1,
 										 (int) (bar.getX() + barWidth / 2), (int) currBottomY));
-
 					currBottomY = y1;
 					verticalOffset += barSize + 2;
-				} else {
 
+				} else if (bar.getValue() < 0) {
 					y1 = zeroPosition + (barSize - negVerticalOffset);
 					result.get(j)
 							  .add(new Region((int) (bar.getX() - barWidth / 2), (int) negCurrBottomY,
 										 (int) (bar.getX() + barWidth / 2), (int) y1));
-
 					negCurrBottomY = y1;
 					negVerticalOffset -= barSize;
+
+				} else {  // If bar.getValue() == 0, force region to 1 pixel
+					y1 = zeroPosition - (1 + verticalOffset);
+					result.get(j)
+							  .add(new Region((int) (bar.getX() - barWidth / 2), (int) y1,
+										 (int) (bar.getX() + barWidth / 2), (int) currBottomY));
 				}
 			}
 		}

@@ -34,9 +34,6 @@ import java.util.ArrayList;
 public abstract class AxisRenderer {
 
 
-	/** Default step between labels */
-	private static final int DEFAULT_STEP = 1;
-
 	/** Distance between axis and label */
 	int distLabelToAxis;
 
@@ -113,10 +110,11 @@ public abstract class AxisRenderer {
 	public void init(ArrayList<ChartSet> data, Style style) {
 
 		if (handleValues) {
-			if (minLabelValue == 0 && maxLabelValue == 0) { //If no pre-defined borders
+			if(!hasStep()) // If no pre-defined step
+				step = 1;
+			if (minLabelValue == 0 && maxLabelValue == 0) { // If no pre-defined borders
 				int[] borders = findBorders(data, step);
-				minLabelValue = borders[0];
-				maxLabelValue = borders[1];
+				setBorderValues(borders[0], borders[1]);
 			}
 			labelsValues = calculateValues(minLabelValue, maxLabelValue, step);
 			labels = convertToLabelsFormat(labelsValues, labelFormat);
@@ -192,7 +190,7 @@ public abstract class AxisRenderer {
 		mandatoryBorderSpacing = 0;
 		borderSpacing = 0;
 		topSpacing = 0;
-		step = DEFAULT_STEP;
+		step = -1;
 		labelsStaticPos = 0;
 		labelsPositioning = LabelPosition.OUTSIDE;
 		labelFormat = new DecimalFormat();
@@ -443,6 +441,14 @@ public abstract class AxisRenderer {
 
 
 	/**
+	 *
+	 */
+	public boolean hasStep(){
+		return (step != -1);
+	}
+
+
+	/**
 	 * Set renderer to handle {@link ChartSet} values, not labels.
 	 *
 	 * @param bool True to handle {@link ChartSet} values, False otherwise.
@@ -595,7 +601,8 @@ public abstract class AxisRenderer {
 	 */
 	public void setBorderValues(int min, int max) {
 
-		if (min >= 0) step = Tools.largestDivisor(max - min);
+		if (!hasStep())
+			step = Tools.largestDivisor(max - min);
 		setBorderValues(min, max, step);
 	}
 

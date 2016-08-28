@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -171,15 +173,20 @@ public class AxisRendererTest {
 
 
 	@Test
-	public void setBorderValues_NoStepMinGreaterEqual0_StepLargestDivisor() {
+	public void setBorderValues_Nominal_StepLargestDivisor() {
 
-		mXRndr.setBorderValues(3, 26);
-		assertEquals(1, mXRndr.getStep());
-		mXRndr.setBorderValues(3, 30);
-		assertEquals(9, mXRndr.getStep());
-		mXRndr.setBorderValues(3, 18);
-		assertEquals(5, mXRndr.getStep());
-		mXRndr.setBorderValues(3, 23);
-		assertEquals(10, mXRndr.getStep());
+		XRenderer spyXRndr = spy(mXRndr);
+		doReturn(false).when(spyXRndr).hasStep();
+
+		spyXRndr.setBorderValues(3, 26);
+		assertEquals(1, spyXRndr.getStep());
+		spyXRndr.setBorderValues(3, 30);
+		assertEquals(9, spyXRndr.getStep());
+		spyXRndr.setBorderValues(3, 18);
+		assertEquals(5, spyXRndr.getStep());
+		spyXRndr.setBorderValues(3, 23);
+		assertEquals(10, spyXRndr.getStep());
+		spyXRndr.setBorderValues(-3, 17);
+		assertEquals(10, spyXRndr.getStep());
 	}
 }

@@ -311,9 +311,6 @@ public abstract class ChartView extends RelativeLayout {
 			if (mGridType == GridType.FULL || mGridType == GridType.HORIZONTAL)
 				drawHorizontalGrid(canvas);
 
-			// Draw Axis Y
-			yRndr.draw(canvas);
-
 			// Draw threshold
 			if (mHasThresholdValue)
 				drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValue, getInnerChartRight(),
@@ -325,6 +322,9 @@ public abstract class ChartView extends RelativeLayout {
 
 			// Draw data
 			if (!data.isEmpty()) onDrawChart(canvas, data);
+
+			// Draw Axis Y
+			yRndr.draw(canvas);
 
 			// Draw axis X
 			xRndr.draw(canvas);

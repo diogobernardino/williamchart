@@ -1436,6 +1436,8 @@ public abstract class ChartView extends RelativeLayout {
 			axisColor = attrs.getColor(R.styleable.ChartAttrs_chart_axisColor, DEFAULT_COLOR);
 			axisThickness = attrs.getDimension(R.styleable.ChartAttrs_chart_axisThickness,
 					  getResources().getDimension(R.dimen.axis_thickness));
+			hasXAxis = true;
+			hasYAxis = true;
 
 			labelsColor = attrs.getColor(R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
 			fontSize = attrs.getDimension(R.styleable.ChartAttrs_chart_fontSize,

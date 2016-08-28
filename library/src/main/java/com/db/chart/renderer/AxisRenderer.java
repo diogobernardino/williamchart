@@ -110,12 +110,15 @@ public abstract class AxisRenderer {
 	public void init(ArrayList<ChartSet> data, Style style) {
 
 		if (handleValues) {
-			if(!hasStep()) // If no pre-defined step
-				step = 1;
 			if (minLabelValue == 0 && maxLabelValue == 0) { // If no pre-defined borders
-				int[] borders = findBorders(data, step);
-				setBorderValues(borders[0], borders[1]);
+				int[] borders;
+				if(hasStep()) borders = findBorders(data, step);
+				else borders = findBorders(data, 1);
+				minLabelValue = borders[0];
+				maxLabelValue = borders[1];
 			}
+			if (!hasStep()) // If no pre-defined step
+				setBorderValues(minLabelValue, maxLabelValue);
 			labelsValues = calculateValues(minLabelValue, maxLabelValue, step);
 			labels = convertToLabelsFormat(labelsValues, labelFormat);
 		} else {

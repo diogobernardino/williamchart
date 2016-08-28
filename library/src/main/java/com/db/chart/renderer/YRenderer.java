@@ -133,6 +133,7 @@ public class YRenderer extends AxisRenderer {
 	 *
 	 * @return Display's coordinate
 	 */
+	@Override
 	public float parsePos(int index, double value) {
 
 		if (handleValues) return (float) (mInnerChartBottom -

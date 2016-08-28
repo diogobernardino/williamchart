@@ -42,6 +42,7 @@ import com.db.chart.animation.style.BaseStyleAnimation;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
+import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.renderer.XRenderer;
 import com.db.chart.renderer.YRenderer;
 import com.db.chart.tooltip.Tooltip;
@@ -856,8 +857,15 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public float getZeroPosition() {
 
-		if (mOrientation == Orientation.VERTICAL) return yRndr.parsePos(0, 0);
-		else return xRndr.parsePos(0, 0);
+		AxisRenderer rndr;
+		if (mOrientation == Orientation.VERTICAL) rndr = yRndr;
+		else rndr = xRndr;
+
+		if (rndr.getBorderMinimumValue() > 0)
+			return rndr.parsePos(0, rndr.getBorderMinimumValue());
+		else if (rndr.getBorderMaximumValue() < 0)
+			return rndr.parsePos(0, rndr.getBorderMaximumValue());
+		return rndr.parsePos(0, 0);
 	}
 
 

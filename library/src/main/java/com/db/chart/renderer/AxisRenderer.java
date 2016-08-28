@@ -173,6 +173,17 @@ public abstract class AxisRenderer {
 
 
 	/**
+	 * Based in a (real) value returns the associated screen point.
+	 *
+	 * @param index Index of label.
+	 * @param value Value to be parsed in display coordinate.
+	 *
+	 * @return Display's coordinate
+	 */
+	public abstract float parsePos(int index, double value);
+
+
+	/**
 	 * Reset renderer attributes to defaults.
 	 */
 	public void reset() {
@@ -334,14 +345,6 @@ public abstract class AxisRenderer {
 	}
 
 
-
-    /*
-	 * --------
-	 * Getters
-	 * --------
-	 */
-
-
 	/**
 	 * Get top inner chart border (inner chart means the chart's area where datasets are drawn).
 	 *
@@ -411,6 +414,24 @@ public abstract class AxisRenderer {
 
 
 	/**
+	 * @return Axis maximum border value.
+	 */
+	public int getBorderMaximumValue() {
+
+		return maxLabelValue;
+	}
+
+
+	/**
+	 * @return Axis minimum border value.
+	 */
+	public int getBorderMinimumValue() {
+
+		return minLabelValue;
+	}
+
+
+	/**
 	 * If needs mandatory border spacing.
 	 *
 	 * @return True if needs mandatory border spacing, False otherwise.
@@ -430,14 +451,6 @@ public abstract class AxisRenderer {
 
 		handleValues = bool;
 	}
-
-
-
-    /*
-	 * --------
-	 * Setters
-	 * --------
-	 */
 
 
 	/**

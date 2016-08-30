@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+    <com.db.chart.view.StackBarChartView
+        xmlns:chart="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_gravity="center"
+        chart:chart_labelColor="#929b88"
+        chart:chart_fontSize="8sp"/>
+</FrameLayout>

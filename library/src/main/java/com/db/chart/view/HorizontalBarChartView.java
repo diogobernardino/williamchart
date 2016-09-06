@@ -18,7 +18,9 @@ package com.db.chart.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.Region;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 
 import com.db.chart.model.Bar;
@@ -83,22 +85,24 @@ public class HorizontalBarChartView extends BaseBarChartView {
 				// If entry value is 0 it won't be drawn
 				if (!barSet.isVisible() || bar.getValue() == 0) continue;
 
-				style.barPaint.setColor(bar.getColor());
-				style.barPaint.setAlpha((int) (barSet.getAlpha() * 255));
+				// Style it!
+				if (!bar.hasGradientColor()) style.barPaint.setColor(bar.getColor());
+				else style.barPaint.setShader(
+						  new LinearGradient(this.getZeroPosition(), bar.getY(), bar.getX(), bar.getY(),
+									 bar.getGradientColors(), bar.getGradientPositions(),
+									 Shader.TileMode.MIRROR));
 				applyShadow(style.barPaint, barSet.getAlpha(), bar.getShadowDx(), bar
 						  .getShadowDy(), bar.getShadowRadius(), bar.getShadowColor());
 
-				// If bar needs background
+				// Draw background
 				if (style.hasBarBackground) drawBarBackground(canvas, this.getInnerChartLeft(), offset,
 						  this.getInnerChartRight(), (offset + barWidth));
 
 
 				// Draw bar
-				if (bar.getValue() > 0)
-					// Draw positive bar
+				if (bar.getValue() > 0) // Positive
 					drawBar(canvas, this.getZeroPosition(), offset, bar.getX(), offset + barWidth);
-				else
-					// Draw negative bar
+				else // Negative
 					drawBar(canvas, bar.getX(), offset, this.getZeroPosition(), offset + barWidth);
 
 				offset += barWidth;

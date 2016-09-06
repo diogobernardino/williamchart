@@ -84,27 +84,25 @@ public class BarChartView extends BaseBarChartView {
 				// If entry value is 0 it won't be drawn
 				if (!barSet.isVisible() || bar.getValue() == 0) continue;
 
+				// Style it!
 				if (!bar.hasGradientColor()) style.barPaint.setColor(bar.getColor());
 				else style.barPaint.setShader(
 						  new LinearGradient(bar.getX(), this.getZeroPosition(), bar.getX(), bar.getY(),
 									 bar.getGradientColors(), bar.getGradientPositions(),
 									 Shader.TileMode.MIRROR));
-				style.barPaint.setAlpha((int) (barSet.getAlpha() * 255));
 				applyShadow(style.barPaint, barSet.getAlpha(), bar.getShadowDx(), bar
 						  .getShadowDy(), bar.getShadowRadius(), bar.getShadowColor());
 
-				// If bar needs background
+				// Draw background
 				if (style.hasBarBackground) {
 					drawBarBackground(canvas, offset, this.getInnerChartTop(), offset + barWidth,
 							  this.getInnerChartBottom());
 				}
 
 				// Draw bar
-				if (bar.getValue() > 0)
-					// Draw positive bar
+				if (bar.getValue() > 0) // Positive
 					drawBar(canvas, offset, bar.getY(), offset + barWidth, this.getZeroPosition());
-				else
-					// Draw negative bar
+				else // Negative
 					drawBar(canvas, offset, this.getZeroPosition(), offset + barWidth, bar.getY());
 
 				offset += barWidth;

@@ -118,7 +118,6 @@ public class HorizontalStackBarChartView extends BaseStackBarChartView {
 				if (!barSet.isVisible() || bar.getValue() == 0 || barSize < 2) continue;
 
 				style.barPaint.setColor(bar.getColor());
-				style.barPaint.setAlpha((int) (barSet.getAlpha() * 255));
 				applyShadow(style.barPaint, barSet.getAlpha(), bar.getShadowDx(), bar
 						  .getShadowDy(), bar.getShadowRadius(), bar.getShadowColor());
 

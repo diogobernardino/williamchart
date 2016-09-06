@@ -360,18 +360,17 @@ public class Animation {
 		final int nSets = data.size();
 		final int nEntries = data.get(0).size();
 
-		// Process current animation duration
+		// Process current animation duration, global and for each entry.
 		long diff;
 		long currentTime = System.currentTimeMillis();
 		mCurrentGlobalDuration = currentTime - mGlobalInitTime;
 		for (int i = 0; i < nEntries; i++) {
 			diff = currentTime - mInitTime[i];
-			if (diff < 0) mCurrentDuration[i] = 0;
-			else mCurrentDuration[i] = diff;
+			mCurrentDuration[i] = diff < 0 ? 0 : diff;
 		}
 
-		// In case current duration slightly goes over the animation duration, 
-		// force it to the duration value
+		// In case current duration slightly goes over the
+		// animation duration, force it to the duration value
 		if (mCurrentGlobalDuration > mGlobalDuration) mCurrentGlobalDuration = mGlobalDuration;
 
 		// Update next values to be drawn
@@ -383,7 +382,7 @@ public class Animation {
 
 				timeNormalized = normalizeTime(j);
 
-				if (mAlphaSpeed != -1 && mEasing.getState() != BaseEasingMethod.UPDATE)
+				if (mAlphaSpeed != -1 && mEasing.getState() != BaseEasingMethod.UPDATE) // Set alpha
 					data.get(i).setAlpha(mEasing.next(timeNormalized) * mAlphaSpeed * mSetsAlpha[i]);
 
 				if (!getEntryUpdate(i, j, timeNormalized, posUpdate)) {
@@ -411,7 +410,7 @@ public class Animation {
 	/**
 	 * Normalize time into a 0-1 relation.
 	 *
-	 * @param index
+	 * @param index Entry's index
 	 *
 	 * @return value from 0 to 1 telling the next step.
 	 */
@@ -456,14 +455,6 @@ public class Animation {
 
 		return mRunnable;
 	}
-	
-
-
-	/*
-	 * --------
-	 * Setters
-	 * --------
-	 */
 
 
 	/**

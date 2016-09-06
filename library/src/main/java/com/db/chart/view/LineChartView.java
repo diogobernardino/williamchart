@@ -60,7 +60,7 @@ public class LineChartView extends ChartView {
 		setOrientation(Orientation.VERTICAL);
 		mStyle = new Style(
 				  context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
-		mClickableRadius = getResources().getDimension(R.dimen.dot_region_radius);
+		mClickableRadius = context.getResources().getDimension(R.dimen.dot_region_radius);
 	}
 
 
@@ -70,7 +70,7 @@ public class LineChartView extends ChartView {
 
 		setOrientation(Orientation.VERTICAL);
 		mStyle = new Style();
-		mClickableRadius = ctx.getResources().getDimension(R.dimen.dot_region_radius);
+		mClickableRadius = context.getResources().getDimension(R.dimen.dot_region_radius);
 	}
 
 
@@ -100,6 +100,49 @@ public class LineChartView extends ChartView {
 
 		super.onDetachedFromWindow();
 		mStyle.clean();
+	}
+
+
+	/**
+	 * Method responsible to draw a line with the parsed screen points.
+	 *
+	 * @param canvas The canvas to draw on.
+	 */
+	@Override
+	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
+
+		LineSet lineSet;
+		Path linePath;
+
+		for (ChartSet set : data) {
+
+			lineSet = (LineSet) set;
+
+			if (lineSet.isVisible()) {
+
+				mStyle.mLinePaint.setColor(lineSet.getColor());
+				mStyle.mLinePaint.setStrokeWidth(lineSet.getThickness());
+				mStyle.setShadow(mStyle.mLinePaint, lineSet);
+
+				if (lineSet.isDashed()) mStyle.mLinePaint.setPathEffect(
+						  new DashPathEffect(lineSet.getDashedIntervals(), lineSet.getDashedPhase()));
+				else mStyle.mLinePaint.setPathEffect(null);
+
+				if (!lineSet.isSmooth()) linePath = createLinePath(lineSet);
+				else linePath = createSmoothLinePath(lineSet);
+
+				//Draw background
+				if (lineSet.hasFill() || lineSet.hasGradientFill())
+					canvas.drawPath(createBackgroundPath(new Path(linePath), lineSet), mStyle.mFillPaint);
+
+				//Draw line
+				canvas.drawPath(linePath, mStyle.mLinePaint);
+
+				//Draw points
+				drawPoints(canvas, lineSet);
+			}
+		}
+
 	}
 
 
@@ -138,42 +181,6 @@ public class LineChartView extends ChartView {
 		}
 
 		return result;
-	}
-
-
-	/**
-	 * Method responsible to draw a line with the parsed screen points.
-	 *
-	 * @param canvas The canvas to draw on.
-	 */
-	@Override
-	public void onDrawChart(Canvas canvas, ArrayList<ChartSet> data) {
-
-		LineSet lineSet;
-
-		for (ChartSet set : data) {
-
-			lineSet = (LineSet) set;
-
-			if (lineSet.isVisible()) {
-
-				mStyle.mLinePaint.setColor(lineSet.getColor());
-				mStyle.mLinePaint.setStrokeWidth(lineSet.getThickness());
-				applyShadow(mStyle.mLinePaint, lineSet);
-
-				if (lineSet.isDashed()) mStyle.mLinePaint.setPathEffect(
-						  new DashPathEffect(lineSet.getDashedIntervals(), lineSet.getDashedPhase()));
-				else mStyle.mLinePaint.setPathEffect(null);
-
-				//Draw line
-				if (!lineSet.isSmooth()) drawLine(canvas, lineSet);
-				else drawSmoothLine(canvas, lineSet);
-
-				//Draw points
-				drawPoints(canvas, lineSet);
-			}
-		}
-
 	}
 
 
@@ -225,54 +232,31 @@ public class LineChartView extends ChartView {
 
 	/**
 	 * Responsible for drawing a (non smooth) line
+	 *
+	 * @param set {@link LineSet} object.
 	 */
-	private void drawLine(Canvas canvas, LineSet set) {
+	Path createLinePath(LineSet set) {
 
-		float minY = this.getInnerChartBottom();
-
-		Path path = new Path();
-		Path bgPath = new Path();
+		Path res = new Path();
 
 		int begin = set.getBegin();
 		int end = set.getEnd();
-		float x;
-		float y;
 		for (int i = begin; i < end; i++) {
-
-			x = set.getEntry(i).getX();
-			y = set.getEntry(i).getY();
-
-			// Get minimum display Y to optimize gradient
-			if (y < minY) minY = y;
-
-			if (i == begin) {
-				//Defining outline
-				path.moveTo(x, y);
-				//Defining background
-				bgPath.moveTo(x, y);
-			} else {
-				//Defining outline
-				path.lineTo(x, y);
-				//Defining background
-				bgPath.lineTo(x, y);
-			}
+			if (i == begin) res.moveTo(set.getEntry(i).getX(), set.getEntry(i).getY());
+			else res.lineTo(set.getEntry(i).getX(), set.getEntry(i).getY());
 		}
 
-		//Draw background
-		if (set.hasFill() || set.hasGradientFill()) drawBackground(canvas, bgPath, set, minY);
-
-		//Draw line
-		canvas.drawPath(path, mStyle.mLinePaint);
+		return res;
 	}
 
 
 	/**
 	 * Credits: http://www.jayway.com/author/andersericsson/
 	 * Method responsible to draw a smooth line with the parsed screen points.
+	 *
+	 * @param set {@link LineSet} object.
 	 */
-	private void drawSmoothLine(Canvas canvas, LineSet set) {
-
-		float minY = this.getInnerChartBottom();
+	Path createSmoothLinePath(LineSet set) {
 
 		float thisPointX;
 		float thisPointY;
@@ -287,26 +271,15 @@ public class LineChartView extends ChartView {
 		float secondControlX;
 		float secondControlY;
 
-		Path path = new Path();
-		path.moveTo(set.getEntry(set.getBegin()).getX(), set.getEntry(set.getBegin()).getY());
-
-		Path bgPath = new Path();
-		bgPath.moveTo(set.getEntry(set.getBegin()).getX(), set.getEntry(set.getBegin()).getY());
+		Path res = new Path();
+		res.moveTo(set.getEntry(set.getBegin()).getX(), set.getEntry(set.getBegin()).getY());
 
 		int begin = set.getBegin();
 		int end = set.getEnd();
-		float x;
-		float y;
 		for (int i = begin; i < end - 1; i++) {
 
-			x = set.getEntry(i).getX();
-			y = set.getEntry(i).getY();
-
-			// Get minimum display Y to optimize gradient
-			if (y < minY) minY = y;
-
-			thisPointX = x;
-			thisPointY = y;
+			thisPointX = set.getEntry(i).getX();
+			thisPointY = set.getEntry(i).getY();
 
 			nextPointX = set.getEntry(i + 1).getX();
 			nextPointY = set.getEntry(i + 1).getY();
@@ -323,53 +296,36 @@ public class LineChartView extends ChartView {
 			secondControlX = nextPointX - (0.15f * endDiffX);
 			secondControlY = nextPointY - (0.15f * endDiffY);
 
-			//Define outline
-			path.cubicTo(firstControlX, firstControlY, secondControlX, secondControlY, nextPointX,
-					  nextPointY);
-
-			//Define background
-			bgPath.cubicTo(firstControlX, firstControlY, secondControlX, secondControlY, nextPointX,
+			res.cubicTo(firstControlX, firstControlY, secondControlX, secondControlY, nextPointX,
 					  nextPointY);
 		}
 
-		//Draw background
-		if (set.hasFill() || set.hasGradientFill()) drawBackground(canvas, bgPath, set, minY);
-
-		//Draw outline
-		canvas.drawPath(path, mStyle.mLinePaint);
+		return res;
 
 	}
 
 
 	/**
 	 * Responsible for drawing line background
+	 *
+	 * @param path {@link Path} object containing line path
+	 * @param set {@link LineSet} object.
 	 */
-	private void drawBackground(Canvas canvas, Path path, LineSet set, float minDisplayY) {
-
-		float innerChartBottom = super.getInnerChartBottom();
+	private Path createBackgroundPath(Path path, LineSet set) {
 
 		mStyle.mFillPaint.setAlpha((int) (set.getAlpha() * 255));
 
 		if (set.hasFill()) mStyle.mFillPaint.setColor(set.getFillColor());
 		if (set.hasGradientFill()) mStyle.mFillPaint.setShader(
-				  new LinearGradient(super.getInnerChartLeft(), minDisplayY, super.getInnerChartLeft(),
-							 innerChartBottom, set.getGradientColors(), set.getGradientPositions(),
-							 Shader.TileMode.MIRROR));
+				  new LinearGradient(super.getInnerChartLeft(), super.getInnerChartTop(),
+							 super.getInnerChartLeft(), super.getInnerChartBottom(),
+							 set.getGradientColors(), set.getGradientPositions(), Shader.TileMode.MIRROR));
 
-		path.lineTo(set.getEntry(set.getEnd() - 1).getX(), innerChartBottom);
-		path.lineTo(set.getEntry(set.getBegin()).getX(), innerChartBottom);
+		path.lineTo(set.getEntry(set.getEnd() - 1).getX(), super.getInnerChartBottom());
+		path.lineTo(set.getEntry(set.getBegin()).getX(), super.getInnerChartBottom());
 		path.close();
-		canvas.drawPath(path, mStyle.mFillPaint);
-	}
 
-
-	private void applyShadow(Paint paint, LineSet set) {
-
-		paint.setAlpha((int) (set.getAlpha() * 255));
-		paint.setShadowLayer(set.getShadowRadius(), set.getShadowDx(), set.getShadowDy(), Color.argb(
-				  ((int) (set.getAlpha() * 255) < set.getShadowColor()[0]) ?
-							 (int) (set.getAlpha() * 255) : set.getShadowColor()[0],
-				  set.getShadowColor()[1], set.getShadowColor()[2], set.getShadowColor()[3]));
+		return path;
 	}
 
 
@@ -435,6 +391,15 @@ public class LineChartView extends ChartView {
 			mDotsPaint = null;
 		}
 
+
+		private void setShadow(Paint paint, LineSet set) {
+
+			paint.setAlpha((int) (set.getAlpha() * 255));
+			paint.setShadowLayer(set.getShadowRadius(), set.getShadowDx(), set.getShadowDy(), Color.argb(
+					  ((int) (set.getAlpha() * 255) < set.getShadowColor()[0]) ?
+								 (int) (set.getAlpha() * 255) : set.getShadowColor()[0],
+					  set.getShadowColor()[1], set.getShadowColor()[2], set.getShadowColor()[3]));
+		}
 
 	}
 

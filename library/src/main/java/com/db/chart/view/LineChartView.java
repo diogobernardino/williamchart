@@ -122,7 +122,8 @@ public class LineChartView extends ChartView {
 
 				mStyle.mLinePaint.setColor(lineSet.getColor());
 				mStyle.mLinePaint.setStrokeWidth(lineSet.getThickness());
-				mStyle.setShadow(mStyle.mLinePaint, lineSet);
+				applyShadow(mStyle.mLinePaint, lineSet.getAlpha(), lineSet.getShadowDx(), lineSet
+						  .getShadowDy(), lineSet.getShadowRadius(), lineSet.getShadowColor());
 
 				if (lineSet.isDashed()) mStyle.mLinePaint.setPathEffect(
 						  new DashPathEffect(lineSet.getDashedIntervals(), lineSet.getDashedPhase()));
@@ -201,7 +202,8 @@ public class LineChartView extends ChartView {
 				// Style dot
 				mStyle.mDotsPaint.setColor(dot.getColor());
 				mStyle.mDotsPaint.setAlpha((int) (set.getAlpha() * 255));
-				applyShadow(mStyle.mDotsPaint, set.getAlpha(), dot);
+				applyShadow(mStyle.mDotsPaint, set.getAlpha(), dot.getShadowDx(), dot
+						  .getShadowDy(), dot.getShadowRadius(), dot.getShadowColor());
 
 				// Draw dot
 				canvas.drawCircle(dot.getX(), dot.getY(), dot.getRadius(), mStyle.mDotsPaint);
@@ -213,7 +215,8 @@ public class LineChartView extends ChartView {
 					mStyle.mDotsStrokePaint.setStrokeWidth(dot.getStrokeThickness());
 					mStyle.mDotsStrokePaint.setColor(dot.getStrokeColor());
 					mStyle.mDotsStrokePaint.setAlpha((int) (set.getAlpha() * 255));
-					applyShadow(mStyle.mDotsStrokePaint, set.getAlpha(), dot);
+					applyShadow(mStyle.mDotsStrokePaint, set.getAlpha(), dot.getShadowDx(), dot
+							  .getShadowDy(), dot.getShadowRadius(), dot.getShadowColor());
 
 					canvas.drawCircle(dot.getX(), dot.getY(), dot.getRadius(), mStyle.mDotsStrokePaint);
 				}
@@ -389,16 +392,6 @@ public class LineChartView extends ChartView {
 			mLinePaint = null;
 			mFillPaint = null;
 			mDotsPaint = null;
-		}
-
-
-		private void setShadow(Paint paint, LineSet set) {
-
-			paint.setAlpha((int) (set.getAlpha() * 255));
-			paint.setShadowLayer(set.getShadowRadius(), set.getShadowDx(), set.getShadowDy(), Color.argb(
-					  ((int) (set.getAlpha() * 255) < set.getShadowColor()[0]) ?
-								 (int) (set.getAlpha() * 255) : set.getShadowColor()[0],
-					  set.getShadowColor()[1], set.getShadowColor()[2], set.getShadowColor()[3]));
 		}
 
 	}

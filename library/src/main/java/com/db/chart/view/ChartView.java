@@ -1360,16 +1360,20 @@ public abstract class ChartView extends RelativeLayout {
 	/**
 	 * Applies an alpha to the paint object.
 	 *
-	 * @param paint {@link android.graphics.Paint} object to apply alpha.
-	 * @param alpha Alpha value (opacity).
-	 * @param entry Entry containing shadow customization.
+	 * @param paint {@link android.graphics.Paint} object to apply alpha
+	 * @param alpha Alpha value (opacity)
+	 * @param dx Dx
+	 * @param dy Dy
+	 * @param radius Radius
+	 * @param color Color
 	 */
-	protected void applyShadow(Paint paint, float alpha, ChartEntry entry) {
+	protected void applyShadow(Paint paint, float alpha, float dx, float dy, float radius,
+			  int[] color) {
 
-		paint.setShadowLayer(entry.getShadowRadius(), entry.getShadowDx(), entry.getShadowDy(),
-				  Color.argb(((int) (alpha * 255) < entry.getShadowColor()[0]) ? (int) (alpha * 255) :
-										entry.getShadowColor()[0], entry.getShadowColor()[1],
-							 entry.getShadowColor()[2], entry.getShadowColor()[3]));
+		paint.setAlpha((int) (alpha * 255));
+		paint.setShadowLayer(radius, dx, dy,
+				  Color.argb(((int) (alpha * 255) < color[0]) ? (int) (alpha * 255) : color[0],
+							 color[1], color[2], color[3]));
 	}
 
 

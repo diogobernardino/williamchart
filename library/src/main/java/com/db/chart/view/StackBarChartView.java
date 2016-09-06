@@ -120,7 +120,8 @@ public class StackBarChartView extends BaseStackBarChartView {
 
 				style.barPaint.setColor(bar.getColor());
 				style.barPaint.setAlpha((int) (barSet.getAlpha() * 255));
-				applyShadow(style.barPaint, barSet.getAlpha(), bar);
+				applyShadow(style.barPaint, barSet.getAlpha(), bar.getShadowDx(), bar
+						  .getShadowDy(), bar.getShadowRadius(), bar.getShadowColor());
 
 				x0 = (bar.getX() - barWidth / 2);
 				x1 = (bar.getX() + barWidth / 2);

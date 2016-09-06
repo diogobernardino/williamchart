@@ -128,4 +128,22 @@ public class YRendererTest {
 		assertEquals(15.f, mYRndr.measureInnerChartBottom(24), RESULT_THRESHOLD);
 	}
 
+
+	@Test
+	public void parsePos_HandleValuesNoLabels_Result(){
+
+		when(mStyleMock.hasXAxis()).thenReturn(false);
+
+		mYRndr.setHandleValues(true);
+		mYRndr.setInnerChartBounds(0, 0, 10, 10);
+		mYRndr.setLabelsPositioning(AxisRenderer.LabelPosition.NONE);
+		mYRndr.init(mData, mStyleMock);
+		mYRndr.dispose();
+
+		assertTrue(mYRndr.parsePos(0, 0) > mYRndr.parsePos(0, 0.1));
+		assertTrue(mYRndr.parsePos(0, 1) > mYRndr.parsePos(0, 111));
+		assertTrue(mYRndr.parsePos(0, -1) < mYRndr.parsePos(0, -111));
+		assertTrue(mYRndr.parsePos(0, -1) > mYRndr.parsePos(0, 1));
+	}
+
 }

@@ -169,4 +169,21 @@ public class XRendererTest {
 	}
 
 
+	@Test
+	public void parsePos_HandleValuesNoLabels_Result(){
+
+		when(mStyleMock.hasXAxis()).thenReturn(false);
+
+		mXRndr.setHandleValues(true);
+		mXRndr.setInnerChartBounds(0, 0, 10, 10);
+		mXRndr.setLabelsPositioning(AxisRenderer.LabelPosition.NONE);
+		mXRndr.init(mData, mStyleMock);
+		mXRndr.dispose();
+
+		assertTrue(mXRndr.parsePos(0, 0) < mXRndr.parsePos(0, 0.1));
+		assertTrue(mXRndr.parsePos(0, 1) < mXRndr.parsePos(0, 111));
+		assertTrue(mXRndr.parsePos(0, -1) > mXRndr.parsePos(0, -111));
+		assertTrue(mXRndr.parsePos(0, -1) < mXRndr.parsePos(0, 1));
+	}
+
 }

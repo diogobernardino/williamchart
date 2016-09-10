@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
     android:background="@drawable/rect_round_corners_bck">
     <TextView
         android:id="@+id/value"

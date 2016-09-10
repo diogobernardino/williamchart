@@ -60,7 +60,7 @@ public class LineCardOne extends CardController {
 				  Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Semibold.ttf"));
 
 		mTip.setVerticalAlignment(Tooltip.Alignment.BOTTOM_TOP);
-		mTip.setDimensions((int) Tools.fromDpToPx(65), (int) Tools.fromDpToPx(25));
+		mTip.setDimensions((int) Tools.fromDpToPx(58), (int) Tools.fromDpToPx(25));
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 

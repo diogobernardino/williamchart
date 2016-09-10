@@ -56,7 +56,7 @@
                     android:padding="5dp"
                     android:text="@string/sandbox_axis_y"
                     android:textSize="@dimen/axis_label_size"
-                    android:textColor="@color/color_btn"
+                    android:textColor="@drawable/color_btn"
                     android:clickable="true"
                     android:onClick="onMenuClick"
                     />
@@ -81,7 +81,7 @@
                     android:padding="5dp"
                     android:text="@string/sandbox_axis_y"
                     android:textSize="@dimen/axis_label_size"
-                    android:textColor="@color/color_btn"
+                    android:textColor="@drawable/color_btn"
                     android:clickable="true"
                     android:onClick="onMenuClick"
                     />
@@ -106,7 +106,7 @@
                     android:padding="5dp"
                     android:text="@string/sandbox_axis_x"
                     android:textSize="@dimen/axis_label_size"
-                    android:textColor="@color/color_btn"
+                    android:textColor="@drawable/color_btn"
                     android:clickable="true"
                     android:onClick="onMenuClick"
                     />
@@ -132,7 +132,7 @@
                     android:padding="5dp"
                     android:text="@string/sandbox_axis_x"
                     android:textSize="@dimen/axis_label_size"
-                    android:textColor="@color/color_btn"
+                    android:textColor="@drawable/color_btn"
                     android:clickable="true"
                     android:onClick="onMenuClick"
                     />

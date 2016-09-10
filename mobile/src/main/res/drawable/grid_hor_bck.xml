@@ -5,25 +5,25 @@
             <item android:top="5dp" android:bottom="35dp" android:left="0dp" android:right="0dp">
                 <shape android:shape="rectangle">
                     <size android:height="5dp" android:width="45dp" />
-                    <solid android:color="@color/unselected"/>
+                    <solid android:color="@color/off"/>
                 </shape>
             </item>
             <item android:top="15dp" android:bottom="25dp" android:left="0dp" android:right="0dp">
                 <shape android:shape="rectangle">
                     <size android:height="5dp" android:width="45dp" />
-                    <solid android:color="@color/unselected"/>
+                    <solid android:color="@color/off"/>
                 </shape>
             </item>
             <item android:top="25dp" android:bottom="15dp" android:left="0dp" android:right="0dp">
                 <shape android:shape="rectangle">
                     <size android:height="5dp" android:width="45dp" />
-                    <solid android:color="@color/unselected"/>
+                    <solid android:color="@color/off"/>
                 </shape>
             </item>
             <item android:top="35dp" android:bottom="5dp" android:left="0dp" android:right="0dp">
                 <shape android:shape="rectangle">
                     <size android:height="5dp" android:width="45dp" />
-                    <solid android:color="@color/unselected"/>
+                    <solid android:color="@color/off"/>
                 </shape>
             </item>
         </layer-list>
@@ -33,25 +33,25 @@
             <item android:top="5dp" android:bottom="35dp" android:left="0dp" android:right="0dp">
                 <shape android:shape="rectangle">
                     <size android:height="5dp" android:width="45dp" />
-                    <solid android:color="@color/selected"/>
+                    <solid android:color="@color/on"/>
                 </shape>
             </item>
             <item android:top="15dp" android:bottom="25dp" android:left="0dp" android:right="0dp">
                 <shape android:shape="rectangle">
                     <size android:height="5dp" android:width="45dp" />
-                    <solid android:color="@color/selected"/>
+                    <solid android:color="@color/on"/>
                 </shape>
             </item>
             <item android:top="25dp" android:bottom="15dp" android:left="0dp" android:right="0dp">
                 <shape android:shape="rectangle">
                     <size android:height="5dp" android:width="45dp" />
-                    <solid android:color="@color/selected"/>
+                    <solid android:color="@color/on"/>
                 </shape>
             </item>
             <item android:top="35dp" android:bottom="5dp" android:left="0dp" android:right="0dp">
                 <shape android:shape="rectangle">
                     <size android:height="5dp" android:width="45dp" />
-                    <solid android:color="@color/selected"/>
+                    <solid android:color="@color/on"/>
                 </shape>
             </item>
         </layer-list>

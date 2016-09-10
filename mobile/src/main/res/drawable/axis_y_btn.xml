@@ -4,14 +4,14 @@
         android:top="0dp" android:bottom="0dp" android:left="17dp" android:right="17dp">
         <shape android:shape="rectangle">
             <size android:height="75dp" android:width="6dp" />
-            <solid android:color="@color/selected"/>
+            <solid android:color="@color/on"/>
         </shape>
     </item>
     <item android:state_selected="false"
         android:top="0dp" android:bottom="0dp" android:left="17dp" android:right="17dp">
         <shape android:shape="rectangle">
             <size android:height="75dp" android:width="6dp" />
-            <solid android:color="@color/unselected"/>
+            <solid android:color="@color/off"/>
         </shape>
     </item>
 </selector>

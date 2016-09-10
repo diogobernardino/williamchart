@@ -10,8 +10,8 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
 
-    <color name="selected">#009688</color>
-    <color name="unselected">#CFD8DC</color>
+    <color name="on">#009688</color>
+    <color name="off">#CFD8DC</color>
 
     <color name="gray">#ff363436</color>
 

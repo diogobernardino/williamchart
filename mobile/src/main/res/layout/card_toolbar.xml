@@ -10,7 +10,7 @@
         android:layout_marginEnd="5dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_play"
+        android:src="@drawable/ic_play_toolbar"
         android:background="?attr/selectableItemBackgroundBorderless"/>
     <ImageButton
         android:id="@+id/update"

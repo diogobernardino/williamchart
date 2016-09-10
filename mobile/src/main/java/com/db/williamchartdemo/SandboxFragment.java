@@ -481,7 +481,7 @@ public class SandboxFragment extends Fragment {
 		mHasBarBackground = false;
 		mBarBackgroundId = -1;
 		mBarBackgroundColorId = DEFAULT_COLOR;
-		mBarSpacingId = R.id.sandbox_bar_spacing1;
+		mBarSpacingId = R.id.sandbox_bar_spacing2;
 		mBarCornersSizeId = R.id.sandbox_bar_corner1;
 
 		mHasYAxis = true;
@@ -1067,10 +1067,6 @@ public class SandboxFragment extends Fragment {
 					mGridThickness = Tools.fromDpToPx(2);
 					mGridThicknessId = swapState(mLayout, mGridThicknessId, id, true);
 					break;
-				case R.id.sandbox_grid_thickness4:
-					mGridThickness = Tools.fromDpToPx(1);
-					mGridThicknessId = swapState(mLayout, mGridThicknessId, id, true);
-					break;
 
 				case R.id.sandbox_grid_color:
 					final View gridColorLayout = getActivity().getLayoutInflater()
@@ -1167,10 +1163,6 @@ public class SandboxFragment extends Fragment {
 					mLineThickness = Tools.fromDpToPx(3);
 					mLineThicknessId = swapState(mLayout, mLineThicknessId, id, true);
 					break;
-				case R.id.sandbox_line_thickness4:
-					mLineThickness = Tools.fromDpToPx(1);
-					mLineThicknessId = swapState(mLayout, mLineThicknessId, id, true);
-					break;
 
 				case R.id.sandbox_line_color:
 					final View lineColorLayout = getActivity().getLayoutInflater()
@@ -1190,10 +1182,6 @@ public class SandboxFragment extends Fragment {
 					break;
 
 				/** Points size **/
-				case R.id.sandbox_point_size1:
-					mPointsSize = Tools.fromDpToPx(8);
-					mPointsSizeId = swapState(mLayout, mPointsSizeId, id, false);
-					break;
 				case R.id.sandbox_point_size2:
 					mPointsSize = Tools.fromDpToPx(6);
 					mPointsSizeId = swapState(mLayout, mPointsSizeId, id, false);
@@ -1292,10 +1280,6 @@ public class SandboxFragment extends Fragment {
 					mBarCornersSize = Tools.fromDpToPx(0);
 					mBarCornersSizeId = swapState(mLayout, mBarCornersSizeId, id, false);
 					break;
-				case R.id.sandbox_bar_corner2:
-					mBarCornersSize = Tools.fromDpToPx(4);
-					mBarCornersSizeId = swapState(mLayout, mBarCornersSizeId, id, false);
-					break;
 				case R.id.sandbox_bar_corner3:
 					mBarCornersSize = Tools.fromDpToPx(8);
 					mBarCornersSizeId = swapState(mLayout, mBarCornersSizeId, id, false);
@@ -1306,10 +1290,6 @@ public class SandboxFragment extends Fragment {
 					break;
 
 				/** Bar spacing **/
-				case R.id.sandbox_bar_spacing1:
-					mBarSpacing = Tools.fromDpToPx(10);
-					mBarSpacingId = swapState(mLayout, mBarSpacingId, id, true);
-					break;
 				case R.id.sandbox_bar_spacing2:
 					mBarSpacing = Tools.fromDpToPx(16);
 					mBarSpacingId = swapState(mLayout, mBarSpacingId, id, true);

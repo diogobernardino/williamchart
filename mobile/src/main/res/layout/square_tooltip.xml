@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="2dp"
-    android:src="@drawable/ic_star"
+    android:src="@drawable/ic_grade"
     android:background="@drawable/round_bck">
 </ImageView>
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.db.william.ChartsFragment">
+    tools:context="com.db.williamchartdemo.ChartsFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"

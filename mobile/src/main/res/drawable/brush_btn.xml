@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_selected="true"
-    	android:drawable="@drawable/brush"/>
+    	android:drawable="@drawable/ic_brush_on"/>
     <item android:state_selected="false"
-    	android:drawable="@drawable/brush_unselected"/>
+    	android:drawable="@drawable/ic_brush_off"/>
 </selector>

@@ -6,7 +6,7 @@
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginTop="@dimen/activity_vertical_margin"
     android:layout_marginBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity$PlaceholderFragment">
+    tools:context="com.db.williamchartdemo.SandboxFragment">
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -66,8 +66,8 @@
             android:layout_height="80dp"
             android:layout_margin="15dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/play"
-            android:background="@drawable/play_btn_bck"
+            android:src="@drawable/ic_play"
+            android:background="@drawable/play_btn"
             android:onClick="onPlay"
             android:elevation="3dp"/>
         <ImageButton
@@ -79,7 +79,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:src="@drawable/ic_code"
-            android:background="@drawable/send_btn_bck"
+            android:background="@drawable/code_btn"
             android:onClick="onPlay"
             android:elevation="3dp"
             />

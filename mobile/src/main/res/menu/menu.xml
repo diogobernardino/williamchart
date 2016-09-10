@@ -9,10 +9,8 @@
 		app:actionViewClass="android.widget.Spinner" />
 	<item android:id="@+id/github"
 		android:title="@string/github_str"
-		android:icon="@drawable/github"
 		app:showAsAction="never"/>
 	<item android:id="@+id/play"
 		android:title="@string/google_play_str"
-		android:icon="@drawable/ic_favorite"
 		app:showAsAction="never"/>
 </menu>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffe9e7e9"
-    tools:context="com.db.william.SandboxFragment">
+    tools:context="com.db.williamchartdemo.SandboxFragment">
 
     <android.support.design.widget.AppBarLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"

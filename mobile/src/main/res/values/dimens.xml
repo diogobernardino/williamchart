@@ -5,13 +5,13 @@
     <dimen name="activity_vertical_margin">8dp</dimen>
 
     <dimen name="button_size">40dp</dimen>
-    <dimen name="color_button_size">35dp</dimen>
+    <dimen name="color_button_size">30dp</dimen>
 
     <dimen name="four_button_margin">7dp</dimen>
     <dimen name="three_button_margin">17dp</dimen>
     <dimen name="two_button_margin">17dp</dimen>
 
-    <dimen name="enter_button_margin">6dp</dimen>
+    <dimen name="enter_button_margin">0dp</dimen>
 
     <dimen name="line_point_s">13dp</dimen>
     <dimen name="line_point_m">20dp</dimen>

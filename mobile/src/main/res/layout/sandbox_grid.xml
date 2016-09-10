@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity$PlaceholderFragment">
+    tools:context="com.db.williamchartdemo.SandboxFragment">
 
     <RelativeLayout
         android:id="@+id/sandbox_grid_type"
@@ -150,17 +150,6 @@
                 android:layout_centerVertical="true"
                 android:layout_margin="@dimen/four_button_margin"
                 android:src="@drawable/thickness_size3_bck"
-                android:background="@android:color/transparent"
-                android:onClick="onMenuClick"/>
-            <ImageButton
-                android:id="@+id/sandbox_grid_thickness4"
-                android:layout_width="@dimen/button_size"
-                android:layout_height="@dimen/button_size"
-                android:layout_toEndOf="@+id/sandbox_grid_thickness3"
-                android:layout_toRightOf="@+id/sandbox_grid_thickness3"
-                android:layout_centerVertical="true"
-                android:layout_margin="@dimen/four_button_margin"
-                android:src="@drawable/thickness_size4_bck"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"/>
 

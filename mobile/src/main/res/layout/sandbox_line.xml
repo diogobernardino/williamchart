@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity$PlaceholderFragment">
+    tools:context="com.db.williamchartdemo.SandboxFragment">
 
     <RelativeLayout
         android:id="@+id/sandbox_line_type"
@@ -133,19 +133,6 @@
                         android:background="@android:color/transparent"
                         android:onClick="onMenuClick"/>
 
-                    <ImageButton
-                        android:id="@+id/sandbox_line_thickness4"
-                        android:layout_width="@dimen/button_size"
-                        android:layout_height="@dimen/button_size"
-                        android:layout_toEndOf="@+id/sandbox_line_thickness3"
-                        android:layout_toRightOf="@+id/sandbox_line_thickness3"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/four_button_margin"
-                        android:src="@drawable/thickness_size4_bck"
-                        android:background="@android:color/transparent"
-                        android:onClick="onMenuClick"
-                        />
-
             </RelativeLayout>
 
         </LinearLayout>
@@ -179,20 +166,9 @@
             android:layout_height="match_parent"
             android:gravity="center">
             <ImageButton
-                android:id="@+id/sandbox_point_size1"
-                android:layout_width="@dimen/button_size"
-                android:layout_height="@dimen/button_size"
-                android:layout_centerVertical="true"
-                android:layout_margin="10dp"
-                android:src="@drawable/point_size1_bck"
-                android:background="@android:color/transparent"
-                android:onClick="onMenuClick"/>
-            <ImageButton
                 android:id="@+id/sandbox_point_size2"
                 android:layout_width="@dimen/button_size"
                 android:layout_height="@dimen/button_size"
-                android:layout_toEndOf="@+id/sandbox_point_size1"
-                android:layout_toRightOf="@+id/sandbox_point_size1"
                 android:layout_centerVertical="true"
                 android:layout_margin="7dp"
                 android:src="@drawable/point_size2_bck"

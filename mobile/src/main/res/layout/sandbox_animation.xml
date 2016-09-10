@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity$PlaceholderFragment">
+    tools:context="com.db.williamchartdemo.SandboxFragment">
 
     <RelativeLayout
         android:id="@+id/sandbox_anim_easing"
@@ -39,7 +39,7 @@
             android:layout_width="@dimen/button_size"
             android:layout_height="@dimen/button_size"
             android:layout_margin="@dimen/three_button_margin"
-            android:src="@drawable/alpha_btn"
+            android:src="@drawable/alpha_low_btn"
             android:background="@android:color/transparent"
             android:onClick="onMenuClick"/>
 
@@ -50,7 +50,7 @@
             android:layout_toRightOf="@+id/sandbox_anim_alpha1"
             android:layout_toEndOf="@+id/sandbox_anim_alpha1"
             android:layout_margin="@dimen/three_button_margin"
-            android:src="@drawable/alpha2_btn"
+            android:src="@drawable/alpha_medium_btn"
             android:background="@android:color/transparent"
             android:onClick="onMenuClick"/>
 
@@ -61,7 +61,7 @@
             android:layout_toRightOf="@+id/sandbox_anim_alpha2"
             android:layout_toEndOf="@+id/sandbox_anim_alpha2"
             android:layout_margin="@dimen/three_button_margin"
-            android:src="@drawable/alpha3_btn"
+            android:src="@drawable/alpha_high_btn"
             android:background="@android:color/transparent"
             android:onClick="onMenuClick"/>
 
@@ -141,7 +141,7 @@
                 android:layout_width="@dimen/button_size"
                 android:layout_height="@dimen/button_size"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_corner_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />
@@ -153,7 +153,7 @@
                 android:layout_toRightOf="@+id/sandbox_anim_entertl"
                 android:layout_toEndOf="@+id/sandbox_anim_entertl"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_ver_sides_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />
@@ -165,7 +165,7 @@
                 android:layout_toRightOf="@+id/sandbox_anim_entert"
                 android:layout_toEndOf="@+id/sandbox_anim_entert"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_corner_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />
@@ -183,7 +183,7 @@
                 android:layout_width="@dimen/button_size"
                 android:layout_height="@dimen/button_size"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_hor_side_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />
@@ -195,7 +195,7 @@
                 android:layout_toRightOf="@+id/sandbox_anim_entercl"
                 android:layout_toEndOf="@+id/sandbox_anim_entercl"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_corner_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />
@@ -206,7 +206,7 @@
                 android:layout_toRightOf="@+id/sandbox_anim_enterc"
                 android:layout_toEndOf="@+id/sandbox_anim_enterc"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_hor_side_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />
@@ -224,7 +224,7 @@
                 android:layout_width="@dimen/button_size"
                 android:layout_height="@dimen/button_size"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_corner_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />
@@ -236,7 +236,7 @@
                 android:layout_toRightOf="@+id/sandbox_anim_enterbl"
                 android:layout_toEndOf="@+id/sandbox_anim_enterbl"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_ver_sides_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />
@@ -247,7 +247,7 @@
                 android:layout_toRightOf="@+id/sandbox_anim_enterb"
                 android:layout_toEndOf="@+id/sandbox_anim_enterb"
                 android:layout_margin="@dimen/enter_button_margin"
-                android:src="@drawable/enter_corner_bck"
+                android:src="@drawable/anim_start_btn"
                 android:background="@android:color/transparent"
                 android:onClick="onMenuClick"
                 />

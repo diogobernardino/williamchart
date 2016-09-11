@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -25,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.animation.Animation;
@@ -432,20 +434,22 @@ public class SandboxFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			  Bundle savedInstanceState) {
 
-		View mLayout = inflater.inflate(R.layout.sandbox, container, false);
+		View layout = inflater.inflate(R.layout.sandbox, container, false);
 
-		Toolbar toolbar = (Toolbar) mLayout.findViewById(R.id.toolbar);
-		((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+		((AppCompatActivity) getActivity()).setSupportActionBar(
+				  (Toolbar) layout.findViewById(R.id.toolbar));
+		((TextView) layout.findViewById(R.id.title)).setTypeface(
+				  Typeface.createFromAsset(getContext().getAssets(), "Ponsi-Regular.otf"));
 
 		// Pager
 		mSectionsPagerAdapter = new SandboxPagerAdapter(this.getChildFragmentManager());
 
-		mViewPager = (ViewPager) mLayout.findViewById(R.id.pager);
+		mViewPager = (ViewPager) layout.findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		//getActivity().setupViewPager(viewPager);
 
-		TabLayout tabLayout = (TabLayout) mLayout.findViewById(R.id.tab_layout);
+		TabLayout tabLayout = (TabLayout) layout.findViewById(R.id.tab_layout);
 		tabLayout.setupWithViewPager(mViewPager);
 
 
@@ -513,7 +517,7 @@ public class SandboxFragment extends Fragment {
 		mStartY = 0;
 		mAlpha = -1;
 
-		return mLayout;
+		return layout;
 	}
 
 
@@ -1344,6 +1348,7 @@ public class SandboxFragment extends Fragment {
 				  Bundle savedInstanceState) {
 
 			mLayout = inflater.inflate(R.layout.sandbox_animation, container, false);
+
 			Spinner spinner = (Spinner) mLayout.findViewById(R.id.sandbox_anim_easing_type);
 			ArrayAdapter<CharSequence> adapter =
 					  ArrayAdapter.createFromResource(this.getActivity(), R.array.easing,

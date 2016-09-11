@@ -16,6 +16,7 @@
 
 package com.db.williamchartdemo;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.db.williamchartdemo.barchart.BarCardOne;
 import com.db.williamchartdemo.barchart.BarCardThree;
@@ -53,8 +55,10 @@ public class ChartsFragment extends Fragment {
 
 		View layout = inflater.inflate(R.layout.charts, container, false);
 
-		Toolbar toolbar = (Toolbar) layout.findViewById(R.id.toolbar);
-		((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+		((AppCompatActivity) getActivity()).setSupportActionBar(
+				  (Toolbar) layout.findViewById(R.id.toolbar));
+		((TextView) layout.findViewById(R.id.title)).setTypeface(
+				  Typeface.createFromAsset(getContext().getAssets(), "Ponsi-Regular.otf"));
 
 		(new LineCardOne((CardView) layout.findViewById(R.id.card1), getContext())).init();
 		(new LineCardThree((CardView) layout.findViewById(R.id.card2), getContext())).init();

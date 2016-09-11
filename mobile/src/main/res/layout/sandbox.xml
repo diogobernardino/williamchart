@@ -18,7 +18,15 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="williamchart"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"/>
+        </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"

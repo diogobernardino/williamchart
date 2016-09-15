@@ -46,7 +46,7 @@ public class BarCardOne extends CardController {
         barSet.setColor(Color.parseColor("#fc2a53"));
         mChart.addData(barSet);
 
-        mChart.setBarSpacing(Tools.fromDpToPx(40));
+        mChart.setBarSpacing(Tools.fromDpToPx(20));
         mChart.setRoundCorners(Tools.fromDpToPx(2));
         mChart.setBarBackgroundColor(Color.parseColor("#592932"));
 

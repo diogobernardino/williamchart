@@ -70,7 +70,7 @@ public class BarCardThree extends CardController {
         dataset.setColor(Color.parseColor("#eb993b"));
         mChart.addData(dataset);
 
-        mChart.setBarSpacing(Tools.fromDpToPx(3));
+        mChart.setBarSpacing(Tools.fromDpToPx(1.5f));
 
         mChart.setXLabels(AxisController.LabelPosition.NONE)
                 .setYLabels(AxisController.LabelPosition.NONE)

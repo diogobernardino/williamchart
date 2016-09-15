@@ -106,7 +106,7 @@ public class BarCardTwo extends CardController {
         }
 
         mChart.addData(barSet);
-        mChart.setBarSpacing(Tools.fromDpToPx(8));
+        mChart.setBarSpacing(Tools.fromDpToPx(4));
 
         mChart.setBorderSpacing(0)
                 .setXAxis(false)

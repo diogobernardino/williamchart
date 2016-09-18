@@ -34,7 +34,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 				  android.R.layout.simple_spinner_item);
 		mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		mCurrFragment = new ChartsFragment();
+		switch (currSpinnerSelection){
+			case 0: mCurrFragment = new ChartsFragment(); break;
+			case 1: mCurrFragment = new SandboxFragment(); break;
+		}
+
 		getSupportFragmentManager().beginTransaction().add(R.id.container, mCurrFragment).commit();
 	}
 

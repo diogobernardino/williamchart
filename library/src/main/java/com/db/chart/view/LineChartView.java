@@ -150,7 +150,7 @@ public class LineChartView extends ChartView {
 	/**
 	 * (Optional) To be overridden in order for each chart to define its own clickable regions.
 	 * This way, classes extending ChartView will only define their clickable regions.
-	 * <p/>
+	 * <p>
 	 * Important: the returned vector must match the order of the data passed
 	 * by the user. This ensures that onTouchEvent will return the correct index.
 	 *

@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    compile project(':library')
+    compile project(':williamchart')
     compile 'com.google.android.support:wearable:2.0.0-alpha2'
     compile 'com.google.android.gms:play-services-wearable:9.4.0'
 }

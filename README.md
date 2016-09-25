@@ -1,32 +1,34 @@
-#WilliamChart
+#williamchart![phone][7]![watch][8]
 
-WilliamChart is an Android Library to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional chart features but instead something that could be pleasant and intuitive while representing and visualizing data. I would prefer to keep charts simple and clean rather than overfeatured.
+Williamchart is an Android Library to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional chart features but instead something that could be pleasant and intuitive while representing and visualizing data. I would prefer to keep charts simple and clean rather than overfeatured.
 
 At the moment it provides:
 
-* [``LineChartView``][2]
-* [``BarChartView``][3]
-* [``HorizontalBarChartView``][3]
-* [``StackBarChartView``][4]
-* [``HorizontalStackBarChartView``][4]
+* ``LineChartView``
+* ``BarChartView``
+* ``HorizontalBarChartView``
+* ``StackBarChartView``
+* ``HorizontalStackBarChartView``
 
-It has been tested in Android 2.2 and above.
+It has been tested in Android 4.0 and above.
 
-Check the [javadoc][7] and [wiki][5] for further documentation.
+Check the [javadoc][6] and [wiki][5] for further documentation.
 
 ###Gradle 
 ``` groovy
-   compile 'com.diogobernardino:williamchart:2.3'
+   compile 'com.diogobernardino:williamchart:2.3.0'
 ```
 
-If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][6].
+If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][6], I will be happy to know about it.
 
-![Demo2][1]
+![gif1][1]
+
+![gif1][2]
+
+![gif1][3]
 
 <a href="https://play.google.com/store/apps/details?id=com.db.williamchartdemo"><img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
 </a>
-
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-WilliamChart-lightgrey.svg?style=flat)](https://android-arsenal.com/details/1/769)
 
 
 License
@@ -48,10 +50,11 @@ License
 
 
 
-[1]: ./art/demo2.gif
-[2]: https://github.com/diogobernardino/WilliamChart/wiki/%283%29-Line-Chart
-[3]: https://github.com/diogobernardino/WilliamChart/wiki/%284%29-Bar-Chart
-[4]: https://github.com/diogobernardino/WilliamChart/wiki/%285%29-Stacked-Chart
-[5]: https://github.com/diogobernardino/WilliamChart/wiki
-[6]: https://twitter.com/dfbernardino
-[7]: http://diogobernardino.github.io/WilliamChart/javadoc/
+[1]: ./art/2.3.0-1.gif
+[2]: ./art/2.3.0-2.gif
+[3]: ./art/2.3.0-3.gif
+[4]: https://github.com/diogobernardino/WilliamChart/wiki
+[5]: https://twitter.com/dfbernardino
+[6]: http://diogobernardino.github.io/WilliamChart/javadoc/
+[7]: ./art/phone.png
+[8]: ./art/watch.png

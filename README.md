@@ -12,6 +12,8 @@ At the moment it provides:
 
 Tested in Android 4.0 and above.
 
+And here is the [javadoc][6].
+
 ###Gradle 
 ``` groovy
    compile 'com.diogobernardino:williamchart:2.3.0'

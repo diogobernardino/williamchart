@@ -1,7 +1,9 @@
 com.db.chart
+com.db.chart.animation
+com.db.chart.animation.easing
+com.db.chart.animation.style
 com.db.chart.listener
 com.db.chart.model
+com.db.chart.renderer
+com.db.chart.tooltip
 com.db.chart.view
-com.db.chart.view.animation
-com.db.chart.view.animation.easing
-com.db.chart.view.animation.style

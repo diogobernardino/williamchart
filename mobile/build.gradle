@@ -1,4 +1,8 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.triplet.play'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
@@ -12,13 +16,21 @@ android {
         applicationId "com.db.williamchartdemo"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file("williamchart-release.keystore")
+            storePassword properties.getProperty("apk.store_password")
+            keyAlias "william"
+            keyPassword properties.getProperty("apk.key_password")
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
-
 }
 
 dependencies {
@@ -31,4 +43,10 @@ dependencies {
     androidTestCompile 'com.android.support:support-annotations:24.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
+}
+
+play {
+    serviceAccountEmail = '1034055180604-compute@developer.gserviceaccount.com'
+    pk12File = file('williamchart.p12')
+    track = 'alpha'
 }

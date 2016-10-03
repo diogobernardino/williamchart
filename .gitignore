@@ -86,3 +86,9 @@ build/
 .gradletasknamecache
 
 javadoc/
+
+### Keystore file ###
+*.keystore
+
+### Google Play API file ###
+*.p12

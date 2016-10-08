@@ -90,18 +90,17 @@ public abstract class ChartView extends RelativeLayout {
 
 	private int mChartBottom;
 
-	/** Threshold limit line value */
-	private boolean mHasThresholdValue;
+	/** Threshold line value */
 
-	private float mThresholdStartValue;
+	private ArrayList<Float> mThresholdStartValues;
 
-	private float mThresholdEndValue;
+	private ArrayList<Float> mThresholdEndValues;
 
-	private boolean mHasThresholdLabel;
+	/** Threshold line label */
 
-	private int mThresholdStartLabel;
+	private ArrayList<Integer> mThresholdStartLabels;
 
-	private int mThresholdEndLabel;
+	private ArrayList<Integer> mThresholdEndLabels;
 
 	/** Chart data to be displayed */
 	private ArrayList<ArrayList<Region>> mRegions;
@@ -169,9 +168,11 @@ public abstract class ChartView extends RelativeLayout {
 			xRndr.dispose();
 
 			// Parse threshold screen coordinates
-			if (mHasThresholdValue) {
-				mThresholdStartValue = yRndr.parsePos(0, mThresholdStartValue);
-				mThresholdEndValue = yRndr.parsePos(0, mThresholdEndValue);
+			if (!mThresholdStartValues.isEmpty()) {
+				for (int i = 0; i < mThresholdStartValues.size(); i++) {
+					mThresholdStartValues.set(i, yRndr.parsePos(0, mThresholdStartValues.get(i)));
+					mThresholdEndValues.set(i, yRndr.parsePos(0, mThresholdEndValues.get(i)));
+				}
 			}
 
 			// Process data to define screen coordinates
@@ -245,8 +246,10 @@ public abstract class ChartView extends RelativeLayout {
 	private void init() {
 
 		mReadyToDraw = false;
-		mHasThresholdValue = false;
-		mHasThresholdLabel = false;
+		mThresholdStartValues = new ArrayList<>();
+		mThresholdEndValues = new ArrayList<>();
+		mThresholdStartLabels = new ArrayList<>();
+		mThresholdEndLabels = new ArrayList<>();
 		mIsDrawing = false;
 		data = new ArrayList<>();
 		mRegions = new ArrayList<>();
@@ -322,13 +325,15 @@ public abstract class ChartView extends RelativeLayout {
 				drawHorizontalGrid(canvas);
 
 			// Draw threshold
-			if (mHasThresholdValue)
-				drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValue, getInnerChartRight(),
-						  mThresholdEndValue);
-			if (mHasThresholdLabel)
-				drawThreshold(canvas, data.get(0).getEntry(mThresholdStartLabel).getX(),
-						  getInnerChartTop(), data.get(0).getEntry(mThresholdEndLabel).getX(),
-						  getInnerChartBottom());
+			if (!mThresholdStartValues.isEmpty())
+				for (int i = 0; i < mThresholdStartValues.size(); i++)
+					drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValues.get(i),
+							  getInnerChartRight(), mThresholdEndValues.get(i), style.thresholdPaint);
+			if (!mThresholdStartLabels.isEmpty())
+				for (int i = 0; i < mThresholdStartLabels.size(); i++)
+					drawThreshold(canvas, data.get(0).getEntry(mThresholdStartLabels.get(i)).getX(),
+							  getInnerChartTop(), data.get(0).getEntry(mThresholdEndLabels.get(i)).getX(),
+							  getInnerChartBottom(), style.thresholdPaint);
 
 			// Draw data
 			if (!data.isEmpty()) onDrawChart(canvas, data);
@@ -530,8 +535,6 @@ public abstract class ChartView extends RelativeLayout {
 		if (xRndr.hasMandatoryBorderSpacing()) xRndr.reset();
 		if (yRndr.hasMandatoryBorderSpacing()) yRndr.reset();
 
-		mHasThresholdLabel = false;
-		mHasThresholdValue = false;
 		style.thresholdPaint = null;
 
 		style.gridPaint = null;
@@ -744,11 +747,12 @@ public abstract class ChartView extends RelativeLayout {
 	 * @param right The right side of the line/band to be drawn
 	 * @param bottom The bottom side of the line/band to be drawn
 	 */
-	private void drawThreshold(Canvas canvas, float left, float top, float right, float bottom) {
+	private void drawThreshold(Canvas canvas, float left, float top, float right, float bottom,
+			  Paint paint) {
 
 		if (left == right || top == bottom)
-			canvas.drawLine(left, top, right, bottom, style.thresholdPaint);
-		else canvas.drawRect(left, top, right, bottom, style.thresholdPaint);
+			canvas.drawLine(left, top, right, bottom, paint);
+		else canvas.drawRect(left, top, right, bottom, paint);
 	}
 
 
@@ -1280,9 +1284,32 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setValueThreshold(float startValue, float endValue, Paint paint) {
 
-		mHasThresholdValue = true;
-		mThresholdStartValue = startValue;
-		mThresholdEndValue = endValue;
+		mThresholdStartValues.add(startValue);
+		mThresholdEndValues.add(endValue);
+		style.thresholdPaint = paint;
+		return this;
+	}
+
+
+	/**
+	 * Display a value threshold either in a form of line or band.
+	 * In order to produce a line, the start and end value will be equal.
+	 *
+	 * @param startValues Threshold values.
+	 * @param endValues Threshold values.
+	 * @param paint The Paint instance that will be used to draw the grid
+	 * If null the grid won't be drawn
+	 *
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
+	 */
+	public ChartView setValueThreshold(float[] startValues, float[] endValues, Paint paint) {
+
+		mThresholdStartValues.clear();
+		mThresholdEndValues.clear();
+		for (int i = 0; i < startValues.length; i++) {
+			mThresholdStartValues.add(startValues[i]);
+			mThresholdEndValues.add(endValues[i]);
+		}
 		style.thresholdPaint = paint;
 		return this;
 	}
@@ -1301,9 +1328,32 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setLabelThreshold(int startLabel, int endLabel, Paint paint) {
 
-		mHasThresholdLabel = true;
-		mThresholdStartLabel = startLabel;
-		mThresholdEndLabel = endLabel;
+		mThresholdStartLabels.add(startLabel);
+		mThresholdEndLabels.add(endLabel);
+		style.thresholdPaint = paint;
+		return this;
+	}
+
+
+	/**
+	 * Display a label threshold either in a form of line or band.
+	 * In order to produce a line, the start and end label will be equal.
+	 *
+	 * @param startLabels Threshold start label index.
+	 * @param endLabels Threshold end label index.
+	 * @param paint The Paint instance that will be used to draw the grid
+	 * If null the grid won't be drawn
+	 *
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
+	 */
+	public ChartView setLabelThreshold(int[] startLabels, int[] endLabels, Paint paint) {
+
+		mThresholdStartLabels.clear();
+		mThresholdEndLabels.clear();
+		for (int i = 0; i < startLabels.length; i++) {
+			mThresholdStartLabels.add(startLabels[i]);
+			mThresholdEndLabels.add(endLabels[i]);
+		}
 		style.thresholdPaint = paint;
 		return this;
 	}

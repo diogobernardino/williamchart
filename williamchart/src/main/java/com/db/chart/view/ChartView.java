@@ -181,7 +181,20 @@ public abstract class ChartView extends RelativeLayout {
 			onPreDrawChart(data);
 
 			// Define entries regions
-			mRegions = defineRegions(data);
+			if (mRegions.isEmpty()){
+				int dataSize = data.size();
+				int setSize;
+				mRegions = new ArrayList<>(dataSize);
+				ArrayList<Region> regionSet;
+				for (int i = 0; i < dataSize; i++) {
+					setSize = data.get(0).size();
+					regionSet = new ArrayList<>(setSize);
+					for (int j = 0; j < setSize; j++)
+						regionSet.add(new Region());
+					mRegions.add(regionSet);
+				}
+			}
+			defineRegions(mRegions, data);
 
 			// Prepare the animation retrieving the first dump of coordinates to be used
 			if (mAnim != null) data = mAnim.prepareEnterAnimation(ChartView.this);
@@ -371,10 +384,7 @@ public abstract class ChartView extends RelativeLayout {
 	 * @return {@link java.util.ArrayList} of {@link android.graphics.Region} with regions
 	 * where click will be detected
 	 */
-	ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
-
-		return mRegions;
-	}
+	void defineRegions(ArrayList<ArrayList<Region>> regions, ArrayList<ChartSet> data) {}
 
 
 	/**
@@ -564,7 +574,7 @@ public abstract class ChartView extends RelativeLayout {
 			for (ChartSet set : data)
 				newCoords.add(set.getScreenPoints());
 
-			mRegions = defineRegions(data);
+			defineRegions(mRegions, data);
 			if (mAnim != null) data = mAnim.prepareUpdateAnimation(this, oldCoords, newCoords);
 
 			invalidate();

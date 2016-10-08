@@ -228,13 +228,10 @@ public class StackBarChartView extends BaseStackBarChartView {
 	 * where click will be detected
 	 */
 	@Override
-	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
+	void defineRegions(ArrayList<ArrayList<Region>> regions, ArrayList<ChartSet> data) {
 
 		int dataSize = data.size();
 		int setSize = data.get(0).size();
-		ArrayList<ArrayList<Region>> result = new ArrayList<>(dataSize);
-		for (int i = 0; i < dataSize; i++)
-			result.add(new ArrayList<Region>(setSize));
 
 		float verticalOffset;
 		float currBottomY;
@@ -273,30 +270,31 @@ public class StackBarChartView extends BaseStackBarChartView {
 
 				if (bar.getValue() > 0) {
 					y1 = zeroPosition - (barSize + verticalOffset);
-					result.get(j)
-							  .add(new Region((int) (bar.getX() - barWidth / 2), (int) y1,
-										 (int) (bar.getX() + barWidth / 2), (int) currBottomY));
+					regions.get(j)
+							  .get(i)
+							  .set((int) (bar.getX() - barWidth / 2), (int) y1,
+										 (int) (bar.getX() + barWidth / 2), (int) currBottomY);
 					currBottomY = y1;
 					verticalOffset += barSize + 2;
 
 				} else if (bar.getValue() < 0) {
 					y1 = zeroPosition + (barSize - negVerticalOffset);
-					result.get(j)
-							  .add(new Region((int) (bar.getX() - barWidth / 2), (int) negCurrBottomY,
-										 (int) (bar.getX() + barWidth / 2), (int) y1));
+					regions.get(j)
+							  .get(i)
+							  .set((int) (bar.getX() - barWidth / 2), (int) negCurrBottomY,
+										 (int) (bar.getX() + barWidth / 2), (int) y1);
 					negCurrBottomY = y1;
 					negVerticalOffset -= barSize;
 
 				} else {  // If bar.getValue() == 0, force region to 1 pixel
 					y1 = zeroPosition - (1 + verticalOffset);
-					result.get(j)
-							  .add(new Region((int) (bar.getX() - barWidth / 2), (int) y1,
-										 (int) (bar.getX() + barWidth / 2), (int) currBottomY));
+					regions.get(j)
+							  .get(i)
+							  .set((int) (bar.getX() - barWidth / 2), (int) y1,
+										 (int) (bar.getX() + barWidth / 2), (int) currBottomY);
 				}
 			}
 		}
-
-		return result;
 	}
 
 }

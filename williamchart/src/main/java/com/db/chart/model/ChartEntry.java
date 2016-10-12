@@ -169,6 +169,17 @@ public abstract class ChartEntry implements Comparable<ChartEntry> {
 
 
 	/**
+	 * Set new String label.
+	 *
+	 * @param label New label
+	 */
+	public void setLabel(String label) {
+
+		mLabel = label;
+	}
+
+
+	/**
 	 * Set the parsed display coordinates.
 	 *
 	 * @param x display x coordinate.

@@ -30,7 +30,7 @@ public abstract class ChartEntry implements Comparable<ChartEntry> {
 
 
 	/** Input from user */
-	final private String mLabel;
+	private String mLabel;
 
 	/** Defines if entry is visible */
 	boolean isVisible;

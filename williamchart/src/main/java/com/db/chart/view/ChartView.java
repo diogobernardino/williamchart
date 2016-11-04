@@ -310,12 +310,12 @@ public abstract class ChartView extends RelativeLayout {
 
 			// Draw threshold
 			if (mHasThresholdValue)
-				drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValue, getInnerChartRight(),
-						  mThresholdEndValue);
+				drawValueThreshold(canvas, getInnerChartLeft(), mThresholdStartValue, getInnerChartRight(),
+						  mThresholdEndValue); // edited to allow different vertical and horizontal threshhold paints(muddassir235)
 			if (mHasThresholdLabel)
-				drawThreshold(canvas, data.get(0).getEntry(mThresholdStartLabel).getX(),
+				drawLabelThreshold(canvas, data.get(0).getEntry(mThresholdStartLabel).getX(),
 						  getInnerChartTop(), data.get(0).getEntry(mThresholdEndLabel).getX(),
-						  getInnerChartBottom());
+						  getInnerChartBottom()); //edited to allow different vertical and horizontal threshhold paints(muddassir235)
 
 			// Draw data
 			if (!data.isEmpty()) onDrawChart(canvas, data);
@@ -522,7 +522,10 @@ public abstract class ChartView extends RelativeLayout {
 
 		mHasThresholdLabel = false;
 		mHasThresholdValue = false;
-		style.thresholdPaint = null;
+
+		// edited to allow different vertical and horizontal threshhold paints(muddassir235)
+		style.labelThresholdPaint = null;
+		style.valueThresholdPaint = null;
 
 		style.gridPaint = null;
 	}
@@ -734,13 +737,20 @@ public abstract class ChartView extends RelativeLayout {
 	 * @param right The right side of the line/band to be drawn
 	 * @param bottom The bottom side of the line/band to be drawn
 	 */
-	private void drawThreshold(Canvas canvas, float left, float top, float right, float bottom) {
 
+	// edited to allow different vertical and horizontal threshhold paints(muddassir235)
+	private void drawLabelThreshold(Canvas canvas, float left, float top, float right, float bottom) {
 		if (left == right || top == bottom)
-			canvas.drawLine(left, top, right, bottom, style.thresholdPaint);
-		else canvas.drawRect(left, top, right, bottom, style.thresholdPaint);
+			canvas.drawLine(left, top, right, bottom, style.labelThresholdPaint);
+		else canvas.drawRect(left, top, right, bottom, style.labelThresholdPaint);
 	}
 
+	// edited to allow different vertical and horizontal threshhold paints(muddassir235)
+	private void drawValueThreshold(Canvas canvas, float left, float top, float right, float bottom) {
+		if (left == right || top == bottom)
+			canvas.drawLine(left, top, right, bottom, style.valueThresholdPaint);
+		else canvas.drawRect(left, top, right, bottom, style.valueThresholdPaint);
+	}
 
 	/**
 	 * Draw vertical lines of Grid.
@@ -1273,7 +1283,7 @@ public abstract class ChartView extends RelativeLayout {
 		mHasThresholdValue = true;
 		mThresholdStartValue = startValue;
 		mThresholdEndValue = endValue;
-		style.thresholdPaint = paint;
+		style.valueThresholdPaint = paint;
 		return this;
 	}
 
@@ -1294,7 +1304,23 @@ public abstract class ChartView extends RelativeLayout {
 		mHasThresholdLabel = true;
 		mThresholdStartLabel = startLabel;
 		mThresholdEndLabel = endLabel;
-		style.thresholdPaint = paint;
+		style.labelThresholdPaint = paint;
+		return this;
+	}
+
+	// ** Edit: Function added by muddassir235
+	public ChartView removeLabelThreshold(){
+		mHasThresholdLabel = false;
+		style.labelThresholdPaint = null;
+		this.invalidate();
+		return this;
+	}
+
+	// ** Edit: Function added by muddassir235
+	public ChartView removeValueThreshold(){
+		mHasThresholdValue = false;
+		style.valueThresholdPaint = null;
+		this.invalidate();
 		return this;
 	}
 
@@ -1409,7 +1435,9 @@ public abstract class ChartView extends RelativeLayout {
 		private Paint gridPaint;
 
 		/** Threshold **/
-		private Paint thresholdPaint;
+		private Paint labelThresholdPaint;  // edit (muddassir235)
+
+		private Paint valueThresholdPaint; // edit (muddassir235)
 
 		/** Font */
 		private Paint labelsPaint;
@@ -1482,7 +1510,8 @@ public abstract class ChartView extends RelativeLayout {
 			chartPaint = null;
 			labelsPaint = null;
 			gridPaint = null;
-			thresholdPaint = null;
+			labelThresholdPaint = null;
+			valueThresholdPaint = null;
 		}
 
 

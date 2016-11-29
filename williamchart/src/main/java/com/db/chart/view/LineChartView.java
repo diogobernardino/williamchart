@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
@@ -31,7 +30,6 @@ import android.support.annotation.FloatRange;
 import android.util.AttributeSet;
 
 import com.db.chart.Tools;
-import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.model.LineSet;
 import com.db.chart.model.Point;
@@ -161,27 +159,26 @@ public class LineChartView extends ChartView {
 	 * where click will be detected
 	 */
 	@Override
-	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
+	void defineRegions(ArrayList<ArrayList<Region>>
+			  regions, ArrayList<ChartSet> data) {
 
-		ArrayList<ArrayList<Region>> result = new ArrayList<>(data.size());
-
-		ArrayList<Region> regionSet;
 		float x;
 		float y;
-		for (ChartSet set : data) {
+		int dataSize = data.size();
+		int setSize;
+		for (int i = 0; i < dataSize; i++) {
 
-			regionSet = new ArrayList<>(set.size());
-			for (ChartEntry e : set.getEntries()) {
+			setSize = data.get(0).size();
+			for (int j = 0; j < setSize; j++) {
 
-				x = e.getX();
-				y = e.getY();
-				regionSet.add(new Region((int) (x - mClickableRadius), (int) (y - mClickableRadius),
-						  (int) (x + mClickableRadius), (int) (y + mClickableRadius)));
+				x = data.get(i).getEntry(j).getX();
+				y = data.get(i).getEntry(j).getY();
+				regions.get(i)
+						  .get(j)
+						  .set((int) (x - mClickableRadius), (int) (y - mClickableRadius),
+									 (int) (x + mClickableRadius), (int) (y + mClickableRadius));
 			}
-			result.add(regionSet);
 		}
-
-		return result;
 	}
 
 

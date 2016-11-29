@@ -151,15 +151,10 @@ public class HorizontalBarChartView extends BaseBarChartView {
 	 * where click will be detected
 	 */
 	@Override
-	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
+	void defineRegions(ArrayList<ArrayList<Region>> regions, ArrayList<ChartSet> data) {
 
 		int nSets = data.size();
 		int nEntries = data.get(0).size();
-
-		final ArrayList<ArrayList<Region>> result = new ArrayList<>(nSets);
-
-		for (int i = 0; i < nSets; i++)
-			result.add(new ArrayList<Region>(nEntries));
 
 		float offset;
 		BarSet barSet;
@@ -175,21 +170,24 @@ public class HorizontalBarChartView extends BaseBarChartView {
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
 
-				if (bar.getValue() > 0) result.get(j)
-						  .add(new Region((int) this.getZeroPosition(), (int) offset, (int) bar.getX(),
-									 (int) (offset + barWidth)));
-				else if (bar.getValue() < 0) result.get(j)
-						  .add(new Region((int) bar.getX(), (int) offset, (int) this.getZeroPosition(),
-									 (int) (offset + barWidth)));
-				else result.get(j) // If bar.getValue() == 0, force region to 1 pixel
-							  .add(new Region((int) this.getZeroPosition() - 1, (int) offset,
-										 (int) this.getZeroPosition(), (int) (offset + barWidth)));
+				if (bar.getValue() > 0) regions.get(j)
+						  .get(i)
+						  .set((int) this.getZeroPosition(), (int) offset, (int) bar.getX(),
+									 (int) (offset + barWidth));
+				else if (bar.getValue() < 0) regions.get(j)
+						  .get(i)
+						  .set((int) bar.getX(), (int) offset, (int) this.getZeroPosition(),
+									 (int) (offset + barWidth));
+				else // If bar.getValue() == 0, force region to 1 pixel
+					regions.get(j)
+							  .get(i)
+							  .set((int) this.getZeroPosition() - 1, (int) offset,
+										 (int) this.getZeroPosition(), (int) (offset + barWidth));
 
 				// If last bar of group no set spacing is necessary
 				if (j != nSets - 1) offset += style.setSpacing;
 			}
 		}
-		return result;
 	}
 
 }

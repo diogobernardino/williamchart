@@ -229,13 +229,10 @@ public class HorizontalStackBarChartView extends BaseStackBarChartView {
 	 * where click will be detected
 	 */
 	@Override
-	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
+	void defineRegions(ArrayList<ArrayList<Region>> regions, ArrayList<ChartSet> data) {
 
 		int dataSize = data.size();
 		int setSize = data.get(0).size();
-		ArrayList<ArrayList<Region>> result = new ArrayList<>(dataSize);
-		for (int i = 0; i < dataSize; i++)
-			result.add(new ArrayList<Region>(setSize));
 
 		float offset;
 		float currBottom;
@@ -272,30 +269,25 @@ public class HorizontalStackBarChartView extends BaseStackBarChartView {
 
 				if (bar.getValue() > 0) {
 					x1 = zeroPosition + (barSize - offset);
-					result.get(j)
-							  .add(new Region((int) currBottom, (int) (bar.getY() - barWidth / 2),
-										 (int) x1, (int) (bar.getY() + barWidth / 2)));
+					regions.get(j).get(i).set((int) currBottom, (int) (bar.getY() - barWidth / 2),
+							  (int) x1, (int) (bar.getY() + barWidth / 2));
 					currBottom = x1;
 					offset -= barSize - 2;
 
 				} else if (bar.getValue() < 0) {
 					x1 = zeroPosition - (barSize + negOffset);
-					result.get(j)
-							  .add(new Region((int) x1, (int) (bar.getY() - barWidth / 2),
-										 (int) negCurrBottom, (int) (bar.getY() + barWidth / 2)));
+					regions.get(j).get(i).set((int) x1, (int) (bar.getY() - barWidth / 2),
+										 (int) negCurrBottom, (int) (bar.getY() + barWidth / 2));
 					negCurrBottom = x1;
 					negOffset += barSize;
 
 				} else {  // If bar.getValue() == 0, force region to 1 pixel
 					x1 = zeroPosition + (1 - offset);
-					result.get(j)
-							  .add(new Region((int) currBottom, (int) (bar.getY() - barWidth / 2),
-										 (int) x1, (int) (bar.getY() + barWidth / 2)));
+					regions.get(j).get(i).set((int) currBottom, (int) (bar.getY() - barWidth / 2),
+										 (int) x1, (int) (bar.getY() + barWidth / 2));
 				}
 			}
 		}
-
-		return result;
 	}
 
 }

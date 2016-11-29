@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "com.db.williamchartwear"
@@ -23,5 +23,5 @@ android {
 dependencies {
     compile project(':williamchart')
     compile 'com.google.android.support:wearable:2.0.0-alpha2'
-    compile 'com.google.android.gms:play-services-wearable:9.4.0'
+    compile 'com.google.android.gms:play-services-wearable:10.0.0'
 }

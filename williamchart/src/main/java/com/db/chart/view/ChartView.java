@@ -1481,8 +1481,6 @@ public abstract class ChartView extends RelativeLayout {
 
 			chartPaint = null;
 			labelsPaint = null;
-			gridPaint = null;
-			thresholdPaint = null;
 		}
 
 

@@ -141,7 +141,7 @@ public abstract class BaseBarChartView extends ChartView {
 	 */
 	void calculateBarsWidth(int nSets, float x0, float x1) {
 
-		barWidth = ((x1 - x0) - style.barSpacing / 2 - style.setSpacing * (nSets - 1)) / nSets;
+		barWidth = ((x1 - x0) - style.barSpacing - style.setSpacing * (nSets - 1)) / nSets;
 	}
 
 

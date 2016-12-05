@@ -328,12 +328,12 @@ public abstract class ChartView extends RelativeLayout {
 			if (!mThresholdStartValues.isEmpty())
 				for (int i = 0; i < mThresholdStartValues.size(); i++)
 					drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValues.get(i),
-							  getInnerChartRight(), mThresholdEndValues.get(i), style.thresholdPaint);
+							  getInnerChartRight(), mThresholdEndValues.get(i), style.valueThresPaint);
 			if (!mThresholdStartLabels.isEmpty())
 				for (int i = 0; i < mThresholdStartLabels.size(); i++)
 					drawThreshold(canvas, data.get(0).getEntry(mThresholdStartLabels.get(i)).getX(),
 							  getInnerChartTop(), data.get(0).getEntry(mThresholdEndLabels.get(i)).getX(),
-							  getInnerChartBottom(), style.thresholdPaint);
+							  getInnerChartBottom(), style.labelThresPaint);
 
 			// Draw data
 			if (!data.isEmpty()) onDrawChart(canvas, data);
@@ -535,7 +535,8 @@ public abstract class ChartView extends RelativeLayout {
 		if (xRndr.hasMandatoryBorderSpacing()) xRndr.reset();
 		if (yRndr.hasMandatoryBorderSpacing()) yRndr.reset();
 
-		style.thresholdPaint = null;
+		style.labelThresPaint = null;
+		style.valueThresPaint = null;
 
 		style.gridPaint = null;
 	}
@@ -1286,7 +1287,7 @@ public abstract class ChartView extends RelativeLayout {
 
 		mThresholdStartValues.add(startValue);
 		mThresholdEndValues.add(endValue);
-		style.thresholdPaint = paint;
+		style.valueThresPaint = paint;
 		return this;
 	}
 
@@ -1310,7 +1311,7 @@ public abstract class ChartView extends RelativeLayout {
 			mThresholdStartValues.add(startValues[i]);
 			mThresholdEndValues.add(endValues[i]);
 		}
-		style.thresholdPaint = paint;
+		style.valueThresPaint = paint;
 		return this;
 	}
 
@@ -1330,7 +1331,7 @@ public abstract class ChartView extends RelativeLayout {
 
 		mThresholdStartLabels.add(startLabel);
 		mThresholdEndLabels.add(endLabel);
-		style.thresholdPaint = paint;
+		style.labelThresPaint = paint;
 		return this;
 	}
 
@@ -1354,7 +1355,7 @@ public abstract class ChartView extends RelativeLayout {
 			mThresholdStartLabels.add(startLabels[i]);
 			mThresholdEndLabels.add(endLabels[i]);
 		}
-		style.thresholdPaint = paint;
+		style.labelThresPaint = paint;
 		return this;
 	}
 
@@ -1469,7 +1470,8 @@ public abstract class ChartView extends RelativeLayout {
 		private Paint gridPaint;
 
 		/** Threshold **/
-		private Paint thresholdPaint;
+		private Paint labelThresPaint;
+		private Paint valueThresPaint;
 
 		/** Font */
 		private Paint labelsPaint;
@@ -1541,8 +1543,6 @@ public abstract class ChartView extends RelativeLayout {
 
 			chartPaint = null;
 			labelsPaint = null;
-			gridPaint = null;
-			thresholdPaint = null;
 		}
 
 

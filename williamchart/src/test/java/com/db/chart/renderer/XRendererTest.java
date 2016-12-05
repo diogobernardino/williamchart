@@ -71,10 +71,10 @@ public class XRendererTest {
 		when(mStyleMock.hasXAxis()).thenReturn(true);
 		when(mStyleMock.getAxisThickness()).thenReturn(6.f);
 		when(mStyleMock.getLabelsPaint()).thenReturn(mMockPaint);
+		when(mStyleMock.getXLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.INSIDE);
 		when(mMockPaint.descent()).thenReturn(6.f);
 
 		mXRndr.setInnerChartBounds(0, 0, 0, 18.f);
-		mXRndr.setLabelsPositioning(AxisRenderer.LabelPosition.INSIDE);
 		float axisCoordinate = mXRndr.defineAxisPosition();
 		float labelsCoordinate = mXRndr.defineStaticLabelsPosition(axisCoordinate, 6);
 
@@ -89,11 +89,11 @@ public class XRendererTest {
 		when(mStyleMock.hasXAxis()).thenReturn(true);
 		when(mStyleMock.getAxisThickness()).thenReturn(6.f);
 		when(mStyleMock.getFontMaxHeight()).thenReturn(12);
+		when(mStyleMock.getXLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.OUTSIDE);
 		when(mStyleMock.getLabelsPaint()).thenReturn(mMockPaint);
 		when(mMockPaint.descent()).thenReturn(6.f);
 
 		mXRndr.setInnerChartBounds(0, 0, 0, 18.f);
-		mXRndr.setLabelsPositioning(AxisRenderer.LabelPosition.OUTSIDE);
 		float axisCoordinate = mXRndr.defineAxisPosition();
 		float labelsCoordinate = mXRndr.defineStaticLabelsPosition(axisCoordinate, 6);
 
@@ -105,10 +105,9 @@ public class XRendererTest {
 	@Test
 	public void measureInnerChartLeft_LabelsNone_Result() {
 
+		when(mStyleMock.getXLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.NONE);
 		when(mStyleMock.getLabelsPaint()).thenReturn(mMockPaint);
 		when(mMockPaint.measureText("0")).thenReturn(6.f);
-
-		mXRndr.setLabelsPositioning(AxisRenderer.LabelPosition.NONE);
 
 		assertEquals(5.f, mXRndr.measureInnerChartLeft(5), RESULT_THRESHOLD);
 	}
@@ -117,10 +116,9 @@ public class XRendererTest {
 	@Test
 	public void measureInnerChartLeft_LabelsNotNone_Result() {
 
+		when(mStyleMock.getXLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.INSIDE);
 		when(mStyleMock.getLabelsPaint()).thenReturn(mMockPaint);
 		when(mMockPaint.measureText("0")).thenReturn(6.f);
-
-		mXRndr.setLabelsPositioning(AxisRenderer.LabelPosition.INSIDE);
 
 		assertEquals(3.f, mXRndr.measureInnerChartLeft(5), RESULT_THRESHOLD);
 	}
@@ -129,11 +127,11 @@ public class XRendererTest {
 	@Test
 	public void measureInnerChartRight_NoLabels_Result() {
 
+		when(mStyleMock.getXLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.OUTSIDE);
 		when(mStyleMock.getLabelsPaint()).thenReturn(mMockPaint);
 		when(mMockPaint.measureText("1")).thenReturn(6.f);
 
 		mXRndr.init(mData, mStyleMock);
-		mXRndr.setLabelsPositioning(AxisRenderer.LabelPosition.OUTSIDE);
 		mXRndr.setMandatoryBorderSpacing(true);
 		mXRndr.setBorderSpacing(1);
 
@@ -161,9 +159,9 @@ public class XRendererTest {
 		when(mStyleMock.hasXAxis()).thenReturn(true);
 		when(mStyleMock.getAxisThickness()).thenReturn(6.f);
 		when(mStyleMock.getFontMaxHeight()).thenReturn(6);
+		when(mStyleMock.getXLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.OUTSIDE);
 
 		mXRndr.setAxisLabelsSpacing(6.f);
-		mXRndr.setLabelsPositioning(AxisRenderer.LabelPosition.OUTSIDE);
 
 		assertEquals(6.f, mXRndr.measureInnerChartBottom(24), RESULT_THRESHOLD);
 	}
@@ -173,10 +171,10 @@ public class XRendererTest {
 	public void parsePos_HandleValuesNoLabels_Result(){
 
 		when(mStyleMock.hasXAxis()).thenReturn(false);
+		when(mStyleMock.getXLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.NONE);
 
 		mXRndr.setHandleValues(true);
 		mXRndr.setInnerChartBounds(0, 0, 10, 10);
-		mXRndr.setLabelsPositioning(AxisRenderer.LabelPosition.NONE);
 		mXRndr.init(mData, mStyleMock);
 		mXRndr.dispose();
 

@@ -988,7 +988,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setYLabels(YRenderer.LabelPosition position) {
 
-		yRndr.setLabelsPositioning(position);
+		style.yLabelsPositioning = position;
 		return this;
 	}
 
@@ -1004,7 +1004,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setXLabels(XRenderer.LabelPosition position) {
 
-		xRndr.setLabelsPositioning(position);
+		style.xLabelsPositioning = position;
 		return this;
 	}
 
@@ -1457,13 +1457,13 @@ public abstract class ChartView extends RelativeLayout {
 		private Paint chartPaint;
 
 		/** Axis */
-		private float axisThickness;
-
-		private int axisColor;
-
 		private boolean hasXAxis;
 
 		private boolean hasYAxis;
+
+		private float axisThickness;
+
+		private int axisColor;
 
 		/** Grid */
 		private Paint gridPaint;
@@ -1472,6 +1472,10 @@ public abstract class ChartView extends RelativeLayout {
 		private Paint thresholdPaint;
 
 		/** Font */
+		private AxisRenderer.LabelPosition xLabelsPositioning;
+
+		private AxisRenderer.LabelPosition yLabelsPositioning;
+
 		private Paint labelsPaint;
 
 		private int labelsColor;
@@ -1495,6 +1499,8 @@ public abstract class ChartView extends RelativeLayout {
 			hasXAxis = true;
 			hasYAxis = true;
 
+			xLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
+			yLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
 			labelsColor = DEFAULT_COLOR;
 			fontSize = ctx.getResources().getDimension(R.dimen.font_size);
 		}
@@ -1502,13 +1508,29 @@ public abstract class ChartView extends RelativeLayout {
 
 		Style(TypedArray attrs) {
 
+			hasXAxis = attrs.getBoolean(R.styleable.ChartAttrs_chart_axis, true);
+			hasYAxis = attrs.getBoolean(R.styleable.ChartAttrs_chart_axis, true);
 			axisColor = attrs.getColor(R.styleable.ChartAttrs_chart_axisColor, DEFAULT_COLOR);
 			axisThickness = attrs.getDimension(R.styleable.ChartAttrs_chart_axisThickness,
 					  getResources().getDimension(R.dimen.axis_thickness));
-			hasXAxis = true;
-			hasYAxis = true;
+
+			switch (attrs.getInt(R.styleable.ChartAttrs_chart_labels, 0)){
+				case 1:
+					xLabelsPositioning = AxisRenderer.LabelPosition.INSIDE;
+					yLabelsPositioning = AxisRenderer.LabelPosition.INSIDE;
+					break;
+				case 2:
+					xLabelsPositioning = AxisRenderer.LabelPosition.NONE;
+					yLabelsPositioning = AxisRenderer.LabelPosition.NONE;
+					break;
+				default:
+					xLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
+					yLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
+					break;
+			}
 
 			labelsColor = attrs.getColor(R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
+
 			fontSize = attrs.getDimension(R.styleable.ChartAttrs_chart_fontSize,
 					  getResources().getDimension(R.dimen.font_size));
 
@@ -1594,6 +1616,16 @@ public abstract class ChartView extends RelativeLayout {
 		public int getFontMaxHeight() {
 
 			return fontMaxHeight;
+		}
+
+		public AxisRenderer.LabelPosition getXLabelsPositioning(){
+
+			return xLabelsPositioning;
+		}
+
+		public AxisRenderer.LabelPosition getYLabelsPositioning(){
+
+			return yLabelsPositioning;
 		}
 	}
 

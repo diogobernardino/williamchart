@@ -52,9 +52,6 @@ public abstract class AxisRenderer {
 	/** Number of labels */
 	int nLabels;
 
-	/** none/inside/outside */
-	LabelPosition labelsPositioning;
-
 	/** Labels Metric to draw together with labels */
 	DecimalFormat labelFormat;
 
@@ -195,7 +192,6 @@ public abstract class AxisRenderer {
 		topSpacing = 0;
 		step = -1;
 		labelsStaticPos = 0;
-		labelsPositioning = LabelPosition.OUTSIDE;
 		labelFormat = new DecimalFormat();
 		axisPosition = 0;
 		minLabelValue = 0;
@@ -459,17 +455,6 @@ public abstract class AxisRenderer {
 	public void setHandleValues(boolean bool) {
 
 		handleValues = bool;
-	}
-
-
-	/**
-	 * Set where labels should be placed in relation to axis (none/inside/outside).
-	 *
-	 * @param position {@link LabelPosition} value defining where should be positioned.
-	 */
-	public void setLabelsPositioning(LabelPosition position) {
-
-		labelsPositioning = position;
 	}
 
 

@@ -52,7 +52,7 @@ public abstract class BaseBarChartView extends ChartView {
 		super(context, attrs);
 
 		style = new Style(
-				  context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
+				  context.getTheme().obtainStyledAttributes(attrs, R.styleable.BarChartAttrs, 0, 0));
 
 	}
 

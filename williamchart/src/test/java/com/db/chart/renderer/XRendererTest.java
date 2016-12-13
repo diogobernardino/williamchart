@@ -159,9 +159,8 @@ public class XRendererTest {
 		when(mStyleMock.hasXAxis()).thenReturn(true);
 		when(mStyleMock.getAxisThickness()).thenReturn(6.f);
 		when(mStyleMock.getFontMaxHeight()).thenReturn(6);
+		when(mStyleMock.getAxisLabelsSpacing()).thenReturn(6);
 		when(mStyleMock.getXLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.OUTSIDE);
-
-		mXRndr.setAxisLabelsSpacing(6.f);
 
 		assertEquals(6.f, mXRndr.measureInnerChartBottom(24), RESULT_THRESHOLD);
 	}

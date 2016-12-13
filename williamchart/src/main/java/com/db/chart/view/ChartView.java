@@ -1369,8 +1369,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setAxisLabelsSpacing(float spacing) {
 
-		xRndr.setAxisLabelsSpacing(spacing);
-		yRndr.setAxisLabelsSpacing(spacing);
+		style.distLabelToAxis = (int) spacing;
 		return this;
 	}
 
@@ -1466,11 +1465,15 @@ public abstract class ChartView extends RelativeLayout {
 
 		private int axisColor;
 
+		/** Distance between axis and label */
+		private int distLabelToAxis;
+
 		/** Grid */
 		private Paint gridPaint;
 
 		/** Threshold **/
 		private Paint labelThresPaint;
+
 		private Paint valueThresPaint;
 
 		/** Font */
@@ -1505,6 +1508,8 @@ public abstract class ChartView extends RelativeLayout {
 			yLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
 			labelsColor = DEFAULT_COLOR;
 			fontSize = ctx.getResources().getDimension(R.dimen.font_size);
+
+			distLabelToAxis = (int) ctx.getResources().getDimension(R.dimen.axis_labels_spacing);
 		}
 
 
@@ -1539,6 +1544,10 @@ public abstract class ChartView extends RelativeLayout {
 			String typefaceName = attrs.getString(R.styleable.ChartAttrs_chart_typeface);
 			if (typefaceName != null) typeface = Typeface.createFromAsset(getResources().
 					  getAssets(), typefaceName);
+
+			distLabelToAxis = (int) attrs.getDimension(R.styleable.ChartAttrs_chart_axisLabelsSpacing,
+					  getResources().getDimension(R.dimen.axis_labels_spacing));
+
 		}
 
 
@@ -1626,6 +1635,11 @@ public abstract class ChartView extends RelativeLayout {
 		public AxisRenderer.LabelPosition getYLabelsPositioning(){
 
 			return yLabelsPositioning;
+		}
+
+		public int getAxisLabelsSpacing(){
+
+			return distLabelToAxis;
 		}
 	}
 

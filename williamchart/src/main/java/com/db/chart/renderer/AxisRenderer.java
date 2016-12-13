@@ -34,9 +34,6 @@ import java.util.ArrayList;
 public abstract class AxisRenderer {
 
 
-	/** Distance between axis and label */
-	int distLabelToAxis;
-
 	/** Label's values formatted */
 	ArrayList<String> labels;
 
@@ -132,7 +129,7 @@ public abstract class AxisRenderer {
 	void dispose() {
 
 		axisPosition = defineAxisPosition();
-		labelsStaticPos = defineStaticLabelsPosition(axisPosition, distLabelToAxis);
+		labelsStaticPos = defineStaticLabelsPosition(axisPosition, style.getAxisLabelsSpacing());
 	}
 
 
@@ -186,7 +183,6 @@ public abstract class AxisRenderer {
 	 */
 	public void reset() {
 
-		distLabelToAxis = (int) Tools.fromDpToPx(5.f);
 		mandatoryBorderSpacing = 0;
 		borderSpacing = 0;
 		topSpacing = 0;
@@ -515,17 +511,6 @@ public abstract class AxisRenderer {
 
 
 	/**
-	 * Set distance between labels and axis.
-	 *
-	 * @param distLabelToAxis Distance between labels and axis.
-	 */
-	public void setLabelToAxisDistance(int distLabelToAxis) {
-
-		this.distLabelToAxis = distLabelToAxis;
-	}
-
-
-	/**
 	 * Set inner chart bounds.
 	 * Inner chart means the chart's area where datasets are drawn,
 	 * chart's area excluding axis area.
@@ -541,17 +526,6 @@ public abstract class AxisRenderer {
 		mInnerChartTop = top;
 		mInnerChartRight = right;
 		mInnerChartBottom = bottom;
-	}
-
-
-	/**
-	 * Define spacing between axis and labels.
-	 *
-	 * @param spacing Spacing between axis and labels
-	 */
-	public void setAxisLabelsSpacing(float spacing) {
-
-		distLabelToAxis = (int) spacing;
 	}
 
 

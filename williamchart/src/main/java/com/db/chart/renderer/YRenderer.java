@@ -164,7 +164,7 @@ public class YRenderer extends AxisRenderer {
 			for (String label : labels)
 				if ((aux = style.getLabelsPaint().measureText(label)) > maxLabelLength)
 					maxLabelLength = aux;
-			result += maxLabelLength + distLabelToAxis;
+			result += maxLabelLength + style.getAxisLabelsSpacing();
 		}
 		return result;
 	}

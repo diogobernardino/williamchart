@@ -204,7 +204,7 @@ public class XRenderer extends AxisRenderer {
 		if (style.hasXAxis()) result -= style.getAxisThickness();
 
 		if (style.getXLabelsPositioning() == LabelPosition.OUTSIDE)
-			result -= style.getFontMaxHeight() + distLabelToAxis;
+			result -= style.getFontMaxHeight() + style.getAxisLabelsSpacing();
 
 		return result;
 	}

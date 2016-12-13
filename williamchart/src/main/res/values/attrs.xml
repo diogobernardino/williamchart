@@ -8,6 +8,8 @@
         <attr name="chart_axisBorderSpacing" format="dimension"/>
         <attr name="chart_axisTopSpacing" format="dimension"/>
 
+        <attr name="chart_axisLabelsSpacing" format="dimension"/>
+
         <attr name="chart_labels" format="enum">
             <enum name="outside" value="0"/>
             <enum name="inside" value="1"/>
@@ -28,6 +30,7 @@
     <declare-styleable name="BarChartAttrs">
         <attr name="chart_barSpacing" format="dimension"/>
         <attr name="chart_setSpacing" format="dimension"/>
+        <attr name="chart_cornerRadius" format="dimension"/>
     </declare-styleable>
 </resources>
 

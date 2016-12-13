@@ -104,11 +104,12 @@ public class YRendererTest {
 		when(mStyleMock.getAxisThickness()).thenReturn(6.f);
 		when(mStyleMock.getYLabelsPositioning()).thenReturn(AxisRenderer.LabelPosition.OUTSIDE);
 		when(mStyleMock.getLabelsPaint()).thenReturn(mMockPaint);
+		when(mStyleMock.getAxisLabelsSpacing()).thenReturn(6);
+
 		when(mMockPaint.measureText("0")).thenReturn(6.f);
 		when(mMockPaint.measureText("1")).thenReturn(12.f);
 
 		mYRndr.init(mData, mStyleMock);
-		mYRndr.setLabelToAxisDistance(6);
 
 		assertEquals(30.f, mYRndr.measureInnerChartLeft(6), RESULT_THRESHOLD);
 	}

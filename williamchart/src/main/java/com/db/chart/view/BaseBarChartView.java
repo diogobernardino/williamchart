@@ -225,26 +225,23 @@ public abstract class BaseBarChartView extends ChartView {
 
 		private static final int DEFAULT_COLOR = -16777216;
 
-
 		/** Bars fill variables */
 		Paint barPaint;
-
 
 		/** Spacing between bars */
 		float barSpacing;
 
 		float setSpacing;
 
-
 		/** Bar background variables */
 		Paint barBackgroundPaint;
 
 		boolean hasBarBackground;
 
+		private int mBarBackgroundColor;
+
 		/** Radius to round corners **/
 		float cornerRadius;
-
-		private int mBarBackgroundColor;
 
 
 		Style() {
@@ -254,6 +251,7 @@ public abstract class BaseBarChartView extends ChartView {
 
 			barSpacing = getResources().getDimension(R.dimen.bar_spacing);
 			setSpacing = getResources().getDimension(R.dimen.set_spacing);
+			cornerRadius = getResources().getDimension(R.dimen.corner_radius);
 		}
 
 
@@ -266,6 +264,8 @@ public abstract class BaseBarChartView extends ChartView {
 					  getResources().getDimension(R.dimen.bar_spacing));
 			setSpacing = attrs.getDimension(R.styleable.BarChartAttrs_chart_barSpacing,
 					  getResources().getDimension(R.dimen.set_spacing));
+			cornerRadius = attrs.getDimension(R.styleable.BarChartAttrs_chart_cornerRadius,
+					  getResources().getDimension(R.dimen.corner_radius));
 		}
 
 

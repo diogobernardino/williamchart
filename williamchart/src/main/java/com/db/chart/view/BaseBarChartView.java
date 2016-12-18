@@ -111,7 +111,8 @@ public abstract class BaseBarChartView extends ChartView {
 	 */
 	void drawBar(Canvas canvas, float left, float top, float right, float bottom) {
 
-		canvas.drawRoundRect(new RectF((int) left, (int) top, (int) right, (int) bottom),
+		canvas.drawRoundRect(
+				  new RectF(Math.round(left), Math.round(top), Math.round(right), Math.round(bottom)),
 				  style.cornerRadius, style.cornerRadius, style.barPaint);
 	}
 
@@ -127,7 +128,8 @@ public abstract class BaseBarChartView extends ChartView {
 	 */
 	void drawBarBackground(Canvas canvas, float left, float top, float right, float bottom) {
 
-		canvas.drawRoundRect(new RectF((int) left, (int) top, (int) right, (int) bottom),
+		canvas.drawRoundRect(
+				  new RectF(Math.round(left), Math.round(top), Math.round(right), Math.round(bottom)),
 				  style.cornerRadius, style.cornerRadius, style.barBackgroundPaint);
 	}
 

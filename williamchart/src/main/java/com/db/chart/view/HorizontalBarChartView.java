@@ -83,7 +83,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 				bar = (Bar) barSet.getEntry(i);
 
 				// If entry value is 0 it won't be drawn
-				if (!barSet.isVisible() || bar.getValue() == 0) continue;
+				if (!barSet.isVisible()) continue;
 
 				// Style it!
 				if (!bar.hasGradientColor()) style.barPaint.setColor(bar.getColor());
@@ -100,7 +100,7 @@ public class HorizontalBarChartView extends BaseBarChartView {
 
 
 				// Draw bar
-				if (bar.getValue() > 0) // Positive
+				if (bar.getValue() >= 0) // Positive
 					drawBar(canvas, this.getZeroPosition(), offset, bar.getX(), offset + barWidth);
 				else // Negative
 					drawBar(canvas, bar.getX(), offset, this.getZeroPosition(), offset + barWidth);

@@ -38,6 +38,7 @@ import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.RelativeLayout;
 
 import com.db.chart.animation.Animation;
+import com.db.chart.animation.ChartAnimationListener;
 import com.db.chart.animation.style.BaseStyleAnimation;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.ChartEntry;
@@ -122,6 +123,9 @@ public abstract class ChartView extends RelativeLayout {
 
 	/** Chart animation */
 	private Animation mAnim;
+
+	private ChartAnimationListener mAnimListener;
+
 
 	/**
 	 * Executed only before the chart is drawn for the first time.
@@ -257,6 +261,17 @@ public abstract class ChartView extends RelativeLayout {
 		mGridNRows = DEFAULT_GRID_ROWS;
 		mGridNColumns = DEFAULT_GRID_COLUMNS;
 		mGestureDetector = new GestureDetector(ctx, new GestureListener());
+		mAnimListener = new ChartAnimationListener() {
+			@Override
+			public boolean onAnimationUpdate(ArrayList<ChartSet> data) {
+				if (!mIsDrawing) {
+					addData(data);
+					postInvalidate();
+					return true;
+				}
+				return false;
+			}
+		};
 	}
 
 
@@ -469,6 +484,7 @@ public abstract class ChartView extends RelativeLayout {
 	public void show(Animation anim) {
 
 		mAnim = anim;
+		mAnim.setAnimationListener(mAnimListener);
 		show();
 	}
 
@@ -499,10 +515,12 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @param anim Animation used to exit
 	 */
-	public void dismiss(Animation anim) {
+	public void dismiss(@NonNull Animation anim) {
 
 		if (anim != null) {
+
 			mAnim = anim;
+			mAnim.setAnimationListener(mAnimListener);
 
 			final Runnable endAction = mAnim.getEndAction();
 			mAnim.setEndAction(new Runnable() {
@@ -579,9 +597,8 @@ public abstract class ChartView extends RelativeLayout {
 				newCoords.add(set.getScreenPoints());
 
 			defineRegions(mRegions, data);
-			if (mAnim != null) data = mAnim.prepareUpdateAnimation(this, oldCoords, newCoords);
-
-			invalidate();
+			if (mAnim != null) mAnim.prepareUpdateAnimation(oldCoords, newCoords);
+			else invalidate();
 
 		} else {
 			Log.w(TAG, "Unexpected data update notification. " +

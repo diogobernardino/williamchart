@@ -44,7 +44,7 @@ public class SandboxAnimationTest {
 
 		swipeLeftTo(4);
 		onView(withId(R.id.sandbox_anim_easing_type)).perform(click());
-		onData(allOf(is(instanceOf(String.class)), is("ELASTIC"))).perform(click());
+		onData(allOf(is(instanceOf(String.class)), is("Interpolator 2"))).perform(click());
 		swipeLeftTo(5);
 		onView(withId(R.id.sandbox_play_play)).perform(click());
 	}

@@ -3,10 +3,11 @@ package com.db.williamchartdemo.stackedchart;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.CardView;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 
 import com.db.chart.Tools;
 import com.db.chart.animation.Animation;
-import com.db.chart.animation.easing.ExpoEase;
 import com.db.chart.model.BarSet;
 import com.db.chart.view.ChartView;
 import com.db.chart.view.HorizontalStackBarChartView;
@@ -65,7 +66,7 @@ public class StackedCardTwo extends CardController {
 				  .setYAxis(false)
 				  .setLabelsFormat(new DecimalFormat("##'M'"))
 				  .show(new Animation().setDuration(2500)
-							 .setEasing(new ExpoEase())
+							 .setEasing(new AccelerateInterpolator())
 							 .setEndAction(action));
 	}
 
@@ -92,7 +93,7 @@ public class StackedCardTwo extends CardController {
 		super.dismiss(action);
 
 		mChart.dismiss(
-				  new Animation().setDuration(2500).setEasing(new ExpoEase()).setEndAction(action));
+				  new Animation().setDuration(2500).setEasing(new AccelerateInterpolator()).setEndAction(action));
 	}
 
 }

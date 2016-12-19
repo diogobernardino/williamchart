@@ -6,10 +6,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.db.chart.Tools;
 import com.db.chart.animation.Animation;
-import com.db.chart.animation.easing.ElasticEase;
 import com.db.chart.model.BarSet;
 import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.tooltip.Tooltip;
@@ -77,7 +77,7 @@ public class BarCardThree extends CardController {
 				  .setXAxis(false)
 				  .setYAxis(false);
 
-		Animation anim = new Animation().setEasing(new ElasticEase()).setEndAction(action);
+		Animation anim = new Animation().setEasing(new AccelerateDecelerateInterpolator()).setEndAction(action);
 
 		mChart.show(anim);
 	}
@@ -101,7 +101,7 @@ public class BarCardThree extends CardController {
 		super.dismiss(action);
 
 		mChart.dismissAllTooltips();
-		mChart.dismiss(new Animation().setEasing(new ElasticEase()).setEndAction(action));
+		mChart.dismiss(new Animation().setEasing(new AccelerateDecelerateInterpolator()).setEndAction(action));
 	}
 
 }

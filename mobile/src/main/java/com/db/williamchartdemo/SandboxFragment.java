@@ -322,8 +322,8 @@ public class SandboxFragment extends Fragment {
 		}
 
 		return new Animation(mDuration).setAlpha(mAlpha)
-				  .setEasing(mInterpolator)
-				  .setOverlap(mOverlapFactor, mOverlapOrder)
+				  .setInterpolator(mInterpolator)
+				  .setSequentially(mOverlapOrder, true)
 				  .setStartPoint(mStartX, mStartY)
 				  .setEndAction(mEndAction);
 	}

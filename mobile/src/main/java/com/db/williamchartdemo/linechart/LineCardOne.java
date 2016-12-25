@@ -115,7 +115,9 @@ public class LineCardOne extends CardController {
 			}
 		};
 
-		Animation anim = new Animation().setEasing(new BounceInterpolator()).setEndAction(chartAction);
+		Animation anim = new Animation().setInterpolator(new BounceInterpolator())
+				.setAlpha(0)
+				.setEndAction(chartAction);
 
 		mChart.show(anim);
 	}
@@ -145,7 +147,7 @@ public class LineCardOne extends CardController {
 		super.dismiss(action);
 
 		mChart.dismissAllTooltips();
-		mChart.dismiss(new Animation().setEasing(new BounceInterpolator()).setEndAction(action));
+		mChart.dismiss(new Animation().setInterpolator(new BounceInterpolator()).setEndAction(action));
 	}
 
 }

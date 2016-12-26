@@ -17,13 +17,11 @@
 package com.db.chart.animation;
 
 import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
-import android.graphics.Path;
-import android.graphics.PathMeasure;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.support.annotation.FloatRange;
 import android.view.animation.DecelerateInterpolator;
 
@@ -68,15 +66,21 @@ public class Animation {
 	/** Flag if animation is entering */
 	private boolean mIsEntering;
 
+	/** Chart callback to call in every chart data update */
 	private ChartAnimationListener mCallback;
 
-	private boolean mAnimateWithOverlap;
+	/** True if entries will be animated in parallel, False otherwise */
+	private boolean mAnimateInParallel;
 
-	private boolean mAnimateSequentially;
+	/** Overlap factor between entries while animating in sequence */
+	private float mAnimateOverlapFactor;
 
+	/** {@link ValueAnimator} only kept to know if animation still on going */
 	private ValueAnimator mAnimator;
 
-	private final Animator.AnimatorListener mAnimatorListener = new Animator.AnimatorListener() {
+	/** Animation listener set to executed animation end action */
+	private final AnimatorListener mAnimatorListener = new AnimatorListener() {
+
 		@Override
 		public void onAnimationStart(Animator animator) {}
 
@@ -113,84 +117,8 @@ public class Animation {
 		mStartXFactor = -1f;
 		mStartYFactor = -1f;
 		mIsEntering = true;
-	}
-
-
-	/**
-	 * Method that prepares the animation. Defines starting points, targets,
-	 * distance, yadda, as well as the first set of points to be drawn.
-	 *
-	 * @param start X and Y start coordinates
-	 * @param end X and Y end coordinates
-	 *
-	 * @return Array of {@link ChartSet} containing the first values to be drawn.
-	 */
-	private ArrayList<ChartSet> animate(ArrayList<float[][]> start,
-												 ArrayList<float[][]> end) {
-
-		final int nSets = start.size();
-		final int nEntries = start.get(0).length;
-
-		ArrayList<PropertyValuesHolder> pvh = new ArrayList<>(nSets*nEntries*2);
-
-		if (mOrder == null) {
-			mOrder = new int[nEntries];
-			for (int i = 0; i < nEntries; i++)
-				mOrder[i] = i;
-		}
-
-		pvh.add(PropertyValuesHolder.ofFloat("alpha", mAlpha, 1));
-
-		for (int i = 0; i < nSets; i++) {
-			for (int j = 0; j < nEntries; j++) {
-
-				float[] valuesX = new float[3];
-				valuesX[0] = start.get(i)[j][0];
-				valuesX[2] = end.get(i)[j][0];
-				valuesX[1] = valuesX[0] + ((valuesX[2]-valuesX[0])/2);
-
-				float[] valuesY = new float[3];
-				valuesY[0] = start.get(i)[j][1];
-				valuesY[2] = end.get(i)[j][1];
-				valuesY[1] = valuesY[0] + ((valuesY[2]-valuesY[0])/2);
-
-				if (mAnimateSequentially)
-					if (mAnimateWithOverlap) {
-						valuesX = valuesWithOverlap(valuesX, nEntries, mOrder[j]);
-						valuesY = valuesWithOverlap(valuesY, nEntries, mOrder[j]);
-					} else {
-						valuesX = valuesWithoutOverlap(valuesX, nEntries, mOrder[j]);
-						valuesY = valuesWithoutOverlap(valuesY, nEntries, mOrder[j]);
-					}
-				pvh.add(PropertyValuesHolder.ofFloat(
-						Integer.toString(i) + Integer.toString(j) + 'x', valuesX));
-				pvh.add(PropertyValuesHolder.ofFloat(
-						Integer.toString(i) + Integer.toString(j) + 'y', valuesY));
-			}
-		}
-
-		mAnimator = ValueAnimator.ofPropertyValuesHolder(pvh.toArray(new PropertyValuesHolder[pvh.size()]));
-		mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-			@Override
-			public void onAnimationUpdate(ValueAnimator animation) {
-
-				for (int i = 0; i < nSets; i++) {
-					mData.get(i).setAlpha((float) animation.getAnimatedValue("alpha"));
-					for (int j = 0; j < nEntries; j++) {
-						mData.get(i).getEntry(j).setCoordinates(
-								(float) animation.getAnimatedValue(Integer.toString(i) + Integer.toString(j) + 'x'),
-								(float) animation.getAnimatedValue(Integer.toString(i) + Integer.toString(j) + 'y'));
-					}
-				}
-				mCallback.onAnimationUpdate(mData);
-			}
-		});
-		mAnimator.addListener(mAnimatorListener);
-		mAnimator.setDuration(mDuration);
-		mAnimator.setInterpolator(mInterpolator);
-		mAnimator.start();
-
-		return mData;
+		mAnimateInParallel = true;
+		mAnimateOverlapFactor = -1;
 	}
 
 
@@ -313,76 +241,148 @@ public class Animation {
 
 
 	/**
-	 * Generates animation values considering no overlap
-	 * between entries during a sequential animation.
+	 * Method that prepares the animation. Defines starting points, targets,
+	 * distance, yadda, as well as the first set of points to be drawn.
 	 *
-	 * @param values Current values with neither overlap nor sequentiality
-	 * @param nEntries Number of entries
-	 * @param index Index of entry to which values belong to
+	 * @param start X and Y start coordinates
+	 * @param end X and Y end coordinates
 	 *
-	 * @return Set of animation values considering no overlap
-	 * between entries during a sequential animation.
+	 * @return Array of {@link ChartSet} containing the first values to be drawn.
 	 */
-	protected float[] valuesWithoutOverlap(float[] values, int nEntries, int index){
+	private ArrayList<ChartSet> animate(ArrayList<float[][]> start,
+										ArrayList<float[][]> end) {
 
-		return valuesSequentially(values, nEntries*2+1, index*2);
+		if (mAnimateInParallel)
+			animateInParallel(start,end);
+		else
+			animateInSequence(start, end);
+
+		final int nSets = start.size();
+		mAnimator = ValueAnimator.ofFloat(mAlpha, 1);
+		mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+
+				for (int i = 0; i < nSets; i++)
+					mData.get(i).setAlpha((float) animation.getAnimatedValue());
+				mCallback.onAnimationUpdate(mData);
+			}
+		});
+		mAnimator.addListener(mAnimatorListener);
+		mAnimator.setDuration(mDuration);
+		mAnimator.setInterpolator(mInterpolator);
+		mAnimator.start();
+
+		return mData;
 	}
 
 
 	/**
-	 * Generates animation values considering an overlap
-	 * between entries during a sequential animation.
+	 * Animate entries in sequence. In this case a {@link ValueAnimator} will be created for each chart entry.
 	 *
-	 * @param values Current values with neither overlap nor sequentiality
-	 * @param nEntries Number of entries
-	 * @param index Index of entry to which values belong to
-	 *
-	 * @return Set of animation values considering the overlap
-	 * between entries during a sequential animation.
+	 * @param start Animation start values
+	 * @param end Animation end values
 	 */
-	protected float[] valuesWithOverlap(float[] values, int nEntries, int index){
+	private void animateInSequence(ArrayList<float[][]> start, ArrayList<float[][]> end){
 
-		return valuesSequentially(values, nEntries+2, index);
+		final int nSets = start.size();
+		final int nEntries = start.get(0).length;
+
+		if (mOrder == null) {
+			mOrder = new int[nEntries];
+			for (int i = 0; i < nEntries; i++)
+				mOrder[i] = i;
+		}
+
+		// Calculates the expected duration as there was with no overlap (factor = 0)
+		float noOverlapDuration = mDuration / nEntries;
+		// Adjust the duration to the overlap
+		int mEntryDuration =
+				(int) (noOverlapDuration + (mDuration - noOverlapDuration) * mAnimateOverlapFactor);
+
+		// Define initial time for each entry
+		long[] mEntryInitTime = new long[nEntries];
+		long noOverlapInitTime;
+		for (int i = 0; i < nEntries; i++) {
+			// Calculates the expected init time as there was with no overlap (factor = 0)
+			noOverlapInitTime = i * (mDuration / nEntries);
+			// Adjust the init time to overlap
+			mEntryInitTime[mOrder[i]] = (noOverlapInitTime -
+					((long) (mAnimateOverlapFactor * noOverlapInitTime)));
+		}
+
+		for (int i = 0; i < nSets; i++) {
+			for (int j = 0; j < nEntries; j++) {
+
+				final int ii = i;
+				final int jj = j;
+
+				mData.get(i).getEntry(j).setCoordinates(start.get(i)[j][0],
+						start.get(i)[j][1]);
+
+				mAnimator = ValueAnimator.ofPropertyValuesHolder(
+						PropertyValuesHolder.ofFloat("x", start.get(i)[j][0], end.get(i)[j][0]),
+						PropertyValuesHolder.ofFloat("y", start.get(i)[j][1], end.get(i)[j][1]));
+				mAnimator.setStartDelay(mEntryInitTime[j]);
+				mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+					@Override
+					public void onAnimationUpdate(ValueAnimator animation) {
+
+						mData.get(ii).getEntry(jj).setCoordinates(
+								(float) animation.getAnimatedValue("x"),
+								(float) animation.getAnimatedValue("y"));
+						mCallback.onAnimationUpdate(mData);
+					}
+				});
+				mAnimator.setDuration(mEntryDuration);
+				mAnimator.setInterpolator(mInterpolator);
+				mAnimator.start();
+			}
+		}
 	}
 
 
 	/**
-	 * Generates animation values which will animate sequentially.
+	 * Animate entries in parallel. In this case a single {@link ValueAnimator} will be enough to animate all entries.
 	 *
-	 * @param values Current values with neither overlap nor sequentiality
-	 * @param size Size of array containing animation values
-	 * @param pointer Pointer defining where the current values
-	 *                (defining neither sequentiality nor overlap) will be placed.
-	 *                Values before the point will be equal to values[0] and after
-	 *                pointer equal to values[2].
-	 *
-	 * @return Set of animation values considering the overlap
-	 * between entries during a sequential animation.
-	 */
-	private float[] valuesSequentially(float[] values, int size, int pointer){
+	 * @param start Animation start values
+	 * @param end Animation end values
+     */
+	private void animateInParallel(ArrayList<float[][]> start, ArrayList<float[][]> end){
 
-		float[] res = new float[size];
+		final int nSets = start.size();
+		final int nEntries = start.get(0).length;
 
-		for (int i = 0; i < pointer; i++)
-			res[i] = values[0];
+		ArrayList<PropertyValuesHolder> pvh = new ArrayList<>(nSets*nEntries);
 
-		res[pointer] = values[0];
-		res[pointer += 1] = values[1];
-		res[pointer += 1] = values[2];
+		for (int i = 0; i < nSets; i++) {
+			for (int j = 0; j < nEntries; j++) {
 
-		for (int i = pointer; i < res.length; i++)
-			res[i] = values[2];
+				pvh.add(PropertyValuesHolder.ofFloat(
+						Integer.toString(i) + Integer.toString(j) + 'x',
+						start.get(i)[j][0], end.get(i)[j][0]));
+				pvh.add(PropertyValuesHolder.ofFloat(
+						Integer.toString(i) + Integer.toString(j) + 'y',
+						start.get(i)[j][1], end.get(i)[j][1]));
+			}
+		}
 
-		return res;
-	}
+		mAnimator = ValueAnimator.ofPropertyValuesHolder(pvh.toArray(new PropertyValuesHolder[pvh.size()]));
+		mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
 
-
-	/**
-	 * Cancel the on-going animation.
-	 */
-	public void cancel() {
-
-		mAnimator.cancel();
+				for (int i = 0; i < nSets; i++)
+					for (int j = 0; j < nEntries; j++)
+						mData.get(i).getEntry(j).setCoordinates(
+								(float) animation.getAnimatedValue(Integer.toString(i) + Integer.toString(j) + 'x'),
+								(float) animation.getAnimatedValue(Integer.toString(i) + Integer.toString(j) + 'y'));
+				mCallback.onAnimationUpdate(mData);
+			}
+		});
+		mAnimator.setDuration(mDuration);
+		mAnimator.setInterpolator(mInterpolator);
+		mAnimator.start();
 	}
 
 
@@ -426,6 +426,7 @@ public class Animation {
 
 	/**
 	 * Set animation duration.
+	 *
 	 * @param duration Animation duration
 	 *
 	 * @return {@link com.db.chart.animation.Animation} self-reference.
@@ -442,15 +443,14 @@ public class Animation {
 	 * but also in a specific order.
 	 *
 	 * @param order Sequentiality order
-	 * @param withOverlap In case animation should show an overlap between entries
+	 * @param factor In case animation should show an overlap between entries
 	 *
-     * @return {@link com.db.chart.animation.Animation} self-reference.
-     */
-	public Animation setSequentially(int[] order, boolean withOverlap) {
+	 * @return {@link com.db.chart.animation.Animation} self-reference.
+	 */
+	public Animation setInSequence(float factor, int[] order) {
 
 		mOrder = order;
-		mAnimateSequentially = true;
-		mAnimateWithOverlap = withOverlap;
+		setInSequence(factor);
 		return this;
 	}
 
@@ -458,14 +458,12 @@ public class Animation {
 	/**
 	 * Entries will animate sequentially instead of all at the same time.
 	 *
-	 * @param withOverlap In case animation should show an overlap between entries
-	 *
 	 * @return {@link com.db.chart.animation.Animation} self-reference.
 	 */
-	public Animation setSequentially(boolean withOverlap) {
+	public Animation setInSequence(float factor) {
 
-		mAnimateSequentially = true;
-		mAnimateWithOverlap = withOverlap;
+		mAnimateInParallel = false;
+		mAnimateOverlapFactor = factor;
 		return this;
 	}
 
@@ -526,6 +524,5 @@ public class Animation {
 
 		mCallback = callback;
 	}
-
 
 }

@@ -101,48 +101,4 @@ public class AnimationTest {
         assertEquals(0, newValues.get(0)[0][1], 0f);
     }
 
-
-    @Test
-    public void valuesWithOverlap_FirstEntry(){
-
-        float[] newValues = mAnimation.valuesWithOverlap(new float[]{0f, .5f, 1f}, 3, 0);
-        assertArrayEquals(new float[]{0, .5f, 1f, 1f, 1f}, newValues, 0f);
-    }
-
-
-    @Test
-    public void valuesWithOverlap_MiddleEntry(){
-
-        float[] newValues = mAnimation.valuesWithOverlap(new float[]{0f, .5f, 1f}, 3, 1);
-        assertArrayEquals(new float[]{0, 0, .5f, 1f, 1f}, newValues, 0f);
-    }
-
-    @Test
-    public void valuesWithOverlap_LastEntry(){
-
-        float[] newValues = mAnimation.valuesWithOverlap(new float[]{0f, .5f, 1f}, 3, 2);
-        assertArrayEquals(new float[]{0, 0, 0, .5f, 1f}, newValues, 0f);
-    }
-
-    @Test
-    public void valuesWithoutOverlap_FirstEntry(){
-
-        float[] newValues = mAnimation.valuesWithoutOverlap(new float[]{0f, .5f, 1f}, 3, 0);
-        assertArrayEquals(new float[]{0, .5f, 1f, 1f, 1f, 1f, 1f}, newValues, 0f);
-    }
-
-
-    @Test
-    public void valuesWithoutOverlap_MiddleEntry(){
-
-        float[] newValues = mAnimation.valuesWithoutOverlap(new float[]{0f, .5f, 1f}, 3, 1);
-        assertArrayEquals(new float[]{0, 0, 0, .5f, 1f, 1f, 1f}, newValues, 0f);
-    }
-
-    @Test
-    public void valuesWithoutOverlap_LastEntry(){
-
-        float[] newValues = mAnimation.valuesWithoutOverlap(new float[]{0f, .5f, 1f}, 3, 2);
-        assertArrayEquals(new float[]{0, 0, 0, 0, 0, .5f, 1f}, newValues, 0f);
-    }
 }

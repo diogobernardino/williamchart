@@ -547,6 +547,8 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public void reset() {
 
+		if (mAnim != null && mAnim.isPlaying()) mAnim.cancel();
+
 		init();
 		if (xRndr.hasMandatoryBorderSpacing()) xRndr.reset();
 		if (yRndr.hasMandatoryBorderSpacing()) yRndr.reset();

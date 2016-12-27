@@ -22,6 +22,7 @@ import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
+import android.renderscript.Sampler;
 import android.support.annotation.FloatRange;
 import android.view.animation.DecelerateInterpolator;
 
@@ -75,8 +76,8 @@ public class Animation {
 	/** Overlap factor between entries while animating in sequence */
 	private float mAnimateOverlapFactor;
 
-	/** {@link ValueAnimator} only kept to know if animation still on going */
-	private ValueAnimator mAnimator;
+	/** List of {@link ValueAnimator} objects for a given on going animation */
+	private ArrayList<ValueAnimator> mAnimators;
 
 	/** Animation listener set to executed animation end action */
 	private final AnimatorListener mAnimatorListener = new AnimatorListener() {
@@ -86,6 +87,7 @@ public class Animation {
 
 		@Override
 		public void onAnimationEnd(Animator animator) {
+			mAnimators.clear();
 			if (mEndAction != null) mEndAction.run();
 		}
 
@@ -111,6 +113,7 @@ public class Animation {
 
 	private void init(int duration) {
 
+		mAnimators = new ArrayList<>();
 		mDuration = duration;
 		mAlpha = 1;
 		mInterpolator = new DecelerateInterpolator();
@@ -253,13 +256,13 @@ public class Animation {
 										ArrayList<float[][]> end) {
 
 		if (mAnimateInParallel)
-			animateInParallel(start,end);
+			mAnimators.addAll(animateInParallel(start,end));
 		else
-			animateInSequence(start, end);
+			mAnimators.addAll(animateInSequence(start, end));
 
 		final int nSets = start.size();
-		mAnimator = ValueAnimator.ofFloat(mAlpha, 1);
-		mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+		final ValueAnimator animator = ValueAnimator.ofFloat(mAlpha, 1);
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
 
@@ -268,10 +271,14 @@ public class Animation {
 				mCallback.onAnimationUpdate(mData);
 			}
 		});
-		mAnimator.addListener(mAnimatorListener);
-		mAnimator.setDuration(mDuration);
-		mAnimator.setInterpolator(mInterpolator);
-		mAnimator.start();
+		animator.addListener(mAnimatorListener); // Include listener in last animator
+		animator.setDuration(mDuration);
+		animator.setInterpolator(mInterpolator);
+		animator.start();
+		mAnimators.add(animator);
+
+		for (ValueAnimator e : mAnimators)
+			e.start();
 
 		return mData;
 	}
@@ -283,10 +290,12 @@ public class Animation {
 	 * @param start Animation start values
 	 * @param end Animation end values
 	 */
-	private void animateInSequence(ArrayList<float[][]> start, ArrayList<float[][]> end){
+	private ArrayList<ValueAnimator> animateInSequence(ArrayList<float[][]> start, ArrayList<float[][]> end){
 
 		final int nSets = start.size();
 		final int nEntries = start.get(0).length;
+
+		ArrayList<ValueAnimator> result = new ArrayList<>(nSets*nEntries);
 
 		if (mOrder == null) {
 			mOrder = new int[nEntries];
@@ -320,11 +329,11 @@ public class Animation {
 				mData.get(i).getEntry(j).setCoordinates(start.get(i)[j][0],
 						start.get(i)[j][1]);
 
-				mAnimator = ValueAnimator.ofPropertyValuesHolder(
+				final ValueAnimator animator = ValueAnimator.ofPropertyValuesHolder(
 						PropertyValuesHolder.ofFloat("x", start.get(i)[j][0], end.get(i)[j][0]),
 						PropertyValuesHolder.ofFloat("y", start.get(i)[j][1], end.get(i)[j][1]));
-				mAnimator.setStartDelay(mEntryInitTime[j]);
-				mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				animator.setStartDelay(mEntryInitTime[j]);
+				animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 					@Override
 					public void onAnimationUpdate(ValueAnimator animation) {
 
@@ -334,11 +343,12 @@ public class Animation {
 						mCallback.onAnimationUpdate(mData);
 					}
 				});
-				mAnimator.setDuration(mEntryDuration);
-				mAnimator.setInterpolator(mInterpolator);
-				mAnimator.start();
+				animator.setDuration(mEntryDuration);
+				animator.setInterpolator(mInterpolator);
+				result.add(animator);
 			}
 		}
+		return result;
 	}
 
 
@@ -348,11 +358,12 @@ public class Animation {
 	 * @param start Animation start values
 	 * @param end Animation end values
      */
-	private void animateInParallel(ArrayList<float[][]> start, ArrayList<float[][]> end){
+	private ArrayList<ValueAnimator> animateInParallel(ArrayList<float[][]> start, ArrayList<float[][]> end){
 
 		final int nSets = start.size();
 		final int nEntries = start.get(0).length;
 
+		final ArrayList<ValueAnimator> result = new ArrayList<>(nSets*nEntries);
 		ArrayList<PropertyValuesHolder> pvh = new ArrayList<>(nSets*nEntries);
 
 		for (int i = 0; i < nSets; i++) {
@@ -367,8 +378,8 @@ public class Animation {
 			}
 		}
 
-		mAnimator = ValueAnimator.ofPropertyValuesHolder(pvh.toArray(new PropertyValuesHolder[pvh.size()]));
-		mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+		final ValueAnimator animator = ValueAnimator.ofPropertyValuesHolder(pvh.toArray(new PropertyValuesHolder[pvh.size()]));
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
 			public void onAnimationUpdate(ValueAnimator animation) {
 
@@ -380,9 +391,11 @@ public class Animation {
 				mCallback.onAnimationUpdate(mData);
 			}
 		});
-		mAnimator.setDuration(mDuration);
-		mAnimator.setInterpolator(mInterpolator);
-		mAnimator.start();
+		animator.setDuration(mDuration);
+		animator.setInterpolator(mInterpolator);
+		result.add(animator);
+
+		return result;
 	}
 
 
@@ -393,7 +406,21 @@ public class Animation {
 	 */
 	public boolean isPlaying() {
 
-		return mAnimator.isRunning();
+		for (ValueAnimator animator : mAnimators)
+			if (animator.isRunning())
+				return true;
+		return false;
+	}
+
+
+	/**
+	 * Cancel every running animator.
+	 *
+	 */
+	public void cancel(){
+
+		for (ValueAnimator animator : mAnimators)
+			animator.cancel();
 	}
 
 

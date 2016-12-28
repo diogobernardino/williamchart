@@ -60,7 +60,7 @@ public class StackedCardTwo extends CardController {
 
 		mChart.setBorderSpacing(0)
 				  .setStep(1)
-				  .setGrid(ChartView.GridType.VERTICAL, 1, 10, gridPaint)
+				  .setGrid(0, 10, gridPaint)
 				  .setXAxis(false)
 				  .setYAxis(false)
 				  .setLabelsFormat(new DecimalFormat("##'M'"))

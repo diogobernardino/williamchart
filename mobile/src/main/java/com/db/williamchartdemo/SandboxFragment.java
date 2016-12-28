@@ -144,7 +144,7 @@ public class SandboxFragment extends Fragment {
 	private static String mLabelFormat;
 
 	/** Grid */
-	private static ChartView.GridType mGridType;
+	private static GridType mGridType;
 
 	private static Paint mGridPaint;
 
@@ -203,6 +203,9 @@ public class SandboxFragment extends Fragment {
 
 	private ViewPager mViewPager;
 
+	public enum GridType {
+		FULL, VERTICAL, HORIZONTAL, NONE
+	}
 
 	private static ChartView buildLineChart(LineChartView chart) {
 
@@ -271,7 +274,11 @@ public class SandboxFragment extends Fragment {
 				  .setLabelsColor(mLabelColorId)
 				  .setAxisColor(mAxisColorId);
 
-		if (mGridType != null) chart.setGrid(mGridType, mGridPaint);
+		if (mGridType != null) {
+			if (mGridType.compareTo(GridType.FULL) == 0) chart.setGrid(5, 5, mGridPaint);
+			if (mGridType.compareTo(GridType.VERTICAL) == 0) chart.setGrid(0, 5, mGridPaint);
+			if (mGridType.compareTo(GridType.HORIZONTAL) == 0) chart.setGrid(5, 0, mGridPaint);
+		}
 
 		chart.setLabelsFormat(new DecimalFormat("#" + mLabelFormat));
 
@@ -1027,18 +1034,18 @@ public class SandboxFragment extends Fragment {
 
 				/** Grid Type **/
 				case R.id.sandbox_grid_hor:
-					if (mGridTypeId == id) mGridType = ChartView.GridType.NONE;
-					else mGridType = ChartView.GridType.HORIZONTAL;
+					if (mGridTypeId == id) mGridType = GridType.NONE;
+					else mGridType = GridType.HORIZONTAL;
 					mGridTypeId = swapState(mLayout, mGridTypeId, id, false);
 					break;
 				case R.id.sandbox_grid_ver:
-					if (mGridTypeId == id) mGridType = ChartView.GridType.NONE;
-					else mGridType = ChartView.GridType.VERTICAL;
+					if (mGridTypeId == id) mGridType = GridType.NONE;
+					else mGridType = GridType.VERTICAL;
 					mGridTypeId = swapState(mLayout, mGridTypeId, id, false);
 					break;
 				case R.id.sandbox_grid_full:
-					if (mGridTypeId == id) mGridType = ChartView.GridType.NONE;
-					else mGridType = ChartView.GridType.FULL;
+					if (mGridTypeId == id) mGridType = GridType.NONE;
+					else mGridType = GridType.FULL;
 					mGridTypeId = swapState(mLayout, mGridTypeId, id, false);
 					break;
 

@@ -60,10 +60,6 @@ public abstract class ChartView extends RelativeLayout {
 
 	private static final String TAG = "chart.view.ChartView";
 
-	private static final int DEFAULT_GRID_ROWS = 5;
-
-	private static final int DEFAULT_GRID_COLUMNS = 5;
-
 	/** Horizontal and Vertical position controllers */
 	final XRenderer xRndr;
 
@@ -207,13 +203,6 @@ public abstract class ChartView extends RelativeLayout {
 		}
 	};
 
-	/** Grid attributes */
-	private GridType mGridType;
-
-	private int mGridNRows;
-
-	private int mGridNColumns;
-
 	/** Tooltip */
 	private Tooltip mTooltip;
 
@@ -253,9 +242,6 @@ public abstract class ChartView extends RelativeLayout {
 		mIsDrawing = false;
 		data = new ArrayList<>();
 		mRegions = new ArrayList<>();
-		mGridType = GridType.NONE;
-		mGridNRows = DEFAULT_GRID_ROWS;
-		mGridNColumns = DEFAULT_GRID_COLUMNS;
 		mGestureDetector = new GestureDetector(ctx, new GestureListener());
 	}
 
@@ -320,9 +306,8 @@ public abstract class ChartView extends RelativeLayout {
 			//long time = System.currentTimeMillis();
 
 			// Draw grid
-			if (mGridType == GridType.FULL || mGridType == GridType.VERTICAL) drawVerticalGrid(canvas);
-			if (mGridType == GridType.FULL || mGridType == GridType.HORIZONTAL)
-				drawHorizontalGrid(canvas);
+			if (style.hasVerticalGrid()) drawVerticalGrid(canvas);
+			if (style.hasHorizontalGrid()) drawHorizontalGrid(canvas);
 
 			// Draw threshold
 			if (!mThresholdStartValues.isEmpty())
@@ -764,7 +749,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	private void drawVerticalGrid(Canvas canvas) {
 
-		final float offset = (getInnerChartRight() - getInnerChartLeft()) / mGridNColumns;
+		final float offset = (getInnerChartRight() - getInnerChartLeft()) / style.gridColumns;
 		float marker = getInnerChartLeft();
 
 		if (style.hasYAxis) marker += offset;
@@ -787,7 +772,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	private void drawHorizontalGrid(Canvas canvas) {
 
-		final float offset = (getInnerChartBottom() - getInnerChartTop()) / mGridNRows;
+		final float offset = (getInnerChartBottom() - getInnerChartTop()) / style.gridRows;
 		float marker = getInnerChartTop();
 		while (marker < getInnerChartBottom()) {
 			canvas.drawLine(getInnerChartLeft(), marker, getInnerChartRight(), marker,
@@ -1233,24 +1218,6 @@ public abstract class ChartView extends RelativeLayout {
 	/**
 	 * Apply grid to chart.
 	 *
-	 * @param type {@link GridType} for grid
-	 * @param paint The Paint instance that will be used to draw the grid
-	 * If null the grid won't be drawn
-	 *
-	 * @return {@link com.db.chart.view.ChartView} self-reference.
-	 */
-	public ChartView setGrid(GridType type, Paint paint) {
-
-		mGridType = type;
-		style.gridPaint = paint;
-		return this;
-	}
-
-
-	/**
-	 * Apply grid to chart.
-	 *
-	 * @param type {@link GridType} for grid
 	 * @param rows Grid's number of rows
 	 * @param columns Grid's number of columns
 	 * @param paint The Paint instance that will be used to draw the grid
@@ -1258,15 +1225,14 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setGrid(GridType type, @IntRange(from = 1) int rows,
-			  @IntRange(from = 1) int columns, Paint paint) {
+	public ChartView setGrid(@IntRange(from = 0) int rows, @IntRange(from = 0) int columns,
+							 Paint paint) {
 
-		if (rows < 1 || columns < 1)
-			throw new IllegalArgumentException("Number of rows/columns can't be lesser than 1.");
+		if (rows < 0 || columns < 0)
+			throw new IllegalArgumentException("Number of rows/columns can't be smaller than 0.");
 
-		mGridType = type;
-		mGridNRows = rows;
-		mGridNColumns = columns;
+		style.gridRows = rows;
+		style.gridColumns = columns;
 		style.gridPaint = paint;
 		return this;
 	}
@@ -1434,11 +1400,6 @@ public abstract class ChartView extends RelativeLayout {
 	}
 
 
-	public enum GridType {
-		FULL, VERTICAL, HORIZONTAL, NONE
-	}
-
-
 	public enum Orientation {
 		HORIZONTAL, VERTICAL
 	}
@@ -1452,6 +1413,9 @@ public abstract class ChartView extends RelativeLayout {
 
 		private final static int DEFAULT_COLOR = Color.BLACK;
 
+		private static final int DEFAULT_GRID_ROWS = 0;
+
+		private static final int DEFAULT_GRID_COLUMNS = 0;
 
 		/** Chart */
 		private Paint chartPaint;
@@ -1496,6 +1460,9 @@ public abstract class ChartView extends RelativeLayout {
 		 */
 		private int fontMaxHeight;
 
+		private int gridRows;
+
+		private int gridColumns;
 
 		Style() {
 
@@ -1510,6 +1477,9 @@ public abstract class ChartView extends RelativeLayout {
 			fontSize = ctx.getResources().getDimension(R.dimen.font_size);
 
 			distLabelToAxis = (int) ctx.getResources().getDimension(R.dimen.axis_labels_spacing);
+
+			gridRows = DEFAULT_GRID_ROWS;
+			gridColumns = DEFAULT_GRID_COLUMNS;
 		}
 
 
@@ -1548,6 +1518,8 @@ public abstract class ChartView extends RelativeLayout {
 			distLabelToAxis = (int) attrs.getDimension(R.styleable.ChartAttrs_chart_axisLabelsSpacing,
 					  getResources().getDimension(R.dimen.axis_labels_spacing));
 
+			gridRows = DEFAULT_GRID_ROWS;
+			gridColumns = DEFAULT_GRID_COLUMNS;
 		}
 
 
@@ -1641,6 +1613,15 @@ public abstract class ChartView extends RelativeLayout {
 
 			return distLabelToAxis;
 		}
+
+		private boolean hasHorizontalGrid(){
+			return gridRows > 0;
+		}
+
+		private boolean hasVerticalGrid(){
+			return gridColumns > 0;
+		}
+
 	}
 
 

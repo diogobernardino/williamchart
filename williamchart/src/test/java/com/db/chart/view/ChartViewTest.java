@@ -121,9 +121,10 @@ public class ChartViewTest {
 	}
 
 
+	@SuppressWarnings("Range")
 	@Test(expected = IllegalArgumentException.class)
-	public void setGrid_RowsLesserOne_ThrowIllegalArgException() {
+	public void setGrid_RowsSmallerZero_ThrowIllegalArgException() {
 
-		mChartView.setGrid(ChartView.GridType.NONE, 0, 0, null);
+		mChartView.setGrid(-1, -1, null);
 	}
 }

@@ -68,9 +68,6 @@ public abstract class ChartView extends RelativeLayout {
 	/** Style applied to chart */
 	final Style style;
 
-	/** Context */
-	Context ctx;
-
 	/** Chart data to be displayed */
 	ArrayList<ChartSet> data;
 
@@ -212,11 +209,9 @@ public abstract class ChartView extends RelativeLayout {
 		super(context, attrs);
 
 		init();
-		ctx = context;
 		xRndr = new XRenderer();
 		yRndr = new YRenderer();
-		style = new Style(
-				  context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
+		style = new Style(context, attrs);
 	}
 
 
@@ -225,10 +220,9 @@ public abstract class ChartView extends RelativeLayout {
 		super(context);
 
 		init();
-		ctx = context;
 		xRndr = new XRenderer();
 		yRndr = new YRenderer();
-		style = new Style();
+		style = new Style(context);
 	}
 
 
@@ -242,7 +236,7 @@ public abstract class ChartView extends RelativeLayout {
 		mIsDrawing = false;
 		data = new ArrayList<>();
 		mRegions = new ArrayList<>();
-		mGestureDetector = new GestureDetector(ctx, new GestureListener());
+		mGestureDetector = new GestureDetector(getContext(), new GestureListener());
 	}
 
 
@@ -1462,34 +1456,38 @@ public abstract class ChartView extends RelativeLayout {
 
 		private int gridColumns;
 
-		Style() {
+
+		Style(Context context) {
 
 			axisColor = DEFAULT_COLOR;
-			axisThickness = ctx.getResources().getDimension(R.dimen.grid_thickness);
+			axisThickness = context.getResources().getDimension(R.dimen.grid_thickness);
 			hasXAxis = true;
 			hasYAxis = true;
 
 			xLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
 			yLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
 			labelsColor = DEFAULT_COLOR;
-			fontSize = ctx.getResources().getDimension(R.dimen.font_size);
+			fontSize = context.getResources().getDimension(R.dimen.font_size);
 
-			distLabelToAxis = (int) ctx.getResources().getDimension(R.dimen.axis_labels_spacing);
+			distLabelToAxis = (int) context.getResources().getDimension(R.dimen.axis_labels_spacing);
 
 			gridRows = DEFAULT_GRID_OFF;
 			gridColumns = DEFAULT_GRID_OFF;
 		}
 
 
-		Style(TypedArray attrs) {
+		Style(Context context, AttributeSet attrs) {
 
-			hasXAxis = attrs.getBoolean(R.styleable.ChartAttrs_chart_axis, true);
-			hasYAxis = attrs.getBoolean(R.styleable.ChartAttrs_chart_axis, true);
-			axisColor = attrs.getColor(R.styleable.ChartAttrs_chart_axisColor, DEFAULT_COLOR);
-			axisThickness = attrs.getDimension(R.styleable.ChartAttrs_chart_axisThickness,
-					  getResources().getDimension(R.dimen.axis_thickness));
 
-			switch (attrs.getInt(R.styleable.ChartAttrs_chart_labels, 0)){
+			TypedArray arr = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0);
+
+			hasXAxis = arr.getBoolean(R.styleable.ChartAttrs_chart_axis, true);
+			hasYAxis = arr.getBoolean(R.styleable.ChartAttrs_chart_axis, true);
+			axisColor = arr.getColor(R.styleable.ChartAttrs_chart_axisColor, DEFAULT_COLOR);
+			axisThickness = arr.getDimension(R.styleable.ChartAttrs_chart_axisThickness,
+					  context.getResources().getDimension(R.dimen.axis_thickness));
+
+			switch (arr.getInt(R.styleable.ChartAttrs_chart_labels, 0)){
 				case 1:
 					xLabelsPositioning = AxisRenderer.LabelPosition.INSIDE;
 					yLabelsPositioning = AxisRenderer.LabelPosition.INSIDE;
@@ -1504,17 +1502,17 @@ public abstract class ChartView extends RelativeLayout {
 					break;
 			}
 
-			labelsColor = attrs.getColor(R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
+			labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
 
-			fontSize = attrs.getDimension(R.styleable.ChartAttrs_chart_fontSize,
-					  getResources().getDimension(R.dimen.font_size));
+			fontSize = arr.getDimension(R.styleable.ChartAttrs_chart_fontSize,
+					  context.getResources().getDimension(R.dimen.font_size));
 
-			String typefaceName = attrs.getString(R.styleable.ChartAttrs_chart_typeface);
+			String typefaceName = arr.getString(R.styleable.ChartAttrs_chart_typeface);
 			if (typefaceName != null) typeface = Typeface.createFromAsset(getResources().
 					  getAssets(), typefaceName);
 
-			distLabelToAxis = (int) attrs.getDimension(R.styleable.ChartAttrs_chart_axisLabelsSpacing,
-					  getResources().getDimension(R.dimen.axis_labels_spacing));
+			distLabelToAxis = (int) arr.getDimension(R.styleable.ChartAttrs_chart_axisLabelsSpacing,
+					  context.getResources().getDimension(R.dimen.axis_labels_spacing));
 
 			gridRows = DEFAULT_GRID_OFF;
 			gridColumns = DEFAULT_GRID_OFF;

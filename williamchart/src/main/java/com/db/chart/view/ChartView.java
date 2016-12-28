@@ -1413,9 +1413,7 @@ public abstract class ChartView extends RelativeLayout {
 
 		private final static int DEFAULT_COLOR = Color.BLACK;
 
-		private static final int DEFAULT_GRID_ROWS = 0;
-
-		private static final int DEFAULT_GRID_COLUMNS = 0;
+		private static final int DEFAULT_GRID_OFF = 0;
 
 		/** Chart */
 		private Paint chartPaint;
@@ -1478,8 +1476,8 @@ public abstract class ChartView extends RelativeLayout {
 
 			distLabelToAxis = (int) ctx.getResources().getDimension(R.dimen.axis_labels_spacing);
 
-			gridRows = DEFAULT_GRID_ROWS;
-			gridColumns = DEFAULT_GRID_COLUMNS;
+			gridRows = DEFAULT_GRID_OFF;
+			gridColumns = DEFAULT_GRID_OFF;
 		}
 
 
@@ -1518,8 +1516,8 @@ public abstract class ChartView extends RelativeLayout {
 			distLabelToAxis = (int) attrs.getDimension(R.styleable.ChartAttrs_chart_axisLabelsSpacing,
 					  getResources().getDimension(R.dimen.axis_labels_spacing));
 
-			gridRows = DEFAULT_GRID_ROWS;
-			gridColumns = DEFAULT_GRID_COLUMNS;
+			gridRows = DEFAULT_GRID_OFF;
+			gridColumns = DEFAULT_GRID_OFF;
 		}
 
 

@@ -99,7 +99,7 @@ public abstract class ChartView extends RelativeLayout {
 	private ArrayList<ArrayList<Region>> mRegions;
 
 	/** Gestures detector to trigger listeners callback */
-	private GestureDetector mGestureDetector;
+	final private GestureDetector mGestureDetector;
 
 	/** Listener callback on entry click */
 	private OnEntryClickListener mEntryListener;
@@ -209,6 +209,7 @@ public abstract class ChartView extends RelativeLayout {
 		super(context, attrs);
 
 		init();
+		mGestureDetector = new GestureDetector(context, new GestureListener());
 		xRndr = new XRenderer();
 		yRndr = new YRenderer();
 		style = new Style(context, attrs);
@@ -220,6 +221,7 @@ public abstract class ChartView extends RelativeLayout {
 		super(context);
 
 		init();
+		mGestureDetector = new GestureDetector(context, new GestureListener());
 		xRndr = new XRenderer();
 		yRndr = new YRenderer();
 		style = new Style(context);
@@ -236,7 +238,6 @@ public abstract class ChartView extends RelativeLayout {
 		mIsDrawing = false;
 		data = new ArrayList<>();
 		mRegions = new ArrayList<>();
-		mGestureDetector = new GestureDetector(getContext(), new GestureListener());
 	}
 
 
@@ -1511,8 +1512,8 @@ public abstract class ChartView extends RelativeLayout {
 			if (typefaceName != null) typeface = Typeface.createFromAsset(getResources().
 					  getAssets(), typefaceName);
 
-			distLabelToAxis = (int) arr.getDimension(R.styleable.ChartAttrs_chart_axisLabelsSpacing,
-					  context.getResources().getDimension(R.dimen.axis_labels_spacing));
+			distLabelToAxis = arr.getDimensionPixelSize(R.styleable.ChartAttrs_chart_axisLabelsSpacing,
+					  context.getResources().getDimensionPixelSize(R.dimen.axis_labels_spacing));
 
 			gridRows = DEFAULT_GRID_OFF;
 			gridColumns = DEFAULT_GRID_OFF;

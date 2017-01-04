@@ -78,11 +78,11 @@ public class YRenderer extends AxisRenderer {
 
 		float result = axisCoordinate;
 
-		if (labelsPositioning == LabelPosition.INSIDE) {
+		if (style.getYLabelsPositioning() == LabelPosition.INSIDE) {
 			result += distanceToAxis;
 			if (style.hasYAxis()) result += style.getAxisThickness() / 2;
 
-		} else if (labelsPositioning == LabelPosition.OUTSIDE) {
+		} else if (style.getYLabelsPositioning() == LabelPosition.OUTSIDE) {
 			result -= distanceToAxis;
 			if (style.hasYAxis()) result -= style.getAxisThickness() / 2;
 		}
@@ -101,11 +101,12 @@ public class YRenderer extends AxisRenderer {
 			canvas.drawLine(axisPosition, mInnerChartTop, axisPosition, bottom, style.getChartPaint());
 		}
 
-		if (labelsPositioning != LabelPosition.NONE) {
+		if (style.getYLabelsPositioning() != LabelPosition.NONE) {
 
 			style.getLabelsPaint()
 					  .setTextAlign(
-								 (labelsPositioning == LabelPosition.OUTSIDE) ? Align.RIGHT : Align.LEFT);
+								 (style.getYLabelsPositioning() == LabelPosition.OUTSIDE) ? Align.RIGHT :
+											Align.LEFT);
 
 			// Draw labels
 			for (int i = 0; i < nLabels; i++) {
@@ -157,13 +158,13 @@ public class YRenderer extends AxisRenderer {
 
 		if (style.hasYAxis()) result += style.getAxisThickness();
 
-		if (labelsPositioning == LabelPosition.OUTSIDE) {
+		if (style.getYLabelsPositioning() == LabelPosition.OUTSIDE) {
 			float aux;
 			float maxLabelLength = 0;
 			for (String label : labels)
 				if ((aux = style.getLabelsPaint().measureText(label)) > maxLabelLength)
 					maxLabelLength = aux;
-			result += maxLabelLength + distLabelToAxis;
+			result += maxLabelLength + style.getAxisLabelsSpacing();
 		}
 		return result;
 	}
@@ -210,7 +211,8 @@ public class YRenderer extends AxisRenderer {
 	 */
 	public float measureInnerChartBottom(int bottom) {
 
-		if (labelsPositioning != LabelPosition.NONE && borderSpacing < style.getFontMaxHeight() / 2)
+		if (style.getYLabelsPositioning() != LabelPosition.NONE &&
+				  borderSpacing < style.getFontMaxHeight() / 2)
 			return bottom - style.getFontMaxHeight() / 2;
 		return bottom;
 	}

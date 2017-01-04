@@ -5,7 +5,9 @@
 
     <!-- Axis thickness-->
     <dimen name="axis_thickness">2dp</dimen>
-        
+
+    <dimen name="axis_labels_spacing">5dp</dimen>
+
     <!-- Text Labels size -->
 	<dimen name="font_size">10dp</dimen>    
     
@@ -21,7 +23,6 @@
     <!-- BarChartView -->
     <dimen name="bar_spacing">6dp</dimen>
     <dimen name="set_spacing">3dp</dimen>
+    <dimen name="corner_radius">0dp</dimen>
 
-    
-	
 </resources>

@@ -6,16 +6,10 @@
 	<string name="google_play_str">Google Play</string>
 
 	<string-array name="easing">
-		<item>CUBIC</item>
-		<item>QUART</item>
-		<item>QUINT</item>
-		<item>BOUNCE</item>
-		<item>ELASTIC</item>
-		<item>EXPO</item>
-		<item>CIRC</item>
-		<item>QUAD</item>
-		<item>SINE</item>
-		<item>LINEAR</item>
+		<item>Interpolator 1</item>
+		<item>Interpolator 2</item>
+		<item>Interpolator 3</item>
+		<item>Interpolator 4</item>
 	</string-array>
 
 	<string-array name="duration">

@@ -312,7 +312,7 @@ public class SandboxFragment extends Fragment {
 				mInterpolator = new DecelerateInterpolator();
 				break;
 			case 1:
-				mInterpolator = new AccelerateDecelerateInterpolator();
+				mInterpolator = new AccelerateInterpolator();
 				break;
 			case 2:
 				mInterpolator = new BounceInterpolator();

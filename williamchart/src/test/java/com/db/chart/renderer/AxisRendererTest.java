@@ -42,7 +42,7 @@ public class AxisRendererTest {
 
 
 	@Test
-	public void init_HandleValues_Values() {
+	public void init_HandleValues_NoBordersAndNoStep() {
 
 		mXRndr.setHandleValues(true);
 		mXRndr.init(mData, null);
@@ -50,6 +50,31 @@ public class AxisRendererTest {
 		ArrayList<String> labels = mXRndr.labels;
 		assertEquals("0", labels.get(0));
 		assertEquals("1", labels.get(1));
+		assertEquals(1, mXRndr.getStep());
+	}
+
+
+	@Test
+	public void init_HandleValues_NoBordersAndStep() {
+
+		mXRndr.setHandleValues(true);
+		mXRndr.setStep(9);
+		mXRndr.init(mData, null);
+
+		ArrayList<String> labels = mXRndr.labels;
+		assertEquals("0", labels.get(0));
+		assertEquals("9", labels.get(1));
+	}
+
+
+	@Test
+	public void init_HandleValues_BordersAndNoStep() {
+
+		mXRndr.setHandleValues(true);
+		mXRndr.setBorderValues(0,9);
+		mXRndr.init(mData, null);
+
+		assertEquals(3, mXRndr.getStep());
 	}
 
 
@@ -126,6 +151,11 @@ public class AxisRendererTest {
 		assertEquals(toAssert, mXRndr.extractLabels(mData));
 	}
 
+	@Test
+	public void findBorders_NoStep() {
+
+		assertArrayEquals(new int[] {0, 1}, mXRndr.findBorders(mData));
+	}
 
 	@Test
 	public void findBorders_BiggerStep_Result() {

@@ -6,26 +6,15 @@
 	<string name="google_play_str">Google Play</string>
 
 	<string-array name="easing">
-		<item>CUBIC</item>
-		<item>QUART</item>
-		<item>QUINT</item>
-		<item>BOUNCE</item>
-		<item>ELASTIC</item>
-		<item>EXPO</item>
-		<item>CIRC</item>
-		<item>QUAD</item>
-		<item>SINE</item>
-		<item>LINEAR</item>
+		<item>Decelerate</item>
+		<item>Accelerate</item>
+		<item>Bounce</item>
 	</string-array>
 
 	<string-array name="duration">
 		<item>500ms</item>
-		<item>1000ms</item>
 		<item>1500ms</item>
-		<item>2000ms</item>
-		<item>2500ms</item>
 		<item>3000ms</item>
-		<item>3500ms</item>
 	</string-array>
 
 	<!-- Stacked chart one -->

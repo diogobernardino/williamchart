@@ -104,15 +104,15 @@ public abstract class AxisRenderer {
 	public void init(ArrayList<ChartSet> data, Style style) {
 
 		if (handleValues) {
-			if (minLabelValue == 0 && maxLabelValue == 0) { // If no pre-defined borders
-				int[] borders;
-				if(hasStep()) borders = findBorders(data, step);
-				else borders = findBorders(data, 1);
+			if (minLabelValue == 0 && maxLabelValue == 0) {
+				int[] borders = new int[2];
+				if (hasStep()) borders = findBorders(data, step); // no borders, step
+				else borders = findBorders(data); // no borders, no step
 				minLabelValue = borders[0];
 				maxLabelValue = borders[1];
 			}
-			if (!hasStep()) // If no pre-defined step
-				setBorderValues(minLabelValue, maxLabelValue);
+			if (!hasStep()) setBorderValues(minLabelValue, maxLabelValue);
+
 			labelsValues = calculateValues(minLabelValue, maxLabelValue, step);
 			labels = convertToLabelsFormat(labelsValues, labelFormat);
 		} else {
@@ -162,7 +162,7 @@ public abstract class AxisRenderer {
 	/**
 	 * Method called from onDraw method to draw AxisController data.
 	 *
-	 * @param canvas {@link android.graphics.Canvas} to use while drawing the data
+	 * @param canvas {@link Canvas} to use while drawing the data
 	 */
 	abstract protected void draw(Canvas canvas);
 
@@ -273,11 +273,10 @@ public abstract class AxisRenderer {
 	 * axis based on {@link ChartSet} values.
 	 *
 	 * @param sets {@link ArrayList} containing {@link ChartSet} elements of chart
-	 * @param step Step to be used between axis values
 	 *
 	 * @return Int vector containing both minimum and maximum value to be used.
 	 */
-	int[] findBorders(ArrayList<ChartSet> sets, int step) {
+	int[] findBorders(ArrayList<ChartSet> sets) {
 
 		float max = Integer.MIN_VALUE;
 		float min = Integer.MAX_VALUE;
@@ -292,12 +291,29 @@ public abstract class AxisRenderer {
 
 		max = (max < 0) ? 0 : (int) Math.ceil(max);
 		min = (min > 0) ? 0 : (int) Math.floor(min);
-		while ((max - min) % step != 0) max += 1;
 
-		// All given set values are 0
-		if (min == max) max += step;
+		// All given set values are equal
+		if (min == max) max += 1;
 
 		return new int[] {(int) min, (int) max};
+	}
+
+
+	/**
+	 * Find out what are the minimum and maximum values of the
+	 * axis based on {@link ChartSet} values.
+	 *
+	 * @param sets {@link ArrayList} containing {@link ChartSet} elements of chart
+	 * @param step Step to be used between axis values
+	 *
+	 * @return Int vector containing both minimum and maximum value to be used.
+	 */
+	int[] findBorders(ArrayList<ChartSet> sets, int step) {
+
+		int[] borders = findBorders(sets);
+		while ((borders[1] - borders[0]) % step != 0) borders[1] += 1; // Assure border fit step
+
+		return borders;
 	}
 
 

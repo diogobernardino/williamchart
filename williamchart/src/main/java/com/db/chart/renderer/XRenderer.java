@@ -76,12 +76,12 @@ public class XRenderer extends AxisRenderer {
 
 		float result = axisCoordinate;
 
-		if (labelsPositioning == LabelPosition.INSIDE) { // Labels sit inside of chart
+		if (style.getXLabelsPositioning() == LabelPosition.INSIDE) { // Labels sit inside of chart
 			result -= distanceToAxis;
 			result -= style.getLabelsPaint().descent();
 			if (style.hasXAxis()) result -= style.getAxisThickness() / 2;
 
-		} else if (labelsPositioning == LabelPosition.OUTSIDE) { // Labels sit outside of chart
+		} else if (style.getXLabelsPositioning() == LabelPosition.OUTSIDE) { // Labels sit outside of chart
 			result += distanceToAxis;
 			result += style.getFontMaxHeight() - style.getLabelsPaint().descent();
 			if (style.hasXAxis()) result += style.getAxisThickness() / 2;
@@ -104,7 +104,7 @@ public class XRenderer extends AxisRenderer {
 					  style.getChartPaint());
 
 		// Draw labels
-		if (labelsPositioning != LabelPosition.NONE) {
+		if (style.getXLabelsPositioning() != LabelPosition.NONE) {
 			style.getLabelsPaint().setTextAlign(Align.CENTER);
 
 			for (int i = 0; i < nLabels; i++) {
@@ -142,7 +142,7 @@ public class XRenderer extends AxisRenderer {
 	 */
 	protected float measureInnerChartLeft(int left) {
 
-		return (labelsPositioning != LabelPosition.NONE) ?
+		return (style.getXLabelsPositioning() != LabelPosition.NONE) ?
 				  style.getLabelsPaint().measureText(labels.get(0)) / 2 :
 				  left;
 	}
@@ -180,7 +180,7 @@ public class XRenderer extends AxisRenderer {
 		if (nLabels > 0) lastLabelWidth = style.getLabelsPaint().measureText(labels.get(nLabels - 1));
 
 		float rightBorder = 0;
-		if (labelsPositioning != LabelPosition.NONE &&
+		if (style.getXLabelsPositioning() != LabelPosition.NONE &&
 				  borderSpacing + mandatoryBorderSpacing < lastLabelWidth / 2)
 			rightBorder = lastLabelWidth / 2 - (borderSpacing + mandatoryBorderSpacing);
 
@@ -203,8 +203,8 @@ public class XRenderer extends AxisRenderer {
 
 		if (style.hasXAxis()) result -= style.getAxisThickness();
 
-		if (labelsPositioning == LabelPosition.OUTSIDE)
-			result -= style.getFontMaxHeight() + distLabelToAxis;
+		if (style.getXLabelsPositioning() == LabelPosition.OUTSIDE)
+			result -= style.getFontMaxHeight() + style.getAxisLabelsSpacing();
 
 		return result;
 	}

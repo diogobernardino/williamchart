@@ -22,10 +22,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.BounceInterpolator;
 
 import com.db.chart.Tools;
 import com.db.chart.animation.Animation;
-import com.db.chart.animation.easing.ElasticEase;
 import com.db.chart.model.BarSet;
 import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.BarChartView;
@@ -71,7 +72,7 @@ public class BarFragment extends Fragment implements View.OnClickListener {
 				  .setYLabels(AxisRenderer.LabelPosition.NONE)
 				  .setXAxis(false)
 				  .setYAxis(false);
-		mChart.show(new Animation().setEasing(new ElasticEase()));
+		mChart.show(new Animation().setEasing(new BounceInterpolator()));
 
 		return layout;
 	}

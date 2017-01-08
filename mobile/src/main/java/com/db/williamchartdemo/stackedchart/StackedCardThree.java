@@ -4,11 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.animation.Animation;
-import com.db.chart.animation.easing.ExpoEase;
 import com.db.chart.model.BarSet;
 import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.view.HorizontalStackBarChartView;
@@ -63,7 +64,7 @@ public class StackedCardThree extends CardController {
 				  .setYAxis(false)
 				  .setAxisBorderValues(-80, 80, 10);
 
-		Animation anim = new Animation().setEasing(new ExpoEase()).setEndAction(action);
+		Animation anim = new Animation().setEasing(new DecelerateInterpolator()).setEndAction(action);
 
 		mChart.show(anim);
 	}
@@ -90,7 +91,7 @@ public class StackedCardThree extends CardController {
 
 		super.dismiss(action);
 
-		mChart.dismiss(mChart.getChartAnimation().setEndAction(action));
+		mChart.dismiss(mChart.getChartAnimation().setEasing(new AccelerateInterpolator()).setEndAction(action));
 	}
 
 }

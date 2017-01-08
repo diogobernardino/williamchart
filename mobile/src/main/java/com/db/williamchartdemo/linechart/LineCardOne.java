@@ -7,11 +7,11 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.animation.Animation;
-import com.db.chart.animation.easing.BounceEase;
 import com.db.chart.model.LineSet;
 import com.db.chart.renderer.AxisRenderer;
 import com.db.chart.tooltip.Tooltip;
@@ -115,7 +115,7 @@ public class LineCardOne extends CardController {
 			}
 		};
 
-		Animation anim = new Animation().setEasing(new BounceEase()).setEndAction(chartAction);
+		Animation anim = new Animation().setEasing(new BounceInterpolator()).setEndAction(chartAction);
 
 		mChart.show(anim);
 	}
@@ -145,7 +145,7 @@ public class LineCardOne extends CardController {
 		super.dismiss(action);
 
 		mChart.dismissAllTooltips();
-		mChart.dismiss(new Animation().setEasing(new BounceEase()).setEndAction(action));
+		mChart.dismiss(new Animation().setEasing(new BounceInterpolator()).setEndAction(action));
 	}
 
 }

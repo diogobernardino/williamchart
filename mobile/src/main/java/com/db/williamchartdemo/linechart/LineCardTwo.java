@@ -81,7 +81,7 @@ public class LineCardTwo extends CardController {
 				  .setYLabels(AxisRenderer.LabelPosition.NONE)
 				  .setXAxis(false)
 				  .setYAxis(false)
-				  .setGrid(ChartView.GridType.VERTICAL, 1, 7, gridPaint)
+				  .setGrid(0, 7, gridPaint)
 				  .setValueThreshold(80f, 80f, thresPaint)
 				  .setAxisBorderValues(0, 110);
 

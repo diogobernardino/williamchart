@@ -82,7 +82,7 @@ public class BarChartView extends BaseBarChartView {
 				bar = (Bar) barSet.getEntry(i);
 
 				// If entry value is 0 it won't be drawn
-				if (!barSet.isVisible() || bar.getValue() == 0) continue;
+				if (!barSet.isVisible()) continue;
 
 				// Style it!
 				if (!bar.hasGradientColor()) style.barPaint.setColor(bar.getColor());
@@ -100,7 +100,7 @@ public class BarChartView extends BaseBarChartView {
 				}
 
 				// Draw bar
-				if (bar.getValue() > 0) // Positive
+				if (bar.getValue() >= 0) // Positive
 					drawBar(canvas, offset, bar.getY(), offset + barWidth, this.getZeroPosition());
 				else // Negative
 					drawBar(canvas, offset, this.getZeroPosition(), offset + barWidth, bar.getY());
@@ -151,15 +151,10 @@ public class BarChartView extends BaseBarChartView {
 	 * where click will be detected
 	 */
 	@Override
-	public ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
+	void defineRegions(ArrayList<ArrayList<Region>> regions, ArrayList<ChartSet> data) {
 
 		final int nSets = data.size();
 		final int nEntries = data.get(0).size();
-
-		ArrayList<ArrayList<Region>> result = new ArrayList<>(nSets);
-
-		for (int i = 0; i < nSets; i++)
-			result.add(new ArrayList<Region>(nEntries));
 
 		float offset;
 		BarSet barSet;
@@ -175,23 +170,23 @@ public class BarChartView extends BaseBarChartView {
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
 
-				if (bar.getValue() > 0) result.get(j)
-						  .add(new Region((int) offset, (int) bar.getY(), (int) (offset += barWidth),
-									 (int) this.getZeroPosition()));
-				else if (bar.getValue() < 0) result.get(j)
-						  .add(new Region((int) offset, (int) this.getZeroPosition(),
-									 (int) (offset += barWidth), (int) bar.getY()));
-				else result.get(j) // If value == 0, force region to 1 pixel
-							  .add(new Region((int) offset, (int) this.getZeroPosition(),
-										 (int) (offset += barWidth), (int) this.getZeroPosition() + 1));
+				if (bar.getValue() > 0) regions.get(j)
+						  .get(i)
+						  .set((int) offset, (int) bar.getY(), (int) (offset += barWidth),
+									 (int) this.getZeroPosition());
+				else if (bar.getValue() < 0) regions.get(j)
+						  .get(i)
+						  .set((int) offset, (int) this.getZeroPosition(), (int) (offset += barWidth),
+									 (int) bar.getY());
+				else regions.get(j)
+							  .get(i)
+							  .set((int) offset, (int) this.getZeroPosition(), (int) (offset += barWidth),
+										 (int) this.getZeroPosition() + 1);
 
 				// If last bar of group no set spacing is necessary
 				if (j != nSets - 1) offset += style.setSpacing;
 			}
-
 		}
-
-		return result;
 	}
 
 }

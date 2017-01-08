@@ -52,7 +52,7 @@ public abstract class BaseBarChartView extends ChartView {
 		super(context, attrs);
 
 		style = new Style(
-				  context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
+				  context.getTheme().obtainStyledAttributes(attrs, R.styleable.BarChartAttrs, 0, 0));
 
 	}
 
@@ -111,7 +111,8 @@ public abstract class BaseBarChartView extends ChartView {
 	 */
 	void drawBar(Canvas canvas, float left, float top, float right, float bottom) {
 
-		canvas.drawRoundRect(new RectF((int) left, (int) top, (int) right, (int) bottom),
+		canvas.drawRoundRect(
+				  new RectF(Math.round(left), Math.round(top), Math.round(right), Math.round(bottom)),
 				  style.cornerRadius, style.cornerRadius, style.barPaint);
 	}
 
@@ -127,7 +128,8 @@ public abstract class BaseBarChartView extends ChartView {
 	 */
 	void drawBarBackground(Canvas canvas, float left, float top, float right, float bottom) {
 
-		canvas.drawRoundRect(new RectF((int) left, (int) top, (int) right, (int) bottom),
+		canvas.drawRoundRect(
+				  new RectF(Math.round(left), Math.round(top), Math.round(right), Math.round(bottom)),
 				  style.cornerRadius, style.cornerRadius, style.barBackgroundPaint);
 	}
 
@@ -141,7 +143,7 @@ public abstract class BaseBarChartView extends ChartView {
 	 */
 	void calculateBarsWidth(int nSets, float x0, float x1) {
 
-		barWidth = ((x1 - x0) - style.barSpacing / 2 - style.setSpacing * (nSets - 1)) / nSets;
+		barWidth = ((x1 - x0) - style.barSpacing - style.setSpacing * (nSets - 1)) / nSets;
 	}
 
 
@@ -225,26 +227,23 @@ public abstract class BaseBarChartView extends ChartView {
 
 		private static final int DEFAULT_COLOR = -16777216;
 
-
 		/** Bars fill variables */
 		Paint barPaint;
-
 
 		/** Spacing between bars */
 		float barSpacing;
 
 		float setSpacing;
 
-
 		/** Bar background variables */
 		Paint barBackgroundPaint;
 
 		boolean hasBarBackground;
 
+		private int mBarBackgroundColor;
+
 		/** Radius to round corners **/
 		float cornerRadius;
-
-		private int mBarBackgroundColor;
 
 
 		Style() {
@@ -254,6 +253,7 @@ public abstract class BaseBarChartView extends ChartView {
 
 			barSpacing = getResources().getDimension(R.dimen.bar_spacing);
 			setSpacing = getResources().getDimension(R.dimen.set_spacing);
+			cornerRadius = getResources().getDimension(R.dimen.corner_radius);
 		}
 
 
@@ -266,6 +266,8 @@ public abstract class BaseBarChartView extends ChartView {
 					  getResources().getDimension(R.dimen.bar_spacing));
 			setSpacing = attrs.getDimension(R.styleable.BarChartAttrs_chart_barSpacing,
 					  getResources().getDimension(R.dimen.set_spacing));
+			cornerRadius = attrs.getDimension(R.styleable.BarChartAttrs_chart_cornerRadius,
+					  getResources().getDimension(R.dimen.corner_radius));
 		}
 
 

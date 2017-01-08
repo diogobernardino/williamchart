@@ -1,6 +1,7 @@
 package com.db.williamchartdemo;
 
 
+import android.animation.TimeInterpolator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.DashPathEffect;
@@ -21,6 +22,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -30,17 +35,6 @@ import android.widget.TextView;
 
 import com.db.chart.Tools;
 import com.db.chart.animation.Animation;
-import com.db.chart.animation.easing.BaseEasingMethod;
-import com.db.chart.animation.easing.BounceEase;
-import com.db.chart.animation.easing.CircEase;
-import com.db.chart.animation.easing.CubicEase;
-import com.db.chart.animation.easing.ElasticEase;
-import com.db.chart.animation.easing.ExpoEase;
-import com.db.chart.animation.easing.LinearEase;
-import com.db.chart.animation.easing.QuadEase;
-import com.db.chart.animation.easing.QuartEase;
-import com.db.chart.animation.easing.QuintEase;
-import com.db.chart.animation.easing.SineEase;
 import com.db.chart.model.BarSet;
 import com.db.chart.model.LineSet;
 import com.db.chart.renderer.AxisRenderer;
@@ -144,7 +138,7 @@ public class SandboxFragment extends Fragment {
 	private static String mLabelFormat;
 
 	/** Grid */
-	private static ChartView.GridType mGridType;
+	private static GridType mGridType;
 
 	private static Paint mGridPaint;
 
@@ -191,7 +185,7 @@ public class SandboxFragment extends Fragment {
 
 	private static int[] mOverlapOrder;
 
-	private static BaseEasingMethod mEasing;
+	private static TimeInterpolator mInterpolator;
 
 	private static float mStartX;
 
@@ -203,6 +197,9 @@ public class SandboxFragment extends Fragment {
 
 	private ViewPager mViewPager;
 
+	public enum GridType {
+		FULL, VERTICAL, HORIZONTAL, NONE
+	}
 
 	private static ChartView buildLineChart(LineChartView chart) {
 
@@ -271,7 +268,11 @@ public class SandboxFragment extends Fragment {
 				  .setLabelsColor(mLabelColorId)
 				  .setAxisColor(mAxisColorId);
 
-		if (mGridType != null) chart.setGrid(mGridType, mGridPaint);
+		if (mGridType != null) {
+			if (mGridType.compareTo(GridType.FULL) == 0) chart.setGrid(5, 5, mGridPaint);
+			if (mGridType.compareTo(GridType.VERTICAL) == 0) chart.setGrid(0, 5, mGridPaint);
+			if (mGridType.compareTo(GridType.HORIZONTAL) == 0) chart.setGrid(5, 0, mGridPaint);
+		}
 
 		chart.setLabelsFormat(new DecimalFormat("#" + mLabelFormat));
 
@@ -315,41 +316,20 @@ public class SandboxFragment extends Fragment {
 
 		switch (mEasingId) {
 			case 0:
-				mEasing = new CubicEase();
+				mInterpolator = new DecelerateInterpolator();
 				break;
 			case 1:
-				mEasing = new QuartEase();
+				mInterpolator = new AccelerateInterpolator();
 				break;
 			case 2:
-				mEasing = new QuintEase();
-				break;
-			case 3:
-				mEasing = new BounceEase();
-				break;
-			case 4:
-				mEasing = new ElasticEase();
-				break;
-			case 5:
-				mEasing = new ExpoEase();
-				break;
-			case 6:
-				mEasing = new CircEase();
-				break;
-			case 7:
-				mEasing = new QuadEase();
-				break;
-			case 8:
-				mEasing = new SineEase();
-				break;
-			case 9:
-				mEasing = new LinearEase();
+				mInterpolator = new BounceInterpolator();
 				break;
 			default:
-				mEasing = new CubicEase();
+				mInterpolator = new DecelerateInterpolator();
 		}
 
 		return new Animation(mDuration).setAlpha(mAlpha)
-				  .setEasing(mEasing)
+				  .setEasing(mInterpolator)
 				  .setOverlap(mOverlapFactor, mOverlapOrder)
 				  .setStartPoint(mStartX, mStartY)
 				  .setEndAction(mEndAction);
@@ -366,34 +346,13 @@ public class SandboxFragment extends Fragment {
 
 		switch (mEasingId) {
 			case 0:
-				code.append("anim.setEasing(new CubicEase());\n");
+				code.append("anim.setEasing(new DecelerateInterpolator());\n");
 				break;
 			case 1:
-				code.append("anim.setEasing(new QuartEase());\n");
+				code.append("anim.setEasing(new AccelerateDecelerateInterpolator());\n");
 				break;
 			case 2:
-				code.append("anim.setEasing(new QuintEase());\n");
-				break;
-			case 3:
-				code.append("anim.setEasing(new BounceEase());\n");
-				break;
-			case 4:
-				code.append("anim.setEasing(new ElasticEase());\n");
-				break;
-			case 5:
-				code.append("anim.setEasing(new ExpoEase());\n");
-				break;
-			case 6:
-				code.append("anim.setEasing(new CircEase());\n");
-				break;
-			case 7:
-				code.append("anim.setEasing(new QuadEase());\n");
-				break;
-			case 8:
-				code.append("anim.setEasing(new SineEase());\n");
-				break;
-			case 9:
-				code.append("anim.setEasing(new LinearEase());\n");
+				code.append("anim.setEasing(new BounceInterpolator());\n");
 				break;
 			default:
 		}
@@ -512,7 +471,7 @@ public class SandboxFragment extends Fragment {
 		mOverlapFactor = 1;
 		mOverlapOrder = mEqualOrder;
 		mEasingId = 0;
-		mEasing = new CubicEase();
+		mInterpolator = new DecelerateInterpolator();
 		mStartX = -1;
 		mStartY = 0;
 		mAlpha = -1;
@@ -1027,18 +986,18 @@ public class SandboxFragment extends Fragment {
 
 				/** Grid Type **/
 				case R.id.sandbox_grid_hor:
-					if (mGridTypeId == id) mGridType = ChartView.GridType.NONE;
-					else mGridType = ChartView.GridType.HORIZONTAL;
+					if (mGridTypeId == id) mGridType = GridType.NONE;
+					else mGridType = GridType.HORIZONTAL;
 					mGridTypeId = swapState(mLayout, mGridTypeId, id, false);
 					break;
 				case R.id.sandbox_grid_ver:
-					if (mGridTypeId == id) mGridType = ChartView.GridType.NONE;
-					else mGridType = ChartView.GridType.VERTICAL;
+					if (mGridTypeId == id) mGridType = GridType.NONE;
+					else mGridType = GridType.VERTICAL;
 					mGridTypeId = swapState(mLayout, mGridTypeId, id, false);
 					break;
 				case R.id.sandbox_grid_full:
-					if (mGridTypeId == id) mGridType = ChartView.GridType.NONE;
-					else mGridType = ChartView.GridType.FULL;
+					if (mGridTypeId == id) mGridType = GridType.NONE;
+					else mGridType = GridType.FULL;
 					mGridTypeId = swapState(mLayout, mGridTypeId, id, false);
 					break;
 

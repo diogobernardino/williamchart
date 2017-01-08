@@ -38,6 +38,7 @@ import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.RelativeLayout;
 
 import com.db.chart.animation.Animation;
+import com.db.chart.animation.ChartAnimationListener;
 import com.db.chart.animation.style.BaseStyleAnimation;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.model.ChartEntry;
@@ -60,10 +61,6 @@ public abstract class ChartView extends RelativeLayout {
 
 	private static final String TAG = "chart.view.ChartView";
 
-	private static final int DEFAULT_GRID_ROWS = 5;
-
-	private static final int DEFAULT_GRID_COLUMNS = 5;
-
 	/** Horizontal and Vertical position controllers */
 	final XRenderer xRndr;
 
@@ -71,9 +68,6 @@ public abstract class ChartView extends RelativeLayout {
 
 	/** Style applied to chart */
 	final Style style;
-
-	/** Context */
-	Context ctx;
 
 	/** Chart data to be displayed */
 	ArrayList<ChartSet> data;
@@ -90,18 +84,17 @@ public abstract class ChartView extends RelativeLayout {
 
 	private int mChartBottom;
 
-	/** Threshold limit line value */
-	private boolean mHasThresholdValue;
+	/** Threshold line value */
 
-	private float mThresholdStartValue;
+	private ArrayList<Float> mThresholdStartValues;
 
-	private float mThresholdEndValue;
+	private ArrayList<Float> mThresholdEndValues;
 
-	private boolean mHasThresholdLabel;
+	/** Threshold line label */
 
-	private int mThresholdStartLabel;
+	private ArrayList<Integer> mThresholdStartLabels;
 
-	private int mThresholdEndLabel;
+	private ArrayList<Integer> mThresholdEndLabels;
 
 	/** Chart data to be displayed */
 	private ArrayList<ArrayList<Region>> mRegions;
@@ -123,6 +116,9 @@ public abstract class ChartView extends RelativeLayout {
 
 	/** Chart animation */
 	private Animation mAnim;
+
+	private ChartAnimationListener mAnimListener;
+
 
 	/**
 	 * Executed only before the chart is drawn for the first time.
@@ -169,9 +165,11 @@ public abstract class ChartView extends RelativeLayout {
 			xRndr.dispose();
 
 			// Parse threshold screen coordinates
-			if (mHasThresholdValue) {
-				mThresholdStartValue = yRndr.parsePos(0, mThresholdStartValue);
-				mThresholdEndValue = yRndr.parsePos(0, mThresholdEndValue);
+			if (!mThresholdStartValues.isEmpty()) {
+				for (int i = 0; i < mThresholdStartValues.size(); i++) {
+					mThresholdStartValues.set(i, yRndr.parsePos(0, mThresholdStartValues.get(i)));
+					mThresholdEndValues.set(i, yRndr.parsePos(0, mThresholdEndValues.get(i)));
+				}
 			}
 
 			// Process data to define screen coordinates
@@ -181,7 +179,20 @@ public abstract class ChartView extends RelativeLayout {
 			onPreDrawChart(data);
 
 			// Define entries regions
-			mRegions = defineRegions(data);
+			if (mRegions.isEmpty()){
+				int dataSize = data.size();
+				int setSize;
+				mRegions = new ArrayList<>(dataSize);
+				ArrayList<Region> regionSet;
+				for (int i = 0; i < dataSize; i++) {
+					setSize = data.get(0).size();
+					regionSet = new ArrayList<>(setSize);
+					for (int j = 0; j < setSize; j++)
+						regionSet.add(new Region());
+					mRegions.add(regionSet);
+				}
+			}
+			defineRegions(mRegions, data);
 
 			// Prepare the animation retrieving the first dump of coordinates to be used
 			if (mAnim != null) data = mAnim.prepareEnterAnimation(ChartView.this);
@@ -193,13 +204,6 @@ public abstract class ChartView extends RelativeLayout {
 		}
 	};
 
-	/** Grid attributes */
-	private GridType mGridType;
-
-	private int mGridNRows;
-
-	private int mGridNColumns;
-
 	/** Tooltip */
 	private Tooltip mTooltip;
 
@@ -209,11 +213,10 @@ public abstract class ChartView extends RelativeLayout {
 		super(context, attrs);
 
 		init();
-		ctx = context;
+		mGestureDetector = new GestureDetector(context, new GestureListener());
 		xRndr = new XRenderer();
 		yRndr = new YRenderer();
-		style = new Style(
-				  context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0));
+		style = new Style(context, attrs);
 	}
 
 
@@ -222,25 +225,34 @@ public abstract class ChartView extends RelativeLayout {
 		super(context);
 
 		init();
-		ctx = context;
+		mGestureDetector = new GestureDetector(context, new GestureListener());
 		xRndr = new XRenderer();
 		yRndr = new YRenderer();
-		style = new Style();
+		style = new Style(context);
 	}
 
 
 	private void init() {
 
 		mReadyToDraw = false;
-		mHasThresholdValue = false;
-		mHasThresholdLabel = false;
+		mThresholdStartValues = new ArrayList<>();
+		mThresholdEndValues = new ArrayList<>();
+		mThresholdStartLabels = new ArrayList<>();
+		mThresholdEndLabels = new ArrayList<>();
 		mIsDrawing = false;
 		data = new ArrayList<>();
 		mRegions = new ArrayList<>();
-		mGridType = GridType.NONE;
-		mGridNRows = DEFAULT_GRID_ROWS;
-		mGridNColumns = DEFAULT_GRID_COLUMNS;
-		mGestureDetector = new GestureDetector(ctx, new GestureListener());
+		mAnimListener = new ChartAnimationListener() {
+			@Override
+			public boolean onAnimationUpdate(ArrayList<ChartSet> data) {
+				if (!mIsDrawing) {
+					addData(data);
+					postInvalidate();
+					return true;
+				}
+				return false;
+			}
+		};
 	}
 
 
@@ -290,7 +302,10 @@ public abstract class ChartView extends RelativeLayout {
 	@Override
 	public boolean onTouchEvent(@NonNull MotionEvent event) {
 
-		return !(mAnim == null || !mAnim.isPlaying()) || mGestureDetector.onTouchEvent(event);
+		super.onTouchEvent(event);
+		return !(mAnim != null && mAnim.isPlaying() ||
+				  mEntryListener == null && mChartListener == null && mTooltip == null) &&
+				  mGestureDetector.onTouchEvent(event);
 	}
 
 
@@ -304,18 +319,19 @@ public abstract class ChartView extends RelativeLayout {
 			//long time = System.currentTimeMillis();
 
 			// Draw grid
-			if (mGridType == GridType.FULL || mGridType == GridType.VERTICAL) drawVerticalGrid(canvas);
-			if (mGridType == GridType.FULL || mGridType == GridType.HORIZONTAL)
-				drawHorizontalGrid(canvas);
+			if (style.hasVerticalGrid()) drawVerticalGrid(canvas);
+			if (style.hasHorizontalGrid()) drawHorizontalGrid(canvas);
 
 			// Draw threshold
-			if (mHasThresholdValue)
-				drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValue, getInnerChartRight(),
-						  mThresholdEndValue);
-			if (mHasThresholdLabel)
-				drawThreshold(canvas, data.get(0).getEntry(mThresholdStartLabel).getX(),
-						  getInnerChartTop(), data.get(0).getEntry(mThresholdEndLabel).getX(),
-						  getInnerChartBottom());
+			if (!mThresholdStartValues.isEmpty())
+				for (int i = 0; i < mThresholdStartValues.size(); i++)
+					drawThreshold(canvas, getInnerChartLeft(), mThresholdStartValues.get(i),
+							  getInnerChartRight(), mThresholdEndValues.get(i), style.valueThresPaint);
+			if (!mThresholdStartLabels.isEmpty())
+				for (int i = 0; i < mThresholdStartLabels.size(); i++)
+					drawThreshold(canvas, data.get(0).getEntry(mThresholdStartLabels.get(i)).getX(),
+							  getInnerChartTop(), data.get(0).getEntry(mThresholdEndLabels.get(i)).getX(),
+							  getInnerChartBottom(), style.labelThresPaint);
 
 			// Draw data
 			if (!data.isEmpty()) onDrawChart(canvas, data);
@@ -371,10 +387,7 @@ public abstract class ChartView extends RelativeLayout {
 	 * @return {@link java.util.ArrayList} of {@link android.graphics.Region} with regions
 	 * where click will be detected
 	 */
-	ArrayList<ArrayList<Region>> defineRegions(ArrayList<ChartSet> data) {
-
-		return mRegions;
-	}
+	void defineRegions(ArrayList<ArrayList<Region>> regions, ArrayList<ChartSet> data) {}
 
 
 	/**
@@ -454,6 +467,7 @@ public abstract class ChartView extends RelativeLayout {
 	public void show(Animation anim) {
 
 		mAnim = anim;
+		mAnim.setAnimationListener(mAnimListener);
 		show();
 	}
 
@@ -484,10 +498,12 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @param anim Animation used to exit
 	 */
-	public void dismiss(Animation anim) {
+	public void dismiss(@NonNull Animation anim) {
 
 		if (anim != null) {
+
 			mAnim = anim;
+			mAnim.setAnimationListener(mAnimListener);
 
 			final Runnable endAction = mAnim.getEndAction();
 			mAnim.setEndAction(new Runnable() {
@@ -520,9 +536,8 @@ public abstract class ChartView extends RelativeLayout {
 		if (xRndr.hasMandatoryBorderSpacing()) xRndr.reset();
 		if (yRndr.hasMandatoryBorderSpacing()) yRndr.reset();
 
-		mHasThresholdLabel = false;
-		mHasThresholdValue = false;
-		style.thresholdPaint = null;
+		style.labelThresPaint = null;
+		style.valueThresPaint = null;
 
 		style.gridPaint = null;
 	}
@@ -564,10 +579,9 @@ public abstract class ChartView extends RelativeLayout {
 			for (ChartSet set : data)
 				newCoords.add(set.getScreenPoints());
 
-			mRegions = defineRegions(data);
-			if (mAnim != null) data = mAnim.prepareUpdateAnimation(this, oldCoords, newCoords);
-
-			invalidate();
+			defineRegions(mRegions, data);
+			if (mAnim != null) mAnim.prepareUpdateAnimation(oldCoords, newCoords);
+			else invalidate();
 
 		} else {
 			Log.w(TAG, "Unexpected data update notification. " +
@@ -734,11 +748,12 @@ public abstract class ChartView extends RelativeLayout {
 	 * @param right The right side of the line/band to be drawn
 	 * @param bottom The bottom side of the line/band to be drawn
 	 */
-	private void drawThreshold(Canvas canvas, float left, float top, float right, float bottom) {
+	private void drawThreshold(Canvas canvas, float left, float top, float right, float bottom,
+			  Paint paint) {
 
 		if (left == right || top == bottom)
-			canvas.drawLine(left, top, right, bottom, style.thresholdPaint);
-		else canvas.drawRect(left, top, right, bottom, style.thresholdPaint);
+			canvas.drawLine(left, top, right, bottom, paint);
+		else canvas.drawRect(left, top, right, bottom, paint);
 	}
 
 
@@ -749,7 +764,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	private void drawVerticalGrid(Canvas canvas) {
 
-		final float offset = (getInnerChartRight() - getInnerChartLeft()) / mGridNColumns;
+		final float offset = (getInnerChartRight() - getInnerChartLeft()) / style.gridColumns;
 		float marker = getInnerChartLeft();
 
 		if (style.hasYAxis) marker += offset;
@@ -772,7 +787,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	private void drawHorizontalGrid(Canvas canvas) {
 
-		final float offset = (getInnerChartBottom() - getInnerChartTop()) / mGridNRows;
+		final float offset = (getInnerChartBottom() - getInnerChartTop()) / style.gridRows;
 		float marker = getInnerChartTop();
 		while (marker < getInnerChartBottom()) {
 			canvas.drawLine(getInnerChartLeft(), marker, getInnerChartRight(), marker,
@@ -974,7 +989,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setYLabels(YRenderer.LabelPosition position) {
 
-		yRndr.setLabelsPositioning(position);
+		style.yLabelsPositioning = position;
 		return this;
 	}
 
@@ -990,7 +1005,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setXLabels(XRenderer.LabelPosition position) {
 
-		xRndr.setLabelsPositioning(position);
+		style.xLabelsPositioning = position;
 		return this;
 	}
 
@@ -1218,24 +1233,6 @@ public abstract class ChartView extends RelativeLayout {
 	/**
 	 * Apply grid to chart.
 	 *
-	 * @param type {@link GridType} for grid
-	 * @param paint The Paint instance that will be used to draw the grid
-	 * If null the grid won't be drawn
-	 *
-	 * @return {@link com.db.chart.view.ChartView} self-reference.
-	 */
-	public ChartView setGrid(GridType type, Paint paint) {
-
-		mGridType = type;
-		style.gridPaint = paint;
-		return this;
-	}
-
-
-	/**
-	 * Apply grid to chart.
-	 *
-	 * @param type {@link GridType} for grid
 	 * @param rows Grid's number of rows
 	 * @param columns Grid's number of columns
 	 * @param paint The Paint instance that will be used to draw the grid
@@ -1243,15 +1240,14 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setGrid(GridType type, @IntRange(from = 1) int rows,
-			  @IntRange(from = 1) int columns, Paint paint) {
+	public ChartView setGrid(@IntRange(from = 0) int rows, @IntRange(from = 0) int columns,
+							 Paint paint) {
 
-		if (rows < 1 || columns < 1)
-			throw new IllegalArgumentException("Number of rows/columns can't be lesser than 1.");
+		if (rows < 0 || columns < 0)
+			throw new IllegalArgumentException("Number of rows/columns can't be smaller than 0.");
 
-		mGridType = type;
-		mGridNRows = rows;
-		mGridNColumns = columns;
+		style.gridRows = rows;
+		style.gridColumns = columns;
 		style.gridPaint = paint;
 		return this;
 	}
@@ -1270,10 +1266,33 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setValueThreshold(float startValue, float endValue, Paint paint) {
 
-		mHasThresholdValue = true;
-		mThresholdStartValue = startValue;
-		mThresholdEndValue = endValue;
-		style.thresholdPaint = paint;
+		mThresholdStartValues.add(startValue);
+		mThresholdEndValues.add(endValue);
+		style.valueThresPaint = paint;
+		return this;
+	}
+
+
+	/**
+	 * Display a value threshold either in a form of line or band.
+	 * In order to produce a line, the start and end value will be equal.
+	 *
+	 * @param startValues Threshold values.
+	 * @param endValues Threshold values.
+	 * @param paint The Paint instance that will be used to draw the grid
+	 * If null the grid won't be drawn
+	 *
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
+	 */
+	public ChartView setValueThreshold(float[] startValues, float[] endValues, Paint paint) {
+
+		mThresholdStartValues.clear();
+		mThresholdEndValues.clear();
+		for (int i = 0; i < startValues.length; i++) {
+			mThresholdStartValues.add(startValues[i]);
+			mThresholdEndValues.add(endValues[i]);
+		}
+		style.valueThresPaint = paint;
 		return this;
 	}
 
@@ -1291,10 +1310,33 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setLabelThreshold(int startLabel, int endLabel, Paint paint) {
 
-		mHasThresholdLabel = true;
-		mThresholdStartLabel = startLabel;
-		mThresholdEndLabel = endLabel;
-		style.thresholdPaint = paint;
+		mThresholdStartLabels.add(startLabel);
+		mThresholdEndLabels.add(endLabel);
+		style.labelThresPaint = paint;
+		return this;
+	}
+
+
+	/**
+	 * Display a label threshold either in a form of line or band.
+	 * In order to produce a line, the start and end label will be equal.
+	 *
+	 * @param startLabels Threshold start label index.
+	 * @param endLabels Threshold end label index.
+	 * @param paint The Paint instance that will be used to draw the grid
+	 * If null the grid won't be drawn
+	 *
+	 * @return {@link com.db.chart.view.ChartView} self-reference.
+	 */
+	public ChartView setLabelThreshold(int[] startLabels, int[] endLabels, Paint paint) {
+
+		mThresholdStartLabels.clear();
+		mThresholdEndLabels.clear();
+		for (int i = 0; i < startLabels.length; i++) {
+			mThresholdStartLabels.add(startLabels[i]);
+			mThresholdEndLabels.add(endLabels[i]);
+		}
+		style.labelThresPaint = paint;
 		return this;
 	}
 
@@ -1308,8 +1350,7 @@ public abstract class ChartView extends RelativeLayout {
 	 */
 	public ChartView setAxisLabelsSpacing(float spacing) {
 
-		xRndr.setAxisLabelsSpacing(spacing);
-		yRndr.setAxisLabelsSpacing(spacing);
+		style.distLabelToAxis = (int) spacing;
 		return this;
 	}
 
@@ -1374,11 +1415,6 @@ public abstract class ChartView extends RelativeLayout {
 	}
 
 
-	public enum GridType {
-		FULL, VERTICAL, HORIZONTAL, NONE
-	}
-
-
 	public enum Orientation {
 		HORIZONTAL, VERTICAL
 	}
@@ -1392,26 +1428,36 @@ public abstract class ChartView extends RelativeLayout {
 
 		private final static int DEFAULT_COLOR = Color.BLACK;
 
+		private static final int DEFAULT_GRID_OFF = 0;
 
 		/** Chart */
 		private Paint chartPaint;
 
 		/** Axis */
+		private boolean hasXAxis;
+
+		private boolean hasYAxis;
+
 		private float axisThickness;
 
 		private int axisColor;
 
-		private boolean hasXAxis;
-
-		private boolean hasYAxis;
+		/** Distance between axis and label */
+		private int distLabelToAxis;
 
 		/** Grid */
 		private Paint gridPaint;
 
 		/** Threshold **/
-		private Paint thresholdPaint;
+		private Paint labelThresPaint;
+
+		private Paint valueThresPaint;
 
 		/** Font */
+		private AxisRenderer.LabelPosition xLabelsPositioning;
+
+		private AxisRenderer.LabelPosition yLabelsPositioning;
+
 		private Paint labelsPaint;
 
 		private int labelsColor;
@@ -1427,34 +1473,70 @@ public abstract class ChartView extends RelativeLayout {
 		 */
 		private int fontMaxHeight;
 
+		private int gridRows;
 
-		Style() {
+		private int gridColumns;
+
+
+		Style(Context context) {
 
 			axisColor = DEFAULT_COLOR;
-			axisThickness = ctx.getResources().getDimension(R.dimen.grid_thickness);
+			axisThickness = context.getResources().getDimension(R.dimen.grid_thickness);
 			hasXAxis = true;
 			hasYAxis = true;
 
+			xLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
+			yLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
 			labelsColor = DEFAULT_COLOR;
-			fontSize = ctx.getResources().getDimension(R.dimen.font_size);
+			fontSize = context.getResources().getDimension(R.dimen.font_size);
+
+			distLabelToAxis = (int) context.getResources().getDimension(R.dimen.axis_labels_spacing);
+
+			gridRows = DEFAULT_GRID_OFF;
+			gridColumns = DEFAULT_GRID_OFF;
 		}
 
 
-		Style(TypedArray attrs) {
+		Style(Context context, AttributeSet attrs) {
 
-			axisColor = attrs.getColor(R.styleable.ChartAttrs_chart_axisColor, DEFAULT_COLOR);
-			axisThickness = attrs.getDimension(R.styleable.ChartAttrs_chart_axisThickness,
-					  getResources().getDimension(R.dimen.axis_thickness));
-			hasXAxis = true;
-			hasYAxis = true;
 
-			labelsColor = attrs.getColor(R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
-			fontSize = attrs.getDimension(R.styleable.ChartAttrs_chart_fontSize,
-					  getResources().getDimension(R.dimen.font_size));
+			TypedArray arr = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0);
 
-			String typefaceName = attrs.getString(R.styleable.ChartAttrs_chart_typeface);
+			hasXAxis = arr.getBoolean(R.styleable.ChartAttrs_chart_axis, true);
+			hasYAxis = arr.getBoolean(R.styleable.ChartAttrs_chart_axis, true);
+			axisColor = arr.getColor(R.styleable.ChartAttrs_chart_axisColor, DEFAULT_COLOR);
+			axisThickness = arr.getDimension(R.styleable.ChartAttrs_chart_axisThickness,
+					  context.getResources().getDimension(R.dimen.axis_thickness));
+
+			switch (arr.getInt(R.styleable.ChartAttrs_chart_labels, 0)){
+				case 1:
+					xLabelsPositioning = AxisRenderer.LabelPosition.INSIDE;
+					yLabelsPositioning = AxisRenderer.LabelPosition.INSIDE;
+					break;
+				case 2:
+					xLabelsPositioning = AxisRenderer.LabelPosition.NONE;
+					yLabelsPositioning = AxisRenderer.LabelPosition.NONE;
+					break;
+				default:
+					xLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
+					yLabelsPositioning = AxisRenderer.LabelPosition.OUTSIDE;
+					break;
+			}
+
+			labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelColor, DEFAULT_COLOR);
+
+			fontSize = arr.getDimension(R.styleable.ChartAttrs_chart_fontSize,
+					  context.getResources().getDimension(R.dimen.font_size));
+
+			String typefaceName = arr.getString(R.styleable.ChartAttrs_chart_typeface);
 			if (typefaceName != null) typeface = Typeface.createFromAsset(getResources().
 					  getAssets(), typefaceName);
+
+			distLabelToAxis = arr.getDimensionPixelSize(R.styleable.ChartAttrs_chart_axisLabelsSpacing,
+					  context.getResources().getDimensionPixelSize(R.dimen.axis_labels_spacing));
+
+			gridRows = DEFAULT_GRID_OFF;
+			gridColumns = DEFAULT_GRID_OFF;
 		}
 
 
@@ -1481,8 +1563,6 @@ public abstract class ChartView extends RelativeLayout {
 
 			chartPaint = null;
 			labelsPaint = null;
-			gridPaint = null;
-			thresholdPaint = null;
 		}
 
 
@@ -1535,6 +1615,30 @@ public abstract class ChartView extends RelativeLayout {
 
 			return fontMaxHeight;
 		}
+
+		public AxisRenderer.LabelPosition getXLabelsPositioning(){
+
+			return xLabelsPositioning;
+		}
+
+		public AxisRenderer.LabelPosition getYLabelsPositioning(){
+
+			return yLabelsPositioning;
+		}
+
+		public int getAxisLabelsSpacing(){
+
+			return distLabelToAxis;
+		}
+
+		private boolean hasHorizontalGrid(){
+			return gridRows > 0;
+		}
+
+		private boolean hasVerticalGrid(){
+			return gridColumns > 0;
+		}
+
 	}
 
 

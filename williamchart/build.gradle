@@ -2,6 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
+version = '2.4.0'
+group = 'com.diogobernardino'
+
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
@@ -13,26 +16,80 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:24.2.1'
-    testCompile 'com.android.support:support-annotations:24.2.1'
+    compile 'com.android.support:support-annotations:25.1.0'
+    testCompile 'com.android.support:support-annotations:25.1.0'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
 
-ext {
-    bintrayRepo = project.BINTRAY_REPO
-    bintrayName = project.BINTRAY_NAME
-    publishedGroupId = project.GROUP
-    libraryName = project.LIB_NAME
-    artifact = project.LIB_ARTIFACT
-    libraryDescription = project.LIB_DESCRIPTION
-    siteUrl = project.WEBSITE
-    gitUrl = project.GIT_URL
-    libraryVersion = project.VERSION_NAME
-    developerId = project.DEV_ID
-    developerName = project.DEV_NAME
-    developerEmail = project.DEV_MAIL
-    licenseName = project.LICENSE_NAME
-    licenseUrl = project.LICENSE_URL
-    allLicenses = ["Apache-2.0"]
+def siteUrl = 'https://github.com/diogobernardino/WilliamChart'
+def gitUrl = 'https://github.com/diogobernardino/WilliamChart.git'
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'aar'
+            name 'WilliamChart'
+            description = 'Flexible charting library with nice motion effects.'
+            url siteUrl
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+            developers {
+                developer {
+                    id 'diogobernardino'
+                    name 'Diogo Bernardino'
+                    email 'mail@diogobernardino.com'
+                }
+            }
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+                url siteUrl
+            }
+        }
+    }
 }
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = 'maven'
+        name = 'com.diogobernardino:williamchart'
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+        override = true
+    }
+}
+

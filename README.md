@@ -16,7 +16,7 @@ And here is the [javadoc][6].
 
 ###Gradle 
 ``` groovy
-   compile 'com.diogobernardino:williamchart:2.3.0'
+   compile 'com.diogobernardino:williamchart:2.4.0'
 ```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][6], I will be happy to know about it.

@@ -10,6 +10,17 @@ buildscript {
     }
 }
 
+ext {
+    minSdkVersion = 15
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = '25.0.2'
+
+    supportLibraryVersion = '25.1.0'
+    runnerVersion = '0.5'
+    espressoVersion = '2.2.2'
+}
+
 allprojects {
     repositories {
         jcenter()
@@ -19,3 +30,4 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

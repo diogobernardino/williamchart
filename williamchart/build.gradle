@@ -6,16 +6,17 @@ version = '2.4.0'
 group = 'com.diogobernardino'
 
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
-        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
+        minSdkVersion 15
+        targetSdkVersion 25
     }
 }
 
 dependencies {
+
     compile 'com.android.support:support-annotations:25.1.0'
     testCompile 'com.android.support:support-annotations:25.1.0'
     testCompile 'junit:junit:4.12'

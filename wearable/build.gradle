@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.db.williamchartdemo"
         minSdkVersion 20
-        targetSdkVersion 25
+        targetSdkVersion rootProject.targetSdkVersion
+        applicationId "com.db.williamchartdemo"
         versionCode 1
         versionName "1.0"
     }

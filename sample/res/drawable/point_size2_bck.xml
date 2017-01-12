@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <shape android:shape="oval">
+            <size android:height="@dimen/line_point_h" android:width="@dimen/line_point_h" />
+            <solid android:color="@color/unselected"/>
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape android:shape="oval">
+            <size android:height="@dimen/line_point_h" android:width="@dimen/line_point_h" />
+            <solid android:color="@color/selected"/>
+        </shape>
+    </item>
+</selector>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <layer-list>
+            <item android:top="5dp" android:bottom="35dp" android:left="0dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="5dp" android:width="45dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="25dp" android:left="0dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="5dp" android:width="45dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="25dp" android:bottom="15dp" android:left="0dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="5dp" android:width="45dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="35dp" android:bottom="5dp" android:left="0dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="5dp" android:width="45dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item android:top="5dp" android:bottom="35dp" android:left="0dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="5dp" android:width="45dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+            <item android:top="15dp" android:bottom="25dp" android:left="0dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="5dp" android:width="45dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+            <item android:top="25dp" android:bottom="15dp" android:left="0dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="5dp" android:width="45dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+            <item android:top="35dp" android:bottom="5dp" android:left="0dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="5dp" android:width="45dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="button_disabled">#dbe1e7</color>
+
+    <color name="line_tooltip">#ffffff</color>
+
+    <color name="primary">#607D8B</color>
+    <color name="primary_dark">#455A64</color>
+    <color name="primary_light">#CFD8DC</color>
+    <color name="accent">#009688</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+
+    <color name="button_pressed">#dbe1e7</color>
+    <color name="button_default">#3c5e62</color>
+
+    <color name="selected">#009688</color>
+    <color name="unselected">#CFD8DC</color>
+    <color name="stacked">#ffa5adb1</color>
+
+    <color name="gray">#ff363436</color>
+    
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="false">
+        <layer-list>
+            <item android:top="15dp" android:bottom="0dp" android:left="0dp" android:right="30dp">
+                <shape android:shape="rectangle">
+                    <size android:height="30dp" android:width="10dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="0dp" android:bottom="0dp" android:left="15dp" android:right="15dp">
+                <shape android:shape="rectangle">
+                    <size android:height="@dimen/button_size" android:width="10dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+            <item android:top="30dp" android:bottom="0dp" android:left="30dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="20dp" android:width="10dp" />
+                    <solid android:color="@color/unselected"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_selected="true">
+        <layer-list>
+            <item android:top="15dp" android:bottom="0dp" android:left="0dp" android:right="30dp">
+                <shape android:shape="rectangle">
+                    <size android:height="30dp" android:width="10dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+            <item android:top="0dp" android:bottom="0dp" android:left="15dp" android:right="15dp">
+                <shape android:shape="rectangle">
+                    <size android:height="@dimen/button_size" android:width="10dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+            <item android:top="30dp" android:bottom="0dp" android:left="30dp" android:right="0dp">
+                <shape android:shape="rectangle">
+                    <size android:height="20dp" android:width="10dp" />
+                    <solid android:color="@color/selected"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

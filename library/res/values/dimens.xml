@@ -1,0 +1,30 @@
+<resources>
+    
+    
+    <!-- ChartView -->
+    
+	<!-- Distance from vertical label to vertical axis -->
+    <dimen name="axis_dist_from_label">5dp</dimen>
+
+    <!-- Axis thickness-->
+    <dimen name="axis_thickness">2dp</dimen>
+        
+    <!-- Text Labels size -->
+	<dimen name="font_size">10dp</dimen>    
+    
+    <!-- Grid thickness-->
+    <dimen name="grid_thickness">1dp</dimen>
+    
+    
+    <!-- LineChartView -->
+    <!-- Dot region radius used on click -->
+    <dimen name="dot_region_radius">18dp</dimen>
+   
+    
+    <!-- BarChartView -->
+    <dimen name="bar_spacing">6dp</dimen>
+    <dimen name="set_spacing">3dp</dimen>
+
+    
+	
+</resources>

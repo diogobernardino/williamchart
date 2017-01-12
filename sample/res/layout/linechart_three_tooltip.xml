@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="0dp">
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textColor="#000000"
+        android:includeFontPadding="false"
+        android:background="@drawable/linechart_three_tooltip_bck">
+    </TextView>
+</RelativeLayout>

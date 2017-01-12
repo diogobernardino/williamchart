@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sandbox_play_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sandbox_play_menu"
+        card_view:cardBackgroundColor="#ffffff"
+        card_view:cardCornerRadius="4dp">
+
+        <com.db.chart.view.LineChartView
+            android:id="@+id/sandbox_chart_line"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/play_chart_padding"
+            android:visibility="gone"/>
+
+        <com.db.chart.view.BarChartView
+            android:id="@+id/sandbox_chart_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/play_chart_padding"
+            android:visibility="gone"
+            android:background="#ffffff"/>
+
+        <com.db.chart.view.HorizontalBarChartView
+            android:id="@+id/sandbox_chart_horbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/play_chart_padding"
+            android:visibility="gone"/>
+
+        <com.db.chart.view.StackBarChartView
+            android:id="@+id/sandbox_chart_stacked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/play_chart_padding"
+            android:visibility="gone"/>
+
+        <com.db.chart.view.HorizontalStackBarChartView
+            android:id="@+id/sandbox_chart_horstacked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/play_chart_padding"
+            android:visibility="gone"/>
+
+    </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/sandbox_play_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <ImageButton
+            android:id="@+id/sandbox_play_play"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="15dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/play"
+            android:background="@drawable/play_btn_bck"
+            android:onClick="onPlay"
+            android:elevation="3dp"/>
+        <ImageButton
+            android:id="@+id/sandbox_play_send"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toRightOf="@+id/sandbox_play_play"
+            android:layout_toEndOf="@+id/sandbox_play_play"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:src="@drawable/share"
+            android:background="@drawable/send_btn_bck"
+            android:onClick="onPlay"
+            android:elevation="3dp"
+            />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <declare-styleable name="ChartAttrs">
+         
+        <attr name="chart_axisThickness" format="dimension"/>
+        <attr name="chart_axisColor" format="reference|color"/>
+        <attr name="chart_axisBorderSpacing" format="dimension"/>
+        <attr name="chart_axisTopSpacing" format="dimension"/>
+        
+        <attr name="chart_labels" format="boolean"/>
+        <attr name="chart_labelColor" format = "reference|color"/>
+        <attr name="chart_fontSize" format = "dimension"/>
+        <attr name="chart_typeface" format="string"/>
+        
+        <attr name="chart_shadowColor" format="reference|color"/>
+        <attr name="chart_shadowDx" format = "dimension"/>
+        <attr name="chart_shadowDy" format = "dimension"/>
+        <attr name="chart_shadowRadius" format = "dimension"/>
+        
+     </declare-styleable>  
+	
+     <declare-styleable name="BarChartAttrs">
+         <attr name="chart_barSpacing" format="dimension"/>
+         <attr name="chart_setSpacing" format="dimension"/>
+	</declare-styleable>  
+</resources>
+

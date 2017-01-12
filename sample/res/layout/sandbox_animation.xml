@@ -1,0 +1,259 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <RelativeLayout
+        android:id="@+id/sandbox_anim_easing"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <Spinner
+            android:id="@+id/sandbox_anim_easing_type"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"/>
+
+        <Spinner
+            android:id="@+id/sandbox_anim_duration"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/sandbox_anim_easing_type"
+            android:layout_toEndOf="@+id/sandbox_anim_easing_type"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/sandbox_anim_alpha"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/sandbox_anim_alpha1"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_margin="@dimen/three_button_margin"
+            android:src="@drawable/alpha_btn"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"/>
+
+        <ImageButton
+            android:id="@+id/sandbox_anim_alpha2"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_toRightOf="@+id/sandbox_anim_alpha1"
+            android:layout_toEndOf="@+id/sandbox_anim_alpha1"
+            android:layout_margin="@dimen/three_button_margin"
+            android:src="@drawable/alpha2_btn"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"/>
+
+        <ImageButton
+            android:id="@+id/sandbox_anim_alpha3"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_toRightOf="@+id/sandbox_anim_alpha2"
+            android:layout_toEndOf="@+id/sandbox_anim_alpha2"
+            android:layout_margin="@dimen/three_button_margin"
+            android:src="@drawable/alpha3_btn"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/sandbox_anim_order"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/sandbox_anim_ordere"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_margin="@dimen/four_button_margin"
+            android:src="@drawable/order_equal_bck"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+            />
+
+        <ImageButton
+            android:id="@+id/sandbox_anim_orderf"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_margin="@dimen/four_button_margin"
+            android:layout_toRightOf="@+id/sandbox_anim_ordere"
+            android:layout_toEndOf="@+id/sandbox_anim_ordere"
+            android:src="@drawable/order_first_bck"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+            />
+
+        <ImageButton
+            android:id="@+id/sandbox_anim_orderl"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_margin="@dimen/four_button_margin"
+            android:layout_toRightOf="@+id/sandbox_anim_orderf"
+            android:layout_toEndOf="@+id/sandbox_anim_orderf"
+            android:src="@drawable/order_last_bck"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+            />
+
+        <ImageButton
+            android:id="@+id/sandbox_anim_orderm"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_margin="@dimen/four_button_margin"
+            android:layout_toRightOf="@+id/sandbox_anim_orderl"
+            android:layout_toEndOf="@+id/sandbox_anim_orderf"
+            android:src="@drawable/order_middle_bck"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+            />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/sandbox_anim_enter"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center">
+        
+        <RelativeLayout
+            android:id="@+id/sandbox_anim_enter_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/sandbox_anim_entertl"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_corner_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+
+            <ImageButton
+                android:id="@+id/sandbox_anim_entert"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toRightOf="@+id/sandbox_anim_entertl"
+                android:layout_toEndOf="@+id/sandbox_anim_entertl"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_ver_sides_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+
+            <ImageButton
+                android:id="@+id/sandbox_anim_entertr"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toRightOf="@+id/sandbox_anim_entert"
+                android:layout_toEndOf="@+id/sandbox_anim_entert"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_corner_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/sandbox_anim_enter_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sandbox_anim_enter_top">
+
+            <ImageButton
+                android:id="@+id/sandbox_anim_entercl"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_hor_side_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+
+            <ImageButton
+                android:id="@+id/sandbox_anim_enterc"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toRightOf="@+id/sandbox_anim_entercl"
+                android:layout_toEndOf="@+id/sandbox_anim_entercl"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_corner_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+            <ImageButton
+                android:id="@+id/sandbox_anim_entercr"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toRightOf="@+id/sandbox_anim_enterc"
+                android:layout_toEndOf="@+id/sandbox_anim_enterc"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_hor_side_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/sandbox_anim_enter_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sandbox_anim_enter_middle">
+
+            <ImageButton
+                android:id="@+id/sandbox_anim_enterbl"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_corner_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+
+            <ImageButton
+                android:id="@+id/sandbox_anim_enterb"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toRightOf="@+id/sandbox_anim_enterbl"
+                android:layout_toEndOf="@+id/sandbox_anim_enterbl"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_ver_sides_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+            <ImageButton
+                android:id="@+id/sandbox_anim_enterbr"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_toRightOf="@+id/sandbox_anim_enterb"
+                android:layout_toEndOf="@+id/sandbox_anim_enterb"
+                android:layout_margin="@dimen/enter_button_margin"
+                android:src="@drawable/enter_corner_bck"
+                android:background="@android:color/transparent"
+                android:onClick="onMenuClick"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

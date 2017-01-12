@@ -1,0 +1,182 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <RelativeLayout
+        android:id="@+id/sandbox_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/sandbox_bar_color"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_margin="19dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/color_bck"
+            android:onClick="onMenuClick"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/sandbox_bar_corner1"
+                    android:layout_width="@dimen/button_size"
+                    android:layout_height="@dimen/button_size"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/four_button_margin"
+                    android:src="@drawable/bar_corner1_bck"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"/>
+
+                <ImageButton
+                    android:id="@+id/sandbox_bar_corner2"
+                    android:layout_width="@dimen/button_size"
+                    android:layout_height="@dimen/button_size"
+                    android:layout_toEndOf="@+id/sandbox_bar_corner1"
+                    android:layout_toRightOf="@+id/sandbox_bar_corner1"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/four_button_margin"
+                    android:src="@drawable/bar_corner2_bck"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+                <ImageButton
+                    android:id="@+id/sandbox_bar_corner3"
+                    android:layout_width="@dimen/button_size"
+                    android:layout_height="@dimen/button_size"
+                    android:layout_toEndOf="@+id/sandbox_bar_corner2"
+                    android:layout_toRightOf="@+id/sandbox_bar_corner2"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/four_button_margin"
+                    android:src="@drawable/bar_corner3_bck"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+                <ImageButton
+                    android:id="@+id/sandbox_bar_corner4"
+                    android:layout_width="@dimen/button_size"
+                    android:layout_height="@dimen/button_size"
+                    android:layout_toEndOf="@+id/sandbox_bar_corner3"
+                    android:layout_toRightOf="@+id/sandbox_bar_corner3"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/four_button_margin"
+                    android:src="@drawable/bar_corner4_bck"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sandbox_bar_spacing"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/sandbox_bar_spacing1"
+                    android:layout_width="40dp"
+                    android:layout_height="70dp"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="7dp"
+                    android:src="@drawable/standard_btn"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"/>
+                <ImageButton
+                    android:id="@+id/sandbox_bar_spacing2"
+                    android:layout_width="30dp"
+                    android:layout_height="70dp"
+                    android:layout_toEndOf="@+id/sandbox_bar_spacing1"
+                    android:layout_toRightOf="@+id/sandbox_bar_spacing1"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="12dp"
+                    android:src="@drawable/standard_btn"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"/>
+                <ImageButton
+                    android:id="@+id/sandbox_bar_spacing3"
+                    android:layout_width="20dp"
+                    android:layout_height="70dp"
+                    android:layout_toEndOf="@+id/sandbox_bar_spacing2"
+                    android:layout_toRightOf="@+id/sandbox_bar_spacing2"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="17dp"
+                    android:src="@drawable/standard_btn"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+                <ImageButton
+                    android:id="@+id/sandbox_bar_spacing4"
+                    android:layout_width="10dp"
+                    android:layout_height="70dp"
+                    android:layout_toEndOf="@+id/sandbox_bar_spacing3"
+                    android:layout_toRightOf="@+id/sandbox_bar_spacing3"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="22dp"
+                    android:src="@drawable/standard_btn"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/gradient_line_bck"
+        />
+
+    <RelativeLayout
+        android:id="@+id/sandbox_bar_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/sandbox_bar_background_color"
+            android:layout_width="@dimen/color_button_size"
+            android:layout_height="@dimen/color_button_size"
+            android:layout_margin="19dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/color_bck"
+            android:onClick="onMenuClick"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <ImageButton
+                android:id="@+id/sandbox_bar_background_toggle"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
+                android:layout_margin="@dimen/two_button_margin"
+                android:onClick="onMenuClick"
+                android:src="@drawable/brush_btn"
+                android:background="@android:color/transparent"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

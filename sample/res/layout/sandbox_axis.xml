@@ -1,0 +1,165 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <RelativeLayout
+        android:id="@+id/sandbox_axis_xy"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="19dp">
+
+            <Button
+                android:id="@+id/sandbox_axis_color"
+                android:layout_width="@dimen/color_button_size"
+                android:layout_height="@dimen/color_button_size"
+                android:background="@drawable/color_bck"
+                android:layout_marginBottom="35dp"
+                android:onClick="onMenuClick"/>
+
+            <Button
+                android:id="@+id/sandbox_label_color"
+                android:layout_width="@dimen/color_button_size"
+                android:layout_height="@dimen/color_button_size"
+                android:layout_below="@+id/sandbox_axis_color"
+                android:background="@drawable/color_bck"
+                android:onClick="onMenuClick"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:id="@+id/sandbox_axis_y"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/sandbox_axis_y_outside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Y"
+                    android:textSize="@dimen/axis_label_size"
+                    android:textColor="@color/color_btn"
+                    android:clickable="true"
+                    android:onClick="onMenuClick"
+                    />
+
+                <ImageButton
+                    android:id="@+id/sandbox_axis_y_axis"
+                    android:layout_width="40dp"
+                    android:layout_height="75dp"
+                    android:layout_toRightOf="@+id/sandbox_axis_y_outside"
+                    android:layout_toEndOf="@+id/sandbox_axis_y_outside"
+                    android:src="@drawable/axis_y_btn"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+
+                <TextView
+                    android:id="@+id/sandbox_axis_y_inside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/sandbox_axis_y_axis"
+                    android:layout_toEndOf="@+id/sandbox_axis_y_axis"
+                    android:padding="5dp"
+                    android:text="Y"
+                    android:textSize="@dimen/axis_label_size"
+                    android:textColor="@color/color_btn"
+                    android:clickable="true"
+                    android:onClick="onMenuClick"
+                    />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/sandbox_axis_x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/sandbox_axis_y"
+                android:layout_toEndOf="@+id/sandbox_axis_y"
+                android:layout_margin="10dp"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/sandbox_axis_x_inside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:padding="5dp"
+                    android:text="X"
+                    android:textSize="@dimen/axis_label_size"
+                    android:textColor="@color/color_btn"
+                    android:clickable="true"
+                    android:onClick="onMenuClick"
+                    />
+
+                <ImageButton
+                    android:id="@+id/sandbox_axis_x_axis"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/sandbox_axis_x_inside"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/axis_x_btn"
+                    android:background="@android:color/transparent"
+                    android:onClick="onMenuClick"
+                    />
+
+                <TextView
+                    android:id="@+id/sandbox_axis_x_outside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sandbox_axis_x_axis"
+                    android:layout_centerHorizontal="true"
+                    android:padding="5dp"
+                    android:text="X"
+                    android:textSize="@dimen/axis_label_size"
+                    android:textColor="@color/color_btn"
+                    android:clickable="true"
+                    android:onClick="onMenuClick"
+                    />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/sandbox_axis_colors"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/sandbox_axis_label_format_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textSize="50sp"
+            android:textColor="@color/primary_text"
+            android:hint="metric"
+            android:inputType="text" />
+
+    </RelativeLayout>
+
+</LinearLayout>

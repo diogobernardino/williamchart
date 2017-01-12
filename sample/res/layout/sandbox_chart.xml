@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/sandbox_chart_line"
+            android:layout_width="@dimen/chart_button_size"
+            android:layout_height="@dimen/chart_button_size"
+            android:src="@drawable/cow_btn"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+        />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/sandbox_chart_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="70dp"
+            android:layout_marginEnd="70dp"
+            android:src="@drawable/duck_btn"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+            />
+
+        <ImageButton
+            android:id="@+id/sandbox_chart_horbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/sandbox_chart_bar"
+            android:layout_toEndOf="@+id/sandbox_chart_bar"
+            android:src="@drawable/duck_btn"
+            android:rotation="90"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/sandbox_chart_stacked"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginRight="70dp"
+            android:layout_marginEnd="70dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/pig_btn"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+            />
+
+        <ImageButton
+            android:id="@+id/sandbox_chart_horstacked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/sandbox_chart_stacked"
+            android:layout_toEndOf="@+id/sandbox_chart_stacked"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/pig_btn"
+            android:rotation="90"
+            android:background="@android:color/transparent"
+            android:onClick="onMenuClick"
+            />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

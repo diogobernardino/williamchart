@@ -66,7 +66,7 @@ public class StackedCardTwo extends CardController {
 				  .setYAxis(false)
 				  .setLabelsFormat(new DecimalFormat("##'M'"))
 				  .show(new Animation().setDuration(2500)
-							 .setEasing(new AccelerateInterpolator())
+							 .setInterpolator(new AccelerateInterpolator())
 							 .setEndAction(action));
 	}
 
@@ -93,7 +93,7 @@ public class StackedCardTwo extends CardController {
 		super.dismiss(action);
 
 		mChart.dismiss(
-				  new Animation().setDuration(2500).setEasing(new AccelerateInterpolator()).setEndAction(action));
+				  new Animation().setDuration(2500).setInterpolator(new AccelerateInterpolator()).setEndAction(action));
 	}
 
 }

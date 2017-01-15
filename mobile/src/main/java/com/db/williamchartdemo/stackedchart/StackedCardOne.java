@@ -137,7 +137,7 @@ public class StackedCardOne extends CardController {
 				  .setValueThreshold(89.f, 89.f, thresPaint);
 
 		int[] order = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-		mChart.show(new Animation().setOverlap(.5f, order).setEndAction(action));
+		mChart.show(new Animation().setInSequence(.5f, order).setEndAction(action));
 	}
 
 
@@ -165,7 +165,7 @@ public class StackedCardOne extends CardController {
 		super.dismiss(action);
 
 		int[] order = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-		mChart.dismiss(new Animation().setOverlap(.5f, order).setEndAction(action));
+		mChart.dismiss(new Animation().setInSequence(.5f, order).setEndAction(action));
 	}
 
 }

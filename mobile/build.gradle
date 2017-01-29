@@ -18,10 +18,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("williamchart-release.keystore")
-            storePassword properties.getProperty("apk.store_password")
-            keyAlias "william"
-            keyPassword properties.getProperty("apk.key_password")
+            storeFile file(properties.getProperty("apk.storeFile"))
+            storePassword properties.getProperty("apk.storePassword")
+            keyAlias properties.getProperty("apk.keyAlias")
+            keyPassword properties.getProperty("apk.keyPassword")
         }
     }
     buildTypes {
@@ -45,7 +45,7 @@ dependencies {
 }
 
 play {
-    serviceAccountEmail = '1034055180604-compute@developer.gserviceaccount.com'
-    pk12File = file('williamchart.p12')
+    serviceAccountEmail = properties.getProperty("play.accountEmail")
+    pk12File = file(properties.getProperty("play.p12"))
     track = 'alpha'
 }

@@ -52,6 +52,8 @@ import com.db.williamchart.R;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import static com.db.chart.Tools.checkNotNull;
+
 
 /**
  * Abstract class to be extend to define any chart that implies axis.
@@ -405,11 +407,12 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @param set {@link ChartSet} object.
 	 */
-	public void addData(ChartSet set) {
+	public void addData(@NonNull ChartSet set) {
+
+		checkNotNull(set);
 
 		if (!data.isEmpty() && set.size() != data.get(0).size())
 			throw new IllegalArgumentException("The number of entries between sets doesn't match.");
-		if (set == null) throw new IllegalArgumentException("Chart data set can't be null.");
 
 		data.add(set);
 	}
@@ -464,8 +467,9 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @param anim Animation used while showing and updating sets
 	 */
-	public void show(Animation anim) {
+	public void show(@NonNull Animation anim) {
 
+		checkNotNull(anim);
 		mAnim = anim;
 		mAnim.setAnimationListener(mAnimListener);
 		show();
@@ -499,28 +503,25 @@ public abstract class ChartView extends RelativeLayout {
 	 * @param anim Animation used to exit
 	 */
 	public void dismiss(@NonNull Animation anim) {
+        checkNotNull(anim);
 
-		if (anim != null) {
+        mAnim = anim;
+        mAnim.setAnimationListener(mAnimListener);
 
-			mAnim = anim;
-			mAnim.setAnimationListener(mAnimListener);
+        final Runnable endAction = mAnim.getEndAction();
+        mAnim.setEndAction(new Runnable() {
+            @Override
+            public void run() {
 
-			final Runnable endAction = mAnim.getEndAction();
-			mAnim.setEndAction(new Runnable() {
-				@Override
-				public void run() {
+                if (endAction != null) endAction.run();
+                data.clear();
+                invalidate();
+            }
+        });
 
-					if (endAction != null) endAction.run();
-					data.clear();
-					invalidate();
-				}
-			});
+        data = mAnim.prepareExitAnimation(this);
 
-			data = mAnim.prepareExitAnimation(this);
-		} else {
-			data.clear();
-		}
-		invalidate();
+        invalidate();
 	}
 
 
@@ -632,24 +633,26 @@ public abstract class ChartView extends RelativeLayout {
 	/**
 	 * Add {@link Tooltip}/{@link View}. to chart/parent view.
 	 *
-	 * @param tip tooltip to be added to chart
+	 * @param tooltip tooltip to be added to chart
 	 */
-	private void addTooltip(Tooltip tip) {
+	private void addTooltip(@NonNull Tooltip tooltip) {
 
-		this.addView(tip);
-		tip.setOn(true);
+        checkNotNull(tooltip);
+		this.addView(tooltip);
+        tooltip.setOn(true);
 	}
 
 
 	/**
 	 * Remove {@link Tooltip}/{@link View} to chart/parent view.
 	 *
-	 * @param tip tooltip to be removed to chart
+	 * @param tooltip tooltip to be removed to chart
 	 */
-	private void removeTooltip(Tooltip tip) {
+	private void removeTooltip(@NonNull Tooltip tooltip) {
 
-		this.removeView(tip);
-		tip.setOn(false);
+        checkNotNull(tooltip);
+		this.removeView(tooltip);
+        tooltip.setOn(false);
 	}
 
 
@@ -658,8 +661,9 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @param tooltip View to be dismissed
 	 */
-	private void dismissTooltip(Tooltip tooltip) {
+	private void dismissTooltip(@NonNull Tooltip tooltip) {
 
+        checkNotNull(tooltip);
 		dismissTooltip(tooltip, null, 0);
 	}
 
@@ -669,7 +673,9 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @param tooltip View to be dismissed
 	 */
-	private void dismissTooltip(final Tooltip tooltip, final Rect rect, final float value) {
+	private void dismissTooltip(@NonNull final Tooltip tooltip, final Rect rect, final float value) {
+
+        checkNotNull(tooltip);
 
 		if (tooltip.hasExitAnimation()) {
 			tooltip.animateExit(new Runnable() {
@@ -967,8 +973,9 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @param orien Orientation.HORIZONTAL | Orientation.VERTICAL
 	 */
-	void setOrientation(Orientation orien) {
+	void setOrientation(@NonNull Orientation orien) {
 
+        checkNotNull(orien);
 		mOrientation = orien;
 		if (mOrientation == Orientation.VERTICAL) {
 			yRndr.setHandleValues(true);
@@ -987,8 +994,9 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setYLabels(YRenderer.LabelPosition position) {
+	public ChartView setYLabels(@NonNull YRenderer.LabelPosition position) {
 
+        checkNotNull(position);
 		style.yLabelsPositioning = position;
 		return this;
 	}
@@ -1003,8 +1011,9 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setXLabels(XRenderer.LabelPosition position) {
+	public ChartView setXLabels(@NonNull XRenderer.LabelPosition position) {
 
+        checkNotNull(position);
 		style.xLabelsPositioning = position;
 		return this;
 	}
@@ -1017,8 +1026,9 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setLabelsFormat(DecimalFormat format) {
+	public ChartView setLabelsFormat(@NonNull DecimalFormat format) {
 
+        checkNotNull(format);
 		if (mOrientation == Orientation.VERTICAL) yRndr.setLabelsFormat(format);
 		else xRndr.setLabelsFormat(format);
 
@@ -1061,8 +1071,9 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setTypeface(Typeface typeface) {
+	public ChartView setTypeface(@NonNull Typeface typeface) {
 
+        checkNotNull(typeface);
 		style.typeface = typeface;
 		return this;
 	}
@@ -1371,13 +1382,13 @@ public abstract class ChartView extends RelativeLayout {
 	/**
 	 * Set the {@link Tooltip} object which will be used to create chart tooltips.
 	 *
-	 * @param tip {@link Tooltip} object in order to produce chart tooltips
+	 * @param tooltip {@link Tooltip} object in order to produce chart tooltips
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setTooltips(Tooltip tip) {
+	public ChartView setTooltips(Tooltip tooltip) {
 
-		mTooltip = tip;
+		mTooltip = tooltip;
 		return this;
 	}
 

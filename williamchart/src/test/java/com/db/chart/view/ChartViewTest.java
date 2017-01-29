@@ -75,7 +75,7 @@ public class ChartViewTest {
 	}
 
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void addData_NullSet_ThrowIllegalArgumentException() {
 
 		BarSet set = null;

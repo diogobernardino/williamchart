@@ -67,37 +67,6 @@ public class Tools {
 	}
 
 
-	/**
-	 * Find the Greatest Common Denominator.
-	 * https://en.wikipedia.org/wiki/Euclidean_algorithm
-	 *
-	 * @param min Mininum value
-	 * @param max Maximum value
-	 *
-	 * @return Greatest common denominator
-	 */
-	public static int GCD(int min, int max) {
-
-		return max == 0 ? min : GCD(max, min % max);
-	}
-
-
-	/**
-	 * Finds the largest divisor of a number.
-	 *
-	 * @param num Value to be found the largest divisor
-	 *
-	 * @return Largest divisor of parameter given
-	 */
-	public static int largestDivisor(int num) {
-
-		if (num > 1)
-			for (int i = num / 2; i >= 0; i--)
-				if (num % i == 0) return i;
-		return 1;
-	}
-
-
 	public static <T> T checkNotNull(T reference) {
 		if(reference == null)
 			throw new NullPointerException();

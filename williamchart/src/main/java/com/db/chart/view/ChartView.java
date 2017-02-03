@@ -892,7 +892,7 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return step
 	 */
-	int getStep() {
+	float getStep() {
 
 		if (mOrientation == Orientation.VERTICAL) return yRndr.getStep();
 		else return xRndr.getStep();
@@ -1118,7 +1118,7 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setAxisBorderValues(int minValue, int maxValue, int step) {
+	public ChartView setAxisBorderValues(float minValue, float maxValue, float step) {
 
 		if (mOrientation == Orientation.VERTICAL) yRndr.setBorderValues(minValue, maxValue, step);
 		else xRndr.setBorderValues(minValue, maxValue, step);

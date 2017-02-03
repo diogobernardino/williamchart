@@ -49,8 +49,8 @@ public class AxisRendererTest {
 
 		ArrayList<String> labels = mXRndr.labels;
 		assertEquals("0", labels.get(0));
-		assertEquals("1", labels.get(1));
-		assertEquals(1, mXRndr.getStep());
+		assertEquals("0.333", labels.get(1));
+		assertEquals(0.333, mXRndr.getStep(), 0.001);
 	}
 
 
@@ -74,7 +74,7 @@ public class AxisRendererTest {
 		mXRndr.setBorderValues(0,9);
 		mXRndr.init(mData, null);
 
-		assertEquals(3, mXRndr.getStep());
+		assertEquals(3, mXRndr.getStep(), 0);
 	}
 
 
@@ -134,8 +134,8 @@ public class AxisRendererTest {
 	@Test
 	public void convertToLabelsFormat_Integer_StringXXDB() {
 
-		ArrayList<Integer> values = new ArrayList<>();
-		values.add(3);
+		ArrayList<Float> values = new ArrayList<>();
+		values.add(3.f);
 		DecimalFormat format = new DecimalFormat("#'DB'");
 
 		assertEquals("3DB", mXRndr.convertToLabelsFormat(values, format).get(0));
@@ -154,13 +154,13 @@ public class AxisRendererTest {
 	@Test
 	public void findBorders_NoStep() {
 
-		assertArrayEquals(new int[] {0, 1}, mXRndr.findBorders(mData));
+		assertArrayEquals(new float[] {0, 1}, mXRndr.findBorders(mData), 0);
 	}
 
 	@Test
 	public void findBorders_BiggerStep_Result() {
 
-		assertArrayEquals(new int[] {0, 9}, mXRndr.findBorders(mData, 9));
+		assertArrayEquals(new float[] {0, 9}, mXRndr.findBorders(mData, 9), 0);
 	}
 
 
@@ -173,25 +173,18 @@ public class AxisRendererTest {
 		mData = new ArrayList<>();
 		mData.add(set);
 
-		assertArrayEquals(new int[] {0, 9}, mXRndr.findBorders(mData, 9));
+		assertArrayEquals(new float[] {0, 9}, mXRndr.findBorders(mData, 9), 0);
 	}
 
 
 	@Test
 	public void calculateValues_Nominal_Result() {
 
-		ArrayList<Integer> toAssert = new ArrayList<>();
-		toAssert.add(0);
-		toAssert.add(5);
-		toAssert.add(10);
+		ArrayList<Float> toAssert = new ArrayList<>();
+		toAssert.add(0.f);
+		toAssert.add(5.f);
+		toAssert.add(10.f);
 		assertEquals(toAssert, mXRndr.calculateValues(0, 8, 5));
-	}
-
-
-	@Test(expected = IllegalArgumentException.class)
-	public void setBorderValues_StepNotDivisor_ThrowException() {
-
-		mXRndr.setBorderValues(0, 1, 2);
 	}
 
 
@@ -209,14 +202,15 @@ public class AxisRendererTest {
 		doReturn(false).when(spyXRndr).hasStep();
 
 		spyXRndr.setBorderValues(3, 26);
-		assertEquals(1, spyXRndr.getStep());
+		assertEquals(7.666, spyXRndr.getStep(), 0.001);
 		spyXRndr.setBorderValues(3, 30);
-		assertEquals(9, spyXRndr.getStep());
+		assertEquals(9, spyXRndr.getStep(), 0);
 		spyXRndr.setBorderValues(3, 18);
-		assertEquals(5, spyXRndr.getStep());
+		assertEquals(5, spyXRndr.getStep(), 0);
 		spyXRndr.setBorderValues(3, 23);
-		assertEquals(10, spyXRndr.getStep());
+		assertEquals(6.666, spyXRndr.getStep(), 0.001);
 		spyXRndr.setBorderValues(-3, 17);
-		assertEquals(10, spyXRndr.getStep());
+		assertEquals(6.666, spyXRndr.getStep(), 0.001);
 	}
+
 }

@@ -18,7 +18,6 @@ package com.db.chart.renderer;
 
 import android.graphics.Canvas;
 
-import com.db.chart.Tools;
 import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView.Style;
@@ -33,12 +32,13 @@ import java.util.ArrayList;
  */
 public abstract class AxisRenderer {
 
+	private final static float DEFAULT_STEPS_NUMBER = 3;
 
 	/** Label's values formatted */
 	ArrayList<String> labels;
 
 	/** Label's values */
-	ArrayList<Integer> labelsValues;
+	ArrayList<Float> labelsValues;
 
 	/** Labels position */
 	ArrayList<Float> labelsPos;
@@ -50,16 +50,16 @@ public abstract class AxisRenderer {
 	int nLabels;
 
 	/** Labels Metric to draw together with labels */
-	DecimalFormat labelFormat;
+	private DecimalFormat labelFormat;
 
 	/** Maximum value of labels */
-	int maxLabelValue;
+	private float maxLabelValue;
 
 	/** Minimum value of labels */
-	int minLabelValue;
+	float minLabelValue;
 
 	/** Step between labels */
-	int step;
+	private float step;
 
 	/** Screen step between labels */
 	float screenStep;
@@ -68,7 +68,7 @@ public abstract class AxisRenderer {
 	float axisPosition;
 
 	/** Spacing for top label */
-	float topSpacing;
+	private float topSpacing;
 
 	/** Horizontal border spacing for labels */
 	float borderSpacing;
@@ -105,14 +105,13 @@ public abstract class AxisRenderer {
 
 		if (handleValues) {
 			if (minLabelValue == 0 && maxLabelValue == 0) {
-				int[] borders = new int[2];
+				float[] borders;
 				if (hasStep()) borders = findBorders(data, step); // no borders, step
 				else borders = findBorders(data); // no borders, no step
 				minLabelValue = borders[0];
 				maxLabelValue = borders[1];
 			}
 			if (!hasStep()) setBorderValues(minLabelValue, maxLabelValue);
-
 			labelsValues = calculateValues(minLabelValue, maxLabelValue, step);
 			labels = convertToLabelsFormat(labelsValues, labelFormat);
 		} else {
@@ -241,7 +240,7 @@ public abstract class AxisRenderer {
 	 * @return An {@link ArrayList} containing the set of strings generated
 	 * from axis values and to be displayed along the axis.
 	 */
-	ArrayList<String> convertToLabelsFormat(ArrayList<Integer> values, DecimalFormat format) {
+	ArrayList<String> convertToLabelsFormat(ArrayList<Float> values, DecimalFormat format) {
 
 		int size = values.size();
 		ArrayList<String> result = new ArrayList<>(size);
@@ -276,26 +275,21 @@ public abstract class AxisRenderer {
 	 *
 	 * @return Int vector containing both minimum and maximum value to be used.
 	 */
-	int[] findBorders(ArrayList<ChartSet> sets) {
+	float[] findBorders(ArrayList<ChartSet> sets) {
 
 		float max = Integer.MIN_VALUE;
 		float min = Integer.MAX_VALUE;
 
-		// Find minimum and maximum value out of all chart entries
-		for (ChartSet set : sets) {
+		for (ChartSet set : sets) {  // Find minimum and maximum value out of all chart entries
 			for (ChartEntry e : set.getEntries()) {
 				if (e.getValue() >= max) max = e.getValue();
 				if (e.getValue() <= min) min = e.getValue();
 			}
 		}
 
-		max = (max < 0) ? 0 : (int) Math.ceil(max);
-		min = (min > 0) ? 0 : (int) Math.floor(min);
+		if (min == max) max += 1;  // All given set values are equal
 
-		// All given set values are equal
-		if (min == max) max += 1;
-
-		return new int[] {(int) min, (int) max};
+		return new float[] {min, max};
 	}
 
 
@@ -308,9 +302,9 @@ public abstract class AxisRenderer {
 	 *
 	 * @return Int vector containing both minimum and maximum value to be used.
 	 */
-	int[] findBorders(ArrayList<ChartSet> sets, int step) {
+	float[] findBorders(ArrayList<ChartSet> sets, float step) {
 
-		int[] borders = findBorders(sets);
+		float[] borders = findBorders(sets);
 		while ((borders[1] - borders[0]) % step != 0) borders[1] += 1; // Assure border fit step
 
 		return borders;
@@ -327,10 +321,10 @@ public abstract class AxisRenderer {
 	 *
 	 * @return {@link ArrayList} containing all values to be displayed along the axis.
 	 */
-	ArrayList<Integer> calculateValues(int min, int max, int step) {
+	ArrayList<Float> calculateValues(float min, float max, float step) {
 
-		ArrayList<Integer> result = new ArrayList<>();
-		int pos = min;
+		ArrayList<Float> result = new ArrayList<>();
+		float pos = min;
 		while (pos <= max) {
 			result.add(pos);
 			pos += step;
@@ -405,7 +399,7 @@ public abstract class AxisRenderer {
 	 *
 	 * @return Step used between axis values.
 	 */
-	public int getStep() {
+	public float getStep() {
 
 		return step;
 	}
@@ -425,7 +419,7 @@ public abstract class AxisRenderer {
 	/**
 	 * @return Axis maximum border value.
 	 */
-	public int getBorderMaximumValue() {
+	public float getBorderMaximumValue() {
 
 		return maxLabelValue;
 	}
@@ -434,7 +428,7 @@ public abstract class AxisRenderer {
 	/**
 	 * @return Axis minimum border value.
 	 */
-	public int getBorderMinimumValue() {
+	public float getBorderMinimumValue() {
 
 		return minLabelValue;
 	}
@@ -454,7 +448,7 @@ public abstract class AxisRenderer {
 	/**
 	 *
 	 */
-	public boolean hasStep(){
+	boolean hasStep(){
 		return (step != -1);
 	}
 
@@ -555,13 +549,10 @@ public abstract class AxisRenderer {
 	 * @param max The maximum value that Y axis will have as a label
 	 * @param step (real) value distance from every label
 	 */
-	public void setBorderValues(int min, int max, int step) {
+	public void setBorderValues(float min, float max, float step) {
 
 		if (min >= max) throw new IllegalArgumentException(
 				  "Minimum border value must be greater than maximum values");
-		if ((max - min) % step != 0) throw new IllegalArgumentException(
-				  "Step value must be a divisor of distance between minimum " +
-							 "border value and maximum border value");
 
 		this.step = step;
 		maxLabelValue = max;
@@ -577,10 +568,9 @@ public abstract class AxisRenderer {
 	 * @param min The minimum value that Y axis will have as a label
 	 * @param max The maximum value that Y axis will have as a label
 	 */
-	public void setBorderValues(int min, int max) {
+	public void setBorderValues(float min, float max) {
 
-		if (!hasStep())
-			step = Tools.largestDivisor(max - min);
+		if (!hasStep()) step = (max - min) / DEFAULT_STEPS_NUMBER;
 		setBorderValues(min, max, step);
 	}
 

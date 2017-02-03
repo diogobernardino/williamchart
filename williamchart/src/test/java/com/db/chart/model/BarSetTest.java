@@ -33,7 +33,7 @@ public class BarSetTest {
 	/**
 	 * No null point argument.
 	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void pointNullException() {
 
 		set.addBar(null);

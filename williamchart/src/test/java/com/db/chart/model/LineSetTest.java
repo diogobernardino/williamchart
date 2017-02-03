@@ -36,7 +36,7 @@ public class LineSetTest {
 	/**
 	 * No null point argument.
 	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void pointNullException() {
 
 		set.addPoint(null);

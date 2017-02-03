@@ -21,6 +21,8 @@ import android.support.annotation.FloatRange;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.db.chart.Tools.checkNotNull;
+
 
 /**
  * Data model containing {@link ChartEntry} elements to be used by {@link
@@ -53,9 +55,7 @@ public abstract class ChartSet {
 
 
 	void addEntry(ChartEntry e) {
-
-		if (e == null) throw new IllegalArgumentException("Chart entry added can't be null object.");
-
+		checkNotNull(e);
 		mEntries.add(e);
 	}
 

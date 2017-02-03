@@ -19,6 +19,8 @@ package com.db.chart.model;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 
+import static com.db.chart.Tools.checkNotNull;
+
 
 /**
  * Generic Data model of a {@link com.db.chart.view.ChartView} entry
@@ -230,7 +232,7 @@ public abstract class ChartEntry implements Comparable<ChartEntry> {
 
 
 	public int compareTo(ChartEntry other) {
-
+		checkNotNull(other);
 		return Float.compare(this.getValue(), other.getValue());
 	}
 

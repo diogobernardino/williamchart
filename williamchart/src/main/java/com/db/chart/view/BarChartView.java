@@ -173,11 +173,11 @@ public class BarChartView extends BaseBarChartView {
 				if (bar.getValue() > 0) regions.get(j)
 						  .get(i)
 						  .set((int) offset, (int) bar.getY(), (int) (offset += barWidth),
-									 (int) this.getZeroPosition());
+									 (int) this.getZeroPosition() + ((int) bar.getY() == (int) this.getZeroPosition() ? 1 : 0));
 				else if (bar.getValue() < 0) regions.get(j)
 						  .get(i)
 						  .set((int) offset, (int) this.getZeroPosition(), (int) (offset += barWidth),
-									 (int) bar.getY());
+									 (int) bar.getY() + ((int) bar.getY() == (int) this.getZeroPosition() ? 1 : 0));
 				else regions.get(j)
 							  .get(i)
 							  .set((int) offset, (int) this.getZeroPosition(), (int) (offset += barWidth),

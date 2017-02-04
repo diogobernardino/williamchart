@@ -16,8 +16,12 @@
 
 package com.db.chart.model;
 
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.RequiresApi;
 
 
 /**
@@ -86,6 +90,38 @@ public abstract class ChartEntry implements Comparable<ChartEntry> {
 		return mShadowRadius != 0;
 	}
 
+
+	public ValueAnimator animateXY(float x0, float y0, float x1, float y1){
+
+		final ValueAnimator animator = ValueAnimator.ofPropertyValuesHolder(
+				PropertyValuesHolder.ofFloat("x", x0, x1),
+				PropertyValuesHolder.ofFloat("y", y0, y1));
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				mX = (float) animation.getAnimatedValue("x");
+				mY = (float) animation.getAnimatedValue("y");
+			}
+		});
+		mX = x0;
+		mY = y0;
+		return animator;
+	}
+
+
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+	public ValueAnimator animateColor(int color0, int color1){
+
+		final ValueAnimator animator = ValueAnimator.ofArgb(color0, color1);
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				mColor = (int) animation.getAnimatedValue();
+			}
+		});
+		mColor = color0;
+		return animator;
+	}
 
 
 	/*

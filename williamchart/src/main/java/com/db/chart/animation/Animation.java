@@ -28,6 +28,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.RequiresApi;
 import android.view.animation.DecelerateInterpolator;
 
+import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;
 
@@ -286,55 +287,40 @@ public class Animation {
      * @param end   X and Y end coordinates
      * @return Array of {@link ChartSet} containing the first values to be drawn.
      */
-    private ArrayList<ChartSet> animate(ArrayList<float[][]> start,
-                                        ArrayList<float[][]> end) {
+    private ArrayList<ChartSet> animate(ArrayList<float[][]> start, ArrayList<float[][]> end) {
 
-        if (mAnimateInParallel)
+        ValueAnimator animator;
+        animator = ValueAnimator.ofInt(0, 1); // Fuehrer
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mCallback.onAnimationUpdate(mData);
+            }
+        });
+        animator.addListener(mAnimatorListener);
+        animator.setDuration(mDuration);
+        mAnimators.add(animator);
+
+        if (mAnimateInParallel) // Animate position
             mAnimators.addAll(animateInParallel(start, end));
         else
             mAnimators.addAll(animateInSequence(start, end));
 
-        final int nSets = mData.size();
-        final int nEntries = mData.get(0).size();
+        for (ChartSet set : mData){ // Animate alpha
+            animator = set.animateAlpha(mAlpha, set.getAlpha());
+            animator.setDuration(mDuration);
+            animator.setInterpolator(mInterpolator);
+            mAnimators.add(animator);
+        }
 
-        ValueAnimator animator = ValueAnimator.ofFloat(mAlpha, 1);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-
-                for (int i = 0; i < nSets; i++)
-                    mData.get(i).setAlpha((float) animation.getAnimatedValue());
-                mCallback.onAnimationUpdate(mData);
-            }
-        });
-        animator.addListener(mAnimatorListener); // Include listener in last animator
-        animator.setDuration(mDuration);
-        animator.setInterpolator(mInterpolator);
-        animator.start();
-        mAnimators.add(animator);
-
-        if (mColor != -1 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            for (int i = 0; i < nSets; i++) {
-                for (int j = 0; j < nEntries; j++) {
-
-                    final int ii = i;
-                    final int jj = j;
-
-                    animator = ValueAnimator.ofArgb(mColor, mData.get(i).getEntry(j).getColor());
-                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animation) {
-                            mData.get(ii).getEntry(jj).setColor((int) animation.getAnimatedValue());
-                        }
-                    });
-                    animator.addListener(mAnimatorListener); // Include listener in last animator
+        if (mColor != -1 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) // Animate color
+            for (ChartSet set : mData)
+                for (ChartEntry entry : set.getEntries()) {
+                    animator = entry.animateColor(mColor, entry.getColor());
                     animator.setDuration(mDuration);
                     animator.setInterpolator(mInterpolator);
-                    animator.start();
                     mAnimators.add(animator);
                 }
-            }
-        }
 
         for (ValueAnimator e : mAnimators)
             e.start();
@@ -380,34 +366,16 @@ public class Animation {
         }
 
         ValueAnimator animator;
-        for (int i = 0; i < nSets; i++) {
+        for (int i = 0; i < nSets; i++)
             for (int j = 0; j < nEntries; j++) {
 
-                final int ii = i;
-                final int jj = j;
-
-                mData.get(i).getEntry(j).setCoordinates(start.get(i)[j][0],
-                        start.get(i)[j][1]);
-
-                animator = ValueAnimator.ofPropertyValuesHolder(
-                        PropertyValuesHolder.ofFloat("x", start.get(i)[j][0], end.get(i)[j][0]),
-                        PropertyValuesHolder.ofFloat("y", start.get(i)[j][1], end.get(i)[j][1]));
+                animator = mData.get(i).getEntry(j).animateXY(start.get(i)[j][0], start.get(i)[j][1],
+                        end.get(i)[j][0], end.get(i)[j][1]);
                 animator.setStartDelay(mEntryInitTime[j]);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-
-                        mData.get(ii).getEntry(jj).setCoordinates(
-                                (float) animation.getAnimatedValue("x"),
-                                (float) animation.getAnimatedValue("y"));
-                        mCallback.onAnimationUpdate(mData);
-                    }
-                });
                 animator.setDuration(mEntryDuration);
                 animator.setInterpolator(mInterpolator);
                 result.add(animator);
             }
-        }
         return result;
     }
 
@@ -424,36 +392,17 @@ public class Animation {
         final int nEntries = start.get(0).length;
 
         final ArrayList<ValueAnimator> result = new ArrayList<>(nSets * nEntries);
-        ArrayList<PropertyValuesHolder> pvh = new ArrayList<>(nSets * nEntries);
 
-        for (int i = 0; i < nSets; i++) {
+        ValueAnimator animator;
+        for (int i = 0; i < nSets; i++)
             for (int j = 0; j < nEntries; j++) {
 
-                pvh.add(PropertyValuesHolder.ofFloat(
-                        Integer.toString(i) + Integer.toString(j) + 'x',
-                        start.get(i)[j][0], end.get(i)[j][0]));
-                pvh.add(PropertyValuesHolder.ofFloat(
-                        Integer.toString(i) + Integer.toString(j) + 'y',
-                        start.get(i)[j][1], end.get(i)[j][1]));
+                animator = mData.get(i).getEntry(j).animateXY(start.get(i)[j][0], start.get(i)[j][1],
+                        end.get(i)[j][0], end.get(i)[j][1]);
+                animator.setDuration(mDuration);
+                animator.setInterpolator(mInterpolator);
+                result.add(animator);
             }
-        }
-
-        final ValueAnimator animator = ValueAnimator.ofPropertyValuesHolder(pvh.toArray(new PropertyValuesHolder[pvh.size()]));
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-
-                for (int i = 0; i < nSets; i++)
-                    for (int j = 0; j < nEntries; j++)
-                        mData.get(i).getEntry(j).setCoordinates(
-                                (float) animation.getAnimatedValue(Integer.toString(i) + Integer.toString(j) + 'x'),
-                                (float) animation.getAnimatedValue(Integer.toString(i) + Integer.toString(j) + 'y'));
-                mCallback.onAnimationUpdate(mData);
-            }
-        });
-        animator.setDuration(mDuration);
-        animator.setInterpolator(mInterpolator);
-        result.add(animator);
 
         return result;
     }

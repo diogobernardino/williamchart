@@ -170,18 +170,15 @@ public class BarChartView extends BaseBarChartView {
 				barSet = (BarSet) data.get(j);
 				bar = (Bar) barSet.getEntry(i);
 
-				if (bar.getValue() > 0) regions.get(j)
-						  .get(i)
-						  .set((int) offset, (int) bar.getY(), (int) (offset += barWidth),
-									 (int) this.getZeroPosition());
-				else if (bar.getValue() < 0) regions.get(j)
-						  .get(i)
-						  .set((int) offset, (int) this.getZeroPosition(), (int) (offset += barWidth),
-									 (int) bar.getY());
-				else regions.get(j)
-							  .get(i)
-							  .set((int) offset, (int) this.getZeroPosition(), (int) (offset += barWidth),
-										 (int) this.getZeroPosition() + 1);
+				if (bar.getValue() > 0 && (int) bar.getY() != (int) this.getZeroPosition())
+					regions.get(j).get(i).set((int) offset, (int) bar.getY(),
+							(int) (offset += barWidth), (int) this.getZeroPosition());
+				else if (bar.getValue() < 0 && (int) bar.getY() != (int) this.getZeroPosition())
+					regions.get(j).get(i).set((int) offset, (int) this.getZeroPosition(),
+							(int) (offset += barWidth), (int) bar.getY());
+				else // If bar.getValue() == 0, force region to 1 pixel
+					regions.get(j).get(i).set((int) offset, (int) this.getZeroPosition(),
+							(int) (offset += barWidth), (int) this.getZeroPosition() + 1);
 
 				// If last bar of group no set spacing is necessary
 				if (j != nSets - 1) offset += style.setSpacing;

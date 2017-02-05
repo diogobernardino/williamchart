@@ -64,7 +64,7 @@ public class StackedCardThree extends CardController {
 				  .setYAxis(false)
 				  .setAxisBorderValues(-80, 80, 10);
 
-		Animation anim = new Animation().setInterpolator(new DecelerateInterpolator()).setEndAction(action);
+		Animation anim = new Animation().setInterpolator(new DecelerateInterpolator()).withEndAction(action);
 
 		mChart.show(anim);
 	}
@@ -91,7 +91,7 @@ public class StackedCardThree extends CardController {
 
 		super.dismiss(action);
 
-		mChart.dismiss(mChart.getChartAnimation().setInterpolator(new AccelerateInterpolator()).setEndAction(action));
+		mChart.dismiss(mChart.getChartAnimation().setInterpolator(new AccelerateInterpolator()).withEndAction(action));
 	}
 
 }

@@ -116,8 +116,8 @@ public class LineCardOne extends CardController {
 		};
 
 		Animation anim = new Animation().setInterpolator(new BounceInterpolator())
-				.setAlpha(0)
-				.setEndAction(chartAction);
+				.fromAlpha(0)
+				.withEndAction(chartAction);
 
 		mChart.show(anim);
 	}
@@ -136,7 +136,7 @@ public class LineCardOne extends CardController {
 			mChart.updateValues(0, mValues[0]);
 			mChart.updateValues(1, mValues[0]);
 		}
-		mChart.getChartAnimation().setEndAction(mBaseAction);
+		mChart.getChartAnimation().withEndAction(mBaseAction);
 		mChart.notifyDataUpdate();
 	}
 
@@ -147,7 +147,7 @@ public class LineCardOne extends CardController {
 		super.dismiss(action);
 
 		mChart.dismissAllTooltips();
-		mChart.dismiss(new Animation().setInterpolator(new BounceInterpolator()).setEndAction(action));
+		mChart.dismiss(new Animation().setInterpolator(new BounceInterpolator()).withEndAction(action));
 	}
 
 }

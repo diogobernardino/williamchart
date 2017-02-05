@@ -328,11 +328,11 @@ public class SandboxFragment extends Fragment {
 				mInterpolator = new DecelerateInterpolator();
 		}
 
-		return new Animation(mDuration).setAlpha(mAlpha)
+		return new Animation(mDuration).fromAlpha(mAlpha)
 				  .setInterpolator(mInterpolator)
-				  .setInSequence(mOverlapFactor, mOverlapOrder)
-				  .setStartPoint(mStartX, mStartY)
-				  .setEndAction(mEndAction);
+				  .inSequence(mOverlapFactor, mOverlapOrder)
+				  .fromXY(mStartX, mStartY)
+				  .withEndAction(mEndAction);
 	}
 
 

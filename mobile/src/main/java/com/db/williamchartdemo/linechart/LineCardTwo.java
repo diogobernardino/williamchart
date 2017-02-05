@@ -85,7 +85,7 @@ public class LineCardTwo extends CardController {
 				  .setValueThreshold(80f, 80f, thresPaint)
 				  .setAxisBorderValues(0, 110);
 
-		Animation anim = new Animation().setStartPoint(0, .5f).setEndAction(action);
+		Animation anim = new Animation().fromXY(0, .5f).withEndAction(action);
 
 		mChart.show(anim);
 	}
@@ -110,7 +110,7 @@ public class LineCardTwo extends CardController {
 
 		super.dismiss(action);
 
-		mChart.dismiss(new Animation().setStartPoint(1, .5f).setEndAction(action));
+		mChart.dismiss(new Animation().fromXY(1, .5f).withEndAction(action));
 	}
 
 }

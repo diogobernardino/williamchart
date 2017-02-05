@@ -509,7 +509,7 @@ public abstract class ChartView extends RelativeLayout {
         mAnim.setAnimationListener(mAnimListener);
 
         final Runnable endAction = mAnim.getEndAction();
-        mAnim.setEndAction(new Runnable() {
+        mAnim.withEndAction(new Runnable() {
             @Override
             public void run() {
 

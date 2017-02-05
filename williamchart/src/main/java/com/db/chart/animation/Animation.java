@@ -468,10 +468,10 @@ public class Animation {
      * @param factor In case animation should show an overlap between entries
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setInSequence(float factor, int[] order) {
+    public Animation inSequence(float factor, int[] order) {
 
         mOrder = order;
-        setInSequence(factor);
+        inSequence(factor);
         return this;
     }
 
@@ -481,7 +481,7 @@ public class Animation {
      *
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setInSequence(float factor) {
+    public Animation inSequence(float factor) {
 
         mAnimateOverlapFactor = factor;
         return this;
@@ -494,7 +494,7 @@ public class Animation {
      * @param endAction to be executed once the animation finishes
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setEndAction(Runnable endAction) {
+    public Animation withEndAction(Runnable endAction) {
 
         mEndAction = endAction;
         return this;
@@ -510,7 +510,7 @@ public class Animation {
      * @param yFactor vertical factor between 0 and 1. If not applied then -1 can be set.
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setStartPoint(@FloatRange(from = -1.f, to = 1.f) float xFactor,
+    public Animation fromXY(@FloatRange(from = -1.f, to = 1.f) float xFactor,
                                    @FloatRange(from = -1.f, to = 1.f) float yFactor) {
 
         mStartXFactor = xFactor;
@@ -525,7 +525,7 @@ public class Animation {
      * @param alpha alpha value from where chart will animate from.
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setAlpha(int alpha) {
+    public Animation fromAlpha(int alpha) {
 
         mAlpha = alpha;
         return this;

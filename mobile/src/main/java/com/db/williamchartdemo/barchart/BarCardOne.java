@@ -71,7 +71,7 @@ public class BarCardOne extends CardController {
 				showTooltip();
 			}
 		};
-		mChart.show(new Animation().setInSequence(.5f, order).setEndAction(chartOneAction));
+		mChart.show(new Animation().inSequence(.5f, order).withEndAction(chartOneAction));
 	}
 
 
@@ -94,7 +94,7 @@ public class BarCardOne extends CardController {
 
 		mChart.dismissAllTooltips();
 		int[] order = {0, 2, 1, 3};
-		mChart.dismiss(new Animation().setInSequence(.5f, order).setEndAction(action));
+		mChart.dismiss(new Animation().inSequence(.5f, order).withEndAction(action));
 	}
 
 

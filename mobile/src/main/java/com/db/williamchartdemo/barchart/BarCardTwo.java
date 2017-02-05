@@ -128,7 +128,7 @@ public class BarCardTwo extends CardController {
 				  .setXLabels(XRenderer.LabelPosition.NONE);
 
 		int[] order = {4, 3, 2, 1, 0};
-		mChart.show(new Animation().setInSequence(.5f, order).setEndAction(action));
+		mChart.show(new Animation().inSequence(.5f, order).withEndAction(action));
 	}
 
 
@@ -160,7 +160,7 @@ public class BarCardTwo extends CardController {
 		mChart.dismissAllTooltips();
 
 		int[] order = {0, 1, 2, 3, 4};
-		mChart.dismiss(new Animation().setInSequence(.5f, order).setEndAction(action));
+		mChart.dismiss(new Animation().inSequence(.5f, order).withEndAction(action));
 	}
 
 }

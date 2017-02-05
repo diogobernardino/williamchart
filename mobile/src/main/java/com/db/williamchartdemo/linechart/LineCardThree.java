@@ -51,7 +51,7 @@ public class LineCardThree extends CardController {
 				  .setYAxis(false)
 				  .setBorderSpacing(Tools.fromDpToPx(5));
 
-		Animation anim = new Animation().setEndAction(action);
+		Animation anim = new Animation().withEndAction(action);
 
 		mChart.show(anim);
 	}
@@ -78,6 +78,6 @@ public class LineCardThree extends CardController {
 		super.dismiss(action);
 
 		mChart.dismissAllTooltips();
-		mChart.dismiss(new Animation().setEndAction(action));
+		mChart.dismiss(new Animation().withEndAction(action));
 	}
 }

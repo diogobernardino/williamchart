@@ -282,16 +282,6 @@ public class Animation {
     private ArrayList<ChartSet> animate(ArrayList<float[][]> start, ArrayList<float[][]> end) {
 
         ValueAnimator animator;
-        animator = ValueAnimator.ofInt(0, 1); // Fuehrer
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mCallback.onAnimationUpdate(mData);
-            }
-        });
-        animator.addListener(mAnimatorListener);
-        animator.setDuration(mDuration);
-        mAnimators.add(animator);
 
         mAnimators.addAll(animateEntries(start, end));
 
@@ -311,8 +301,23 @@ public class Animation {
                     mAnimators.add(animator);
                 }
 
-        for (ValueAnimator e : mAnimators)
+        long maxDelay = 0;
+        for (ValueAnimator e : mAnimators) {
+            if (maxDelay < e.getStartDelay())
+                maxDelay = e.getStartDelay();
             e.start();
+        }
+
+        animator = ValueAnimator.ofInt(0, 1); // Fuehrer
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mCallback.onAnimationUpdate(mData);
+            }
+        });
+        animator.addListener(mAnimatorListener);
+        animator.setDuration(mDuration + maxDelay);
+        animator.start();
 
         return mData;
     }

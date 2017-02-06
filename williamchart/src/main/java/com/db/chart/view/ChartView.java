@@ -1133,7 +1133,7 @@ public abstract class ChartView extends RelativeLayout {
 	 *
 	 * @return {@link com.db.chart.view.ChartView} self-reference.
 	 */
-	public ChartView setAxisBorderValues(int minValue, int maxValue) {
+	public ChartView setAxisBorderValues(float minValue, float maxValue) {
 
 		if (mOrientation == Orientation.VERTICAL) yRndr.setBorderValues(minValue, maxValue);
 		else xRndr.setBorderValues(minValue, maxValue);

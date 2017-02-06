@@ -77,7 +77,7 @@ public class BarCardThree extends CardController {
 				  .setXAxis(false)
 				  .setYAxis(false);
 
-		Animation anim = new Animation().setInterpolator(new AccelerateDecelerateInterpolator()).setEndAction(action);
+		Animation anim = new Animation().setInterpolator(new AccelerateDecelerateInterpolator()).withEndAction(action);
 
 		mChart.show(anim);
 	}
@@ -101,7 +101,7 @@ public class BarCardThree extends CardController {
 		super.dismiss(action);
 
 		mChart.dismissAllTooltips();
-		mChart.dismiss(new Animation().setInterpolator(new AccelerateDecelerateInterpolator()).setEndAction(action));
+		mChart.dismiss(new Animation().setInterpolator(new AccelerateDecelerateInterpolator()).withEndAction(action));
 	}
 
 }

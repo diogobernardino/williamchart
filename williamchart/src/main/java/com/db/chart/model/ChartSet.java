@@ -16,6 +16,7 @@
 
 package com.db.chart.model;
 
+import android.animation.ValueAnimator;
 import android.support.annotation.FloatRange;
 
 import java.util.ArrayList;
@@ -75,7 +76,20 @@ public abstract class ChartSet {
 			setValue(i, newValues[i]);
 	}
 	
-	
+
+	public ValueAnimator animateAlpha(float from , float to){
+
+		final ValueAnimator animator = ValueAnimator.ofFloat(mAlpha, 1);
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+
+				mAlpha = (float) animation.getAnimatedValue();
+			}
+		});
+		mAlpha = from;
+		return animator;
+	}
 	
 	
 	/*

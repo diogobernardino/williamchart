@@ -18,16 +18,15 @@ package com.db.chart.animation;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
-import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
 import android.os.Build;
-import android.renderscript.Sampler;
 import android.support.annotation.FloatRange;
 import android.support.annotation.RequiresApi;
 import android.view.animation.DecelerateInterpolator;
 
+import com.db.chart.model.ChartEntry;
 import com.db.chart.model.ChartSet;
 import com.db.chart.view.ChartView;
 
@@ -96,11 +95,6 @@ public class Animation {
     private ChartAnimationListener mCallback;
 
     /**
-     * True if entries will be animated in parallel, False otherwise
-     */
-    private boolean mAnimateInParallel;
-
-    /**
      * Overlap factor between entries while animating in sequence
      */
     private float mAnimateOverlapFactor;
@@ -158,8 +152,7 @@ public class Animation {
         mStartXFactor = -1f;
         mStartYFactor = -1f;
         mIsEntering = true;
-        mAnimateInParallel = true;
-        mAnimateOverlapFactor = -1;
+        mAnimateOverlapFactor = 1;
     }
 
 
@@ -263,7 +256,7 @@ public class Animation {
      *                     should start
      * @return Given values modified with new starting position.
      */
-    protected ArrayList<float[][]> applyStartingPosition(ArrayList<float[][]> values, Rect area,
+    ArrayList<float[][]> applyStartingPosition(ArrayList<float[][]> values, Rect area,
                                                          float xStartFactor, float yStartFactor) {
 
         for (int i = 0; i < values.size(); i++) {
@@ -286,55 +279,37 @@ public class Animation {
      * @param end   X and Y end coordinates
      * @return Array of {@link ChartSet} containing the first values to be drawn.
      */
-    private ArrayList<ChartSet> animate(ArrayList<float[][]> start,
-                                        ArrayList<float[][]> end) {
+    private ArrayList<ChartSet> animate(ArrayList<float[][]> start, ArrayList<float[][]> end) {
 
-        if (mAnimateInParallel)
-            mAnimators.addAll(animateInParallel(start, end));
-        else
-            mAnimators.addAll(animateInSequence(start, end));
-
-        final int nSets = mData.size();
-        final int nEntries = mData.get(0).size();
-
-        ValueAnimator animator = ValueAnimator.ofFloat(mAlpha, 1);
+        ValueAnimator animator;
+        animator = ValueAnimator.ofInt(0, 1); // Fuehrer
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-
-                for (int i = 0; i < nSets; i++)
-                    mData.get(i).setAlpha((float) animation.getAnimatedValue());
                 mCallback.onAnimationUpdate(mData);
             }
         });
-        animator.addListener(mAnimatorListener); // Include listener in last animator
+        animator.addListener(mAnimatorListener);
         animator.setDuration(mDuration);
-        animator.setInterpolator(mInterpolator);
-        animator.start();
         mAnimators.add(animator);
 
-        if (mColor != -1 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            for (int i = 0; i < nSets; i++) {
-                for (int j = 0; j < nEntries; j++) {
+        mAnimators.addAll(animateEntries(start, end));
 
-                    final int ii = i;
-                    final int jj = j;
+        for (ChartSet set : mData){ // Animate alpha
+            animator = set.animateAlpha(mAlpha, set.getAlpha());
+            animator.setDuration(mDuration);
+            animator.setInterpolator(mInterpolator);
+            mAnimators.add(animator);
+        }
 
-                    animator = ValueAnimator.ofArgb(mColor, mData.get(i).getEntry(j).getColor());
-                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animation) {
-                            mData.get(ii).getEntry(jj).setColor((int) animation.getAnimatedValue());
-                        }
-                    });
-                    animator.addListener(mAnimatorListener); // Include listener in last animator
+        if (mColor != -1 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) // Animate color
+            for (ChartSet set : mData)
+                for (ChartEntry entry : set.getEntries()) {
+                    animator = entry.animateColor(mColor, entry.getColor());
                     animator.setDuration(mDuration);
                     animator.setInterpolator(mInterpolator);
-                    animator.start();
                     mAnimators.add(animator);
                 }
-            }
-        }
 
         for (ValueAnimator e : mAnimators)
             e.start();
@@ -348,114 +323,77 @@ public class Animation {
      *
      * @param start Animation start values
      * @param end   Animation end values
+     * @return List of animators to animate each entry.
      */
-    private ArrayList<ValueAnimator> animateInSequence(ArrayList<float[][]> start, ArrayList<float[][]> end) {
+    private ArrayList<ValueAnimator> animateEntries(ArrayList<float[][]> start, ArrayList<float[][]> end) {
 
         final int nSets = start.size();
         final int nEntries = start.get(0).length;
 
         ArrayList<ValueAnimator> result = new ArrayList<>(nSets * nEntries);
 
-        if (mOrder == null) {
-            mOrder = new int[nEntries];
-            for (int i = 0; i < nEntries; i++)
-                mOrder[i] = i;
-        }
-
-        // Calculates the expected duration as there was with no overlap (factor = 0)
-        float noOverlapDuration = mDuration / nEntries;
-        // Adjust the duration to the overlap
-        int mEntryDuration =
-                (int) (noOverlapDuration + (mDuration - noOverlapDuration) * mAnimateOverlapFactor);
-
-        // Define initial time for each entry
-        long[] mEntryInitTime = new long[nEntries];
-        long noOverlapInitTime;
-        for (int i = 0; i < nEntries; i++) {
-            // Calculates the expected init time as there was with no overlap (factor = 0)
-            noOverlapInitTime = i * (mDuration / nEntries);
-            // Adjust the init time to overlap
-            mEntryInitTime[mOrder[i]] = (noOverlapInitTime -
-                    ((long) (mAnimateOverlapFactor * noOverlapInitTime)));
-        }
-
+        long duration = calculateEntriesDuration(nEntries, mDuration, mAnimateOverlapFactor);
+        long[] delays = calculateEntriesInitTime(nEntries, mDuration, mAnimateOverlapFactor, mOrder);
         ValueAnimator animator;
-        for (int i = 0; i < nSets; i++) {
+        for (int i = 0; i < nSets; i++)
             for (int j = 0; j < nEntries; j++) {
 
-                final int ii = i;
-                final int jj = j;
-
-                mData.get(i).getEntry(j).setCoordinates(start.get(i)[j][0],
-                        start.get(i)[j][1]);
-
-                animator = ValueAnimator.ofPropertyValuesHolder(
-                        PropertyValuesHolder.ofFloat("x", start.get(i)[j][0], end.get(i)[j][0]),
-                        PropertyValuesHolder.ofFloat("y", start.get(i)[j][1], end.get(i)[j][1]));
-                animator.setStartDelay(mEntryInitTime[j]);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-
-                        mData.get(ii).getEntry(jj).setCoordinates(
-                                (float) animation.getAnimatedValue("x"),
-                                (float) animation.getAnimatedValue("y"));
-                        mCallback.onAnimationUpdate(mData);
-                    }
-                });
-                animator.setDuration(mEntryDuration);
+                animator = mData.get(i).getEntry(j).animateXY(start.get(i)[j][0], start.get(i)[j][1],
+                        end.get(i)[j][0], end.get(i)[j][1]);
+                animator.setStartDelay(delays[j]);
+                animator.setDuration(duration);
                 animator.setInterpolator(mInterpolator);
                 result.add(animator);
             }
+        return result;
+    }
+
+
+    /**
+     * Define the delay for each entry.
+     *
+     * @param size          Number of entries
+     * @param duration      Complete animation duration
+     * @param overlapFactor Overlap factor between entries
+     * @return Array containing the animation delays for each entry.
+     */
+    long[] calculateEntriesInitTime(int size, long duration, float overlapFactor, int[] order){
+
+        if (overlapFactor != 1)
+            duration = (long) (duration + duration * overlapFactor);
+
+        if (order == null) {
+            order = new int[size];
+            for (int i = 0; i < size; i++)
+                order[i] = i;
+        }
+
+        long[] result = new long[size];
+        long noOverlapInitTime;
+        for (int i = 0; i < size; i++) {
+            // Calculates the expected init time as there was with no overlap (factor = 0)
+            noOverlapInitTime = i * (duration / size);
+            // Adjust the init time to overlap
+            result[order[i]] = (noOverlapInitTime - ((long) (overlapFactor * noOverlapInitTime)));
         }
         return result;
     }
 
 
     /**
-     * Animate entries in parallel. In this case a single {@link ValueAnimator} will be enough to animate all entries.
+     *  Calculate each individual entry duration.
      *
-     * @param start Animation start values
-     * @param end   Animation end values
+     * @param size          Number of entries
+     * @param duration      Complete animation duration
+     * @param overlapFactor Overlap factor between entries
+     * @return Array containing the animation duration for each entry.
      */
-    private ArrayList<ValueAnimator> animateInParallel(ArrayList<float[][]> start, ArrayList<float[][]> end) {
+    long calculateEntriesDuration(int size, long duration, float overlapFactor){
 
-        final int nSets = start.size();
-        final int nEntries = start.get(0).length;
-
-        final ArrayList<ValueAnimator> result = new ArrayList<>(nSets * nEntries);
-        ArrayList<PropertyValuesHolder> pvh = new ArrayList<>(nSets * nEntries);
-
-        for (int i = 0; i < nSets; i++) {
-            for (int j = 0; j < nEntries; j++) {
-
-                pvh.add(PropertyValuesHolder.ofFloat(
-                        Integer.toString(i) + Integer.toString(j) + 'x',
-                        start.get(i)[j][0], end.get(i)[j][0]));
-                pvh.add(PropertyValuesHolder.ofFloat(
-                        Integer.toString(i) + Integer.toString(j) + 'y',
-                        start.get(i)[j][1], end.get(i)[j][1]));
-            }
-        }
-
-        final ValueAnimator animator = ValueAnimator.ofPropertyValuesHolder(pvh.toArray(new PropertyValuesHolder[pvh.size()]));
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-
-                for (int i = 0; i < nSets; i++)
-                    for (int j = 0; j < nEntries; j++)
-                        mData.get(i).getEntry(j).setCoordinates(
-                                (float) animation.getAnimatedValue(Integer.toString(i) + Integer.toString(j) + 'x'),
-                                (float) animation.getAnimatedValue(Integer.toString(i) + Integer.toString(j) + 'y'));
-                mCallback.onAnimationUpdate(mData);
-            }
-        });
-        animator.setDuration(mDuration);
-        animator.setInterpolator(mInterpolator);
-        result.add(animator);
-
-        return result;
+        // Calculates the expected duration as there was with no overlap (factor = 0)
+        final float noOverlapDuration = duration / size;
+        // Adjust the duration to the overlap
+        return (long) (noOverlapDuration + (duration - noOverlapDuration) * overlapFactor);
     }
 
 
@@ -530,10 +468,10 @@ public class Animation {
      * @param factor In case animation should show an overlap between entries
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setInSequence(float factor, int[] order) {
+    public Animation inSequence(float factor, int[] order) {
 
         mOrder = order;
-        setInSequence(factor);
+        inSequence(factor);
         return this;
     }
 
@@ -543,9 +481,8 @@ public class Animation {
      *
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setInSequence(float factor) {
+    public Animation inSequence(float factor) {
 
-        mAnimateInParallel = false;
         mAnimateOverlapFactor = factor;
         return this;
     }
@@ -557,7 +494,7 @@ public class Animation {
      * @param endAction to be executed once the animation finishes
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setEndAction(Runnable endAction) {
+    public Animation withEndAction(Runnable endAction) {
 
         mEndAction = endAction;
         return this;
@@ -573,7 +510,7 @@ public class Animation {
      * @param yFactor vertical factor between 0 and 1. If not applied then -1 can be set.
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setStartPoint(@FloatRange(from = -1.f, to = 1.f) float xFactor,
+    public Animation fromXY(@FloatRange(from = -1.f, to = 1.f) float xFactor,
                                    @FloatRange(from = -1.f, to = 1.f) float yFactor) {
 
         mStartXFactor = xFactor;
@@ -588,7 +525,7 @@ public class Animation {
      * @param alpha alpha value from where chart will animate from.
      * @return {@link com.db.chart.animation.Animation} self-reference.
      */
-    public Animation setAlpha(int alpha) {
+    public Animation fromAlpha(int alpha) {
 
         mAlpha = alpha;
         return this;
@@ -618,4 +555,5 @@ public class Animation {
         mColor = color;
         return this;
     }
+
 }

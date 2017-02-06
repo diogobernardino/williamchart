@@ -170,9 +170,6 @@ public abstract class BaseStackBarChartView extends BaseBarChartView {
 				minStackValue = (int) Math.ceil(negativeStackValue * -1) * -1;
 		}
 
-		while (maxStackValue % this.getStep() != 0) maxStackValue += 1;
-		while (minStackValue % this.getStep() != 0) minStackValue -= 1;
-
 		super.setAxisBorderValues(minStackValue, maxStackValue, this.getStep());
 	}
 

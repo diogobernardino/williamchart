@@ -287,6 +287,10 @@ public abstract class AxisRenderer {
 			}
 		}
 
+		if (max < 0) max = 0;
+		if (min > 0) min = 0;
+
+
 		if (min == max) max += 1;  // All given set values are equal
 
 		return new float[] {min, max};

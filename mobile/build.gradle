@@ -34,6 +34,7 @@ android {
 }
 
 dependencies {
+    wearApp project(':wearable')
     compile project(':williamchart')
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"

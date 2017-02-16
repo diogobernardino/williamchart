@@ -9,8 +9,8 @@ android {
         minSdkVersion 20
         targetSdkVersion rootProject.targetSdkVersion
         applicationId "com.db.williamchartdemo"
-        versionCode 1
-        versionName "1.0"
+        versionCode 16
+        versionName "2.4.0"
     }
     buildTypes {
         release {
@@ -22,6 +22,6 @@ android {
 
 dependencies {
     compile project(':williamchart')
-    compile 'com.google.android.support:wearable:2.0.0-alpha2'
+    compile 'com.google.android.support:wearable:2.0.0'
     compile 'com.google.android.gms:play-services-wearable:10.0.1'
 }

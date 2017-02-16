@@ -92,3 +92,5 @@ javadoc/
 
 ### Google Play API file ###
 *.p12
+
+/kickTests.*

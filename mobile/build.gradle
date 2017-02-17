@@ -39,7 +39,6 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
-    compile "com.larswerkman:HoloColorPicker:1.5"
     androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
     androidTestCompile "com.android.support.test:runner:$rootProject.runnerVersion"

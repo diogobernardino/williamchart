@@ -33,7 +33,7 @@ public class StackedCardThree extends CardController {
 
 		super(card);
 
-		mChart = (HorizontalStackBarChartView) card.findViewById(R.id.chart4);
+		mChart = (HorizontalStackBarChartView) card.findViewById(R.id.chart);
 		((TextView) card.findViewById(R.id.electric_text)).setTypeface(
 				  Typeface.createFromAsset(context.getAssets(), "Ponsi-Regular.otf"));
 		((TextView) card.findViewById(R.id.fuel_text)).setTypeface(

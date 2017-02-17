@@ -20,26 +20,22 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.db.williamchartdemo.barchart.BarCardOne;
-import com.db.williamchartdemo.barchart.BarCardThree;
-import com.db.williamchartdemo.barchart.BarCardTwo;
-import com.db.williamchartdemo.linechart.LineCardOne;
-import com.db.williamchartdemo.linechart.LineCardThree;
-import com.db.williamchartdemo.linechart.LineCardTwo;
-import com.db.williamchartdemo.stackedchart.StackedCardOne;
-import com.db.williamchartdemo.stackedchart.StackedCardThree;
-import com.db.williamchartdemo.stackedchart.StackedCardTwo;
-
 
 public class ChartsFragment extends Fragment {
 
+	private final static int FULL_SPAN = 3;
+	private final static int MULTI_SPAN = 2;
+	private final static int SINGLE_SPAN = 1;
+
+	private ChartAdapter mAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,18 +56,34 @@ public class ChartsFragment extends Fragment {
 		((TextView) layout.findViewById(R.id.title)).setTypeface(
 				  Typeface.createFromAsset(getContext().getAssets(), "Ponsi-Regular.otf"));
 
-		(new LineCardOne((CardView) layout.findViewById(R.id.card1), getContext())).init();
-		(new LineCardThree((CardView) layout.findViewById(R.id.card2), getContext())).init();
-		(new BarCardOne((CardView) layout.findViewById(R.id.card3), getContext())).init();
-		(new StackedCardThree((CardView) layout.findViewById(R.id.card4), getContext())).init();
-		(new StackedCardOne((CardView) layout.findViewById(R.id.card5))).init();
-		(new BarCardThree((CardView) layout.findViewById(R.id.card6), getContext())).init();
-		(new BarCardTwo((CardView) layout.findViewById(R.id.card7), getContext())).init();
-		(new StackedCardTwo((CardView) layout.findViewById(R.id.card8))).init();
-		(new LineCardTwo((CardView) layout.findViewById(R.id.card9))).init();
+		RecyclerView mRecyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
+
+		GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(), FULL_SPAN);
+		mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+			@Override
+			public int getSpanSize(int position) {
+
+				switch(mAdapter.getItemViewType(position)){
+					case 0: return FULL_SPAN;
+					case 1: return MULTI_SPAN;
+					case 2: return SINGLE_SPAN;
+					case 3: return FULL_SPAN;
+					case 4: return FULL_SPAN;
+					case 5: return SINGLE_SPAN;
+					case 6: return MULTI_SPAN;
+					case 7: return FULL_SPAN;
+					case 8: return FULL_SPAN;
+					default: return SINGLE_SPAN;
+				}
+			}
+		});
+
+		mAdapter = new ChartAdapter(getContext());
+
+		mRecyclerView.setLayoutManager(mLayoutManager);
+		mRecyclerView.setAdapter(mAdapter);
 
 		return layout;
 	}
-
 
 }

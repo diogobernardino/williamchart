@@ -28,7 +28,7 @@ public class LineCardThree extends CardController {
 
 		super(card);
 
-		mChart = (LineChartView) card.findViewById(R.id.chart2);
+		mChart = (LineChartView) card.findViewById(R.id.chart);
 	}
 
 

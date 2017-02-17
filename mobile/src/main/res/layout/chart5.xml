@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chart_card"
+    android:layout_width="match_parent"
+    android:layout_height="175dp"
+    android:layout_margin="@dimen/card_view_padding"
+    card_view:cardBackgroundColor="#ffffff"
+    card_view:cardCornerRadius="@dimen/card_view_roundcorner">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/chart_toolbar"
+            layout="@layout/card_toolbar_grey" />
+
+        <RelativeLayout
+            android:id="@+id/legend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/chart_toolbar">
+
+            <TextView
+                android:id="@+id/state_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_toLeftOf="@+id/state_two"
+                android:layout_toStartOf="@+id/state_two"
+                android:drawableLeft="@drawable/stacked_one_point1_bck"
+                android:drawablePadding="4dp"
+                android:drawableStart="@drawable/stacked_one_point1_bck"
+                android:text="@string/stacked_one_1"
+                android:textColor="#ff2b2b2b"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/state_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="5dp"
+                android:drawableLeft="@drawable/stacked_one_point2_bck"
+                android:drawablePadding="4dp"
+                android:drawableStart="@drawable/stacked_one_point2_bck"
+                android:text="@string/stacked_one_2"
+                android:textColor="#ff2b2b2b"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/state_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_toEndOf="@+id/state_two"
+                android:layout_toRightOf="@+id/state_two"
+                android:drawableLeft="@drawable/stacked_one_point3_bck"
+                android:drawablePadding="4dp"
+                android:drawableStart="@drawable/stacked_one_point3_bck"
+                android:text="@string/stacked_one_3"
+                android:textColor="#ff2b2b2b"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <com.db.chart.view.StackBarChartView xmlns:chart="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/legend"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            chart:chart_fontSize="10sp"
+            chart:chart_labelColor="#929b88" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

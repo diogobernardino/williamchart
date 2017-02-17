@@ -62,7 +62,7 @@ public class CardController {
 	protected CardController(CardView card) {
 
 		super();
-
+		System.out.println(card);
 		RelativeLayout toolbar = (RelativeLayout) card.findViewById(R.id.chart_toolbar);
 		mPlayBtn = (ImageButton) toolbar.findViewById(R.id.play);
 		mUpdateBtn = (ImageButton) toolbar.findViewById(R.id.update);

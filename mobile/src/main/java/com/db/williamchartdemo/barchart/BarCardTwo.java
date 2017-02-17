@@ -21,6 +21,8 @@ import com.db.chart.view.HorizontalBarChartView;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
 
+import java.util.Locale;
+
 
 public class BarCardTwo extends CardController {
 
@@ -43,7 +45,7 @@ public class BarCardTwo extends CardController {
 		super(card);
 
 		mContext = context;
-		mChart = (HorizontalBarChartView) card.findViewById(R.id.chart7);
+		mChart = (HorizontalBarChartView) card.findViewById(R.id.chart);
 		mTextViewValue = (TextView) card.findViewById(R.id.value);
 
 		Typeface typeface = Typeface.createFromAsset(context.getAssets(), "OpenSans-Semibold.ttf");
@@ -74,7 +76,7 @@ public class BarCardTwo extends CardController {
 			@Override
 			public void onClick(int setIndex, int entryIndex, Rect rect) {
 
-				mTextViewValue.setText(Integer.toString((int) mValues[0][entryIndex]));
+				mTextViewValue.setText(String.format(Locale.ENGLISH, "%d", (int) mValues[0][entryIndex]));
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1)
 					mTextViewValue.animate().alpha(1).setDuration(200);
 				else mTextViewValue.setVisibility(View.VISIBLE);

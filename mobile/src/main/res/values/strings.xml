@@ -5,18 +5,6 @@
 	<string name="github_str">Github</string>
 	<string name="google_play_str">Google Play</string>
 
-	<string-array name="easing">
-		<item>Decelerate</item>
-		<item>Accelerate</item>
-		<item>Bounce</item>
-	</string-array>
-
-	<string-array name="duration">
-		<item>500ms</item>
-		<item>1500ms</item>
-		<item>3000ms</item>
-	</string-array>
-
 	<!-- Stacked chart one -->
 	<string name="stacked_one_1">STATE 1</string>
 	<string name="stacked_one_2">STATE 2</string>
@@ -26,18 +14,7 @@
 	<string name="stacked_three_electric">electric</string>
 	<string name="stacked_three_fuel">fuel</string>
 
-	<!-- Sandbox axis -->
-	<string name="sandbox_axis_x">X</string>
-	<string name="sandbox_axis_y">Y</string>
-	<string name="sandbox_axis_metric">metric</string>
-
-	<string-array name="spinner_options">
-		<item>showroom</item>
-		<item>sandbox</item>
-	</string-array>
-
 	<string name="chart_label">AVERAGE TIME</string>
-	<string name="chart_label2">Commuters</string>
 	<string name="chart_label3">00:15:39</string>
 
 </resources>

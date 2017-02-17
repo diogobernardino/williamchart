@@ -45,7 +45,7 @@ public class StackedCardOne extends CardController {
 
 		super(card);
 
-		mChart = (StackBarChartView) card.findViewById(R.id.chart5);
+		mChart = (StackBarChartView) card.findViewById(R.id.chart);
 		mLegendOneRed = (TextView) card.findViewById(R.id.state_one);
 		mLegendOneYellow = (TextView) card.findViewById(R.id.state_two);
 		mLegendOneGreen = (TextView) card.findViewById(R.id.state_three);

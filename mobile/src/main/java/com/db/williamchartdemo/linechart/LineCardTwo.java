@@ -10,7 +10,6 @@ import com.db.chart.animation.Animation;
 import com.db.chart.model.LineSet;
 import com.db.chart.model.Point;
 import com.db.chart.renderer.AxisRenderer;
-import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
@@ -39,7 +38,7 @@ public class LineCardTwo extends CardController {
 
 		super(card);
 
-		mChart = (LineChartView) card.findViewById(R.id.chart9);
+		mChart = (LineChartView) card.findViewById(R.id.chart);
 	}
 
 

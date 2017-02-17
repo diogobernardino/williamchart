@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chart_card"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_margin="@dimen/card_view_padding"
+    card_view:cardBackgroundColor="#363a44"
+    card_view:cardCornerRadius="@dimen/card_view_roundcorner">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/chart_toolbar"
+            layout="@layout/card_toolbar" />
+
+        <com.db.chart.view.BarChartView
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/chart_toolbar" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

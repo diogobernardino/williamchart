@@ -3,13 +3,11 @@ package com.db.williamchartdemo.stackedchart;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.CardView;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 
 import com.db.chart.Tools;
 import com.db.chart.animation.Animation;
 import com.db.chart.model.BarSet;
-import com.db.chart.view.ChartView;
 import com.db.chart.view.HorizontalStackBarChartView;
 import com.db.williamchartdemo.CardController;
 import com.db.williamchartdemo.R;
@@ -34,7 +32,7 @@ public class StackedCardTwo extends CardController {
 
 		super(card);
 
-		mChart = (HorizontalStackBarChartView) card.findViewById(R.id.chart8);
+		mChart = (HorizontalStackBarChartView) card.findViewById(R.id.chart);
 	}
 
 

@@ -33,8 +33,7 @@ public class BarCardOne extends CardController {
 	public BarCardOne(CardView card, Context context) {
 
 		super(card);
-
-		mChart = (BarChartView) card.findViewById(R.id.chart3);
+		mChart = (BarChartView) card.findViewById(R.id.chart);
 		mContext = context;
 	}
 

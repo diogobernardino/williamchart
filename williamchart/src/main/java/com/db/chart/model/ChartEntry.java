@@ -36,7 +36,7 @@ public abstract class ChartEntry implements Comparable<ChartEntry> {
 
 
 	/** Input from user */
-	final private String mLabel;
+	private String mLabel;
 
 	/** Defines if entry is visible */
 	boolean isVisible;
@@ -203,6 +203,17 @@ public abstract class ChartEntry implements Comparable<ChartEntry> {
 	public void setValue(float value) {
 
 		mValue = value;
+	}
+
+
+	/**
+	 * Set new String label.
+	 *
+	 * @param label New label
+	 */
+	public void setLabel(String label) {
+
+		mLabel = label;
 	}
 
 

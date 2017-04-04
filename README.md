@@ -1,4 +1,4 @@
-#williamchart ![phone][7]![watch][8]
+# williamchart ![phone][7]![watch][8]
 
 Williamchart is an Android Library to help the implementation of charts in android applications. For the ones that would like to contribute, my idea is not only to implement the conventional chart features but instead something that could be pleasant and intuitive while representing and visualizing data. I would prefer to keep charts simple and clean rather than overfeatured.
 
@@ -14,7 +14,7 @@ Tested in Android 4.0 and above.
 
 And here is the [javadoc][6].
 
-###Gradle 
+### Gradle 
 ``` groovy
    compile 'com.diogobernardino:williamchart:2.4.0'
 ```

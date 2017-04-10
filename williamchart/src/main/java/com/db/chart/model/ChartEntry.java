@@ -166,6 +166,17 @@ public abstract class ChartEntry implements Comparable<ChartEntry> {
 
 		mValue = value;
 	}
+	
+	
+	/**
+	 * Set new String label.
+	 *
+	 * @param label New label
+	 */
+	public void setLabel(String label) {
+
+		mLabel = label;
+	}
 
 
 	/**

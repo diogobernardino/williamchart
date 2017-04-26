@@ -168,7 +168,7 @@ public class LineChartView extends ChartView {
 		int setSize;
 		for (int i = 0; i < dataSize; i++) {
 
-			setSize = data.get(0).size();
+			setSize = data.get(i).size();
 			for (int j = 0; j < setSize; j++) {
 
 				x = data.get(i).getEntry(j).getX();

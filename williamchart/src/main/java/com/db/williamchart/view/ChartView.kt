@@ -4,9 +4,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.widget.RelativeLayout
 
 import com.db.williamchart.data.ChartSet
+import com.db.williamchart.renderer.ChartRenderer
 
 abstract class ChartView @JvmOverloads constructor(
         context: Context,
@@ -17,10 +19,14 @@ abstract class ChartView @JvmOverloads constructor(
         //Init attrs
     }
 
-    private var data: ChartSet? = null
+    private val DEFAULT_WIDTH = 200
+
+    private val DEFAULT_HEIGHT = 100
+
+    private var renderer : ChartRenderer = ChartRenderer()
 
     fun add(set: ChartSet) {
-        data = set
+        renderer.data = set
     }
 
     override fun onAttachedToWindow() {
@@ -36,6 +42,13 @@ abstract class ChartView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
+
+        setMeasuredDimension(
+                if (widthMode == View.MeasureSpec.AT_MOST) DEFAULT_WIDTH else widthMeasureSpec,
+                if (heightMode == View.MeasureSpec.AT_MOST) DEFAULT_HEIGHT else heightMeasureSpec)
     }
 
     /**
@@ -49,7 +62,13 @@ abstract class ChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        onDrawChart(canvas, data)
+
+        renderer.frameLeft = 0
+        renderer.frameTop = 0
+        renderer.frameRight = measuredWidth
+        renderer.frameBottom = measuredHeight
+
+        onDrawChart(canvas, renderer.data)
     }
 
     /**

@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
 
 import com.db.williamchart.data.ChartSet
@@ -16,12 +17,21 @@ abstract class ChartView @JvmOverloads constructor(
         defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr) {
 
     init {
-        //Init attrs
+        // Init
     }
 
     private val DEFAULT_WIDTH = 200
 
     private val DEFAULT_HEIGHT = 100
+
+    private val drawListener = object : ViewTreeObserver.OnPreDrawListener {
+
+        override fun onPreDraw(): Boolean {
+            this@ChartView.viewTreeObserver.removeOnPreDrawListener(this)
+            renderer.preDraw(measuredWidth, measuredHeight)
+            return true
+        }
+    }
 
     private var renderer : ChartRenderer = ChartRenderer()
 
@@ -62,7 +72,7 @@ abstract class ChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        onDrawChart(canvas, renderer.draw(measuredWidth, measuredHeight))
+        onDrawChart(canvas, renderer.draw())
     }
 
     /**
@@ -78,7 +88,7 @@ abstract class ChartView @JvmOverloads constructor(
      * Base method when a show chart occurs
      */
     fun show() {
-        //viewTreeObserver.addOnPreDrawListener(null)
+        viewTreeObserver.addOnPreDrawListener(drawListener)
         postInvalidate()
     }
 }

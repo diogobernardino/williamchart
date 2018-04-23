@@ -16,10 +16,7 @@ class ChartRenderer {
 
     var data: ChartSet? = null
 
-
-    fun draw(width: Int, height: Int): ChartSet? {
-
-        if (data == null) return null
+    fun preDraw(width: Int, height: Int) {
 
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
@@ -29,6 +26,11 @@ class ChartRenderer {
         frameBottom = height
 
         processScreenCoordinates()
+    }
+
+    fun draw(): ChartSet? {
+
+        if (data == null) return null //TODO Warning here
 
         return data
     }

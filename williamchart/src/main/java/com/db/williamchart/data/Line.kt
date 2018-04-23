@@ -1,11 +1,12 @@
 package com.db.williamchart.data
 
 data class Line(
-        override val entries: List<ChartEntry> = arrayListOf(),
-        override var color: Int = 0,
-        val smooth: Boolean = false) : ChartSet {
+        override val entries: MutableList<ChartEntry> = mutableListOf(),
+        override var color: Int = -0x1000000, // Black as default
+        val smooth: Boolean = false,
+        val strokeWidth: Float = 4F) : ChartSet {
 
     override fun add(entry: ChartEntry) {
-        // TODO("not implemented")
+        entries.add(entry)
     }
 }

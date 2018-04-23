@@ -62,13 +62,7 @@ abstract class ChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-        renderer.frameLeft = 0
-        renderer.frameTop = 0
-        renderer.frameRight = measuredWidth
-        renderer.frameBottom = measuredHeight
-
-        onDrawChart(canvas, renderer.data)
+        onDrawChart(canvas, renderer.draw(measuredWidth, measuredHeight))
     }
 
     /**
@@ -80,4 +74,11 @@ abstract class ChartView @JvmOverloads constructor(
      */
     protected abstract fun onDrawChart(canvas: Canvas, data: ChartSet?)
 
+    /**
+     * Base method when a show chart occurs
+     */
+    fun show() {
+        //viewTreeObserver.addOnPreDrawListener(null)
+        postInvalidate()
+    }
 }

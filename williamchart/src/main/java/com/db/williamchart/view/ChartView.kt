@@ -73,7 +73,10 @@ abstract class ChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        renderer.xLabels!!.forEach { canvas.drawText(it.label, it.x, it.y, Paint()) } // Draw X
+
+        val labelsPaint = Paint()
+        labelsPaint.textAlign = Paint.Align.CENTER;
+        renderer.xLabels!!.forEach { canvas.drawText(it.label, it.x, it.y, labelsPaint) } // Draw X
         onDrawChart(canvas, renderer.data)
     }
 

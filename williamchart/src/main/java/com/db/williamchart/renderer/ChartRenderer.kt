@@ -19,7 +19,7 @@ class ChartRenderer {
 
     var xLabels : List<ChartLabel>? = null
 
-    fun preDraw(width: Int, height: Int) {
+    fun preDraw(width: Int, height: Int, textWidth: Int = 0) {
 
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
@@ -28,10 +28,10 @@ class ChartRenderer {
         frameRight = width
         frameBottom = height
 
-        val stepX = (frameRight - frameLeft) / (data!!.entries.size - 1)
+        val stepX = (frameRight - frameLeft - textWidth * 2) / (data!!.entries.size - 1)
 
         xLabels = data!!.entries.mapIndexed{index, entry ->
-            ChartLabel(entry.label, (frameLeft + stepX * index).toFloat(), frameBottom - 10F) }
+            ChartLabel(entry.label, (frameLeft + textWidth + stepX * index).toFloat(), frameBottom - 10F) }
 
         processEntries()
     }

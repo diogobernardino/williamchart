@@ -1,20 +1,23 @@
 package com.db.williamchart.renderer
 
 import com.db.williamchart.data.ChartEntry
+import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 import java.lang.IllegalArgumentException
 
 class ChartRenderer {
 
-    var frameLeft : Int = 0
+    private var frameLeft : Int = 0
 
-    var frameTop : Int = 0
+    private var frameTop : Int = 0
 
-    var frameRight : Int = 0
+    private var frameRight : Int = 0
 
-    var frameBottom : Int = 0
+    private var frameBottom : Int = 0
 
-    var data: ChartSet? = null
+    var data : ChartSet? = null
+
+    var xLabels : List<ChartLabel>? = null
 
     fun preDraw(width: Int, height: Int) {
 
@@ -25,32 +28,21 @@ class ChartRenderer {
         frameRight = width
         frameBottom = height
 
-        processScreenCoordinates()
+        val stepX = (frameRight - frameLeft) / (data!!.entries.size - 1)
+
+        xLabels = data!!.entries.mapIndexed{index, entry ->
+            ChartLabel(entry.label, (frameLeft + stepX * index).toFloat(), frameBottom - 10F) }
+
+        processEntries()
     }
 
-    fun draw(): ChartSet? {
+    private fun processEntries() {
 
-        if (data == null) return null //TODO Warning here
+        val (min, max) = findBorderValues(data!!.entries)
 
-        return data
-    }
-
-    private fun processScreenCoordinates() {
-
-        val nX = data!!.entries.size
-        val stepX = (frameRight - frameLeft) / (nX - 1)
-        var cursorX = frameLeft
-
-        val yBorders = findBorderValues(data!!.entries)
-
-        for (entry in data?.entries!!) {
-
-            entry.x = cursorX.toFloat()
-            cursorX += stepX
-
-            entry.y = frameBottom -
-                    ((frameBottom - frameTop) * (entry.value - yBorders[0])
-                            / (yBorders[1] - yBorders[0]))
+        data!!.entries.forEachIndexed { index, entry ->
+            entry.x = xLabels!![index].x
+            entry.y = frameBottom - ((frameBottom - frameTop) * (entry.value - min) / (max - min))
         }
     }
 
@@ -59,9 +51,9 @@ class ChartRenderer {
         var max = Integer.MIN_VALUE.toFloat()
         var min = Integer.MAX_VALUE.toFloat()
 
-        for (e in entries) {
-            if (e.value >= max) max = e.value
-            if (e.value <= min) min = e.value
+        entries.forEach {
+            if (it.value >= max) max = it.value
+            if (it.value <= min) min = it.value
         }
 
         if (min == max) max += 1f  // All given values are equal

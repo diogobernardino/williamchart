@@ -2,6 +2,7 @@ package com.db.williamchart.view
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -72,7 +73,8 @@ abstract class ChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        onDrawChart(canvas, renderer.draw())
+        renderer.xLabels!!.forEach { canvas.drawText(it.label, it.x, it.y, Paint()) } // Draw X
+        onDrawChart(canvas, renderer.data)
     }
 
     /**

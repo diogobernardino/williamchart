@@ -26,7 +26,7 @@ class ChartRendererTest {
 
     @Test
     fun noData_DrawRetrievesNull() {
-        assertEquals(null, renderer.draw())
+        assertEquals(null, renderer.data)
     }
 
     @Test
@@ -40,7 +40,7 @@ class ChartRendererTest {
 
         renderer.preDraw(0, 1)
 
-        val result = renderer.draw()
+        val result = renderer.data
         assertEquals(1F, result!!.entries[0].y)
         assertEquals(0F, result.entries[1].y)
     }

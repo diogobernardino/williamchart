@@ -44,7 +44,7 @@ class ChartRenderer(private val painter: Painter) {
         xLabels = data!!.entries.mapIndexed{index, entry ->
             ChartLabel(entry.label,
                     frameLeft + firstLabelCenter + stepX * index,
-                    frameBottom - 10F) }
+                    frameBottom.toFloat()) }
 
         processEntries()
     }

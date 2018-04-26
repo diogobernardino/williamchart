@@ -29,7 +29,15 @@ abstract class ChartView @JvmOverloads constructor(
 
         override fun onPreDraw(): Boolean {
             this@ChartView.viewTreeObserver.removeOnPreDrawListener(this)
-            renderer.preDraw(measuredWidth, measuredHeight)
+
+            renderer.preDraw(
+                    measuredWidth,
+                    measuredHeight,
+                    paddingLeft,
+                    paddingTop,
+                    paddingRight,
+                    paddingBottom)
+
             return true
         }
     }

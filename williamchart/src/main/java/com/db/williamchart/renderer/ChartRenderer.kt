@@ -22,14 +22,19 @@ class ChartRenderer(private val painter: Painter) {
 
     var xLabels : List<ChartLabel>? = null
 
-    fun preDraw(width: Int, height: Int) {
+    fun preDraw(width: Int,
+                height: Int,
+                paddingLeft: Int,
+                paddingTop: Int,
+                paddingRight: Int,
+                paddingBottom: Int) {
 
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
-        frameLeft = 0
-        frameTop = 0
-        frameRight = width
-        frameBottom = height
+        frameLeft = paddingLeft
+        frameTop = paddingTop
+        frameRight = width - paddingRight
+        frameBottom = height - paddingBottom
 
         val firstLabelCenter = painter.measureTextCenter(data!!.entries.first().label, labelSize)
         val lastLabelCenter = painter.measureTextCenter(data!!.entries.last().label, labelSize)

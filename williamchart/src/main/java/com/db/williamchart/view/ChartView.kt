@@ -2,12 +2,12 @@ package com.db.williamchart.view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
+import com.db.williamchart.Painter
 
 import com.db.williamchart.data.ChartSet
 import com.db.williamchart.renderer.ChartRenderer
@@ -34,7 +34,9 @@ abstract class ChartView @JvmOverloads constructor(
         }
     }
 
-    private var renderer : ChartRenderer = ChartRenderer()
+    private val painter : Painter = Painter()
+
+    private val renderer : ChartRenderer = ChartRenderer(painter)
 
     fun add(set: ChartSet) {
         renderer.data = set
@@ -74,9 +76,9 @@ abstract class ChartView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        val labelsPaint = Paint()
-        labelsPaint.textAlign = Paint.Align.CENTER;
-        renderer.xLabels!!.forEach { canvas.drawText(it.label, it.x, it.y, labelsPaint) } // Draw X
+        painter.prepare(renderer.labelSize)
+        renderer.xLabels!!.forEach { canvas.drawText(it.label, it.x, it.y, painter.paint) }
+
         onDrawChart(canvas, renderer.data)
     }
 
@@ -89,9 +91,6 @@ abstract class ChartView @JvmOverloads constructor(
      */
     protected abstract fun onDrawChart(canvas: Canvas, data: ChartSet?)
 
-    /**
-     * Base method when a show chart occurs
-     */
     fun show() {
         viewTreeObserver.addOnPreDrawListener(drawListener)
         postInvalidate()

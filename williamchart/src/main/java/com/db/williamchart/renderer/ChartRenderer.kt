@@ -1,11 +1,12 @@
 package com.db.williamchart.renderer
 
+import com.db.williamchart.Painter
 import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 import java.lang.IllegalArgumentException
 
-class ChartRenderer {
+class ChartRenderer(private val painter: Painter) {
 
     private var frameLeft : Int = 0
 
@@ -15,11 +16,13 @@ class ChartRenderer {
 
     private var frameBottom : Int = 0
 
+    var labelSize : Float = 60F
+
     var data : ChartSet? = null
 
     var xLabels : List<ChartLabel>? = null
 
-    fun preDraw(width: Int, height: Int, textWidth: Int = 0) {
+    fun preDraw(width: Int, height: Int) {
 
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
@@ -28,10 +31,15 @@ class ChartRenderer {
         frameRight = width
         frameBottom = height
 
-        val stepX = (frameRight - frameLeft - textWidth * 2) / (data!!.entries.size - 1)
+        val firstLabelCenter = painter.measureTextCenter(data!!.entries.first().label, labelSize)
+        val lastLabelCenter = painter.measureTextCenter(data!!.entries.last().label, labelSize)
+        val stepX = (frameRight - frameLeft - firstLabelCenter - lastLabelCenter)/
+                (data!!.entries.size - 1)
 
         xLabels = data!!.entries.mapIndexed{index, entry ->
-            ChartLabel(entry.label, (frameLeft + textWidth + stepX * index).toFloat(), frameBottom - 10F) }
+            ChartLabel(entry.label,
+                    frameLeft + firstLabelCenter + stepX * index,
+                    frameBottom - 10F) }
 
         processEntries()
     }

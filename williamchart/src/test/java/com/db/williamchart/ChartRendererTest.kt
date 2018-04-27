@@ -7,11 +7,21 @@ import com.db.williamchart.renderer.ChartRenderer
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.Before
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
 
 class ChartRendererTest {
 
-    private val renderer: ChartRenderer = ChartRenderer()
+    @Mock private lateinit var painter: Painter
+
+    private lateinit var renderer: ChartRenderer
+
+    @Before fun setup() {
+        MockitoAnnotations.initMocks(this)
+        renderer = ChartRenderer(painter)
+    }
 
     @Test(expected = IllegalArgumentException::class)
     fun addDataWithOneEntry_ThrowIlegalArgument() {
@@ -21,7 +31,7 @@ class ChartRendererTest {
 
         renderer.data = set
 
-        renderer.preDraw(0, 0)
+        renderer.preDraw(0, 0, 0, 0, 0, 0)
     }
 
     @Test
@@ -38,7 +48,7 @@ class ChartRendererTest {
 
         renderer.data = set
 
-        renderer.preDraw(0, 1)
+        renderer.preDraw(0, 1, 0, 0, 0, 0)
 
         val result = renderer.data
         assertEquals(1F, result!!.entries[0].y)

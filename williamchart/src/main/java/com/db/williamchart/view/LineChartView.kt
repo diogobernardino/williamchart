@@ -21,16 +21,12 @@ class LineChartView @JvmOverloads constructor(
         if (data == null) return
 
         val line : Line = data as Line
-        val paint = Paint()
         val path: Path
-
-        paint.color = line.color
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = line.strokeWidth
 
         path = if (!line.smooth) createLinePath(line.entries) else createSmoothLinePath(line.entries)
 
-        canvas.drawPath(path, paint)
+        painter.prepare(color = line.color, style = Paint.Style.STROKE, strokeWidth = line.strokeWidth)
+        canvas.drawPath(path, painter.paint)
     }
 
     private fun createLinePath(points: MutableList<ChartEntry>): Path {

@@ -36,8 +36,8 @@ class ChartRenderer(private val painter: Painter) {
         frameRight = width - paddingRight
         frameBottom = height - paddingBottom
 
-        val firstLabelCenter = painter.measureTextCenter(data!!.entries.first().label, labelSize)
-        val lastLabelCenter = painter.measureTextCenter(data!!.entries.last().label, labelSize)
+        val firstLabelCenter = painter.measureLabel(data!!.entries.first().label, labelSize)
+        val lastLabelCenter = painter.measureLabel(data!!.entries.last().label, labelSize)
         val stepX = (frameRight - frameLeft - firstLabelCenter - lastLabelCenter)/
                 (data!!.entries.size - 1)
 

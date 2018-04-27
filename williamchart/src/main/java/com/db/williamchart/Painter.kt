@@ -8,13 +8,19 @@ class Painter(val paint: Paint = Paint()) {
         paint.textAlign = Paint.Align.CENTER
     }
 
-    fun measureTextCenter(text: String, textSize: Float): Float{
+    fun measureLabel(text: String, textSize: Float): Float{
         paint.textSize = textSize
-        return paint.measureText(text) / 2
+        return paint.measureText(text)
     }
 
-    fun prepare(textSize: Float): Paint {
+    fun prepare(textSize: Float = 15F,
+                color: Int = -0x1000000,
+                style: Paint.Style = Paint.Style.FILL,
+                strokeWidth: Float = 4F): Paint {
         paint.textSize = textSize
+        paint.color = color
+        paint.style = style
+        paint.strokeWidth = strokeWidth
         return paint
     }
 }

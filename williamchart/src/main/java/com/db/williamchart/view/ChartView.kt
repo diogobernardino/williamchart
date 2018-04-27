@@ -42,7 +42,7 @@ abstract class ChartView @JvmOverloads constructor(
         }
     }
 
-    private val painter : Painter = Painter()
+    protected val painter : Painter = Painter()
 
     private val renderer : ChartRenderer = ChartRenderer(painter)
 
@@ -84,7 +84,7 @@ abstract class ChartView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        painter.prepare(renderer.labelSize)
+        painter.prepare(textSize = renderer.labelSize)
         renderer.xLabels!!.forEach { canvas.drawText(it.label, it.x, it.y, painter.paint) }
 
         onDrawChart(canvas, renderer.data)

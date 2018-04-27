@@ -21,9 +21,9 @@ abstract class ChartView @JvmOverloads constructor(
         // Init
     }
 
-    private val DEFAULT_WIDTH = 200
+    private val defFrameWidth = 200
 
-    private val DEFAULT_HEIGHT = 100
+    private val defFrameHeight = 100
 
     private val drawListener = object : ViewTreeObserver.OnPreDrawListener {
 
@@ -68,8 +68,8 @@ abstract class ChartView @JvmOverloads constructor(
         val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
 
         setMeasuredDimension(
-                if (widthMode == View.MeasureSpec.AT_MOST) DEFAULT_WIDTH else widthMeasureSpec,
-                if (heightMode == View.MeasureSpec.AT_MOST) DEFAULT_HEIGHT else heightMeasureSpec)
+                if (widthMode == View.MeasureSpec.AT_MOST) defFrameWidth else widthMeasureSpec,
+                if (heightMode == View.MeasureSpec.AT_MOST) defFrameHeight else heightMeasureSpec)
     }
 
     /**

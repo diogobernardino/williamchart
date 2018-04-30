@@ -29,6 +29,7 @@ class ChartRenderer(private val painter: Painter) {
                 paddingRight: Int,
                 paddingBottom: Int) {
 
+        if (data == null) return
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
         frameLeft = paddingLeft

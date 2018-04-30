@@ -35,8 +35,9 @@ class ChartRendererTest {
     }
 
     @Test
-    fun noData_DrawRetrievesNull() {
-        assertEquals(null, renderer.data)
+    fun noData_SkipPreDraw() {
+
+        renderer.preDraw(0, 0, 0, 0, 0, 0)
     }
 
     @Test

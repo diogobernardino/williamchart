@@ -8,9 +8,14 @@ class Painter(val paint: Paint = Paint()) {
         paint.textAlign = Paint.Align.CENTER
     }
 
-    fun measureLabel(text: String, textSize: Float): Float{
+    fun measureLabelWidth(text: String, textSize: Float): Float{
         paint.textSize = textSize
         return paint.measureText(text)
+    }
+
+    fun measureLabelHeight(textSize: Float) : Float{
+        paint.textSize = textSize
+        return paint.descent() - paint.ascent()
     }
 
     fun prepare(textSize: Float = 15F,

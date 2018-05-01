@@ -10,19 +10,11 @@ import java.lang.IllegalArgumentException
 class ChartRenderer(private val view: ChartContract.View,
                     private val painter: Painter) : ChartContract.Renderer{
 
-    private var frameLeft : Int = 0
-
-    private var frameTop : Int = 0
-
-    private var frameRight : Int = 0
-
-    private var frameBottom : Int = 0
-
     private var data : ChartSet? = null
 
     private var xLabels : List<ChartLabel>? = null
 
-    var labelSize : Float = 60F
+    val labelSize : Float = 60F
 
     override fun preDraw(width: Int,
                 height: Int,
@@ -34,22 +26,13 @@ class ChartRenderer(private val view: ChartContract.View,
         if (data == null) return
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
-        frameLeft = paddingLeft
-        frameTop = paddingTop
-        frameRight = width - paddingRight
-        frameBottom = height - paddingBottom
+        val frameLeft = paddingLeft.toFloat()
+        val frameTop = paddingTop.toFloat()
+        val frameRight = width - paddingRight.toFloat()
+        val frameBottom = height - paddingBottom.toFloat()
 
-        val firstLabelCenter = painter.measureLabel(data!!.entries.first().label, labelSize)
-        val lastLabelCenter = painter.measureLabel(data!!.entries.last().label, labelSize)
-        val stepX = (frameRight - frameLeft - firstLabelCenter - lastLabelCenter)/
-                (data!!.entries.size - 1)
-
-        xLabels = data!!.entries.mapIndexed{index, entry ->
-            ChartLabel(entry.label,
-                    frameLeft + firstLabelCenter + stepX * index,
-                    frameBottom.toFloat()) }
-
-        processEntries()
+        processLabels(frameLeft, frameTop, frameRight, frameBottom)
+        processEntries(frameTop, frameBottom - painter.measureLabelHeight(labelSize))
     }
 
     override fun draw() {
@@ -64,7 +47,26 @@ class ChartRenderer(private val view: ChartContract.View,
         data = set
     }
 
-    private fun processEntries() {
+    private fun processLabels(
+            frameLeft: Float,
+            frameTop: Float,
+            frameRight: Float,
+            frameBottom: Float) {
+
+        val firstLabelCenter = painter.measureLabelWidth(data!!.entries.first().label, labelSize)
+        val lastLabelCenter = painter.measureLabelWidth(data!!.entries.last().label, labelSize)
+        val stepX = (frameRight - frameLeft - firstLabelCenter - lastLabelCenter)/
+                (data!!.entries.size - 1)
+
+        xLabels = data!!.entries.mapIndexed{index, entry ->
+            ChartLabel(entry.label,
+                    frameLeft + firstLabelCenter + stepX * index,
+                    frameBottom) }
+    }
+
+    private fun processEntries(
+            frameTop: Float,
+            frameBottom: Float) {
 
         val (min, max) = findBorderValues(data!!.entries)
 

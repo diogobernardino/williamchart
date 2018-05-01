@@ -1,8 +1,10 @@
 package com.db.williamchart.view
 
 import android.content.Context
+import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.Shader
 import android.util.AttributeSet
 import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
@@ -20,7 +22,11 @@ class LineChartView @JvmOverloads constructor(
         super.drawLabels(xLabels)
     }
 
-    override fun drawData(data: ChartSet, innerFrameBottom: Float) {
+    override fun drawData(innerFrameLeft: Float,
+                          innerFrameTop: Float,
+                          innerFrameRight: Float,
+                          innerFrameBottom: Float,
+                          data: ChartSet) {
 
         if (canvas == null) return
 
@@ -29,12 +35,25 @@ class LineChartView @JvmOverloads constructor(
 
         linePath = if (!line.smooth) createLinePath(line.entries) else createSmoothLinePath(line.entries)
 
-        if (line.hasFill()) {
-            val bgPath = createBackgroundPath(linePath, line.entries, innerFrameBottom)
-            painter.prepare(color = line.fillColor, style = Paint.Style.FILL)
-            canvas!!.drawPath(bgPath, painter.paint)
+        if (line.hasFill() || line.hasGradientFillColors()) { // Draw background
+
+            if (line.hasFill()) painter.prepare(color = line.fillColor, style = Paint.Style.FILL)
+            else painter.prepare(
+                    shader = LinearGradient(innerFrameLeft,
+                            innerFrameTop,
+                            innerFrameLeft,
+                            innerFrameBottom,
+                            line.gradientFillColors[0],
+                            line.gradientFillColors[1],
+                            Shader.TileMode.MIRROR),
+                    style = Paint.Style.FILL)
+
+            canvas!!.drawPath(
+                    createBackgroundPath(linePath, line.entries, innerFrameBottom),
+                    painter.paint)
         }
 
+        // Draw line
         painter.prepare(color = line.color, style = Paint.Style.STROKE, strokeWidth = line.strokeWidth)
         canvas!!.drawPath(linePath, painter.paint)
     }

@@ -9,7 +9,11 @@ interface ChartContract {
 
         fun drawLabels(xLabels : List<ChartLabel>)
 
-        fun drawData(data: ChartSet, innerFrameBottom: Float)
+        fun drawData(innerFrameLeft: Float,
+                     innerFrameTop: Float,
+                     innerFrameRight: Float,
+                     innerFrameBottom: Float,
+                     data: ChartSet)
     }
 
     interface Renderer {

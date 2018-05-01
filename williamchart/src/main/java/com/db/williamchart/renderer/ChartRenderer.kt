@@ -14,6 +14,12 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var xLabels : List<ChartLabel>? = null
 
+    private var innerFrameLeft : Float = 0F
+
+    private var innerFrameTop : Float = 0F
+
+    private var innerFrameRight : Float = 0F
+
     private var innerFrameBottom : Float = 0F
 
     val labelSize : Float = 60F
@@ -33,6 +39,9 @@ class ChartRenderer(private val view: ChartContract.View,
         val frameRight = width - paddingRight.toFloat()
         val frameBottom = height - paddingBottom.toFloat()
 
+        innerFrameLeft = frameLeft
+        innerFrameTop = frameTop
+        innerFrameRight = frameRight
         innerFrameBottom = frameBottom - painter.measureLabelHeight(labelSize)
 
         processLabels(frameLeft, frameTop, frameRight, frameBottom)
@@ -44,7 +53,7 @@ class ChartRenderer(private val view: ChartContract.View,
         if (xLabels == null || data == null) return
 
         view.drawLabels(xLabels!!)
-        view.drawData(data!!, innerFrameBottom)
+        view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
     }
 
     override fun add(set: ChartSet) {

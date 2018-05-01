@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         set.add(Point("label2", 940F))
         set.add(Point("label3", 939F))
         set.smooth = true
-        set.fillColor = Color.WHITE
+        set.gradientFillColors = intArrayOf(Color.WHITE, Color.BLACK)
 
         val view : LineChartView = findViewById(R.id.chart)
         view.add(set)

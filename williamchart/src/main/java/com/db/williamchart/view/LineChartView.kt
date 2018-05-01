@@ -1,11 +1,11 @@
 package com.db.williamchart.view
 
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import com.db.williamchart.data.ChartEntry
+import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 import com.db.williamchart.data.Line
 
@@ -15,19 +15,6 @@ class LineChartView @JvmOverloads constructor(
         defStyleAttr: Int = 0) : ChartView(context, attrs, defStyleAttr) {
 
     private val smoothFactor = 0.15f
-
-    override fun onDrawChart(canvas: Canvas, data: ChartSet?) {
-
-        if (data == null) return
-
-        val line : Line = data as Line
-        val path: Path
-
-        path = if (!line.smooth) createLinePath(line.entries) else createSmoothLinePath(line.entries)
-
-        painter.prepare(color = line.color, style = Paint.Style.STROKE, strokeWidth = line.strokeWidth)
-        canvas.drawPath(path, painter.paint)
-    }
 
     private fun createLinePath(points: MutableList<ChartEntry>): Path {
 
@@ -95,6 +82,23 @@ class LineChartView @JvmOverloads constructor(
         if (i > setSize - 1) return setSize - 1
         else if (i < 0) return 0
         return i
+    }
+
+    override fun drawLabels(xLabels : List<ChartLabel>) {
+        super.drawLabels(xLabels)
+    }
+
+    override fun drawData(data: ChartSet) {
+
+        if (canvas == null) return
+
+        val line : Line = data as Line
+        val path: Path
+
+        path = if (!line.smooth) createLinePath(line.entries) else createSmoothLinePath(line.entries)
+
+        painter.prepare(color = line.color, style = Paint.Style.STROKE, strokeWidth = line.strokeWidth)
+        canvas!!.drawPath(path, painter.paint)
     }
 
 }

@@ -1,12 +1,14 @@
 package com.db.williamchart.renderer
 
+import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 import java.lang.IllegalArgumentException
 
-class ChartRenderer(private val painter: Painter) {
+class ChartRenderer(private val view: ChartContract.View,
+                    private val painter: Painter) : ChartContract.Renderer{
 
     private var frameLeft : Int = 0
 
@@ -16,13 +18,13 @@ class ChartRenderer(private val painter: Painter) {
 
     private var frameBottom : Int = 0
 
+    private var data : ChartSet? = null
+
+    private var xLabels : List<ChartLabel>? = null
+
     var labelSize : Float = 60F
 
-    var data : ChartSet? = null
-
-    var xLabels : List<ChartLabel>? = null
-
-    fun preDraw(width: Int,
+    override fun preDraw(width: Int,
                 height: Int,
                 paddingLeft: Int,
                 paddingTop: Int,
@@ -48,6 +50,18 @@ class ChartRenderer(private val painter: Painter) {
                     frameBottom.toFloat()) }
 
         processEntries()
+    }
+
+    override fun draw() {
+
+        if (xLabels == null || data == null) return
+
+        view.drawLabels(xLabels!!)
+        view.drawData(data!!)
+    }
+
+    override fun add(set: ChartSet) {
+        data = set
     }
 
     private fun processEntries() {

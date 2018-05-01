@@ -7,7 +7,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
+import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
+import com.db.williamchart.data.ChartLabel
 
 import com.db.williamchart.data.ChartSet
 import com.db.williamchart.renderer.ChartRenderer
@@ -15,11 +17,7 @@ import com.db.williamchart.renderer.ChartRenderer
 abstract class ChartView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr) {
-
-    init {
-        // Init
-    }
+        defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr), ChartContract.View {
 
     private val defFrameWidth = 200
 
@@ -42,12 +40,14 @@ abstract class ChartView @JvmOverloads constructor(
         }
     }
 
+    protected var canvas: Canvas? = null
+
     protected val painter : Painter = Painter()
 
-    private val renderer : ChartRenderer = ChartRenderer(painter)
+    private val renderer : ChartRenderer = ChartRenderer(this, painter)
 
     fun add(set: ChartSet) {
-        renderer.data = set
+        renderer.add(set)
     }
 
     override fun onAttachedToWindow() {
@@ -83,24 +83,20 @@ abstract class ChartView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
-        painter.prepare(textSize = renderer.labelSize)
-        renderer.xLabels!!.forEach { canvas.drawText(it.label, it.x, it.y, painter.paint) }
-
-        onDrawChart(canvas, renderer.data)
+        this.canvas = canvas
+        renderer.draw()
     }
-
-    /**
-     * Method responsible to draw bars with the parsed screen points.
-     *
-     * @param canvas The canvas to draw on
-     * @param data   [java.util.ArrayList] of [com.db.chart.model.ChartSet]
-     * to use while drawing the Chart
-     */
-    protected abstract fun onDrawChart(canvas: Canvas, data: ChartSet?)
 
     fun show() {
         viewTreeObserver.addOnPreDrawListener(drawListener)
         postInvalidate()
+    }
+
+    override fun drawLabels(xLabels : List<ChartLabel>) {
+
+        if (canvas == null) return
+
+        painter.prepare(textSize = renderer.labelSize)
+        xLabels.forEach { canvas!!.drawText(it.label, it.x, it.y, painter.paint) }
     }
 }

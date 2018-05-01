@@ -1,5 +1,6 @@
 package com.db.williamchartdemo
 
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.db.williamchart.data.Line
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         set.add(Point("label2", 940F))
         set.add(Point("label3", 939F))
         set.smooth = true
+        set.fillColor = Color.WHITE
 
         val view : LineChartView = findViewById(R.id.chart)
         view.add(set)

@@ -16,6 +16,29 @@ class LineChartView @JvmOverloads constructor(
 
     private val smoothFactor = 0.15f
 
+    override fun drawLabels(xLabels : List<ChartLabel>) {
+        super.drawLabels(xLabels)
+    }
+
+    override fun drawData(data: ChartSet, innerFrameBottom: Float) {
+
+        if (canvas == null) return
+
+        val line : Line = data as Line
+        val linePath : Path
+
+        linePath = if (!line.smooth) createLinePath(line.entries) else createSmoothLinePath(line.entries)
+
+        if (line.hasFill()) {
+            val bgPath = createBackgroundPath(linePath, line.entries, innerFrameBottom)
+            painter.prepare(color = line.fillColor, style = Paint.Style.FILL)
+            canvas!!.drawPath(bgPath, painter.paint)
+        }
+
+        painter.prepare(color = line.color, style = Paint.Style.STROKE, strokeWidth = line.strokeWidth)
+        canvas!!.drawPath(linePath, painter.paint)
+    }
+
     private fun createLinePath(points: MutableList<ChartEntry>): Path {
 
         val res = Path()
@@ -74,6 +97,20 @@ class LineChartView @JvmOverloads constructor(
 
     }
 
+    private fun createBackgroundPath(
+            path: Path,
+            points: MutableList<ChartEntry>,
+            innerFrameBottom: Float): Path {
+
+        val res = Path(path)
+
+        res.lineTo(points.last().x, innerFrameBottom)
+        res.lineTo(points.first().x, innerFrameBottom)
+        res.close()
+
+        return res
+    }
+
     /**
      * Credits: http://www.jayway.com/author/andersericsson/
      */
@@ -82,23 +119,6 @@ class LineChartView @JvmOverloads constructor(
         if (i > setSize - 1) return setSize - 1
         else if (i < 0) return 0
         return i
-    }
-
-    override fun drawLabels(xLabels : List<ChartLabel>) {
-        super.drawLabels(xLabels)
-    }
-
-    override fun drawData(data: ChartSet) {
-
-        if (canvas == null) return
-
-        val line : Line = data as Line
-        val path: Path
-
-        path = if (!line.smooth) createLinePath(line.entries) else createSmoothLinePath(line.entries)
-
-        painter.prepare(color = line.color, style = Paint.Style.STROKE, strokeWidth = line.strokeWidth)
-        canvas!!.drawPath(path, painter.paint)
     }
 
 }

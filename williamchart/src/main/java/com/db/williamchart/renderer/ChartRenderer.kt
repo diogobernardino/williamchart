@@ -12,7 +12,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var data : ChartSet? = null
 
-    private var xLabels : List<ChartLabel>? = null
+    private var xLabels : List<ChartLabel> = arrayListOf()
 
     private var innerFrameLeft : Float = 0F
 
@@ -50,9 +50,9 @@ class ChartRenderer(private val view: ChartContract.View,
 
     override fun draw() {
 
-        if (xLabels == null || data == null) return
+        if (data == null) return
 
-        view.drawLabels(xLabels!!)
+        view.drawLabels(xLabels)
         view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
     }
 
@@ -84,7 +84,7 @@ class ChartRenderer(private val view: ChartContract.View,
         val (min, max) = findBorderValues(data!!.entries)
 
         data!!.entries.forEachIndexed { index, entry ->
-            entry.x = xLabels!![index].x
+            entry.x = xLabels[index].x
             entry.y = frameBottom - ((frameBottom - frameTop) * (entry.value - min) / (max - min))
         }
     }

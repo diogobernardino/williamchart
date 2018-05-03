@@ -27,6 +27,9 @@ interface ChartContract {
 
         fun draw()
 
+        fun animate()
+
         fun add(set: ChartSet)
     }
+
 }

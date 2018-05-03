@@ -2,6 +2,7 @@ package com.db.williamchart.renderer
 
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
+import com.db.williamchart.animation.VerticalAnimation
 import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
@@ -21,6 +22,8 @@ class ChartRenderer(private val view: ChartContract.View,
     private var innerFrameRight : Float = 0F
 
     private var innerFrameBottom : Float = 0F
+
+    private var withAnimation : Boolean = false
 
     val labelSize : Float = 60F
 
@@ -53,7 +56,13 @@ class ChartRenderer(private val view: ChartContract.View,
         if (data == null) return
 
         view.drawLabels(xLabels)
-        view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
+
+        if (!withAnimation) view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
+        else VerticalAnimation(data!!.entries, innerFrameBottom).animate()
+    }
+
+    override fun animate() {
+        withAnimation = true
     }
 
     override fun add(set: ChartSet) {

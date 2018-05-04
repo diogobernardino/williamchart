@@ -8,6 +8,7 @@ import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 import java.lang.IllegalArgumentException
 
+
 class ChartRenderer(private val view: ChartContract.View,
                     private val painter: Painter) : ChartContract.Renderer{
 
@@ -23,7 +24,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var innerFrameBottom : Float = 0F
 
-    private var withAnimation : Boolean = false
+    private var runAnimation : Boolean = false
 
     val labelSize : Float = 60F
 
@@ -57,12 +58,16 @@ class ChartRenderer(private val view: ChartContract.View,
 
         view.drawLabels(xLabels)
 
-        if (!withAnimation) view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
-        else VerticalAnimation(data!!.entries, innerFrameBottom).animate()
+        if (!runAnimation) {
+            view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
+        } else {
+            runAnimation = false
+            VerticalAnimation(data!!.entries, innerFrameBottom).animate { view.postInvalidate() }
+        }
     }
 
     override fun animate() {
-        withAnimation = true
+        runAnimation = true
     }
 
     override fun add(set: ChartSet) {

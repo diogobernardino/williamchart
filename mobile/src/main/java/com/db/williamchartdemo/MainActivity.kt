@@ -22,6 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         val view : LineChartView = findViewById(R.id.chart)
         view.add(set)
-        view.show()
+        view.showWithAnimation()
     }
 }

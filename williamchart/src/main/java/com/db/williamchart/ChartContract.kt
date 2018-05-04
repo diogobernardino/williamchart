@@ -14,6 +14,8 @@ interface ChartContract {
                      innerFrameRight: Float,
                      innerFrameBottom: Float,
                      data: ChartSet)
+
+        fun postInvalidate()
     }
 
     interface Renderer {

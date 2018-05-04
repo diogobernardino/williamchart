@@ -92,9 +92,14 @@ abstract class ChartView @JvmOverloads constructor(
         postInvalidate()
     }
 
-    fun showWithAnimation(){
+    fun showWithAnimation() {
         renderer.animate()
         show()
+    }
+
+    fun setLabels(enable: Boolean) : ChartView{
+        renderer.hasLabels = enable
+        return this
     }
 
     override fun drawLabels(xLabels : List<ChartLabel>) {

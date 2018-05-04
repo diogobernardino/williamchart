@@ -28,6 +28,8 @@ class ChartRenderer(private val view: ChartContract.View,
 
     val labelSize : Float = 60F
 
+    var hasLabels : Boolean = true
+
     override fun preDraw(width: Int,
                 height: Int,
                 paddingLeft: Int,
@@ -46,9 +48,10 @@ class ChartRenderer(private val view: ChartContract.View,
         innerFrameLeft = frameLeft
         innerFrameTop = frameTop
         innerFrameRight = frameRight
-        innerFrameBottom = frameBottom - painter.measureLabelHeight(labelSize)
+        innerFrameBottom = if (hasLabels) frameBottom - painter.measureLabelHeight(labelSize) else frameBottom
 
         processLabels(frameLeft, frameTop, frameRight, frameBottom)
+
         processEntries(frameTop, innerFrameBottom)
     }
 
@@ -56,7 +59,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
         if (data == null) return
 
-        view.drawLabels(xLabels)
+        if (hasLabels) view.drawLabels(xLabels)
 
         if (!runAnimation) {
             view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)

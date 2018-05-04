@@ -68,6 +68,21 @@ class ChartRendererTest {
         assertEquals(0F, setCaptor.value.entries[1].y)
     }
 
+    @Test
+    fun noLabels_LabelsNotDisplayed() {
+
+        val set = Line()
+        set.add(Point("label0", 0f))
+        set.add(Point("label1", 1f))
+
+        renderer.add(set)
+        renderer.hasLabels = false
+        //renderer.preDraw(0, 0, 0, 0, 0, 0)
+        renderer.draw()
+
+        verify(view, times(0)).drawLabels(any())
+    }
+
 }
 
 /**

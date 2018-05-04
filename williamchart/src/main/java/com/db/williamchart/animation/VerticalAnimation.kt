@@ -9,9 +9,7 @@ class VerticalAnimation(
         override val entries: MutableList<ChartEntry>,
         var start: Float) : ChartAnimation(entries) {
 
-    private val duration: Long = 5000
-
-    override fun animate(callback: () -> Unit) : ValueAnimator{
+    override fun animate(callback: () -> Unit) : ChartAnimation{
 
         entries.forEach { entry ->
             val eAnimator: ObjectAnimator = ObjectAnimator.ofFloat(entry, "y", start, entry.y)
@@ -22,6 +20,6 @@ class VerticalAnimation(
         animator.addUpdateListener { callback.invoke() }
         animator.duration = duration
         animator.start()
-        return animator
+        return this
     }
 }

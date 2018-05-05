@@ -2,6 +2,7 @@ package com.db.williamchart.renderer
 
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
+import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.VerticalAnimation
 import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
@@ -10,7 +11,8 @@ import java.lang.IllegalArgumentException
 
 
 class ChartRenderer(private val view: ChartContract.View,
-                    private val painter: Painter) : ChartContract.Renderer{
+                    private val painter: Painter,
+                    private var animation: ChartAnimation) : ChartContract.Renderer{
 
     private var data : ChartSet? = null
 
@@ -24,7 +26,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var innerFrameBottom : Float = 0F
 
-    private var runAnimation : Boolean = false
+    private var isProcessed : Boolean = false
 
     val labelSize : Float = 60F
 
@@ -35,9 +37,11 @@ class ChartRenderer(private val view: ChartContract.View,
                 paddingLeft: Int,
                 paddingTop: Int,
                 paddingRight: Int,
-                paddingBottom: Int) {
+                paddingBottom: Int) : Boolean{
 
-        if (data == null) return
+        if (isProcessed) return true  // Data already processed, proceed with drawing
+
+        if (data == null) return false  // No data, cancel drawing
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
         val frameLeft = paddingLeft.toFloat()
@@ -53,6 +57,12 @@ class ChartRenderer(private val view: ChartContract.View,
         processLabels(frameLeft, frameTop, frameRight, frameBottom)
 
         processEntries(frameTop, innerFrameBottom)
+
+        isProcessed = true
+
+        animation.animateFrom(innerFrameBottom, data!!.entries) { view.postInvalidate() }
+
+        return false
     }
 
     override fun draw() {
@@ -61,16 +71,16 @@ class ChartRenderer(private val view: ChartContract.View,
 
         if (hasLabels) view.drawLabels(xLabels)
 
-        if (!runAnimation) {
-            view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
-        } else {
-            runAnimation = false
-            VerticalAnimation(data!!.entries, innerFrameBottom).animate { view.postInvalidate() }
-        }
+        view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
+    }
+
+    override fun show() {
+        view.postInvalidate()
     }
 
     override fun animate() {
-        runAnimation = true
+        animation = VerticalAnimation()
+        view.postInvalidate()
     }
 
     override fun add(set: ChartSet) {

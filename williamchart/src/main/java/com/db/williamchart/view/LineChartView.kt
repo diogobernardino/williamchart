@@ -7,7 +7,6 @@ import android.graphics.Path
 import android.graphics.Shader
 import android.util.AttributeSet
 import com.db.williamchart.data.ChartEntry
-import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 import com.db.williamchart.data.Line
 
@@ -17,10 +16,6 @@ class LineChartView @JvmOverloads constructor(
         defStyleAttr: Int = 0) : ChartView(context, attrs, defStyleAttr) {
 
     private val smoothFactor = 0.15f
-
-    override fun drawLabels(xLabels : List<ChartLabel>) {
-        super.drawLabels(xLabels)
-    }
 
     override fun drawData(innerFrameLeft: Float,
                           innerFrameTop: Float,

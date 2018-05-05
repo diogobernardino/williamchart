@@ -1,5 +1,6 @@
 package com.db.williamchart
 
+import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.ChartSet
 import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
@@ -31,7 +32,7 @@ class ChartRendererTest {
     @Before fun setup() {
 
         MockitoAnnotations.initMocks(this)
-        renderer = ChartRenderer(view, painter)
+        renderer = ChartRenderer(view, painter, NoAnimation())
     }
 
     @Test(expected = IllegalArgumentException::class)

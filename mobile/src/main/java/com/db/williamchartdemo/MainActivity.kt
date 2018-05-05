@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         val view : LineChartView = findViewById(R.id.chart)
         view.setLabels(true)
         view.add(set)
-        view.showWithAnimation()
+        //view.showWithAnimation()
+        view.show()
     }
 }

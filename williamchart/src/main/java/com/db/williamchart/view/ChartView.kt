@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
+import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.ChartLabel
 
 import com.db.williamchart.data.ChartSet
@@ -23,31 +24,24 @@ abstract class ChartView @JvmOverloads constructor(
 
     private val defFrameHeight = 100
 
-    private val drawListener = object : ViewTreeObserver.OnPreDrawListener {
-
-        override fun onPreDraw(): Boolean {
-            this@ChartView.viewTreeObserver.removeOnPreDrawListener(this)
-
-            renderer.preDraw(
-                    measuredWidth,
-                    measuredHeight,
-                    paddingLeft,
-                    paddingTop,
-                    paddingRight,
-                    paddingBottom)
-
-            return true
-        }
+    private val drawListener = ViewTreeObserver.OnPreDrawListener {
+        renderer.preDraw(
+                measuredWidth,
+                measuredHeight,
+                paddingLeft,
+                paddingTop,
+                paddingRight,
+                paddingBottom)
     }
 
     protected var canvas: Canvas? = null
 
     protected val painter : Painter = Painter()
 
-    private val renderer : ChartRenderer = ChartRenderer(this, painter)
+    private val renderer : ChartRenderer = ChartRenderer(this, painter, NoAnimation())
 
-    fun add(set: ChartSet) {
-        renderer.add(set)
+    init {
+        viewTreeObserver.addOnPreDrawListener(drawListener)
     }
 
     override fun onAttachedToWindow() {
@@ -87,14 +81,16 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.draw()
     }
 
+    fun add(set: ChartSet) {
+        renderer.add(set)
+    }
+
     fun show() {
-        viewTreeObserver.addOnPreDrawListener(drawListener)
-        postInvalidate()
+        renderer.show()
     }
 
     fun showWithAnimation() {
         renderer.animate()
-        show()
     }
 
     fun setLabels(enable: Boolean) : ChartView{

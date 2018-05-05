@@ -25,9 +25,11 @@ interface ChartContract {
                     paddingLeft: Int,
                     paddingTop: Int,
                     paddingRight: Int,
-                    paddingBottom: Int)
+                    paddingBottom: Int) : Boolean
 
         fun draw()
+
+        fun show()
 
         fun animate()
 

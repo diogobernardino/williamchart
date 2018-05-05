@@ -9,6 +9,7 @@ import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
+import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.ChartLabel
 
@@ -42,6 +43,9 @@ abstract class ChartView @JvmOverloads constructor(
 
     init {
         viewTreeObserver.addOnPreDrawListener(drawListener)
+
+        val arr = context.theme.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0)
+        renderer.hasLabels = arr.getBoolean(R.styleable.ChartAttrs_chart_labels, true)
     }
 
     override fun onAttachedToWindow() {

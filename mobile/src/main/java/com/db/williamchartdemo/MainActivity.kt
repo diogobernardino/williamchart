@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         set.gradientFillColors = intArrayOf(Color.WHITE, Color.BLACK)
 
         val view : LineChartView = findViewById(R.id.chart)
-        view.setLabels(true)
         view.add(set)
         //view.showWithAnimation()
         view.show()

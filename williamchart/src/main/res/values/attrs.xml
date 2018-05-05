@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ChartAttrs">
+
+        <attr name="chart_labels" format="boolean" />
+        <attr name="chart_labelsColor" format="reference|color" />
+        <attr name="chart_fontSize" format="dimension" />
+        <attr name="chart_typeface" format="string" />
+
+    </declare-styleable>
+</resources>
+

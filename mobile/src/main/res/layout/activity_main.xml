@@ -20,6 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="30dp"
-        app:chart_labels="false"/>
+        app:chart_labels="true"
+        app:chart_labelsSize="10sp"
+        app:chart_labelsColor="#e70404"/>
 
 </android.support.constraint.ConstraintLayout>

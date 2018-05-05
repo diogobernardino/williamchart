@@ -1,10 +1,11 @@
 package com.db.williamchart.data
 
+import android.support.annotation.ColorInt
 import android.support.annotation.Size
 
 data class Line(
         override val entries: MutableList<ChartEntry> = mutableListOf(),
-        override var color: Int = -0x1000000, // Black as default
+        @ColorInt override var color: Int = -0x1000000, // Black as default
         var smooth: Boolean = false,
         var strokeWidth: Float = 4F,
         var fillColor: Int = 0,

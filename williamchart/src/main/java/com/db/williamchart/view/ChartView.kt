@@ -2,6 +2,8 @@ package com.db.williamchart.view
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Typeface
+import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -46,6 +48,9 @@ abstract class ChartView @JvmOverloads constructor(
 
         val arr = context.theme.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0)
         renderer.hasLabels = arr.getBoolean(R.styleable.ChartAttrs_chart_labels, true)
+        renderer.labelsSize = arr.getDimension(R.styleable.ChartAttrs_chart_labelsSize, renderer.labelsSize)
+        renderer.labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelsColor, renderer.labelsColor)
+
     }
 
     override fun onAttachedToWindow() {
@@ -102,11 +107,21 @@ abstract class ChartView @JvmOverloads constructor(
         return this
     }
 
+    fun setLabelsSize(size: Float) {
+        renderer.labelsSize = size
+    }
+
+    fun setLabelsColor(@ColorInt color: Int) {
+        renderer.labelsColor = color
+    }
+
     override fun drawLabels(xLabels : List<ChartLabel>) {
 
         if (canvas == null) return
 
-        painter.prepare(textSize = renderer.labelSize)
+        painter.prepare(
+                textSize = renderer.labelsSize,
+                color = renderer.labelsColor)
         xLabels.forEach { canvas!!.drawText(it.label, it.x, it.y, painter.paint) }
     }
 }

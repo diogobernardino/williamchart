@@ -1,5 +1,6 @@
 package com.db.williamchart.renderer
 
+import android.graphics.Typeface
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
@@ -28,7 +29,9 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var isProcessed : Boolean = false
 
-    val labelSize : Float = 60F
+    var labelsSize : Float = 60F
+
+    var labelsColor : Int = -0x1000000
 
     var hasLabels : Boolean = true
 
@@ -52,15 +55,15 @@ class ChartRenderer(private val view: ChartContract.View,
         innerFrameLeft = frameLeft
         innerFrameTop = frameTop
         innerFrameRight = frameRight
-        innerFrameBottom = if (hasLabels) frameBottom - painter.measureLabelHeight(labelSize) else frameBottom
+        innerFrameBottom = if (hasLabels) frameBottom - painter.measureLabelHeight(labelsSize) else frameBottom
 
         processLabels(frameLeft, frameTop, frameRight, frameBottom)
 
         processEntries(frameTop, innerFrameBottom)
 
-        isProcessed = true
-
         animation.animateFrom(innerFrameBottom, data!!.entries) { view.postInvalidate() }
+
+        isProcessed = true
 
         return false
     }
@@ -93,8 +96,8 @@ class ChartRenderer(private val view: ChartContract.View,
             frameRight: Float,
             frameBottom: Float) {
 
-        val firstLabelCenter = painter.measureLabelWidth(data!!.entries.first().label, labelSize)
-        val lastLabelCenter = painter.measureLabelWidth(data!!.entries.last().label, labelSize)
+        val firstLabelCenter = painter.measureLabelWidth(data!!.entries.first().label, labelsSize)
+        val lastLabelCenter = painter.measureLabelWidth(data!!.entries.last().label, labelsSize)
         val stepX = (frameRight - frameLeft - firstLabelCenter - lastLabelCenter)/
                 (data!!.entries.size - 1)
 

@@ -4,8 +4,7 @@
 
         <attr name="chart_labels" format="boolean" />
         <attr name="chart_labelsColor" format="reference|color" />
-        <attr name="chart_fontSize" format="dimension" />
-        <attr name="chart_typeface" format="string" />
+        <attr name="chart_labelsSize" format="dimension" />
 
     </declare-styleable>
 </resources>

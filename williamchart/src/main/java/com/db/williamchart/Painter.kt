@@ -2,6 +2,7 @@ package com.db.williamchart
 
 import android.graphics.Paint
 import android.graphics.Shader
+import android.graphics.Typeface
 
 class Painter(val paint: Paint = Paint()) {
 

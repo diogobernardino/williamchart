@@ -33,6 +33,8 @@ class ChartRenderer(private val view: ChartContract.View,
 
     var labelsColor : Int = -0x1000000
 
+    var labelsFont : Typeface? = null
+
     var hasLabels : Boolean = true
 
     override fun preDraw(width: Int,

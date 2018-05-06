@@ -24,12 +24,14 @@ class Painter(val paint: Paint = Paint()) {
                 color: Int = -0x1000000,
                 style: Paint.Style = Paint.Style.FILL,
                 strokeWidth: Float = 4F,
-                shader: Shader? = null): Paint {
+                shader: Shader? = null,
+                font: Typeface? = null): Paint {
         paint.textSize = textSize
         paint.color = color
         paint.style = style
         paint.strokeWidth = strokeWidth
         paint.shader = shader
+        paint.typeface = font
 
         return paint
     }

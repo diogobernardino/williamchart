@@ -2,8 +2,10 @@ package com.db.williamchart.view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Typeface
+import android.os.Build
 import android.support.annotation.ColorInt
+import android.support.annotation.FontRes
+import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -50,7 +52,10 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.hasLabels = arr.getBoolean(R.styleable.ChartAttrs_chart_labels, true)
         renderer.labelsSize = arr.getDimension(R.styleable.ChartAttrs_chart_labelsSize, renderer.labelsSize)
         renderer.labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelsColor, renderer.labelsColor)
-
+        if (arr.hasValue(R.styleable.ChartAttrs_chart_labelsFont))
+            renderer.labelsFont =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) arr.getFont(R.styleable.ChartAttrs_chart_labelsFont)
+                    else ResourcesCompat.getFont(context, arr.getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1))
     }
 
     override fun onAttachedToWindow() {
@@ -115,13 +120,18 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.labelsColor = color
     }
 
+    fun setLabelsFont(@FontRes resId: Int) {
+        renderer.labelsFont = ResourcesCompat.getFont(context, resId)
+    }
+
     override fun drawLabels(xLabels : List<ChartLabel>) {
 
         if (canvas == null) return
 
         painter.prepare(
                 textSize = renderer.labelsSize,
-                color = renderer.labelsColor)
+                color = renderer.labelsColor,
+                font = renderer.labelsFont)
         xLabels.forEach { canvas!!.drawText(it.label, it.x, it.y, painter.paint) }
     }
 }

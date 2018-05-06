@@ -22,6 +22,7 @@
         android:padding="30dp"
         app:chart_labels="true"
         app:chart_labelsSize="10sp"
-        app:chart_labelsColor="#e70404"/>
+        app:chart_labelsColor="#e70404"
+        app:chart_labelsFont="@font/opensans_regular"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -54,8 +54,8 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelsColor, renderer.labelsColor)
         if (arr.hasValue(R.styleable.ChartAttrs_chart_labelsFont))
             renderer.labelsFont =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) arr.getFont(R.styleable.ChartAttrs_chart_labelsFont)
-                    else ResourcesCompat.getFont(context, arr.getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1))
+                    ResourcesCompat.getFont(context,
+                            arr.getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1))
     }
 
     override fun onAttachedToWindow() {

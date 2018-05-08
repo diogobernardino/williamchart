@@ -1,6 +1,7 @@
 package com.db.williamchart
 
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
@@ -26,6 +27,8 @@ class ChartRendererTest {
     @Mock private lateinit var painter: Painter
 
     @Captor private lateinit var setCaptor: ArgumentCaptor<ChartSet>
+
+    @Captor private lateinit var labelsCaptor: ArgumentCaptor<List<ChartLabel>>
 
     private lateinit var renderer: ChartRenderer
 
@@ -70,6 +73,55 @@ class ChartRendererTest {
     }
 
     @Test
+    fun chartWithLabels_LabelsDisplayed() {
+
+        val set = Line()
+        set.add(Point("label0", 0f))
+        set.add(Point("label1", 1f))
+
+        renderer.add(set)
+        renderer.draw()
+
+        verify(view, times(2)).drawLabels(any())
+    }
+
+    @Test
+    fun chartWithLabels_XLabelsCorrectlyDisposed() {
+
+        val set = Line()
+        set.add(Point("label0", 0f))
+        set.add(Point("label1", 1f))
+
+        renderer.add(set)
+        renderer.preDraw(1, 1, 0, 0, 0, 0)
+        renderer.draw()
+
+        verify(view, times(2)).drawLabels(capture(labelsCaptor))
+
+        val labels = labelsCaptor.allValues[0]
+        for (i in 0..set.entries.size - 2)
+            assertTrue(labels[i].x < labels[i+1].x)
+    }
+
+    @Test
+    fun chartWithLabels_YLabelsCorrectlyDisposed() {
+
+        val set = Line()
+        set.add(Point("label0", 0f))
+        set.add(Point("label1", 1f))
+
+        renderer.add(set)
+        renderer.preDraw(1, 1, 0, 0, 0, 0)
+        renderer.draw()
+
+        verify(view, times(2)).drawLabels(capture(labelsCaptor))
+
+        val labels = labelsCaptor.allValues[1]
+        for (i in 0..set.entries.size - 2)
+            assertTrue(labels[i].y > labels[i+1].y)
+    }
+
+    @Test
     fun noLabels_LabelsNotDisplayed() {
 
         val set = Line()
@@ -78,7 +130,6 @@ class ChartRendererTest {
 
         renderer.add(set)
         renderer.hasLabels = false
-        //renderer.preDraw(0, 0, 0, 0, 0, 0)
         renderer.draw()
 
         verify(view, times(0)).drawLabels(any())

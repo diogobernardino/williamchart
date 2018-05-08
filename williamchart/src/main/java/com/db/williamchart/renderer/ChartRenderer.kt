@@ -15,9 +15,13 @@ class ChartRenderer(private val view: ChartContract.View,
                     private val painter: Painter,
                     private var animation: ChartAnimation) : ChartContract.Renderer{
 
+    private val defStepNumY = 3
+
     private var data : ChartSet? = null
 
     private var xLabels : List<ChartLabel> = arrayListOf()
+
+    private var yLabels : List<ChartLabel> = arrayListOf()
 
     private var innerFrameLeft : Float = 0F
 
@@ -54,12 +58,19 @@ class ChartRenderer(private val view: ChartContract.View,
         val frameRight = width - paddingRight.toFloat()
         val frameBottom = height - paddingBottom.toFloat()
 
-        innerFrameLeft = frameLeft
-        innerFrameTop = frameTop
-        innerFrameRight = frameRight
-        innerFrameBottom = if (hasLabels) frameBottom - painter.measureLabelHeight(labelsSize) else frameBottom
+        xLabels = defineX()
+        yLabels = defineY()
 
-        processLabels(frameLeft, frameTop, frameRight, frameBottom)
+        val (pLeft, pTop, pRight, pBottom) = // Measure and negotiate padding needs of each axis
+                negotiatePaddingsXY(measurePaddingsX(), measurePaddingsY())
+
+        innerFrameLeft = frameLeft + pLeft
+        innerFrameTop = frameTop + pTop
+        innerFrameRight = frameRight - pRight
+        innerFrameBottom = frameBottom - pBottom
+
+        disposeX(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
+        disposeY(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
 
         processEntries(frameTop, innerFrameBottom)
 
@@ -74,7 +85,10 @@ class ChartRenderer(private val view: ChartContract.View,
 
         if (data == null) return
 
-        if (hasLabels) view.drawLabels(xLabels)
+        if (hasLabels) {
+            view.drawLabels(xLabels)
+            view.drawLabels(yLabels)
+        }
 
         view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
     }
@@ -92,21 +106,79 @@ class ChartRenderer(private val view: ChartContract.View,
         data = set
     }
 
-    private fun processLabels(
-            frameLeft: Float,
-            frameTop: Float,
-            frameRight: Float,
-            frameBottom: Float) {
 
-        val firstLabelCenter = painter.measureLabelWidth(data!!.entries.first().label, labelsSize)
-        val lastLabelCenter = painter.measureLabelWidth(data!!.entries.last().label, labelsSize)
-        val stepX = (frameRight - frameLeft - firstLabelCenter - lastLabelCenter)/
-                (data!!.entries.size - 1)
+    private fun measurePaddingsX() : FloatArray {
 
-        xLabels = data!!.entries.mapIndexed{index, entry ->
-            ChartLabel(entry.label,
-                    frameLeft + firstLabelCenter + stepX * index,
-                    frameBottom) }
+        if (!hasLabels) return floatArrayOf(0F, 0F, 0F, 0F)
+
+        return floatArrayOf(
+                painter.measureLabelWidth(xLabels.first().label, labelsSize),
+                0F,
+                painter.measureLabelWidth(xLabels.last().label, labelsSize),
+                painter.measureLabelHeight(labelsSize))
+    }
+
+    private fun measurePaddingsY() : FloatArray {
+
+        if (!hasLabels) return floatArrayOf(0F, 0F, 0F, 0F)
+
+        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
+
+        return floatArrayOf(
+                if (longestChartLabel != null) painter.measureLabelWidth(longestChartLabel.label, labelsSize) else 0F,
+                painter.measureLabelHeight(labelsSize) / 2,
+                0F,
+                painter.measureLabelHeight(labelsSize) / 2)
+    }
+
+    private fun defineX(): List<ChartLabel> {
+        return data!!.entries.map{ ChartLabel(it.label, 0F, 0F) }
+    }
+
+    private fun defineY(): List<ChartLabel> {
+
+        val tmp : MutableList<ChartLabel> = mutableListOf()
+
+        val (min, max) = findBorderValues(data!!.entries)
+        val valuesStep = (max - min) / defStepNumY
+        var valuesCursor = min
+
+        for (n in 0..defStepNumY) {
+            tmp.add(ChartLabel(valuesCursor.toString(), 0F, 0F))
+            valuesCursor += valuesStep
+        }
+
+        return tmp.toList()
+    }
+
+    private fun disposeX(
+            chartLeft: Float,
+            chartTop: Float,
+            chartRight: Float,
+            chartBottom: Float) {
+
+        val stepX = (chartRight - chartLeft) / (xLabels.size - 1)
+
+        xLabels.forEachIndexed { index, label ->
+            label.x = chartLeft + stepX * index
+            label.y = chartBottom + painter.measureLabelHeight(labelsSize)
+        }
+    }
+
+    private fun disposeY(
+            chartLeft: Float,
+            chartTop: Float,
+            chartRight: Float,
+            chartBottom: Float) {
+
+        val screenStep = (chartBottom - chartTop) / defStepNumY
+        var screenCursor = chartBottom
+
+        yLabels.forEach {
+            it.x = chartLeft - painter.measureLabelWidth(it.label, labelsSize) / 2
+            it.y = screenCursor
+            screenCursor -= screenStep
+        }
     }
 
     private fun processEntries(
@@ -134,6 +206,14 @@ class ChartRenderer(private val view: ChartContract.View,
         if (min == max) max += 1f  // All given values are equal
 
         return floatArrayOf(min, max)
+    }
+
+    private fun negotiatePaddingsXY(paddingsX: FloatArray, paddingsY: FloatArray): FloatArray {
+        return floatArrayOf(
+                maxOf(paddingsX[0], paddingsY[0]),
+                maxOf(paddingsX[1], paddingsY[1]),
+                maxOf(paddingsX[2], paddingsY[2]),
+                maxOf(paddingsX[3], paddingsY[3]))
     }
 
 }

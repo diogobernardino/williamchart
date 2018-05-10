@@ -17,6 +17,7 @@ import org.junit.Before
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 
@@ -133,6 +134,35 @@ class ChartRendererTest {
         renderer.draw()
 
         verify(view, times(0)).drawLabels(any())
+    }
+
+    @Test
+    fun noPadding_LabelsFulfilFrame() {
+
+        val width = 1000
+        val height = 1000
+        val labelWidth = 10F
+        val labelheight = 10F
+        `when`(painter.measureLabelWidth(any(), any())).thenReturn(labelWidth)
+        `when`(painter.measureLabelHeight(any())).thenReturn(labelheight)
+
+        val set = Line()
+        set.add(Point("label0", 0f))
+        set.add(Point("label1", 1f))
+
+        renderer.add(set)
+        renderer.preDraw(width, height, 0, 0, 0, 0)
+        renderer.draw()
+
+        verify(view, times(2)).drawLabels(capture(labelsCaptor))
+
+        val xLabels = labelsCaptor.allValues[0]
+        assertEquals(width.toFloat(), xLabels.last().x + labelWidth / 2)
+        assertEquals(height.toFloat(), xLabels.last().y)
+
+        val yLabels = labelsCaptor.allValues[1]
+        assertEquals(0F, yLabels.last().x - labelWidth / 2)
+        assertEquals(0F, Math.round(yLabels.last().y - labelheight).toFloat())
     }
 
 }

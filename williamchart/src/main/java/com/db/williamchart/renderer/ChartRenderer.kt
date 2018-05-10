@@ -72,7 +72,7 @@ class ChartRenderer(private val view: ChartContract.View,
         disposeX(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
         disposeY(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
 
-        processEntries(frameTop, innerFrameBottom)
+        processEntries(innerFrameTop, innerFrameBottom)
 
         animation.animateFrom(innerFrameBottom, data!!.entries) { view.postInvalidate() }
 
@@ -112,9 +112,9 @@ class ChartRenderer(private val view: ChartContract.View,
         if (!hasLabels) return floatArrayOf(0F, 0F, 0F, 0F)
 
         return floatArrayOf(
-                painter.measureLabelWidth(xLabels.first().label, labelsSize),
+                painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2,
                 0F,
-                painter.measureLabelWidth(xLabels.last().label, labelsSize),
+                painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2,
                 painter.measureLabelHeight(labelsSize))
     }
 
@@ -172,7 +172,7 @@ class ChartRenderer(private val view: ChartContract.View,
             chartBottom: Float) {
 
         val screenStep = (chartBottom - chartTop) / defStepNumY
-        var screenCursor = chartBottom
+        var screenCursor = chartBottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEach {
             it.x = chartLeft - painter.measureLabelWidth(it.label, labelsSize) / 2

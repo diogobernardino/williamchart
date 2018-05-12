@@ -4,7 +4,7 @@ import android.graphics.Typeface
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.animation.VerticalAnimation
+import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
@@ -98,7 +98,7 @@ class ChartRenderer(private val view: ChartContract.View,
     }
 
     override fun animate() {
-        animation = VerticalAnimation()
+        animation = DefaultAnimation()
         view.postInvalidate()
     }
 

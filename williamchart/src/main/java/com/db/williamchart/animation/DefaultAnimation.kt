@@ -5,7 +5,7 @@ import android.animation.ValueAnimator
 import com.db.williamchart.data.ChartEntry
 
 
-class VerticalAnimation : ChartAnimation() {
+class DefaultAnimation : ChartAnimation() {
 
     override fun animateFrom(y: Float,
                              entries: MutableList<ChartEntry>,

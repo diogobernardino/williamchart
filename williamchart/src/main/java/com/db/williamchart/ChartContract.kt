@@ -32,7 +32,7 @@ interface ChartContract {
 
         fun draw()
 
-        fun show()
+        fun render()
 
         fun animate(animation: ChartAnimation)
 

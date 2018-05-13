@@ -94,7 +94,7 @@ class ChartRenderer(private val view: ChartContract.View,
         view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
     }
 
-    override fun show() {
+    override fun render() {
         view.postInvalidate()
     }
 

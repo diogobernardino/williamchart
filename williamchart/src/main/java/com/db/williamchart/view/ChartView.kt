@@ -105,8 +105,8 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.add(set)
     }
 
-    fun show() {
-        renderer.show()
+    fun render() {
+        renderer.render()
     }
 
     fun showWithAnimation() {

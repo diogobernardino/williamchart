@@ -34,7 +34,7 @@ interface ChartContract {
 
         fun render()
 
-        fun animate(animation: ChartAnimation)
+        fun anim(animation: ChartAnimation)
 
         fun add(set: ChartSet)
     }

@@ -109,8 +109,8 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.render()
     }
 
-    fun showWithAnimation() {
-        renderer.animate(animation)
+    fun anim() {
+        renderer.anim(animation)
     }
 
     override fun drawLabels(xLabels : List<ChartLabel>) {

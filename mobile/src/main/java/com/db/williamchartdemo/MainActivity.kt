@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         val view : LineChartView = findViewById(R.id.chart)
         view.add(set)
         view.animation.duration = 10000
-        view.showWithAnimation()
-        //view.show()
+        view.anim()
+        //view.render()
     }
 }

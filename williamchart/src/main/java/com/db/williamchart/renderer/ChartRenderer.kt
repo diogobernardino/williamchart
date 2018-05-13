@@ -98,8 +98,8 @@ class ChartRenderer(private val view: ChartContract.View,
         view.postInvalidate()
     }
 
-    override fun animate() {
-        animation = DefaultAnimation()
+    override fun animate(animation: ChartAnimation) {
+        this.animation = animation
         view.postInvalidate()
     }
 

@@ -1,5 +1,6 @@
 package com.db.williamchart
 
+import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 
@@ -33,7 +34,7 @@ interface ChartContract {
 
         fun show()
 
-        fun animate()
+        fun animate(animation: ChartAnimation)
 
         fun add(set: ChartSet)
     }

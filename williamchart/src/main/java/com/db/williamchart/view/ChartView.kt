@@ -12,6 +12,8 @@ import android.widget.RelativeLayout
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.R
+import com.db.williamchart.animation.ChartAnimation
+import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.ChartLabel
 
@@ -34,6 +36,8 @@ abstract class ChartView @JvmOverloads constructor(
     var labelsFont : Typeface? = null
 
     var hasLabels : Boolean = true
+
+    var animation : ChartAnimation = DefaultAnimation()
 
     private val drawListener = ViewTreeObserver.OnPreDrawListener {
         renderer.preDraw(measuredWidth, measuredHeight,
@@ -106,7 +110,7 @@ abstract class ChartView @JvmOverloads constructor(
     }
 
     fun showWithAnimation() {
-        renderer.animate()
+        renderer.animate(animation)
     }
 
     override fun drawLabels(xLabels : List<ChartLabel>) {

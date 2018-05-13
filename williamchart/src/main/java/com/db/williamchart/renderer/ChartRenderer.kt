@@ -1,6 +1,5 @@
 package com.db.williamchart.renderer
 
-import android.graphics.Typeface
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
@@ -33,20 +32,19 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var isProcessed : Boolean = false
 
-    var labelsSize : Float = 60F
+    private var hasLabels : Boolean = true
 
-    var labelsColor : Int = -0x1000000
+    private var labelsSize : Float = 60F
 
-    var labelsFont : Typeface? = null
-
-    var hasLabels : Boolean = true
 
     override fun preDraw(width: Int,
-                height: Int,
-                paddingLeft: Int,
-                paddingTop: Int,
-                paddingRight: Int,
-                paddingBottom: Int) : Boolean{
+                         height: Int,
+                         paddingLeft: Int,
+                         paddingTop: Int,
+                         paddingRight: Int,
+                         paddingBottom: Int,
+                         hasLabels: Boolean,
+                         labelsSize: Float): Boolean {
 
         if (isProcessed) return true  // Data already processed, proceed with drawing
 
@@ -57,6 +55,9 @@ class ChartRenderer(private val view: ChartContract.View,
         val frameTop = paddingTop.toFloat()
         val frameRight = width - paddingRight.toFloat()
         val frameBottom = height - paddingBottom.toFloat()
+
+        this.hasLabels = hasLabels
+        this.labelsSize = labelsSize
 
         xLabels = defineX()
         yLabels = defineY()

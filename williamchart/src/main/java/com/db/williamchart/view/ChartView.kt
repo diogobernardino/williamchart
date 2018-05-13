@@ -2,9 +2,7 @@ package com.db.williamchart.view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.os.Build
-import android.support.annotation.ColorInt
-import android.support.annotation.FontRes
+import android.graphics.Typeface
 import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -29,14 +27,18 @@ abstract class ChartView @JvmOverloads constructor(
 
     private val defFrameHeight = 100
 
+    var labelsSize : Float = 60F
+
+    var labelsColor : Int = -0x1000000
+
+    var labelsFont : Typeface? = null
+
+    var hasLabels : Boolean = true
+
     private val drawListener = ViewTreeObserver.OnPreDrawListener {
-        renderer.preDraw(
-                measuredWidth,
-                measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom)
+        renderer.preDraw(measuredWidth, measuredHeight,
+                paddingLeft, paddingTop, paddingRight, paddingBottom,
+                hasLabels, labelsSize)
     }
 
     protected var canvas: Canvas? = null
@@ -49,11 +51,11 @@ abstract class ChartView @JvmOverloads constructor(
         viewTreeObserver.addOnPreDrawListener(drawListener)
 
         val arr = context.theme.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0)
-        renderer.hasLabels = arr.getBoolean(R.styleable.ChartAttrs_chart_labels, true)
-        renderer.labelsSize = arr.getDimension(R.styleable.ChartAttrs_chart_labelsSize, renderer.labelsSize)
-        renderer.labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelsColor, renderer.labelsColor)
+        hasLabels = arr.getBoolean(R.styleable.ChartAttrs_chart_labels, true)
+        labelsSize = arr.getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
+        labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
         if (arr.hasValue(R.styleable.ChartAttrs_chart_labelsFont))
-            renderer.labelsFont =
+            labelsFont =
                     ResourcesCompat.getFont(context,
                             arr.getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1))
     }
@@ -107,31 +109,14 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.animate()
     }
 
-    fun setLabels(enable: Boolean) : ChartView{
-        renderer.hasLabels = enable
-        return this
-    }
-
-    fun setLabelsSize(size: Float) {
-        renderer.labelsSize = size
-    }
-
-    fun setLabelsColor(@ColorInt color: Int) {
-        renderer.labelsColor = color
-    }
-
-    fun setLabelsFont(@FontRes resId: Int) {
-        renderer.labelsFont = ResourcesCompat.getFont(context, resId)
-    }
-
     override fun drawLabels(xLabels : List<ChartLabel>) {
 
         if (canvas == null) return
 
         painter.prepare(
-                textSize = renderer.labelsSize,
-                color = renderer.labelsColor,
-                font = renderer.labelsFont)
+                textSize = labelsSize,
+                color = labelsColor,
+                font = labelsFont)
         xLabels.forEach { canvas!!.drawText(it.label, it.x, it.y, painter.paint) }
     }
 }

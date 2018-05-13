@@ -25,7 +25,9 @@ interface ChartContract {
                     paddingLeft: Int,
                     paddingTop: Int,
                     paddingRight: Int,
-                    paddingBottom: Int) : Boolean
+                    paddingBottom: Int,
+                    hasLabels: Boolean,
+                    labelsSize: Float) : Boolean
 
         fun draw()
 

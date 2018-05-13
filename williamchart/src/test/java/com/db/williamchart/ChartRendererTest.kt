@@ -46,7 +46,9 @@ class ChartRendererTest {
         set.add(Point("label", 1f))
 
         renderer.add(set)
-        renderer.preDraw(0, 0, 0, 0, 0, 0)
+        renderer.preDraw(0, 0,
+                0, 0, 0, 0,
+                true, 0F)
     }
 
     @Test
@@ -65,7 +67,9 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(0, 1, 0, 0, 0, 0)
+        renderer.preDraw(0, 1,
+                0, 0, 0, 0,
+                true, 0F)
         renderer.draw()
 
         verify(view).drawData(any(), any(), any(), any(), capture(setCaptor))
@@ -94,7 +98,9 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(1, 1, 0, 0, 0, 0)
+        renderer.preDraw(1, 1,
+                0, 0, 0, 0,
+                true, 0F)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -112,7 +118,9 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(1, 1, 0, 0, 0, 0)
+        renderer.preDraw(1, 1,
+                0, 0, 0, 0,
+                true, 0F)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -130,7 +138,9 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.hasLabels = false
+        renderer.preDraw(1, 1,
+                0, 0, 0, 0,
+                false, 0F)
         renderer.draw()
 
         verify(view, times(0)).drawLabels(any())
@@ -151,7 +161,9 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(width, height, 0, 0, 0, 0)
+        renderer.preDraw(width, height,
+                0, 0, 0, 0,
+                true, 0F)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))

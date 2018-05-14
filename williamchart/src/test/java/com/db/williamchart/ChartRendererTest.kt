@@ -6,6 +6,7 @@ import com.db.williamchart.data.ChartSet
 import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
 import com.db.williamchart.renderer.ChartRenderer
+import com.db.williamchart.view.ChartView.Axis
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -48,7 +49,7 @@ class ChartRendererTest {
         renderer.add(set)
         renderer.preDraw(0, 0,
                 0, 0, 0, 0,
-                true, 0F)
+                Axis.XY, 0F)
     }
 
     @Test
@@ -69,7 +70,7 @@ class ChartRendererTest {
         renderer.add(set)
         renderer.preDraw(0, 1,
                 0, 0, 0, 0,
-                true, 0F)
+                Axis.XY, 0F)
         renderer.draw()
 
         verify(view).drawData(any(), any(), any(), any(), capture(setCaptor))
@@ -100,7 +101,7 @@ class ChartRendererTest {
         renderer.add(set)
         renderer.preDraw(1, 1,
                 0, 0, 0, 0,
-                true, 0F)
+                Axis.XY, 0F)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -120,7 +121,7 @@ class ChartRendererTest {
         renderer.add(set)
         renderer.preDraw(1, 1,
                 0, 0, 0, 0,
-                true, 0F)
+                Axis.XY, 0F)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -140,7 +141,7 @@ class ChartRendererTest {
         renderer.add(set)
         renderer.preDraw(1, 1,
                 0, 0, 0, 0,
-                false, 0F)
+                Axis.NONE, 0F)
         renderer.draw()
 
         verify(view, times(0)).drawLabels(any())
@@ -163,7 +164,7 @@ class ChartRendererTest {
         renderer.add(set)
         renderer.preDraw(width, height,
                 0, 0, 0, 0,
-                true, 0F)
+                Axis.XY, 0F)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))

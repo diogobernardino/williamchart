@@ -25,6 +25,8 @@ abstract class ChartView @JvmOverloads constructor(
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr), ChartContract.View {
 
+    enum class Axis { NONE, Y, X, XY }
+
     private val defFrameWidth = 200
 
     private val defFrameHeight = 100
@@ -35,14 +37,14 @@ abstract class ChartView @JvmOverloads constructor(
 
     var labelsFont : Typeface? = null
 
-    var hasLabels : Boolean = true
+    var axis : Axis = Axis.XY
 
     var animation : ChartAnimation = DefaultAnimation()
 
     private val drawListener = ViewTreeObserver.OnPreDrawListener {
         renderer.preDraw(measuredWidth, measuredHeight,
                 paddingLeft, paddingTop, paddingRight, paddingBottom,
-                hasLabels, labelsSize)
+                axis, labelsSize)
     }
 
     protected var canvas: Canvas? = null
@@ -55,7 +57,7 @@ abstract class ChartView @JvmOverloads constructor(
         viewTreeObserver.addOnPreDrawListener(drawListener)
 
         val arr = context.theme.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0)
-        hasLabels = arr.getBoolean(R.styleable.ChartAttrs_chart_labels, true)
+        axis = if(arr.getBoolean(R.styleable.ChartAttrs_chart_labels, true)) Axis.XY else Axis.NONE
         labelsSize = arr.getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
         labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
         if (arr.hasValue(R.styleable.ChartAttrs_chart_labelsFont))

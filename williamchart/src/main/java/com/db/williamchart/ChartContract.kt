@@ -3,6 +3,7 @@ package com.db.williamchart
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
+import com.db.williamchart.view.ChartView.Axis
 
 interface ChartContract {
 
@@ -27,7 +28,7 @@ interface ChartContract {
                     paddingTop: Int,
                     paddingRight: Int,
                     paddingBottom: Int,
-                    hasLabels: Boolean,
+                    axis: Axis,
                     labelsSize: Float) : Boolean
 
         fun draw()

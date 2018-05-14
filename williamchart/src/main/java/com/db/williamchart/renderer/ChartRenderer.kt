@@ -86,10 +86,8 @@ class ChartRenderer(private val view: ChartContract.View,
 
         if (data == null) return
 
-        if (axis == Axis.XY) {
-            view.drawLabels(xLabels)
-            view.drawLabels(yLabels)
-        }
+        if (axis == Axis.XY || axis == Axis.X) view.drawLabels(xLabels)
+        if (axis == Axis.XY || axis == Axis.Y) view.drawLabels(yLabels)
 
         view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
     }
@@ -110,7 +108,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private fun measurePaddingsX() : FloatArray {
 
-        if (axis != Axis.XY) return floatArrayOf(0F, 0F, 0F, 0F)
+        if (axis != Axis.XY && axis != Axis.X) return floatArrayOf(0F, 0F, 0F, 0F)
 
         return floatArrayOf(
                 painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2,
@@ -121,7 +119,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private fun measurePaddingsY() : FloatArray {
 
-        if (axis != Axis.XY) return floatArrayOf(0F, 0F, 0F, 0F)
+        if (axis != Axis.XY && axis != Axis.Y) return floatArrayOf(0F, 0F, 0F, 0F)
 
         val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
 

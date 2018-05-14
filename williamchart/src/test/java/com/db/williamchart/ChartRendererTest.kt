@@ -79,7 +79,7 @@ class ChartRendererTest {
     }
 
     @Test
-    fun chartWithLabels_LabelsDisplayed() {
+    fun chartWithAxisXY_XYDisplayed() {
 
         val set = Line()
         set.add(Point("label0", 0f))
@@ -92,7 +92,39 @@ class ChartRendererTest {
     }
 
     @Test
-    fun chartWithLabels_XLabelsCorrectlyDisposed() {
+    fun chartWithAxisX_XDisplayed() {
+
+        val set = Line()
+        set.add(Point("label0", 0f))
+        set.add(Point("label1", 1f))
+
+        renderer.add(set)
+        renderer.preDraw(0, 1,
+                0, 0, 0, 0,
+                Axis.X, 0F)
+        renderer.draw()
+
+        verify(view, times(1)).drawLabels(any())
+    }
+
+    @Test
+    fun chartWithAxisY_YDisplayed() {
+
+        val set = Line()
+        set.add(Point("label0", 0f))
+        set.add(Point("label1", 1f))
+
+        renderer.add(set)
+        renderer.preDraw(0, 1,
+                0, 0, 0, 0,
+                Axis.Y, 0F)
+        renderer.draw()
+
+        verify(view, times(1)).drawLabels(any())
+    }
+
+    @Test
+    fun chartWithAxisXY_XLabelsCorrectlyDisposed() {
 
         val set = Line()
         set.add(Point("label0", 0f))
@@ -112,7 +144,7 @@ class ChartRendererTest {
     }
 
     @Test
-    fun chartWithLabels_YLabelsCorrectlyDisposed() {
+    fun chartWithAxisXY_YLabelsCorrectlyDisposed() {
 
         val set = Line()
         set.add(Point("label0", 0f))
@@ -132,7 +164,7 @@ class ChartRendererTest {
     }
 
     @Test
-    fun noLabels_LabelsNotDisplayed() {
+    fun noXY_XYNotDisplayed() {
 
         val set = Line()
         set.add(Point("label0", 0f))

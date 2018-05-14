@@ -24,6 +24,14 @@ import org.mockito.MockitoAnnotations
 
 class ChartRendererTest {
 
+    private val defSize = 1
+
+    private val defPadding = 0
+
+    private val defLabels = 0F
+
+    private val defAxis = Axis.XY
+
     @Mock private lateinit var view: ChartContract.View
 
     @Mock private lateinit var painter: Painter
@@ -47,9 +55,7 @@ class ChartRendererTest {
         set.add(Point("label", 1f))
 
         renderer.add(set)
-        renderer.preDraw(0, 0,
-                0, 0, 0, 0,
-                Axis.XY, 0F)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
     }
 
     @Test
@@ -68,9 +74,7 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(0, 1,
-                0, 0, 0, 0,
-                Axis.XY, 0F)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
         verify(view).drawData(any(), any(), any(), any(), capture(setCaptor))
@@ -99,9 +103,8 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(0, 1,
-                0, 0, 0, 0,
-                Axis.X, 0F)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+                Axis.X, defLabels)
         renderer.draw()
 
         verify(view, times(1)).drawLabels(any())
@@ -115,9 +118,8 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(0, 1,
-                0, 0, 0, 0,
-                Axis.Y, 0F)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+                Axis.Y, defLabels)
         renderer.draw()
 
         verify(view, times(1)).drawLabels(any())
@@ -131,9 +133,8 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(1, 1,
-                0, 0, 0, 0,
-                Axis.XY, 0F)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+                Axis.XY, defLabels)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -151,9 +152,8 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(1, 1,
-                0, 0, 0, 0,
-                Axis.XY, 0F)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+                Axis.XY, defLabels)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -171,9 +171,8 @@ class ChartRendererTest {
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(1, 1,
-                0, 0, 0, 0,
-                Axis.NONE, 0F)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+                Axis.NONE, defLabels)
         renderer.draw()
 
         verify(view, times(0)).drawLabels(any())
@@ -195,8 +194,7 @@ class ChartRendererTest {
 
         renderer.add(set)
         renderer.preDraw(width, height,
-                0, 0, 0, 0,
-                Axis.XY, 0F)
+                defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))

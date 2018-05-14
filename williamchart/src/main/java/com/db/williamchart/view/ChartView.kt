@@ -25,7 +25,7 @@ abstract class ChartView @JvmOverloads constructor(
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr), ChartContract.View {
 
-    enum class Axis { NONE, Y, X, XY }
+    enum class Axis { NONE, X, Y, XY }
 
     private val defFrameWidth = 200
 
@@ -57,7 +57,13 @@ abstract class ChartView @JvmOverloads constructor(
         viewTreeObserver.addOnPreDrawListener(drawListener)
 
         val arr = context.theme.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0)
-        axis = if(arr.getBoolean(R.styleable.ChartAttrs_chart_labels, true)) Axis.XY else Axis.NONE
+
+        axis = when (arr.getString(R.styleable.ChartAttrs_chart_axis)) {
+            "0" -> Axis.NONE
+            "1" -> Axis.X
+            "2" -> Axis.Y
+            else -> Axis.XY
+        }
         labelsSize = arr.getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
         labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
         if (arr.hasValue(R.styleable.ChartAttrs_chart_labelsFont))

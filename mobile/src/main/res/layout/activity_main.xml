@@ -19,7 +19,7 @@
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:chart_labels="true"
+        app:chart_axis="xy"
         app:chart_labelsSize="20sp"
         app:chart_labelsColor="#e70404"
         app:chart_labelsFont="@font/opensans_regular"/>

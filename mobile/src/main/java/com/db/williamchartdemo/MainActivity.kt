@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
-import com.db.williamchart.view.ChartView.Axis
 import com.db.williamchart.view.LineChartView
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         val view : LineChartView = findViewById(R.id.chart)
         view.add(set)
-        view.axis = Axis.Y
+        //view.axis = Axis.Y
         view.animation.duration = 10000
         view.anim()
         //view.render()

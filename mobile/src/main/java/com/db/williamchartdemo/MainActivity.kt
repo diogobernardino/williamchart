@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         val view : LineChartView = findViewById(R.id.chart)
         view.add(set)
+        view.hasLabels = false
         view.animation.duration = 10000
         view.anim()
         //view.render()

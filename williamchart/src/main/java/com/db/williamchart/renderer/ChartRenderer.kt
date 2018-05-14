@@ -3,7 +3,6 @@ package com.db.williamchart.renderer
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
@@ -13,6 +12,8 @@ import java.lang.IllegalArgumentException
 class ChartRenderer(private val view: ChartContract.View,
                     private val painter: Painter,
                     private var animation: ChartAnimation) : ChartContract.Renderer{
+
+    enum class Axis { NONE, Y, X, FULL }
 
     private val defStepNumY = 3
 
@@ -32,7 +33,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var isProcessed : Boolean = false
 
-    private var hasLabels : Boolean = true
+    private var axis : Axis = Axis.FULL
 
     private var labelsSize : Float = 60F
 
@@ -56,7 +57,7 @@ class ChartRenderer(private val view: ChartContract.View,
         val frameRight = width - paddingRight.toFloat()
         val frameBottom = height - paddingBottom.toFloat()
 
-        this.hasLabels = hasLabels
+        this.axis = if (hasLabels) Axis.FULL else Axis.NONE
         this.labelsSize = labelsSize
 
         xLabels = defineX()
@@ -86,7 +87,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
         if (data == null) return
 
-        if (hasLabels) {
+        if (axis == Axis.FULL) {
             view.drawLabels(xLabels)
             view.drawLabels(yLabels)
         }
@@ -110,7 +111,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private fun measurePaddingsX() : FloatArray {
 
-        if (!hasLabels) return floatArrayOf(0F, 0F, 0F, 0F)
+        if (axis != Axis.FULL) return floatArrayOf(0F, 0F, 0F, 0F)
 
         return floatArrayOf(
                 painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2,
@@ -121,7 +122,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private fun measurePaddingsY() : FloatArray {
 
-        if (!hasLabels) return floatArrayOf(0F, 0F, 0F, 0F)
+        if (axis != Axis.FULL) return floatArrayOf(0F, 0F, 0F, 0F)
 
         val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
 

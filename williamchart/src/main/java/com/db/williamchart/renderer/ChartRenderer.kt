@@ -16,11 +16,11 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private val defStepNumY = 3
 
-    private var data : ChartSet? = null
+    private var data: ChartSet? = null
 
-    private var xLabels : List<ChartLabel> = arrayListOf()
+    private var xLabels: List<ChartLabel> = arrayListOf()
 
-    private var yLabels : List<ChartLabel> = arrayListOf()
+    private var yLabels: List<ChartLabel> = arrayListOf()
 
     private var innerFrameLeft : Float = 0F
 
@@ -30,11 +30,11 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var innerFrameBottom : Float = 0F
 
-    private var isProcessed : Boolean = false
+    private var isProcessed: Boolean = false
 
-    private var axis : Axis = Axis.XY
+    private var axis: Axis = Axis.XY
 
-    private var labelsSize : Float = 60F
+    private var labelsSize: Float = 60F
 
 
     override fun preDraw(width: Int,
@@ -194,13 +194,11 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private fun findBorderValues(entries: MutableList<ChartEntry>): FloatArray {
 
-        var max = Integer.MIN_VALUE.toFloat()
-        var min = Integer.MAX_VALUE.toFloat()
+        if (entries.isEmpty()) return floatArrayOf(0F, 1F)
 
-        entries.forEach {
-            if (it.value >= max) max = it.value
-            if (it.value <= min) min = it.value
-        }
+        val values = entries.map { it.value }
+        val min : Float = values.min()!!
+        var max : Float = values.max()!!
 
         if (min == max) max += 1f  // All given values are equal
 

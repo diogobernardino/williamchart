@@ -70,8 +70,8 @@ class ChartRenderer(private val view: ChartContract.View,
         innerFrameRight = frameRight - pRight
         innerFrameBottom = frameBottom - pBottom
 
-        disposeX(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
-        disposeY(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
+        processX(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
+        processY(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
 
         processEntries(innerFrameTop, innerFrameBottom)
 
@@ -150,7 +150,7 @@ class ChartRenderer(private val view: ChartContract.View,
         return tmp.toList()
     }
 
-    private fun disposeX(
+    private fun processX(
             chartLeft: Float,
             chartTop: Float,
             chartRight: Float,
@@ -164,7 +164,7 @@ class ChartRenderer(private val view: ChartContract.View,
         }
     }
 
-    private fun disposeY(
+    private fun processY(
             chartLeft: Float,
             chartTop: Float,
             chartRight: Float,

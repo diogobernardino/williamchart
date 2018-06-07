@@ -126,15 +126,14 @@ class ChartRendererTest {
     }
 
     @Test
-    fun chartWithAxisXY_XLabelsCorrectlyDisposed() {
+    fun chartWithAxisXY_XLabelsInOrder() {
 
         val set = Line()
         set.add(Point("label0", 0f))
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
-                Axis.XY, defLabels)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -145,15 +144,14 @@ class ChartRendererTest {
     }
 
     @Test
-    fun chartWithAxisXY_YLabelsCorrectlyDisposed() {
+    fun chartWithAxisXY_YLabelsInOrder() {
 
         val set = Line()
         set.add(Point("label0", 0f))
         set.add(Point("label1", 1f))
 
         renderer.add(set)
-        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
-                Axis.XY, defLabels)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -176,6 +174,26 @@ class ChartRendererTest {
         renderer.draw()
 
         verify(view, times(0)).drawLabels(any())
+    }
+
+    @Test
+    fun noXY_ChartDataFulfilsFrameWidth() {
+
+        val labelWidth = 10F
+        `when`(painter.measureLabelWidth(any(), any())).thenReturn(labelWidth)
+
+        val set = Line()
+        set.add(Point("label0", 0f))
+        set.add(Point("label1", 1f))
+
+        renderer.add(set)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+                Axis.NONE, defLabels)
+        renderer.draw()
+
+        verify(view).drawData(any(), any(), any(), any(), capture(setCaptor))
+        assertEquals(0F, setCaptor.value.entries.first().x)
+        assertEquals(defSize.toFloat(), setCaptor.value.entries.last().x)
     }
 
     @Test
@@ -206,6 +224,23 @@ class ChartRendererTest {
         val yLabels = labelsCaptor.allValues[1]
         assertEquals(0F, yLabels.last().x - labelWidth / 2)
         assertEquals(0F, Math.round(yLabels.last().y - labelheight).toFloat())
+    }
+
+    @Test
+    fun yStartsAtZero_YLabelIsZero() {
+
+        val set = Line()
+        set.add(Point("label0", 1f))
+        set.add(Point("label1", 2f))
+
+        renderer.yAtZero = true
+        renderer.add(set)
+        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+                Axis.Y, defLabels)
+        renderer.draw()
+
+        verify(view).drawLabels(capture(labelsCaptor))
+        assertEquals("0.0", labelsCaptor.value.first().label)
     }
 
 }

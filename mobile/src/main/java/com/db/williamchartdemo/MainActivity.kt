@@ -3,8 +3,10 @@ package com.db.williamchartdemo
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.db.williamchart.data.BarSet
 import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
+import com.db.williamchart.view.BarChartView
 import com.db.williamchart.view.LineChartView
 
 class MainActivity : AppCompatActivity() {
@@ -13,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val set = Line()
+        /*val set = Line()
         set.add(Point("label1", 938F))
         set.add(Point("label2", 940F))
         set.add(Point("label3", 939F))
@@ -21,6 +23,18 @@ class MainActivity : AppCompatActivity() {
         set.gradientFillColors = intArrayOf(Color.WHITE, Color.BLACK)
 
         val view : LineChartView = findViewById(R.id.chart)
+        view.add(set)
+        //view.axis = Axis.Y
+        view.animation.duration = 10000
+        view.anim()
+        //view.render()*/
+
+        val set = BarSet()
+        set.add(Point("label1", 938F))
+        set.add(Point("label2", 940F))
+        set.add(Point("label3", 939F))
+
+        val view : BarChartView = findViewById(R.id.chart)
         view.add(set)
         //view.axis = Axis.Y
         view.animation.duration = 10000

@@ -51,7 +51,7 @@ abstract class ChartView @JvmOverloads constructor(
 
     protected val painter : Painter = Painter()
 
-    private val renderer : ChartRenderer = ChartRenderer(this, painter, NoAnimation())
+    protected val renderer : ChartRenderer = ChartRenderer(this, painter, NoAnimation())
 
     init {
         viewTreeObserver.addOnPreDrawListener(drawListener)

@@ -36,6 +36,10 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var labelsSize: Float = 60F
 
+    internal var xPacked = false
+
+    internal var yAtZero = false
+
 
     override fun preDraw(width: Int,
                          height: Int,
@@ -110,11 +114,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
         if (axis != Axis.XY && axis != Axis.X) return floatArrayOf(0F, 0F, 0F, 0F)
 
-        return floatArrayOf(
-                painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2,
-                0F,
-                painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2,
-                painter.measureLabelHeight(labelsSize))
+        return floatArrayOf(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
     }
 
     private fun measurePaddingsY() : FloatArray {
@@ -156,10 +156,24 @@ class ChartRenderer(private val view: ChartContract.View,
             chartRight: Float,
             chartBottom: Float) {
 
-        val stepX = (chartRight - chartLeft) / (xLabels.size - 1)
+        val auxLeft : Float
+        val auxRight : Float
 
+        if (xPacked) { // Pack labels
+            val entryWidth = (chartRight - chartLeft) / (xLabels.size)
+            auxLeft = chartLeft + entryWidth / 2
+            auxRight = chartRight - entryWidth / 2
+        } else if (axis == Axis.XY || axis == Axis.X) {
+            auxLeft = chartLeft + painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
+            auxRight = chartRight - painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
+        } else { // X not displayed
+            auxLeft = chartLeft
+            auxRight = chartRight
+        }
+
+        val stepX = (auxRight - auxLeft) / (xLabels.size - 1)
         xLabels.forEachIndexed { index, label ->
-            label.x = chartLeft + stepX * index
+            label.x = auxLeft + stepX * index
             label.y = chartBottom + painter.measureLabelHeight(labelsSize)
         }
     }
@@ -197,7 +211,7 @@ class ChartRenderer(private val view: ChartContract.View,
         if (entries.isEmpty()) return floatArrayOf(0F, 1F)
 
         val values = entries.map { it.value }
-        val min : Float = values.min()!!
+        val min : Float = if (yAtZero) 0F else values.min()!!
         var max : Float = values.max()!!
 
         if (min == max) max += 1f  // All given values are equal

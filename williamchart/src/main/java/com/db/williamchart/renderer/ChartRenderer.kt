@@ -66,13 +66,12 @@ class ChartRenderer(private val view: ChartContract.View,
         xLabels = defineX()
         yLabels = defineY()
 
-        val (pLeft, pTop, pRight, pBottom) = // Measure and negotiate padding needs of each axis
-                negotiatePaddingsXY(measurePaddingsX(), measurePaddingsY())
+        val paddings = negotiatePaddingsXY(measurePaddingsX(), measurePaddingsY())
 
-        innerFrameLeft = frameLeft + pLeft
-        innerFrameTop = frameTop + pTop
-        innerFrameRight = frameRight - pRight
-        innerFrameBottom = frameBottom - pBottom
+        innerFrameLeft = frameLeft + paddings.left
+        innerFrameTop = frameTop + paddings.top
+        innerFrameRight = frameRight - paddings.right
+        innerFrameBottom = frameBottom - paddings.bottom
 
         processX(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
         processY(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
@@ -110,20 +109,20 @@ class ChartRenderer(private val view: ChartContract.View,
     }
 
 
-    private fun measurePaddingsX() : FloatArray {
+    private fun measurePaddingsX() : Paddings {
 
-        if (axis != Axis.XY && axis != Axis.X) return floatArrayOf(0F, 0F, 0F, 0F)
+        if (axis != Axis.XY && axis != Axis.X) return Paddings(0F, 0F, 0F, 0F)
 
-        return floatArrayOf(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
+        return Paddings(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
     }
 
-    private fun measurePaddingsY() : FloatArray {
+    private fun measurePaddingsY() : Paddings {
 
-        if (axis != Axis.XY && axis != Axis.Y) return floatArrayOf(0F, 0F, 0F, 0F)
+        if (axis != Axis.XY && axis != Axis.Y) return Paddings(0F, 0F, 0F, 0F)
 
         val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
 
-        return floatArrayOf(
+        return Paddings(
                 if (longestChartLabel != null) painter.measureLabelWidth(longestChartLabel.label, labelsSize) else 0F,
                 painter.measureLabelHeight(labelsSize) / 2,
                 0F,
@@ -221,14 +220,16 @@ class ChartRenderer(private val view: ChartContract.View,
         return Borders(min, max)
     }
 
-    private fun negotiatePaddingsXY(paddingsX: FloatArray, paddingsY: FloatArray): FloatArray {
-        return floatArrayOf(
-                maxOf(paddingsX[0], paddingsY[0]),
-                maxOf(paddingsX[1], paddingsY[1]),
-                maxOf(paddingsX[2], paddingsY[2]),
-                maxOf(paddingsX[3], paddingsY[3]))
+    private fun negotiatePaddingsXY(paddingsX: Paddings, paddingsY: Paddings): Paddings {
+        return Paddings(
+                maxOf(paddingsX.left, paddingsY.left),
+                maxOf(paddingsX.top, paddingsY.top),
+                maxOf(paddingsX.right, paddingsY.right),
+                maxOf(paddingsX.bottom, paddingsY.bottom))
     }
 
 }
 
 class Borders(val min: Float, val max: Float)
+
+class Paddings(val left: Float, val top: Float, val right: Float, val bottom: Float)

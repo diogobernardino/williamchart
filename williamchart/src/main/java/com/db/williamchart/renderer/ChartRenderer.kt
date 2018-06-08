@@ -138,9 +138,9 @@ class ChartRenderer(private val view: ChartContract.View,
 
         val tmp : MutableList<ChartLabel> = mutableListOf()
 
-        val (min, max) = findBorderValues(data!!.entries)
-        val valuesStep = (max - min) / defStepNumY
-        var valuesCursor = min
+        val borders = findBorderValues(data!!.entries)
+        val valuesStep = (borders.max - borders.min) / defStepNumY
+        var valuesCursor = borders.min
 
         for (n in 0..defStepNumY) {
             tmp.add(ChartLabel(valuesCursor.toString(), 0F, 0F))
@@ -198,17 +198,19 @@ class ChartRenderer(private val view: ChartContract.View,
             frameTop: Float,
             frameBottom: Float) {
 
-        val (min, max) = findBorderValues(data!!.entries)
+        val borders = findBorderValues(data!!.entries)
 
         data!!.entries.forEachIndexed { index, entry ->
             entry.x = xLabels[index].x
-            entry.y = frameBottom - ((frameBottom - frameTop) * (entry.value - min) / (max - min))
+            entry.y = frameBottom -
+                    ((frameBottom - frameTop) * (entry.value - borders.min) /
+                            (borders.max - borders.min))
         }
     }
 
-    private fun findBorderValues(entries: MutableList<ChartEntry>): FloatArray {
+    private fun findBorderValues(entries: MutableList<ChartEntry>): Borders {
 
-        if (entries.isEmpty()) return floatArrayOf(0F, 1F)
+        if (entries.isEmpty()) return Borders(0F, 1F)
 
         val values = entries.map { it.value }
         val min : Float = if (yAtZero) 0F else values.min()!!
@@ -216,7 +218,7 @@ class ChartRenderer(private val view: ChartContract.View,
 
         if (min == max) max += 1f  // All given values are equal
 
-        return floatArrayOf(min, max)
+        return Borders(min, max)
     }
 
     private fun negotiatePaddingsXY(paddingsX: FloatArray, paddingsY: FloatArray): FloatArray {
@@ -228,3 +230,5 @@ class ChartRenderer(private val view: ChartContract.View,
     }
 
 }
+
+class Borders(val min: Float, val max: Float)

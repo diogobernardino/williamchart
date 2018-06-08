@@ -129,10 +129,11 @@ class LineChartView @JvmOverloads constructor(
      * Credits: http://www.jayway.com/author/andersericsson/
      */
     private fun si(setSize: Int, i: Int): Int {
-
-        if (i > setSize - 1) return setSize - 1
-        else if (i < 0) return 0
-        return i
+        return when {
+            i > setSize - 1 -> setSize - 1
+            i < 0 -> 0
+            else -> i
+        }
     }
 
 }

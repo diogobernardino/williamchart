@@ -110,23 +110,21 @@ class ChartRenderer(private val view: ChartContract.View,
 
 
     private fun measurePaddingsX() : Paddings {
-
-        if (axis != Axis.XY && axis != Axis.X) return Paddings(0F, 0F, 0F, 0F)
-
-        return Paddings(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
+        return if (axis != Axis.XY && axis != Axis.X) Paddings(0F, 0F, 0F, 0F)
+        else Paddings(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
     }
 
-    private fun measurePaddingsY() : Paddings {
+    private fun measurePaddingsY(): Paddings {
 
-        if (axis != Axis.XY && axis != Axis.Y) return Paddings(0F, 0F, 0F, 0F)
-
-        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
-
-        return Paddings(
-                if (longestChartLabel != null) painter.measureLabelWidth(longestChartLabel.label, labelsSize) else 0F,
-                painter.measureLabelHeight(labelsSize) / 2,
-                0F,
-                painter.measureLabelHeight(labelsSize) / 2)
+        return if (axis != Axis.XY && axis != Axis.Y) return Paddings(0F, 0F, 0F, 0F)
+        else {
+            val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
+            Paddings(
+                    if (longestChartLabel != null) painter.measureLabelWidth(longestChartLabel.label, labelsSize) else 0F,
+                    painter.measureLabelHeight(labelsSize) / 2,
+                    0F,
+                    painter.measureLabelHeight(labelsSize) / 2)
+        }
     }
 
     private fun defineX(): List<ChartLabel> {
@@ -135,18 +133,13 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private fun defineY(): List<ChartLabel> {
 
-        val tmp : MutableList<ChartLabel> = mutableListOf()
-
         val borders = findBorderValues(data!!.entries)
         val valuesStep = (borders.max - borders.min) / defStepNumY
-        var valuesCursor = borders.min
 
-        for (n in 0..defStepNumY) {
-            tmp.add(ChartLabel(valuesCursor.toString(), 0F, 0F))
-            valuesCursor += valuesStep
-        }
-
-        return tmp.toList()
+        return List(defStepNumY + 1, {
+            val aux = borders.min + valuesStep * it
+            ChartLabel(aux.toString(), 0F, 0F)
+        })
     }
 
     private fun processX(

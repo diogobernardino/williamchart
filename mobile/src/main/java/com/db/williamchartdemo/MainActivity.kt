@@ -1,44 +1,36 @@
 package com.db.williamchartdemo
 
-import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.db.williamchart.data.BarSet
-import com.db.williamchart.data.Line
-import com.db.williamchart.data.Point
-import com.db.williamchart.view.BarChartView
-import com.db.williamchart.view.LineChartView
+import android.support.design.widget.BottomNavigationView
+import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_linechart -> {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.contentFrame, LineChartFragment.newInstance())
+                    commit()
+                }
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_barchart -> {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.contentFrame, BarChartFragment.newInstance())
+                    commit()
+                }
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        /*val set = Line()
-        set.add(Point("label1", 938F))
-        set.add(Point("label2", 940F))
-        set.add(Point("label3", 939F))
-        set.smooth = false
-        set.gradientFillColors = intArrayOf(Color.WHITE, Color.BLACK)
-
-        val view : LineChartView = findViewById(R.id.chart)
-        view.add(set)
-        //view.axis = Axis.Y
-        view.animation.duration = 10000
-        view.anim()
-        //view.render()*/
-
-        val set = BarSet()
-        set.add(Point("label1", 938F))
-        set.add(Point("label2", 940F))
-        set.add(Point("label3", 939F))
-
-        val view : BarChartView = findViewById(R.id.chart)
-        view.add(set)
-        //view.axis = Axis.Y
-        view.animation.duration = 10000
-        view.anim()
-        //view.render()
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        navigation.selectedItemId = R.id.navigation_linechart
     }
 }

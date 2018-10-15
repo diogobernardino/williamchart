@@ -7,20 +7,15 @@ import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
 import com.db.williamchart.renderer.ChartRenderer
 import com.db.williamchart.view.ChartView.Axis
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.times
-import com.nhaarman.mockito_kotlin.verify
-
-import org.junit.Test
-
-import org.junit.Assert.*
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.slot
+import io.mockk.verify
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
-
+import org.junit.Test
 
 class ChartRendererTest {
 
@@ -32,19 +27,19 @@ class ChartRendererTest {
 
     private val defAxis = Axis.XY
 
-    @Mock private lateinit var view: ChartContract.View
+    @MockK private lateinit var view: ChartContract.View
 
-    @Mock private lateinit var painter: Painter
+    @MockK private lateinit var painter: Painter
 
-    @Captor private lateinit var setCaptor: ArgumentCaptor<ChartSet>
+    private var setCaptor = slot<ChartSet>()
 
-    @Captor private lateinit var labelsCaptor: ArgumentCaptor<List<ChartLabel>>
+    private var labelsCaptor = mutableListOf<List<ChartLabel>>()
 
     private lateinit var renderer: ChartRenderer
 
     @Before fun setup() {
 
-        MockitoAnnotations.initMocks(this)
+        MockKAnnotations.init(this, relaxed = true)
         renderer = ChartRenderer(view, painter, NoAnimation())
     }
 
@@ -63,7 +58,7 @@ class ChartRendererTest {
 
         renderer.draw()
 
-        verify(view, times(0)).drawData(any(), any(), any(), any(), any())
+        verify(exactly = 0) { view.drawData(any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -77,9 +72,9 @@ class ChartRendererTest {
         renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
-        verify(view).drawData(any(), any(), any(), any(), capture(setCaptor))
-        assertEquals(1F, setCaptor.value.entries[0].y)
-        assertEquals(0F, setCaptor.value.entries[1].y)
+        verify { view.drawData(any(), any(), any(), any(), capture(setCaptor)) }
+        assertEquals(1F, setCaptor.captured.entries[0].y)
+        assertEquals(0F, setCaptor.captured.entries[1].y)
     }
 
     @Test
@@ -92,7 +87,7 @@ class ChartRendererTest {
         renderer.add(set)
         renderer.draw()
 
-        verify(view, times(2)).drawLabels(any())
+        verify(exactly = 2) { view.drawLabels(any()) }
     }
 
     @Test
@@ -107,7 +102,7 @@ class ChartRendererTest {
                 Axis.X, defLabels)
         renderer.draw()
 
-        verify(view, times(1)).drawLabels(any())
+        verify(exactly = 1) { view.drawLabels(any()) }
     }
 
     @Test
@@ -122,7 +117,7 @@ class ChartRendererTest {
                 Axis.Y, defLabels)
         renderer.draw()
 
-        verify(view, times(1)).drawLabels(any())
+        verify(exactly = 1) { view.drawLabels(any()) }
     }
 
     @Test
@@ -136,9 +131,9 @@ class ChartRendererTest {
         renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
-        verify(view, times(2)).drawLabels(capture(labelsCaptor))
+        verify(exactly = 2) { view.drawLabels(capture(labelsCaptor)) }
 
-        val labels = labelsCaptor.allValues[0]
+        val labels = labelsCaptor[0]
         for (i in 0..set.entries.size - 2)
             assertTrue(labels[i].x < labels[i+1].x)
     }
@@ -154,9 +149,9 @@ class ChartRendererTest {
         renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
-        verify(view, times(2)).drawLabels(capture(labelsCaptor))
+        verify(exactly = 2) { view.drawLabels(capture(labelsCaptor)) }
 
-        val labels = labelsCaptor.allValues[1]
+        val labels = labelsCaptor[1]
         for (i in 0..set.entries.size - 2)
             assertTrue(labels[i].y > labels[i+1].y)
     }
@@ -173,14 +168,14 @@ class ChartRendererTest {
                 Axis.NONE, defLabels)
         renderer.draw()
 
-        verify(view, times(0)).drawLabels(any())
+        verify(exactly = 0) { view.drawLabels(any()) }
     }
 
     @Test
     fun noXY_ChartDataFulfilsFrameWidth() {
 
         val labelWidth = 10F
-        `when`(painter.measureLabelWidth(any(), any())).thenReturn(labelWidth)
+        every {  painter.measureLabelWidth(any(), any()) } returns labelWidth
 
         val set = Line()
         set.add(Point("label0", 0f))
@@ -191,9 +186,9 @@ class ChartRendererTest {
                 Axis.NONE, defLabels)
         renderer.draw()
 
-        verify(view).drawData(any(), any(), any(), any(), capture(setCaptor))
-        assertEquals(0F, setCaptor.value.entries.first().x)
-        assertEquals(defSize.toFloat(), setCaptor.value.entries.last().x)
+        verify { view.drawData(any(), any(), any(), any(), capture(setCaptor)) }
+        assertEquals(0F, setCaptor.captured.entries.first().x)
+        assertEquals(defSize.toFloat(), setCaptor.captured.entries.last().x)
     }
 
     @Test
@@ -203,8 +198,8 @@ class ChartRendererTest {
         val height = 1000
         val labelWidth = 10F
         val labelheight = 10F
-        `when`(painter.measureLabelWidth(any(), any())).thenReturn(labelWidth)
-        `when`(painter.measureLabelHeight(any())).thenReturn(labelheight)
+        every { painter.measureLabelWidth(any(), any()) } returns labelWidth
+        every { painter.measureLabelHeight(any()) } returns labelheight
 
         val set = Line()
         set.add(Point("label0", 0f))
@@ -215,13 +210,13 @@ class ChartRendererTest {
                 defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
-        verify(view, times(2)).drawLabels(capture(labelsCaptor))
+        verify(exactly = 2) { view.drawLabels(capture(labelsCaptor)) }
 
-        val xLabels = labelsCaptor.allValues[0]
+        val xLabels = labelsCaptor[0]
         assertEquals(width.toFloat(), xLabels.last().x + labelWidth / 2)
         assertEquals(height.toFloat(), xLabels.last().y)
 
-        val yLabels = labelsCaptor.allValues[1]
+        val yLabels = labelsCaptor[1]
         assertEquals(0F, yLabels.last().x - labelWidth / 2)
         assertEquals(0F, Math.round(yLabels.last().y - labelheight).toFloat())
     }
@@ -239,14 +234,8 @@ class ChartRendererTest {
                 Axis.Y, defLabels)
         renderer.draw()
 
-        verify(view).drawLabels(capture(labelsCaptor))
-        assertEquals("0.0", labelsCaptor.value.first().label)
+        verify { view.drawLabels(capture(labelsCaptor)) }
+        assertEquals("0.0", labelsCaptor.first().first().label)
     }
 
 }
-
-/**
- * Returns ArgumentCaptor.capture() as nullable type to avoid java.lang.IllegalStateException
- * when null is returned.
- */
-fun <T> capture(argumentCaptor: ArgumentCaptor<T>): T = argumentCaptor.capture()

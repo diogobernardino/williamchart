@@ -3,12 +3,12 @@ package com.db.williamchart.view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Typeface
-import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
+import androidx.core.content.res.ResourcesCompat
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.R

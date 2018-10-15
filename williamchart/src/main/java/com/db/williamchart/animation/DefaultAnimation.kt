@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import com.db.williamchart.data.ChartEntry
 
-
 class DefaultAnimation : ChartAnimation() {
 
     override fun animateFrom(y: Float,

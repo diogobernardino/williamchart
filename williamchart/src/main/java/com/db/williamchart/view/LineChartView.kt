@@ -11,22 +11,25 @@ import com.db.williamchart.data.ChartSet
 import com.db.williamchart.data.Line
 
 class LineChartView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0) : ChartView(context, attrs, defStyleAttr) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ChartView(context, attrs, defStyleAttr) {
 
     private val smoothFactor = 0.15f
 
-    override fun drawData(innerFrameLeft: Float,
-                          innerFrameTop: Float,
-                          innerFrameRight: Float,
-                          innerFrameBottom: Float,
-                          data: ChartSet) {
+    override fun drawData(
+        innerFrameLeft: Float,
+        innerFrameTop: Float,
+        innerFrameRight: Float,
+        innerFrameBottom: Float,
+        data: ChartSet
+    ) {
 
         if (canvas == null) return
 
-        val line : Line = data as Line
-        val linePath : Path
+        val line: Line = data as Line
+        val linePath: Path
 
         linePath = if (!line.smooth) createLinePath(line.entries) else createSmoothLinePath(line.entries)
 
@@ -108,13 +111,13 @@ class LineChartView @JvmOverloads constructor(
         }
 
         return res
-
     }
 
     private fun createBackgroundPath(
-            path: Path,
-            points: MutableList<ChartEntry>,
-            innerFrameBottom: Float): Path {
+        path: Path,
+        points: MutableList<ChartEntry>,
+        innerFrameBottom: Float
+    ): Path {
 
         val res = Path(path)
 
@@ -135,5 +138,4 @@ class LineChartView @JvmOverloads constructor(
             else -> i
         }
     }
-
 }

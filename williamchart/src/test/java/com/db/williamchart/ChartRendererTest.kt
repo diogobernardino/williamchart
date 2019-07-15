@@ -10,17 +10,17 @@ import com.db.williamchart.view.ChartView.Axis
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 import org.junit.Test
 
-import org.junit.Assert.*
 import org.junit.Before
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-
 
 class ChartRendererTest {
 
@@ -140,7 +140,7 @@ class ChartRendererTest {
 
         val labels = labelsCaptor.allValues[0]
         for (i in 0..set.entries.size - 2)
-            assertTrue(labels[i].x < labels[i+1].x)
+            assertTrue(labels[i].x < labels[i + 1].x)
     }
 
     @Test
@@ -158,7 +158,7 @@ class ChartRendererTest {
 
         val labels = labelsCaptor.allValues[1]
         for (i in 0..set.entries.size - 2)
-            assertTrue(labels[i].y > labels[i+1].y)
+            assertTrue(labels[i].y > labels[i + 1].y)
     }
 
     @Test
@@ -242,7 +242,6 @@ class ChartRendererTest {
         verify(view).drawLabels(capture(labelsCaptor))
         assertEquals("0.0", labelsCaptor.value.first().label)
     }
-
 }
 
 /**

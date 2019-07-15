@@ -8,9 +8,10 @@ import com.db.williamchart.data.BarSet
 import com.db.williamchart.data.ChartSet
 
 class BarChartView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0) : ChartView(context, attrs, defStyleAttr) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : ChartView(context, attrs, defStyleAttr) {
 
     var spacing = 10
 
@@ -19,11 +20,13 @@ class BarChartView @JvmOverloads constructor(
         renderer.yAtZero = true
     }
 
-    override fun drawData(innerFrameLeft: Float,
-                          innerFrameTop: Float,
-                          innerFrameRight: Float,
-                          innerFrameBottom: Float,
-                          data: ChartSet) {
+    override fun drawData(
+        innerFrameLeft: Float,
+        innerFrameTop: Float,
+        innerFrameRight: Float,
+        innerFrameBottom: Float,
+        data: ChartSet
+    ) {
 
         if (canvas == null) return
 
@@ -40,5 +43,4 @@ class BarChartView @JvmOverloads constructor(
                     painter.paint)
         }
     }
-
 }

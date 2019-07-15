@@ -10,5 +10,5 @@ abstract class ChartAnimation {
 
     var interpolator: Interpolator = DecelerateInterpolator()
 
-    abstract fun animateFrom(y: Float, entries: MutableList<ChartEntry>, callback: () -> Unit) : ChartAnimation
+    abstract fun animateFrom(y: Float, entries: MutableList<ChartEntry>, callback: () -> Unit): ChartAnimation
 }

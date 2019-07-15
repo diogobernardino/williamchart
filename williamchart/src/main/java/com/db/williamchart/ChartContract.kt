@@ -9,27 +9,31 @@ interface ChartContract {
 
     interface View {
 
-        fun drawLabels(xLabels : List<ChartLabel>)
+        fun drawLabels(xLabels: List<ChartLabel>)
 
-        fun drawData(innerFrameLeft: Float,
-                     innerFrameTop: Float,
-                     innerFrameRight: Float,
-                     innerFrameBottom: Float,
-                     data: ChartSet)
+        fun drawData(
+            innerFrameLeft: Float,
+            innerFrameTop: Float,
+            innerFrameRight: Float,
+            innerFrameBottom: Float,
+            data: ChartSet
+        )
 
         fun postInvalidate()
     }
 
     interface Renderer {
 
-        fun preDraw(width: Int,
-                    height: Int,
-                    paddingLeft: Int,
-                    paddingTop: Int,
-                    paddingRight: Int,
-                    paddingBottom: Int,
-                    axis: Axis,
-                    labelsSize: Float) : Boolean
+        fun preDraw(
+            width: Int,
+            height: Int,
+            paddingLeft: Int,
+            paddingTop: Int,
+            paddingRight: Int,
+            paddingBottom: Int,
+            axis: Axis,
+            labelsSize: Float
+        ): Boolean
 
         fun draw()
 
@@ -39,5 +43,4 @@ interface ChartContract {
 
         fun add(set: ChartSet)
     }
-
 }

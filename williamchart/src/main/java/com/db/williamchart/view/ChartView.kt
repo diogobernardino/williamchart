@@ -21,9 +21,10 @@ import com.db.williamchart.data.ChartSet
 import com.db.williamchart.renderer.ChartRenderer
 
 abstract class ChartView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0) : RelativeLayout(context, attrs, defStyleAttr), ChartContract.View {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : RelativeLayout(context, attrs, defStyleAttr), ChartContract.View {
 
     enum class Axis { NONE, X, Y, XY }
 
@@ -31,15 +32,15 @@ abstract class ChartView @JvmOverloads constructor(
 
     private val defFrameHeight = 100
 
-    var labelsSize : Float = 60F
+    var labelsSize: Float = 60F
 
-    var labelsColor : Int = -0x1000000
+    var labelsColor: Int = -0x1000000
 
-    var labelsFont : Typeface? = null
+    var labelsFont: Typeface? = null
 
-    var axis : Axis = Axis.XY
+    var axis: Axis = Axis.XY
 
-    var animation : ChartAnimation = DefaultAnimation()
+    var animation: ChartAnimation = DefaultAnimation()
 
     private val drawListener = ViewTreeObserver.OnPreDrawListener {
         renderer.preDraw(measuredWidth, measuredHeight,
@@ -49,9 +50,9 @@ abstract class ChartView @JvmOverloads constructor(
 
     protected var canvas: Canvas? = null
 
-    protected val painter : Painter = Painter()
+    protected val painter: Painter = Painter()
 
-    protected val renderer : ChartRenderer = ChartRenderer(this, painter, NoAnimation())
+    protected val renderer: ChartRenderer = ChartRenderer(this, painter, NoAnimation())
 
     init {
         viewTreeObserver.addOnPreDrawListener(drawListener)
@@ -75,12 +76,12 @@ abstract class ChartView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         this.setWillNotDraw(false)
-        //style.init()
+        // style.init()
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        //style.clean()
+        // style.clean()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -121,7 +122,7 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.anim(animation)
     }
 
-    override fun drawLabels(xLabels : List<ChartLabel>) {
+    override fun drawLabels(xLabels: List<ChartLabel>) {
 
         if (canvas == null) return
 

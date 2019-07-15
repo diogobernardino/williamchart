@@ -11,8 +11,11 @@ import kotlinx.android.synthetic.main.barchart_frag.*
 
 class BarChartFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.barchart_frag, container, false)
     }
 

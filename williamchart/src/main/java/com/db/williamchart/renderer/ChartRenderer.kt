@@ -9,10 +9,11 @@ import com.db.williamchart.data.ChartSet
 import com.db.williamchart.view.ChartView.Axis
 import java.lang.IllegalArgumentException
 
-
-class ChartRenderer(private val view: ChartContract.View,
-                    private val painter: Painter,
-                    private var animation: ChartAnimation) : ChartContract.Renderer{
+class ChartRenderer(
+    private val view: ChartContract.View,
+    private val painter: Painter,
+    private var animation: ChartAnimation
+) : ChartContract.Renderer {
 
     private val defStepNumY = 3
 
@@ -22,13 +23,13 @@ class ChartRenderer(private val view: ChartContract.View,
 
     private var yLabels: List<ChartLabel> = arrayListOf()
 
-    private var innerFrameLeft : Float = 0F
+    private var innerFrameLeft: Float = 0F
 
-    private var innerFrameTop : Float = 0F
+    private var innerFrameTop: Float = 0F
 
-    private var innerFrameRight : Float = 0F
+    private var innerFrameRight: Float = 0F
 
-    private var innerFrameBottom : Float = 0F
+    private var innerFrameBottom: Float = 0F
 
     private var isProcessed: Boolean = false
 
@@ -40,19 +41,20 @@ class ChartRenderer(private val view: ChartContract.View,
 
     internal var yAtZero = false
 
+    override fun preDraw(
+        width: Int,
+        height: Int,
+        paddingLeft: Int,
+        paddingTop: Int,
+        paddingRight: Int,
+        paddingBottom: Int,
+        axis: Axis,
+        labelsSize: Float
+    ): Boolean {
 
-    override fun preDraw(width: Int,
-                         height: Int,
-                         paddingLeft: Int,
-                         paddingTop: Int,
-                         paddingRight: Int,
-                         paddingBottom: Int,
-                         axis: Axis,
-                         labelsSize: Float): Boolean {
+        if (isProcessed) return true // Data already processed, proceed with drawing
 
-        if (isProcessed) return true  // Data already processed, proceed with drawing
-
-        if (data == null) return false  // No data, cancel drawing
+        if (data == null) return false // No data, cancel drawing
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
         val frameLeft = paddingLeft.toFloat()
@@ -108,8 +110,7 @@ class ChartRenderer(private val view: ChartContract.View,
         data = set
     }
 
-
-    private fun measurePaddingsX() : Paddings {
+    private fun measurePaddingsX(): Paddings {
         return if (axis != Axis.XY && axis != Axis.X) Paddings(0F, 0F, 0F, 0F)
         else Paddings(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
     }
@@ -128,7 +129,7 @@ class ChartRenderer(private val view: ChartContract.View,
     }
 
     private fun defineX(): List<ChartLabel> {
-        return data!!.entries.map{ ChartLabel(it.label, 0F, 0F) }
+        return data!!.entries.map { ChartLabel(it.label, 0F, 0F) }
     }
 
     private fun defineY(): List<ChartLabel> {
@@ -143,13 +144,14 @@ class ChartRenderer(private val view: ChartContract.View,
     }
 
     private fun processX(
-            chartLeft: Float,
-            chartTop: Float,
-            chartRight: Float,
-            chartBottom: Float) {
+        chartLeft: Float,
+        chartTop: Float,
+        chartRight: Float,
+        chartBottom: Float
+    ) {
 
-        val auxLeft : Float
-        val auxRight : Float
+        val auxLeft: Float
+        val auxRight: Float
 
         if (xPacked) { // Pack labels
             val entryWidth = (chartRight - chartLeft) / (xLabels.size)
@@ -171,10 +173,11 @@ class ChartRenderer(private val view: ChartContract.View,
     }
 
     private fun processY(
-            chartLeft: Float,
-            chartTop: Float,
-            chartRight: Float,
-            chartBottom: Float) {
+        chartLeft: Float,
+        chartTop: Float,
+        chartRight: Float,
+        chartBottom: Float
+    ) {
 
         val screenStep = (chartBottom - chartTop) / defStepNumY
         var screenCursor = chartBottom + painter.measureLabelHeight(labelsSize) / 2
@@ -187,8 +190,9 @@ class ChartRenderer(private val view: ChartContract.View,
     }
 
     private fun processEntries(
-            frameTop: Float,
-            frameBottom: Float) {
+        frameTop: Float,
+        frameBottom: Float
+    ) {
 
         val borders = findBorderValues(data!!.entries)
 
@@ -205,10 +209,10 @@ class ChartRenderer(private val view: ChartContract.View,
         if (entries.isEmpty()) return Borders(0F, 1F)
 
         val values = entries.map { it.value }
-        val min : Float = if (yAtZero) 0F else values.min()!!
-        var max : Float = values.max()!!
+        val min: Float = if (yAtZero) 0F else values.min()!!
+        var max: Float = values.max()!!
 
-        if (min == max) max += 1f  // All given values are equal
+        if (min == max) max += 1f // All given values are equal
 
         return Borders(min, max)
     }
@@ -220,7 +224,6 @@ class ChartRenderer(private val view: ChartContract.View,
                 maxOf(paddingsX.right, paddingsY.right),
                 maxOf(paddingsX.bottom, paddingsY.bottom))
     }
-
 }
 
 class Borders(val min: Float, val max: Float)

@@ -17,6 +17,7 @@ allprojects {
         google()
         jcenter()
     }
+    apply from: "$rootDir/ktlint.gradle"
 }
 
 task clean(type: Delete) {

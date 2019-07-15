@@ -21,7 +21,7 @@ class Painter(val paint: Paint = Paint()) {
      * @param textSize size used in font.
      * @return width of the text.
      */
-    fun measureLabelWidth(text: String, textSize: Float): Float{
+    fun measureLabelWidth(text: String, textSize: Float): Float {
         paint.textSize = textSize
         return paint.measureText(text)
     }
@@ -32,7 +32,7 @@ class Painter(val paint: Paint = Paint()) {
      * @param textSize size used in font.
      * @return height of the text.
      */
-    fun measureLabelHeight(textSize: Float) : Float{
+    fun measureLabelHeight(textSize: Float): Float {
         paint.textSize = textSize
         return paint.descent() - paint.ascent()
     }
@@ -48,12 +48,14 @@ class Painter(val paint: Paint = Paint()) {
      * @param typeface May be null. New Typeface to be set in the paint.
      * @return Configured Paint object.
      */
-    fun prepare(textSize: Float = 15F,
-                color: Int = -0x1000000,
-                style: Paint.Style = Paint.Style.FILL,
-                strokeWidth: Float = 4F,
-                shader: Shader? = null,
-                font: Typeface? = null): Paint {
+    fun prepare(
+        textSize: Float = 15F,
+        color: Int = -0x1000000,
+        style: Paint.Style = Paint.Style.FILL,
+        strokeWidth: Float = 4F,
+        shader: Shader? = null,
+        font: Typeface? = null
+    ): Paint {
         paint.textSize = textSize
         paint.color = color
         paint.style = style

@@ -12,6 +12,7 @@ class DefaultAnimation : ChartAnimation() {
         callback: () -> Unit
     ): ChartAnimation {
 
+        // Entries animators
         entries.forEach { entry ->
             val eAnimator: ObjectAnimator = ObjectAnimator.ofFloat(entry, "y", y, entry.y)
             eAnimator.duration = duration
@@ -19,6 +20,7 @@ class DefaultAnimation : ChartAnimation() {
             eAnimator.start()
         }
 
+        // Global animator
         val animator: ValueAnimator = ValueAnimator.ofInt(0, 1)
         animator.addUpdateListener { callback.invoke() }
         animator.duration = duration

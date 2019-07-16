@@ -31,7 +31,7 @@ class LineChartFragment : Fragment() {
 
         chart.add(set)
         chart.animation.duration = 10000
-        chart.render()
+        chart.show()
     }
 
     companion object {

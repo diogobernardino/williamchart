@@ -9,7 +9,7 @@ class NoAnimation : ChartAnimation() {
         entries: MutableList<ChartEntry>,
         callback: () -> Unit
     ): ChartAnimation {
-        callback.invoke()
+        callback()
         return this
     }
 }

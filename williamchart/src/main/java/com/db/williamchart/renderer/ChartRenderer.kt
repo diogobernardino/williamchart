@@ -7,7 +7,6 @@ import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.data.ChartSet
 import com.db.williamchart.view.ChartView.Axis
-import java.lang.IllegalArgumentException
 
 class ChartRenderer(
     private val view: ChartContract.View,
@@ -15,7 +14,7 @@ class ChartRenderer(
     private var animation: ChartAnimation
 ) : ChartContract.Renderer {
 
-    private val defStepNumY = 3
+    private val defaultStepNumY = 3
 
     private var data: ChartSet? = null
 
@@ -55,6 +54,7 @@ class ChartRenderer(
         if (isProcessed) return true // Data already processed, proceed with drawing
 
         if (data == null) return false // No data, cancel drawing
+
         if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
         val frameLeft = paddingLeft.toFloat()
@@ -121,10 +121,11 @@ class ChartRenderer(
         else {
             val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             Paddings(
-                    if (longestChartLabel != null) painter.measureLabelWidth(longestChartLabel.label, labelsSize) else 0F,
-                    painter.measureLabelHeight(labelsSize) / 2,
-                    0F,
-                    painter.measureLabelHeight(labelsSize) / 2)
+                if (longestChartLabel != null) painter.measureLabelWidth(longestChartLabel.label, labelsSize) else 0F,
+                painter.measureLabelHeight(labelsSize) / 2,
+                0F,
+                painter.measureLabelHeight(labelsSize) / 2
+            )
         }
     }
 
@@ -135,12 +136,12 @@ class ChartRenderer(
     private fun defineY(): List<ChartLabel> {
 
         val borders = findBorderValues(data!!.entries)
-        val valuesStep = (borders.max - borders.min) / defStepNumY
+        val valuesStep = (borders.max - borders.min) / defaultStepNumY
 
-        return List(defStepNumY + 1, {
+        return List(defaultStepNumY + 1) {
             val aux = borders.min + valuesStep * it
             ChartLabel(aux.toString(), 0F, 0F)
-        })
+        }
     }
 
     private fun processX(
@@ -179,7 +180,7 @@ class ChartRenderer(
         chartBottom: Float
     ) {
 
-        val screenStep = (chartBottom - chartTop) / defStepNumY
+        val screenStep = (chartBottom - chartTop) / defaultStepNumY
         var screenCursor = chartBottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEach {
@@ -199,8 +200,8 @@ class ChartRenderer(
         data!!.entries.forEachIndexed { index, entry ->
             entry.x = xLabels[index].x
             entry.y = frameBottom -
-                    ((frameBottom - frameTop) * (entry.value - borders.min) /
-                            (borders.max - borders.min))
+                ((frameBottom - frameTop) * (entry.value - borders.min) /
+                    (borders.max - borders.min))
         }
     }
 
@@ -219,10 +220,11 @@ class ChartRenderer(
 
     private fun negotiatePaddingsXY(paddingsX: Paddings, paddingsY: Paddings): Paddings {
         return Paddings(
-                maxOf(paddingsX.left, paddingsY.left),
-                maxOf(paddingsX.top, paddingsY.top),
-                maxOf(paddingsX.right, paddingsY.right),
-                maxOf(paddingsX.bottom, paddingsY.bottom))
+            maxOf(paddingsX.left, paddingsY.left),
+            maxOf(paddingsX.top, paddingsY.top),
+            maxOf(paddingsX.right, paddingsY.right),
+            maxOf(paddingsX.bottom, paddingsY.bottom)
+        )
     }
 }
 

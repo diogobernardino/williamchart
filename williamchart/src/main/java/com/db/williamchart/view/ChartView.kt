@@ -1,12 +1,12 @@
 package com.db.williamchart.view
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
 import com.db.williamchart.ChartContract
@@ -16,7 +16,6 @@ import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.ChartLabel
-
 import com.db.williamchart.data.ChartSet
 import com.db.williamchart.renderer.ChartRenderer
 
@@ -28,9 +27,9 @@ abstract class ChartView @JvmOverloads constructor(
 
     enum class Axis { NONE, X, Y, XY }
 
-    private val defFrameWidth = 200
+    private val defaultFrameWidth = 200
 
-    private val defFrameHeight = 100
+    private val defaultFrameHeight = 100
 
     var labelsSize: Float = 60F
 
@@ -43,9 +42,16 @@ abstract class ChartView @JvmOverloads constructor(
     var animation: ChartAnimation = DefaultAnimation()
 
     private val drawListener = ViewTreeObserver.OnPreDrawListener {
-        renderer.preDraw(measuredWidth, measuredHeight,
-                paddingLeft, paddingTop, paddingRight, paddingBottom,
-                axis, labelsSize)
+        renderer.preDraw(
+            measuredWidth,
+            measuredHeight,
+            paddingLeft,
+            paddingTop,
+            paddingRight,
+            paddingBottom,
+            axis,
+            labelsSize
+        )
     }
 
     protected var canvas: Canvas? = null
@@ -57,20 +63,9 @@ abstract class ChartView @JvmOverloads constructor(
     init {
         viewTreeObserver.addOnPreDrawListener(drawListener)
 
-        val arr = context.theme.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0)
-
-        axis = when (arr.getString(R.styleable.ChartAttrs_chart_axis)) {
-            "0" -> Axis.NONE
-            "1" -> Axis.X
-            "2" -> Axis.Y
-            else -> Axis.XY
-        }
-        labelsSize = arr.getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
-        labelsColor = arr.getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
-        if (arr.hasValue(R.styleable.ChartAttrs_chart_labelsFont))
-            labelsFont =
-                    ResourcesCompat.getFont(context,
-                            arr.getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1))
+        val styledAttributes =
+            context.theme.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0)
+        handleAttributes(styledAttributes)
     }
 
     override fun onAttachedToWindow() {
@@ -87,12 +82,13 @@ abstract class ChartView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
-        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
 
         setMeasuredDimension(
-                if (widthMode == View.MeasureSpec.AT_MOST) defFrameWidth else widthMeasureSpec,
-                if (heightMode == View.MeasureSpec.AT_MOST) defFrameHeight else heightMeasureSpec)
+            if (widthMode == MeasureSpec.AT_MOST) defaultFrameWidth else widthMeasureSpec,
+            if (heightMode == MeasureSpec.AT_MOST) defaultFrameHeight else heightMeasureSpec
+        )
     }
 
     /**
@@ -110,11 +106,23 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.draw()
     }
 
+    override fun drawLabels(xLabels: List<ChartLabel>) {
+
+        if (canvas == null) return
+
+        painter.prepare(
+            textSize = labelsSize,
+            color = labelsColor,
+            font = labelsFont
+        )
+        xLabels.forEach { canvas!!.drawText(it.label, it.x, it.y, painter.paint) }
+    }
+
     fun add(set: ChartSet) {
         renderer.add(set)
     }
 
-    fun render() {
+    fun show() {
         renderer.render()
     }
 
@@ -122,14 +130,23 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.anim(animation)
     }
 
-    override fun drawLabels(xLabels: List<ChartLabel>) {
+    private fun handleAttributes(typedArray: TypedArray) {
 
-        if (canvas == null) return
+        axis = when (typedArray.getString(R.styleable.ChartAttrs_chart_axis)) {
+            "0" -> Axis.NONE
+            "1" -> Axis.X
+            "2" -> Axis.Y
+            else -> Axis.XY
+        }
+        labelsSize = typedArray.getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
+        labelsColor = typedArray.getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
+        if (typedArray.hasValue(R.styleable.ChartAttrs_chart_labelsFont))
+            labelsFont =
+                ResourcesCompat.getFont(
+                    context,
+                    typedArray.getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1)
+                )
 
-        painter.prepare(
-                textSize = labelsSize,
-                color = labelsColor,
-                font = labelsFont)
-        xLabels.forEach { canvas!!.drawText(it.label, it.x, it.y, painter.paint) }
+        typedArray.recycle()
     }
 }

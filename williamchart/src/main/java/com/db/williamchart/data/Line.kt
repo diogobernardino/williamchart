@@ -1,7 +1,7 @@
 package com.db.williamchart.data
 
-import android.support.annotation.ColorInt
-import android.support.annotation.Size
+import androidx.annotation.ColorInt
+import androidx.annotation.Size
 
 data class Line(
     override val entries: MutableList<ChartEntry> = mutableListOf(),
@@ -9,7 +9,8 @@ data class Line(
     var smooth: Boolean = false,
     var strokeWidth: Float = 4F,
     var fillColor: Int = 0,
-    @Size(min = 2, max = 2) var gradientFillColors: IntArray = intArrayOf()) : ChartSet {
+    @Size(min = 2, max = 2) var gradientFillColors: IntArray = intArrayOf(0, 0)
+) : ChartSet {
 
     override fun add(entry: ChartEntry) {
         entries.add(entry)

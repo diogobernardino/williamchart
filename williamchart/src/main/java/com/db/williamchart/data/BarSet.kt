@@ -1,6 +1,6 @@
 package com.db.williamchart.data
 
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 
 data class BarSet(
     override val entries: MutableList<ChartEntry> = mutableListOf(),

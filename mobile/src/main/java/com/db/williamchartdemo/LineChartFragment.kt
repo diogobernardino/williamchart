@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.db.williamchart.data.BarSet
 import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
 import kotlinx.android.synthetic.main.linechart_frag.*
@@ -22,29 +23,24 @@ class LineChartFragment : Fragment() {
 
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {
 
-        val set = Line()
-        set.add(Point("label1", 5f))
-        set.add(Point("label2", 4.5f))
-        set.add(Point("label3", 4.7f))
-        set.add(Point("label4", 3.5f))
-        set.add(Point("label5", 3.6f))
-        set.add(Point("label6", 7.5f))
-        set.add(Point("label7", 7.5f))
-        set.add(Point("label8", 10f))
-        set.add(Point("label9", 5f))
-        set.add(Point("label10", 6.5f))
-        set.add(Point("label11", 3f))
-        set.add(Point("label12", 4f))
-        set.smooth = true
-        set.gradientFillColors = intArrayOf(Color.WHITE, Color.BLACK)
+        val lineSet = Line()
+        lineSet.add(Point("label1", 938F))
+        lineSet.add(Point("label2", 940F))
+        lineSet.add(Point("label3", 939F))
+        lineSet.smooth = false
+        lineSet.gradientFillColors = intArrayOf(Color.WHITE, Color.BLACK)
 
-        chart.add(set)
-        chart.animation.duration = 10000
-        chart.show()
-    }
+        lineChart.add(lineSet)
+        lineChart.animation.duration = 10000
+        lineChart.show()
 
-    companion object {
+        val barSet = BarSet()
+        barSet.add(Point("label1", 400F))
+        barSet.add(Point("label2", 940F))
+        barSet.add(Point("label3", 200F))
 
-        fun newInstance() = LineChartFragment()
+        barChart.add(barSet)
+        barChart.animation.duration = 10000
+        barChart.show()
     }
 }

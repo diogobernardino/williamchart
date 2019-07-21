@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.db.williamchart.data.BarSet
 import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
+import com.db.williamchart.view.ChartView
 import kotlinx.android.synthetic.main.linechart_frag.*
 
 class LineChartFragment : Fragment() {
@@ -32,6 +33,8 @@ class LineChartFragment : Fragment() {
 
         lineChart.add(lineSet)
         lineChart.animation.duration = 10000
+        lineChart.axis = ChartView.Axis.NONE
+
         lineChart.show()
 
         val barSet = BarSet()
@@ -41,6 +44,7 @@ class LineChartFragment : Fragment() {
 
         barChart.add(barSet)
         barChart.animation.duration = 10000
+        barChart.axis = ChartView.Axis.X
         barChart.show()
     }
 }

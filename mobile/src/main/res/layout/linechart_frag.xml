@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/layout_background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundGuideline"

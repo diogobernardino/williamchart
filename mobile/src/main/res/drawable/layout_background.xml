@@ -9,7 +9,10 @@
         android:right="-100dp"
         android:top="-80dp">
         <shape android:shape="oval">
-            <solid android:color="@color/colorPrimary" />
+            <gradient
+                android:startColor="#3B5998"
+                android:endColor="@color/colorAccent"
+                android:angle="0"/>
         </shape>
     </item>
 </layer-list>

@@ -28,8 +28,10 @@ class LineChartFragment : Fragment() {
         lineSet.add(Point("label1", 938F))
         lineSet.add(Point("label2", 940F))
         lineSet.add(Point("label3", 939F))
-        lineSet.smooth = false
-        lineSet.gradientFillColors = intArrayOf(Color.WHITE, Color.BLACK)
+        lineSet.smooth = true
+        lineSet.gradientFillColors = intArrayOf(Color.parseColor("#FFD1F2"), Color.WHITE)
+        lineSet.strokeWidth = 11F
+        lineSet.color = Color.parseColor("#F971AC")
 
         lineChart.add(lineSet)
         lineChart.animation.duration = 10000

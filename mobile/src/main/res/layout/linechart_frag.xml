@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:text="w"
         android:textSize="60sp"
+        android:textColor="@android:color/white"
         android:fontFamily="@font/supermercado_one"
         app:layout_constraintTop_toTopOf="@id/appLogo"
         app:layout_constraintLeft_toLeftOf="parent"

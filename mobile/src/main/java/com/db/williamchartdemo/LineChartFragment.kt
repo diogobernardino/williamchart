@@ -29,7 +29,11 @@ class LineChartFragment : Fragment() {
         lineSet.add(Point("label2", 940F))
         lineSet.add(Point("label3", 939F))
         lineSet.smooth = true
-        lineSet.gradientFillColors = intArrayOf(Color.parseColor("#FFD1F2"), Color.WHITE)
+        lineSet.gradientFillColors =
+            intArrayOf(
+                Color.parseColor("#FFD1F2"),
+                Color.TRANSPARENT
+            )
         lineSet.strokeWidth = 11F
         lineSet.color = Color.parseColor("#F971AC")
 

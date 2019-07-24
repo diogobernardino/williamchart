@@ -23,10 +23,19 @@ class LineChartFragment : Fragment() {
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {
 
         val set = Line()
-        set.add(Point("label1", 938F))
-        set.add(Point("label2", 940F))
-        set.add(Point("label3", 939F))
-        set.smooth = false
+        set.add(Point("label1", 5f))
+        set.add(Point("label2", 4.5f))
+        set.add(Point("label3", 4.7f))
+        set.add(Point("label4", 3.5f))
+        set.add(Point("label5", 3.6f))
+        set.add(Point("label6", 7.5f))
+        set.add(Point("label7", 7.5f))
+        set.add(Point("label8", 10f))
+        set.add(Point("label9", 5f))
+        set.add(Point("label10", 6.5f))
+        set.add(Point("label11", 3f))
+        set.add(Point("label12", 4f))
+        set.smooth = true
         set.gradientFillColors = intArrayOf(Color.WHITE, Color.BLACK)
 
         chart.add(set)

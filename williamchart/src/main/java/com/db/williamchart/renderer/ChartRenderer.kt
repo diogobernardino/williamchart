@@ -3,8 +3,8 @@ package com.db.williamchart.renderer
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.ChartEntry
-import com.db.williamchart.data.ChartLabel
+import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.Label
 import com.db.williamchart.view.ChartView.Axis
 
 class ChartRenderer(
@@ -15,11 +15,11 @@ class ChartRenderer(
 
     private val defaultStepNumY = 3
 
-    private var data: List<ChartEntry> = listOf()
+    private var data: List<DataPoint> = listOf()
 
-    private var xLabels: List<ChartLabel> = arrayListOf()
+    private var xLabels: List<Label> = arrayListOf()
 
-    private var yLabels: List<ChartLabel> = arrayListOf()
+    private var yLabels: List<Label> = arrayListOf()
 
     private var innerFrameLeft: Float = 0F
 
@@ -105,11 +105,11 @@ class ChartRenderer(
 
     private fun add(entries: HashMap<String, Float>) {
         data = entries.map {
-            ChartEntry(
+            DataPoint(
                 label = it.key,
                 value = it.value,
-                x = 0f,
-                y = 0f
+                screenPositionX = 0f,
+                screenPositionY = 0f
             )
         }
     }
@@ -133,18 +133,18 @@ class ChartRenderer(
         }
     }
 
-    private fun defineX(): List<ChartLabel> {
-        return data.map { ChartLabel(it.label, 0F, 0F) }
+    private fun defineX(): List<Label> {
+        return data.map { Label(it.label, 0F, 0F) }
     }
 
-    private fun defineY(): List<ChartLabel> {
+    private fun defineY(): List<Label> {
 
         val borders = findBorderValues(data)
         val valuesStep = (borders.max - borders.min) / defaultStepNumY
 
         return List(defaultStepNumY + 1) {
             val aux = borders.min + valuesStep * it
-            ChartLabel(aux.toString(), 0F, 0F)
+            Label(aux.toString(), 0F, 0F)
         }
     }
 
@@ -202,14 +202,14 @@ class ChartRenderer(
         val borders = findBorderValues(data)
 
         data.forEachIndexed { index, entry ->
-            entry.x = xLabels[index].x
-            entry.y = frameBottom -
+            entry.screenPositionX = xLabels[index].x
+            entry.screenPositionY = frameBottom -
                 ((frameBottom - frameTop) * (entry.value - borders.min) /
                     (borders.max - borders.min))
         }
     }
 
-    private fun findBorderValues(entries: List<ChartEntry>): Borders {
+    private fun findBorderValues(entries: List<DataPoint>): Borders {
 
         if (entries.isEmpty()) return Borders(0F, 1F)
 

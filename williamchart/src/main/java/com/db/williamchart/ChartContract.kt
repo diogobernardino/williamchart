@@ -1,22 +1,22 @@
 package com.db.williamchart
 
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.ChartEntry
-import com.db.williamchart.data.ChartLabel
+import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.Label
 import com.db.williamchart.view.ChartView.Axis
 
 interface ChartContract {
 
     interface View {
 
-        fun drawLabels(xLabels: List<ChartLabel>)
+        fun drawLabels(xLabels: List<Label>)
 
         fun drawData(
             innerFrameLeft: Float,
             innerFrameTop: Float,
             innerFrameRight: Float,
             innerFrameBottom: Float,
-            entries: List<ChartEntry>
+            entries: List<DataPoint>
         )
 
         fun postInvalidate()

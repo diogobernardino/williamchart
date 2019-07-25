@@ -1,8 +1,8 @@
 package com.db.williamchart
 
 import com.db.williamchart.animation.NoAnimation
-import com.db.williamchart.data.ChartLabel
-import com.db.williamchart.data.ChartSet
+import com.db.williamchart.data.Label
+//import com.db.williamchart.data.ChartSet
 import com.db.williamchart.renderer.ChartRenderer
 import com.db.williamchart.view.ChartView.Axis
 import org.junit.Before
@@ -25,9 +25,9 @@ class ChartRendererTest {
 
     @Mock private lateinit var painter: Painter
 
-    @Captor private lateinit var setCaptor: ArgumentCaptor<ChartSet>
+    //@Captor private lateinit var setCaptor: ArgumentCaptor<ChartSet>
 
-    @Captor private lateinit var labelsCaptor: ArgumentCaptor<List<ChartLabel>>
+    @Captor private lateinit var labelsCaptor: ArgumentCaptor<List<Label>>
 
     private lateinit var renderer: ChartRenderer
 

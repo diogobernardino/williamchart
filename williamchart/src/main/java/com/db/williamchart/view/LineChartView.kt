@@ -7,7 +7,7 @@ import android.graphics.Path
 import android.graphics.Shader
 import android.util.AttributeSet
 import androidx.annotation.Size
-import com.db.williamchart.data.ChartEntry
+import com.db.williamchart.data.DataPoint
 
 class LineChartView @JvmOverloads constructor(
     context: Context,
@@ -31,7 +31,7 @@ class LineChartView @JvmOverloads constructor(
         innerFrameTop: Float,
         innerFrameRight: Float,
         innerFrameBottom: Float,
-        entries: List<ChartEntry>
+        entries: List<DataPoint>
     ) {
 
         val linePath =
@@ -66,20 +66,20 @@ class LineChartView @JvmOverloads constructor(
         canvas.drawPath(linePath, painter.paint)
     }
 
-    private fun createLinePath(points: List<ChartEntry>): Path {
+    private fun createLinePath(points: List<DataPoint>): Path {
 
         val res = Path()
 
-        res.moveTo(points.first().x, points.first().y)
+        res.moveTo(points.first().screenPositionX, points.first().screenPositionY)
         for (i in 1 until points.size)
-            res.lineTo(points[i].x, points[i].y)
+            res.lineTo(points[i].screenPositionX, points[i].screenPositionY)
         return res
     }
 
     /**
      * Credits: http://www.jayway.com/author/andersericsson/
      */
-    private fun createSmoothLinePath(points: List<ChartEntry>): Path {
+    private fun createSmoothLinePath(points: List<DataPoint>): Path {
 
         var thisPointX: Float
         var thisPointY: Float
@@ -95,21 +95,21 @@ class LineChartView @JvmOverloads constructor(
         var secondControlY: Float
 
         val res = Path()
-        res.moveTo(points.first().x, points.first().y)
+        res.moveTo(points.first().screenPositionX, points.first().screenPositionY)
 
         for (i in 0 until points.size - 1) {
 
-            thisPointX = points[i].x
-            thisPointY = points[i].y
+            thisPointX = points[i].screenPositionX
+            thisPointY = points[i].screenPositionY
 
-            nextPointX = points[i + 1].x
-            nextPointY = points[i + 1].y
+            nextPointX = points[i + 1].screenPositionX
+            nextPointY = points[i + 1].screenPositionY
 
-            startDiffX = nextPointX - points[si(points.size, i - 1)].x
-            startDiffY = nextPointY - points[si(points.size, i - 1)].y
+            startDiffX = nextPointX - points[si(points.size, i - 1)].screenPositionX
+            startDiffY = nextPointY - points[si(points.size, i - 1)].screenPositionY
 
-            endDiffX = points[si(points.size, i + 2)].x - thisPointX
-            endDiffY = points[si(points.size, i + 2)].y - thisPointY
+            endDiffX = points[si(points.size, i + 2)].screenPositionX - thisPointX
+            endDiffY = points[si(points.size, i + 2)].screenPositionY - thisPointY
 
             firstControlX = thisPointX + SMOOTH_FACTOR * startDiffX
             firstControlY = thisPointY + SMOOTH_FACTOR * startDiffY
@@ -125,14 +125,14 @@ class LineChartView @JvmOverloads constructor(
 
     private fun createBackgroundPath(
         path: Path,
-        points: List<ChartEntry>,
+        points: List<DataPoint>,
         innerFrameBottom: Float
     ): Path {
 
         val res = Path(path)
 
-        res.lineTo(points.last().x, innerFrameBottom)
-        res.lineTo(points.first().x, innerFrameBottom)
+        res.lineTo(points.last().screenPositionX, innerFrameBottom)
+        res.lineTo(points.first().screenPositionX, innerFrameBottom)
         res.close()
 
         return res

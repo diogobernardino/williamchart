@@ -15,7 +15,7 @@ import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.animation.NoAnimation
-import com.db.williamchart.data.ChartLabel
+import com.db.williamchart.data.Label
 import com.db.williamchart.renderer.ChartRenderer
 
 abstract class ChartView @JvmOverloads constructor(
@@ -105,7 +105,7 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.draw()
     }
 
-    override fun drawLabels(xLabels: List<ChartLabel>) {
+    override fun drawLabels(xLabels: List<Label>) {
 
         painter.prepare(
             textSize = labelsSize,

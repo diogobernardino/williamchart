@@ -2,7 +2,7 @@ package com.db.williamchart.animation
 
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
-import com.db.williamchart.data.ChartEntry
+import com.db.williamchart.data.DataPoint
 
 abstract class ChartAnimation {
 
@@ -10,5 +10,5 @@ abstract class ChartAnimation {
 
     var interpolator: Interpolator = DecelerateInterpolator()
 
-    abstract fun animateFrom(y: Float, entries: List<ChartEntry>, callback: () -> Unit): ChartAnimation
+    abstract fun animateFrom(y: Float, entries: List<DataPoint>, callback: () -> Unit): ChartAnimation
 }

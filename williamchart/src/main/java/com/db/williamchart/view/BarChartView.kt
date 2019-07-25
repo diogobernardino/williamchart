@@ -5,7 +5,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
-import com.db.williamchart.data.ChartEntry
+import com.db.williamchart.data.DataPoint
 
 class BarChartView @JvmOverloads constructor(
     context: Context,
@@ -29,7 +29,7 @@ class BarChartView @JvmOverloads constructor(
         innerFrameTop: Float,
         innerFrameRight: Float,
         innerFrameBottom: Float,
-        entries: List<ChartEntry>
+        entries: List<DataPoint>
     ) {
 
         val halfBarWidth = (innerFrameRight - innerFrameLeft - (entries.size + 1) * spacing) / entries.size / 2
@@ -38,9 +38,9 @@ class BarChartView @JvmOverloads constructor(
         entries.forEach {
             canvas.drawRoundRect(
                 RectF(
-                    it.x - halfBarWidth,
-                    it.y,
-                    it.x + halfBarWidth,
+                    it.screenPositionX - halfBarWidth,
+                    it.screenPositionY,
+                    it.screenPositionX + halfBarWidth,
                     innerFrameBottom
                 ),
                 barRadius,

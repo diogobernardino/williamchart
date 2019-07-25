@@ -16,7 +16,7 @@ class LineChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ChartView(context, attrs, defStyleAttr) {
 
-    private val smoothFactor = 0.15f
+    private val smoothFactor = 0.20f
 
     override fun drawData(
         innerFrameLeft: Float,

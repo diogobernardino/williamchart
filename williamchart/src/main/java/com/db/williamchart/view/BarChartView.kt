@@ -29,16 +29,14 @@ class BarChartView @JvmOverloads constructor(
         innerFrameTop: Float,
         innerFrameRight: Float,
         innerFrameBottom: Float,
-        entries: MutableList<ChartEntry>
+        entries: List<ChartEntry>
     ) {
-
-        if (canvas == null) return
 
         val halfBarWidth = (innerFrameRight - innerFrameLeft - (entries.size + 1) * spacing) / entries.size / 2
 
         painter.prepare(color = barColor, style = Paint.Style.FILL)
         entries.forEach {
-            canvas!!.drawRoundRect(
+            canvas.drawRoundRect(
                 RectF(
                     it.x - halfBarWidth,
                     it.y,

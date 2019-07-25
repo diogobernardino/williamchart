@@ -15,7 +15,6 @@ import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.animation.NoAnimation
-import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
 import com.db.williamchart.renderer.ChartRenderer
 
@@ -54,7 +53,7 @@ abstract class ChartView @JvmOverloads constructor(
         )
     }
 
-    protected var canvas: Canvas? = null
+    protected lateinit var canvas: Canvas
 
     protected val painter: Painter = Painter()
 
@@ -108,26 +107,20 @@ abstract class ChartView @JvmOverloads constructor(
 
     override fun drawLabels(xLabels: List<ChartLabel>) {
 
-        if (canvas == null) return
-
         painter.prepare(
             textSize = labelsSize,
             color = labelsColor,
             font = labelsFont
         )
-        xLabels.forEach { canvas!!.drawText(it.label, it.x, it.y, painter.paint) }
+        xLabels.forEach { canvas.drawText(it.label, it.x, it.y, painter.paint) }
     }
 
-    fun add(entries: MutableList<ChartEntry>) {
-        renderer.add(entries)
+    fun show(entries: HashMap<String, Float>) {
+        renderer.render(entries)
     }
 
-    fun show() {
-        renderer.render()
-    }
-
-    fun anim() {
-        renderer.anim(animation)
+    fun anim(entries: HashMap<String, Float>) {
+        renderer.anim(entries, animation)
     }
 
     private fun handleAttributes(typedArray: TypedArray) {

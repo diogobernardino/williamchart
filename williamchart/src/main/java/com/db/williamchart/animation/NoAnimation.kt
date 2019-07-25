@@ -6,7 +6,7 @@ class NoAnimation : ChartAnimation() {
 
     override fun animateFrom(
         y: Float,
-        entries: MutableList<ChartEntry>,
+        entries: List<ChartEntry>,
         callback: () -> Unit
     ): ChartAnimation {
         callback()

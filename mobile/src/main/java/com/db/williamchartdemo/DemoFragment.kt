@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.view.ChartView
 import kotlinx.android.synthetic.main.demo_fragment.*
 
@@ -22,21 +21,21 @@ class DemoFragment : Fragment() {
 
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {
 
-        val lineSet = mutableListOf<ChartEntry>()
-        lineSet.add(ChartEntry("label1", 5f))
-        lineSet.add(ChartEntry("label2", 4.5f))
-        lineSet.add(ChartEntry("label3", 4.7f))
-        lineSet.add(ChartEntry("label4", 3.5f))
-        lineSet.add(ChartEntry("label5", 3.6f))
-        lineSet.add(ChartEntry("label6", 7.5f))
-        lineSet.add(ChartEntry("label7", 7.5f))
-        lineSet.add(ChartEntry("label8", 10f))
-        lineSet.add(ChartEntry("label9", 5f))
-        lineSet.add(ChartEntry("label10", 6.5f))
-        lineSet.add(ChartEntry("label11", 3f))
-        lineSet.add(ChartEntry("label12", 4f))
+        val lineSet = hashMapOf(
+            "label1" to 5f,
+            "label2" to 4.5f,
+            "label3" to 4.7f,
+            "label4" to 3.5f,
+            "label5" to 3.6f,
+            "label6" to 7.5f,
+            "label7" to 7.5f,
+            "label8" to 10f,
+            "label9" to 5f,
+            "label10" to 6.5f,
+            "label11" to 3f,
+            "label12" to 4f
+        )
 
-        lineChart.add(lineSet)
         lineChart.smooth = true
         lineChart.gradientFillColors =
             intArrayOf(
@@ -47,16 +46,16 @@ class DemoFragment : Fragment() {
         lineChart.lineColor = Color.parseColor("#F971AC")
         lineChart.animation.duration = 10000
         lineChart.axis = ChartView.Axis.NONE
-        lineChart.show()
+        lineChart.show(lineSet)
 
-        val barSet = mutableListOf<ChartEntry>()
-        barSet.add(ChartEntry("label1", 400F))
-        barSet.add(ChartEntry("label2", 940F))
-        barSet.add(ChartEntry("label3", 200F))
+        val barSet = hashMapOf(
+            "label1" to 400F,
+            "label2" to 940F,
+            "label3" to 200F
+        )
 
-        barChart.add(barSet)
         barChart.animation.duration = 10000
         barChart.axis = ChartView.Axis.X
-        barChart.show()
+        barChart.show(barSet)
     }
 }

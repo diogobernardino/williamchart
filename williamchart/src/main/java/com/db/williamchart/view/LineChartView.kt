@@ -16,9 +16,13 @@ class LineChartView @JvmOverloads constructor(
 ) : ChartView(context, attrs, defStyleAttr) {
 
     var smooth: Boolean = false
+
     var strokeWidth: Float = 4F
+
     var fillColor: Int = 0
+
     var lineColor: Int = -0x1000000 // Black as default
+
     @Size(min = 2, max = 2)
     var gradientFillColors: IntArray = intArrayOf(0, 0)
 
@@ -27,12 +31,12 @@ class LineChartView @JvmOverloads constructor(
         innerFrameTop: Float,
         innerFrameRight: Float,
         innerFrameBottom: Float,
-        entries: MutableList<ChartEntry>
+        entries: List<ChartEntry>
     ) {
 
-        if (canvas == null) return
-
-        val linePath = if (!smooth) createLinePath(entries) else createSmoothLinePath(entries)
+        val linePath =
+            if (!smooth) createLinePath(entries)
+            else createSmoothLinePath(entries)
 
         if (fillColor != 0 || gradientFillColors.isNotEmpty()) { // Draw background
 
@@ -51,7 +55,7 @@ class LineChartView @JvmOverloads constructor(
                 style = Paint.Style.FILL
             )
 
-            canvas!!.drawPath(
+            canvas.drawPath(
                 createBackgroundPath(linePath, entries, innerFrameBottom),
                 painter.paint
             )
@@ -59,10 +63,10 @@ class LineChartView @JvmOverloads constructor(
 
         // Draw line
         painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = strokeWidth)
-        canvas!!.drawPath(linePath, painter.paint)
+        canvas.drawPath(linePath, painter.paint)
     }
 
-    private fun createLinePath(points: MutableList<ChartEntry>): Path {
+    private fun createLinePath(points: List<ChartEntry>): Path {
 
         val res = Path()
 
@@ -75,7 +79,7 @@ class LineChartView @JvmOverloads constructor(
     /**
      * Credits: http://www.jayway.com/author/andersericsson/
      */
-    private fun createSmoothLinePath(points: MutableList<ChartEntry>): Path {
+    private fun createSmoothLinePath(points: List<ChartEntry>): Path {
 
         var thisPointX: Float
         var thisPointY: Float
@@ -121,7 +125,7 @@ class LineChartView @JvmOverloads constructor(
 
     private fun createBackgroundPath(
         path: Path,
-        points: MutableList<ChartEntry>,
+        points: List<ChartEntry>,
         innerFrameBottom: Float
     ): Path {
 

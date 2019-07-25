@@ -16,7 +16,7 @@ interface ChartContract {
             innerFrameTop: Float,
             innerFrameRight: Float,
             innerFrameBottom: Float,
-            entries: MutableList<ChartEntry>
+            entries: List<ChartEntry>
         )
 
         fun postInvalidate()
@@ -37,10 +37,8 @@ interface ChartContract {
 
         fun draw()
 
-        fun render()
+        fun render(entries: HashMap<String, Float>)
 
-        fun anim(animation: ChartAnimation)
-
-        fun add(entries: MutableList<ChartEntry>)
+        fun anim(entries: HashMap<String, Float>, animation: ChartAnimation)
     }
 }

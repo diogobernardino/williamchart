@@ -15,7 +15,7 @@ class ChartRenderer(
 
     private val defaultStepNumY = 3
 
-    private var data: MutableList<ChartEntry> = mutableListOf()
+    private var data: List<ChartEntry> = listOf()
 
     private var xLabels: List<ChartLabel> = arrayListOf()
 
@@ -92,17 +92,26 @@ class ChartRenderer(
         view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data)
     }
 
-    override fun render() {
+    override fun render(entries: HashMap<String, Float>) {
+        add(entries)
         view.postInvalidate()
     }
 
-    override fun anim(animation: ChartAnimation) {
+    override fun anim(entries: HashMap<String, Float>, animation: ChartAnimation) {
+        add(entries)
         this.animation = animation
         view.postInvalidate()
     }
 
-    override fun add(entries: MutableList<ChartEntry>) {
-        data = entries
+    private fun add(entries: HashMap<String, Float>) {
+        data = entries.map {
+            ChartEntry(
+                label = it.key,
+                value = it.value,
+                x = 0f,
+                y = 0f
+            )
+        }
     }
 
     private fun measurePaddingsX(): Paddings {
@@ -200,7 +209,7 @@ class ChartRenderer(
         }
     }
 
-    private fun findBorderValues(entries: MutableList<ChartEntry>): Borders {
+    private fun findBorderValues(entries: List<ChartEntry>): Borders {
 
         if (entries.isEmpty()) return Borders(0F, 1F)
 

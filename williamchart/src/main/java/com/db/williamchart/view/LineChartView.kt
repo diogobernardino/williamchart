@@ -6,9 +6,8 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Shader
 import android.util.AttributeSet
+import androidx.annotation.Size
 import com.db.williamchart.data.ChartEntry
-import com.db.williamchart.data.ChartSet
-import com.db.williamchart.data.Line
 
 class LineChartView @JvmOverloads constructor(
     context: Context,
@@ -16,45 +15,50 @@ class LineChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ChartView(context, attrs, defStyleAttr) {
 
+    var smooth: Boolean = false
+    var strokeWidth: Float = 4F
+    var fillColor: Int = 0
+    var lineColor: Int = -0x1000000 // Black as default
+    @Size(min = 2, max = 2)
+    var gradientFillColors: IntArray = intArrayOf(0, 0)
+
     override fun drawData(
         innerFrameLeft: Float,
         innerFrameTop: Float,
         innerFrameRight: Float,
         innerFrameBottom: Float,
-        data: ChartSet
+        entries: MutableList<ChartEntry>
     ) {
 
         if (canvas == null) return
 
-        val line: Line = data as Line
-        val linePath: Path
+        val linePath = if (!smooth) createLinePath(entries) else createSmoothLinePath(entries)
 
-        linePath = if (!line.smooth) createLinePath(line.entries) else createSmoothLinePath(line.entries)
+        if (fillColor != 0 || gradientFillColors.isNotEmpty()) { // Draw background
 
-        if (line.hasFill() || line.hasGradientFillColors()) { // Draw background
-
-            if (line.hasFill()) painter.prepare(color = line.fillColor, style = Paint.Style.FILL)
+            if (fillColor != 0)
+                painter.prepare(color = fillColor, style = Paint.Style.FILL)
             else painter.prepare(
                 shader = LinearGradient(
                     innerFrameLeft,
                     innerFrameTop,
                     innerFrameLeft,
                     innerFrameBottom,
-                    line.gradientFillColors[0],
-                    line.gradientFillColors[1],
+                    gradientFillColors[0],
+                    gradientFillColors[1],
                     Shader.TileMode.MIRROR
                 ),
                 style = Paint.Style.FILL
             )
 
             canvas!!.drawPath(
-                createBackgroundPath(linePath, line.entries, innerFrameBottom),
+                createBackgroundPath(linePath, entries, innerFrameBottom),
                 painter.paint
             )
         }
 
         // Draw line
-        painter.prepare(color = line.color, style = Paint.Style.STROKE, strokeWidth = line.strokeWidth)
+        painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = strokeWidth)
         canvas!!.drawPath(linePath, painter.paint)
     }
 

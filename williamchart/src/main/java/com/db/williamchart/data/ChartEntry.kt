@@ -1,9 +1,9 @@
 package com.db.williamchart.data
 
-interface ChartEntry {
-
-    val label: String
+data class ChartEntry(
+    val label: String,
     val value: Float
-    var x: Float
-    var y: Float
+) {
+    var x: Float = 0f
+    var y: Float = 0f
 }

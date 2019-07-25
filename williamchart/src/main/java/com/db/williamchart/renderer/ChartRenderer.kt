@@ -5,7 +5,6 @@ import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
-import com.db.williamchart.data.ChartSet
 import com.db.williamchart.view.ChartView.Axis
 
 class ChartRenderer(
@@ -16,7 +15,7 @@ class ChartRenderer(
 
     private val defaultStepNumY = 3
 
-    private var data: ChartSet? = null
+    private var data: MutableList<ChartEntry> = mutableListOf()
 
     private var xLabels: List<ChartLabel> = arrayListOf()
 
@@ -53,9 +52,7 @@ class ChartRenderer(
 
         if (isProcessed) return true // Data already processed, proceed with drawing
 
-        if (data == null) return false // No data, cancel drawing
-
-        if (data!!.entries.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
+        if (data.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
 
         val frameLeft = paddingLeft.toFloat()
         val frameTop = paddingTop.toFloat()
@@ -80,7 +77,7 @@ class ChartRenderer(
 
         processEntries(innerFrameTop, innerFrameBottom)
 
-        animation.animateFrom(innerFrameBottom, data!!.entries) { view.postInvalidate() }
+        animation.animateFrom(innerFrameBottom, data) { view.postInvalidate() }
 
         isProcessed = true
 
@@ -89,12 +86,10 @@ class ChartRenderer(
 
     override fun draw() {
 
-        if (data == null) return
-
         if (axis == Axis.XY || axis == Axis.X) view.drawLabels(xLabels)
         if (axis == Axis.XY || axis == Axis.Y) view.drawLabels(yLabels)
 
-        view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data!!)
+        view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data)
     }
 
     override fun render() {
@@ -106,8 +101,8 @@ class ChartRenderer(
         view.postInvalidate()
     }
 
-    override fun add(set: ChartSet) {
-        data = set
+    override fun add(entries: MutableList<ChartEntry>) {
+        data = entries
     }
 
     private fun measurePaddingsX(): Paddings {
@@ -130,12 +125,12 @@ class ChartRenderer(
     }
 
     private fun defineX(): List<ChartLabel> {
-        return data!!.entries.map { ChartLabel(it.label, 0F, 0F) }
+        return data.map { ChartLabel(it.label, 0F, 0F) }
     }
 
     private fun defineY(): List<ChartLabel> {
 
-        val borders = findBorderValues(data!!.entries)
+        val borders = findBorderValues(data)
         val valuesStep = (borders.max - borders.min) / defaultStepNumY
 
         return List(defaultStepNumY + 1) {
@@ -195,9 +190,9 @@ class ChartRenderer(
         frameBottom: Float
     ) {
 
-        val borders = findBorderValues(data!!.entries)
+        val borders = findBorderValues(data)
 
-        data!!.entries.forEachIndexed { index, entry ->
+        data.forEachIndexed { index, entry ->
             entry.x = xLabels[index].x
             entry.y = frameBottom -
                 ((frameBottom - frameTop) * (entry.value - borders.min) /

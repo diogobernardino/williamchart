@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
-import com.db.williamchart.data.BarSet
-import com.db.williamchart.data.ChartSet
+import androidx.annotation.ColorInt
+import com.db.williamchart.data.ChartEntry
 
 class BarChartView @JvmOverloads constructor(
     context: Context,
@@ -14,6 +14,10 @@ class BarChartView @JvmOverloads constructor(
 ) : ChartView(context, attrs, defStyleAttr) {
 
     var spacing = 10
+
+    @ColorInt
+    var barColor: Int = -0x1000000
+    var barRadius: Float = 0F
 
     init {
         renderer.xPacked = true
@@ -25,22 +29,26 @@ class BarChartView @JvmOverloads constructor(
         innerFrameTop: Float,
         innerFrameRight: Float,
         innerFrameBottom: Float,
-        data: ChartSet
+        entries: MutableList<ChartEntry>
     ) {
 
         if (canvas == null) return
 
-        val set: BarSet = data as BarSet
-        val halfBarWidth =
-                (innerFrameRight - innerFrameLeft - (data.entries.size + 1) * spacing) /
-                data.entries.size / 2
+        val halfBarWidth = (innerFrameRight - innerFrameLeft - (entries.size + 1) * spacing) / entries.size / 2
 
-        painter.prepare(color = set.color, style = Paint.Style.FILL)
-        set.entries.forEach {
+        painter.prepare(color = barColor, style = Paint.Style.FILL)
+        entries.forEach {
             canvas!!.drawRoundRect(
-                    RectF(it.x - halfBarWidth, it.y, it.x + halfBarWidth, innerFrameBottom),
-                    set.radius, set.radius,
-                    painter.paint)
+                RectF(
+                    it.x - halfBarWidth,
+                    it.y,
+                    it.x + halfBarWidth,
+                    innerFrameBottom
+                ),
+                barRadius,
+                barRadius,
+                painter.paint
+            )
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.db.williamchart
 
 import com.db.williamchart.animation.ChartAnimation
+import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
-import com.db.williamchart.data.ChartSet
 import com.db.williamchart.view.ChartView.Axis
 
 interface ChartContract {
@@ -16,7 +16,7 @@ interface ChartContract {
             innerFrameTop: Float,
             innerFrameRight: Float,
             innerFrameBottom: Float,
-            data: ChartSet
+            entries: MutableList<ChartEntry>
         )
 
         fun postInvalidate()
@@ -41,6 +41,6 @@ interface ChartContract {
 
         fun anim(animation: ChartAnimation)
 
-        fun add(set: ChartSet)
+        fun add(entries: MutableList<ChartEntry>)
     }
 }

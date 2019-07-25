@@ -15,8 +15,8 @@ import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.ChartEntry
 import com.db.williamchart.data.ChartLabel
-import com.db.williamchart.data.ChartSet
 import com.db.williamchart.renderer.ChartRenderer
 
 abstract class ChartView @JvmOverloads constructor(
@@ -118,8 +118,8 @@ abstract class ChartView @JvmOverloads constructor(
         xLabels.forEach { canvas!!.drawText(it.label, it.x, it.y, painter.paint) }
     }
 
-    fun add(set: ChartSet) {
-        renderer.add(set)
+    fun add(entries: MutableList<ChartEntry>) {
+        renderer.add(entries)
     }
 
     fun show() {

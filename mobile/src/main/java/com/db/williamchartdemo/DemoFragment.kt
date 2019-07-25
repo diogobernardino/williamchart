@@ -10,16 +10,16 @@ import com.db.williamchart.data.BarSet
 import com.db.williamchart.data.Line
 import com.db.williamchart.data.Point
 import com.db.williamchart.view.ChartView
-import kotlinx.android.synthetic.main.linechart_frag.*
+import kotlinx.android.synthetic.main.demo_fragment.*
 
-class LineChartFragment : Fragment() {
+class DemoFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.linechart_frag, container, false)
+        return inflater.inflate(R.layout.demo_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {

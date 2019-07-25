@@ -16,8 +16,6 @@ class LineChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ChartView(context, attrs, defStyleAttr) {
 
-    private val smoothFactor = 0.20f
-
     override fun drawData(
         innerFrameLeft: Float,
         innerFrameTop: Float,
@@ -37,18 +35,22 @@ class LineChartView @JvmOverloads constructor(
 
             if (line.hasFill()) painter.prepare(color = line.fillColor, style = Paint.Style.FILL)
             else painter.prepare(
-                    shader = LinearGradient(innerFrameLeft,
-                            innerFrameTop,
-                            innerFrameLeft,
-                            innerFrameBottom,
-                            line.gradientFillColors[0],
-                            line.gradientFillColors[1],
-                            Shader.TileMode.MIRROR),
-                    style = Paint.Style.FILL)
+                shader = LinearGradient(
+                    innerFrameLeft,
+                    innerFrameTop,
+                    innerFrameLeft,
+                    innerFrameBottom,
+                    line.gradientFillColors[0],
+                    line.gradientFillColors[1],
+                    Shader.TileMode.MIRROR
+                ),
+                style = Paint.Style.FILL
+            )
 
             canvas!!.drawPath(
-                    createBackgroundPath(linePath, line.entries, innerFrameBottom),
-                    painter.paint)
+                createBackgroundPath(linePath, line.entries, innerFrameBottom),
+                painter.paint
+            )
         }
 
         // Draw line
@@ -101,11 +103,11 @@ class LineChartView @JvmOverloads constructor(
             endDiffX = points[si(points.size, i + 2)].x - thisPointX
             endDiffY = points[si(points.size, i + 2)].y - thisPointY
 
-            firstControlX = thisPointX + smoothFactor * startDiffX
-            firstControlY = thisPointY + smoothFactor * startDiffY
+            firstControlX = thisPointX + SMOOTH_FACTOR * startDiffX
+            firstControlY = thisPointY + SMOOTH_FACTOR * startDiffY
 
-            secondControlX = nextPointX - smoothFactor * endDiffX
-            secondControlY = nextPointY - smoothFactor * endDiffY
+            secondControlX = nextPointX - SMOOTH_FACTOR * endDiffX
+            secondControlY = nextPointY - SMOOTH_FACTOR * endDiffY
 
             res.cubicTo(firstControlX, firstControlY, secondControlX, secondControlY, nextPointX, nextPointY)
         }
@@ -137,5 +139,9 @@ class LineChartView @JvmOverloads constructor(
             i < 0 -> 0
             else -> i
         }
+    }
+
+    companion object {
+        private const val SMOOTH_FACTOR = 0.20f
     }
 }

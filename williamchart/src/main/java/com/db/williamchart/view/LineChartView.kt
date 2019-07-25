@@ -99,7 +99,7 @@ class LineChartView @JvmOverloads constructor(
             startDiffY = nextPointY - points[si(points.size, i - 1)].y
 
             endDiffX = points[si(points.size, i + 2)].x - thisPointX
-            endDiffY = points[si(points.size, i + 29)].y - thisPointY
+            endDiffY = points[si(points.size, i + 2)].y - thisPointY
 
             firstControlX = thisPointX + smoothFactor * startDiffX
             firstControlY = thisPointY + smoothFactor * startDiffY

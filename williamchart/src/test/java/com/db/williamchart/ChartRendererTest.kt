@@ -1,11 +1,18 @@
 package com.db.williamchart
 
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Label
-//import com.db.williamchart.data.ChartSet
 import com.db.williamchart.renderer.ChartRenderer
 import com.db.williamchart.view.ChartView.Axis
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
@@ -21,64 +28,62 @@ class ChartRendererTest {
 
     private val defAxis = Axis.XY
 
-    @Mock private lateinit var view: ChartContract.View
+    @Mock
+    private lateinit var view: ChartContract.View
 
-    @Mock private lateinit var painter: Painter
+    @Mock
+    private lateinit var painter: Painter
 
-    //@Captor private lateinit var setCaptor: ArgumentCaptor<ChartSet>
+    @Captor
+    private lateinit var setCaptor: ArgumentCaptor<List<DataPoint>>
 
-    @Captor private lateinit var labelsCaptor: ArgumentCaptor<List<Label>>
+    @Captor
+    private lateinit var labelsCaptor: ArgumentCaptor<List<Label>>
 
     private lateinit var renderer: ChartRenderer
 
-    @Before fun setup() {
+    @Before
+    fun setup() {
 
         MockitoAnnotations.initMocks(this)
         renderer = ChartRenderer(view, painter, NoAnimation())
     }
 
-/*    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = IllegalArgumentException::class)
     fun addDataWithOneEntry_ThrowIlegalArgument() {
 
-        val set = Line()
-        set.add(Point("label", 1f))
+        val set = hashMapOf("label" to 1f)
 
-        renderer.add(set)
+        renderer.render(set)
         renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
-    }
-
-    @Test
-    fun noData_SkipPreDraw() {
-
-        renderer.draw()
-
-        verify(view, times(0)).drawData(any(), any(), any(), any(), any())
     }
 
     @Test
     fun addData_RetrievesProperData() {
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
+        renderer.render(set)
         renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
         verify(view).drawData(any(), any(), any(), any(), capture(setCaptor))
-        assertEquals(1F, setCaptor.value.entries[0].y)
-        assertEquals(0F, setCaptor.value.entries[1].y)
+        assertEquals(1F, setCaptor.value[0].screenPositionY)
+        assertEquals(0F, setCaptor.value[1].screenPositionY)
     }
 
     @Test
     fun chartWithAxisXY_XYDisplayed() {
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
+        renderer.render(set)
         renderer.draw()
 
         verify(view, times(2)).drawLabels(any())
@@ -87,13 +92,16 @@ class ChartRendererTest {
     @Test
     fun chartWithAxisX_XDisplayed() {
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
-        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
-                Axis.X, defLabels)
+        renderer.render(set)
+        renderer.preDraw(
+            defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+            Axis.X, defLabels
+        )
         renderer.draw()
 
         verify(view, times(1)).drawLabels(any())
@@ -102,13 +110,16 @@ class ChartRendererTest {
     @Test
     fun chartWithAxisY_YDisplayed() {
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
-        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
-                Axis.Y, defLabels)
+        renderer.render(set)
+        renderer.preDraw(
+            defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+            Axis.Y, defLabels
+        )
         renderer.draw()
 
         verify(view, times(1)).drawLabels(any())
@@ -117,11 +128,12 @@ class ChartRendererTest {
     @Test
     fun chartWithAxisXY_XLabelsInOrder() {
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
+        renderer.render(set)
         renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
@@ -135,11 +147,12 @@ class ChartRendererTest {
     @Test
     fun chartWithAxisXY_YLabelsInOrder() {
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
+        renderer.render(set)
         renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
         renderer.draw()
 
@@ -153,13 +166,16 @@ class ChartRendererTest {
     @Test
     fun noXY_XYNotDisplayed() {
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
-        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
-                Axis.NONE, defLabels)
+        renderer.render(set)
+        renderer.preDraw(
+            defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+            Axis.NONE, defLabels
+        )
         renderer.draw()
 
         verify(view, times(0)).drawLabels(any())
@@ -169,20 +185,23 @@ class ChartRendererTest {
     fun noXY_ChartDataFulfilsFrameWidth() {
 
         val labelWidth = 10F
-        `when`(painter.measureLabelWidth(any(), any())).thenReturn(labelWidth)
+        whenever(painter.measureLabelWidth(any(), any())).thenReturn(labelWidth)
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
-        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
-                Axis.NONE, defLabels)
+        renderer.render(set)
+        renderer.preDraw(
+            defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+            Axis.NONE, defLabels
+        )
         renderer.draw()
 
         verify(view).drawData(any(), any(), any(), any(), capture(setCaptor))
-        assertEquals(0F, setCaptor.value.entries.first().x)
-        assertEquals(defSize.toFloat(), setCaptor.value.entries.last().x)
+        assertEquals(0F, setCaptor.value.first().screenPositionX)
+        assertEquals(defSize.toFloat(), setCaptor.value.last().screenPositionX)
     }
 
     @Test
@@ -192,16 +211,19 @@ class ChartRendererTest {
         val height = 1000
         val labelWidth = 10F
         val labelheight = 10F
-        `when`(painter.measureLabelWidth(any(), any())).thenReturn(labelWidth)
-        `when`(painter.measureLabelHeight(any())).thenReturn(labelheight)
+        whenever(painter.measureLabelWidth(any(), any())).thenReturn(labelWidth)
+        whenever(painter.measureLabelHeight(any())).thenReturn(labelheight)
 
-        val set = Line()
-        set.add(Point("label0", 0f))
-        set.add(Point("label1", 1f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
-        renderer.add(set)
-        renderer.preDraw(width, height,
-                defPadding, defPadding, defPadding, defPadding, defAxis, defLabels)
+        renderer.render(set)
+        renderer.preDraw(
+            width, height,
+            defPadding, defPadding, defPadding, defPadding, defAxis, defLabels
+        )
         renderer.draw()
 
         verify(view, times(2)).drawLabels(capture(labelsCaptor))
@@ -218,19 +240,22 @@ class ChartRendererTest {
     @Test
     fun yStartsAtZero_YLabelIsZero() {
 
-        val set = Line()
-        set.add(Point("label0", 1f))
-        set.add(Point("label1", 2f))
+        val set = hashMapOf(
+            "label0" to 0f,
+            "label1" to 1f
+        )
 
         renderer.yAtZero = true
-        renderer.add(set)
-        renderer.preDraw(defSize, defSize, defPadding, defPadding, defPadding, defPadding,
-                Axis.Y, defLabels)
+        renderer.render(set)
+        renderer.preDraw(
+            defSize, defSize, defPadding, defPadding, defPadding, defPadding,
+            Axis.Y, defLabels
+        )
         renderer.draw()
 
         verify(view).drawLabels(capture(labelsCaptor))
         assertEquals("0.0", labelsCaptor.value.first().label)
-    }*/
+    }
 }
 
 /*

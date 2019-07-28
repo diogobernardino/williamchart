@@ -62,8 +62,8 @@ class ChartRenderer(
         this.axis = axis
         this.labelsSize = labelsSize
 
-        xLabels = defineX()
-        yLabels = defineY()
+        xLabels = createLabelsX()
+        yLabels = createLabelsY()
 
         val paddings = negotiatePaddingsXY(measurePaddingsX(), measurePaddingsY())
 
@@ -72,10 +72,10 @@ class ChartRenderer(
         innerFrameRight = frameRight - paddings.right
         innerFrameBottom = frameBottom - paddings.bottom
 
-        processX(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
-        processY(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
+        placeLabelsX(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
+        placeLabelsY(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
 
-        processEntries(innerFrameTop, innerFrameBottom)
+        placeDataPoints(innerFrameTop, innerFrameBottom)
 
         animation.animateFrom(innerFrameBottom, data) { view.postInvalidate() }
 
@@ -133,11 +133,11 @@ class ChartRenderer(
         }
     }
 
-    private fun defineX(): List<Label> {
+    private fun createLabelsX(): List<Label> {
         return data.map { Label(it.label, 0F, 0F) }
     }
 
-    private fun defineY(): List<Label> {
+    private fun createLabelsY(): List<Label> {
 
         val borders = findBorderValues(data)
         val valuesStep = (borders.max - borders.min) / defaultStepNumY
@@ -148,7 +148,7 @@ class ChartRenderer(
         }
     }
 
-    private fun processX(
+    private fun placeLabelsX(
         chartLeft: Float,
         chartTop: Float,
         chartRight: Float,
@@ -177,7 +177,7 @@ class ChartRenderer(
         }
     }
 
-    private fun processY(
+    private fun placeLabelsY(
         chartLeft: Float,
         chartTop: Float,
         chartRight: Float,
@@ -194,7 +194,7 @@ class ChartRenderer(
         }
     }
 
-    private fun processEntries(
+    private fun placeDataPoints(
         frameTop: Float,
         frameBottom: Float
     ) {

@@ -7,7 +7,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
-import android.widget.RelativeLayout
+import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import com.db.williamchart.Painter
 import com.db.williamchart.R
@@ -19,7 +19,7 @@ abstract class ChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : RelativeLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr) {
 
     enum class Axis { NONE, X, Y, XY }
 

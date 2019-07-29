@@ -13,8 +13,6 @@ class ChartRenderer(
     private var animation: ChartAnimation
 ) : ChartContract.Renderer {
 
-    private val defaultStepNumY = 3
-
     private var data: List<DataPoint> = listOf()
 
     private var xLabels: List<Label> = arrayListOf()
@@ -229,6 +227,10 @@ class ChartRenderer(
             maxOf(paddingsX.right, paddingsY.right),
             maxOf(paddingsX.bottom, paddingsY.bottom)
         )
+    }
+
+    companion object {
+        private const val defaultStepNumY = 3
     }
 }
 

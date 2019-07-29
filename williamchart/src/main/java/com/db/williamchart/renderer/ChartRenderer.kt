@@ -113,8 +113,10 @@ class ChartRenderer(
     }
 
     private fun measurePaddingsX(): Paddings {
-        return if (axis != Axis.XY && axis != Axis.X) Paddings(0F, 0F, 0F, 0F)
-        else Paddings(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
+        return if (axis != Axis.XY && axis != Axis.X)
+            Paddings(0F, 0F, 0F, 0F)
+        else
+            Paddings(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
     }
 
     private fun measurePaddingsY(): Paddings {
@@ -132,7 +134,7 @@ class ChartRenderer(
     }
 
     private fun createLabelsX(): List<Label> {
-        return data.map { Label(it.label, 0F, 0F) }
+        return data.map { Label(it.label, -1F, -1F) }
     }
 
     private fun createLabelsY(): List<Label> {
@@ -142,7 +144,7 @@ class ChartRenderer(
 
         return List(defaultStepNumY + 1) {
             val aux = borders.min + valuesStep * it
-            Label(aux.toString(), 0F, 0F)
+            Label(aux.toString(), -1F, -1F)
         }
     }
 

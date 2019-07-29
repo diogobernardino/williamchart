@@ -9,26 +9,23 @@ import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
 import androidx.core.content.res.ResourcesCompat
-import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
-import com.db.williamchart.animation.NoAnimation
-import com.db.williamchart.data.Label
 import com.db.williamchart.renderer.ChartRenderer
 
 abstract class ChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : RelativeLayout(context, attrs, defStyleAttr), ChartContract.View {
+) : RelativeLayout(context, attrs, defStyleAttr) {
 
     enum class Axis { NONE, X, Y, XY }
 
-    private val defaultFrameWidth = 200
-
-    private val defaultFrameHeight = 100
+    /**
+     * API
+     */
 
     var labelsSize: Float = 60F
 
@@ -39,6 +36,17 @@ abstract class ChartView @JvmOverloads constructor(
     var axis: Axis = Axis.XY
 
     var animation: ChartAnimation = DefaultAnimation()
+
+    /**
+     * Members to be used by the different charts extending `ChartView`
+     */
+
+    protected lateinit var canvas: Canvas
+
+    protected val painter: Painter = Painter()
+
+    // Initialized in init() by chart views extending `ChartView` (e.g. LineChartView)
+    protected lateinit var renderer: ChartRenderer
 
     private val drawListener = ViewTreeObserver.OnPreDrawListener {
         renderer.preDraw(
@@ -53,17 +61,16 @@ abstract class ChartView @JvmOverloads constructor(
         )
     }
 
-    protected lateinit var canvas: Canvas
-
-    protected val painter: Painter = Painter()
-
-    protected val renderer: ChartRenderer = ChartRenderer(this, painter, NoAnimation())
-
     init {
         viewTreeObserver.addOnPreDrawListener(drawListener)
 
         val styledAttributes =
-            context.theme.obtainStyledAttributes(attrs, R.styleable.ChartAttrs, 0, 0)
+            context.theme.obtainStyledAttributes(
+                attrs,
+                R.styleable.ChartAttrs,
+                0,
+                0
+            )
         handleAttributes(styledAttributes)
     }
 
@@ -105,16 +112,6 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.draw()
     }
 
-    override fun drawLabels(xLabels: List<Label>) {
-
-        painter.prepare(
-            textSize = labelsSize,
-            color = labelsColor,
-            font = labelsFont
-        )
-        xLabels.forEach { canvas.drawText(it.label, it.x, it.y, painter.paint) }
-    }
-
     fun show(entries: HashMap<String, Float>) {
         renderer.render(entries)
     }
@@ -141,5 +138,10 @@ abstract class ChartView @JvmOverloads constructor(
                 )
 
         typedArray.recycle()
+    }
+
+    companion object {
+        private const val defaultFrameWidth = 200
+        private const val defaultFrameHeight = 100
     }
 }

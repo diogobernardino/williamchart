@@ -7,24 +7,41 @@ import android.graphics.Path
 import android.graphics.Shader
 import android.util.AttributeSet
 import androidx.annotation.Size
+import com.db.williamchart.ChartContract
+import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.Label
+import com.db.williamchart.renderer.ChartRenderer
 
 class LineChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChartView(context, attrs, defStyleAttr) {
+) : ChartView(context, attrs, defStyleAttr), ChartContract.View {
 
+    /**
+     * API
+     */
+
+    @Suppress("MemberVisibilityCanBePrivate")
     var smooth: Boolean = false
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var strokeWidth: Float = 4F
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var fillColor: Int = 0
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var lineColor: Int = -0x1000000 // Black as default
 
     @Size(min = 2, max = 2)
+    @Suppress("MemberVisibilityCanBePrivate")
     var gradientFillColors: IntArray = intArrayOf(0, 0)
+
+    init {
+        renderer = ChartRenderer(this, painter, NoAnimation())
+    }
 
     override fun drawData(
         innerFrameLeft: Float,
@@ -64,6 +81,16 @@ class LineChartView @JvmOverloads constructor(
         // Draw line
         painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = strokeWidth)
         canvas.drawPath(linePath, painter.paint)
+    }
+
+    override fun drawLabels(xLabels: List<Label>) {
+
+        painter.prepare(
+            textSize = labelsSize,
+            color = labelsColor,
+            font = labelsFont
+        )
+        xLabels.forEach { canvas.drawText(it.label, it.x, it.y, painter.paint) }
     }
 
     private fun createLinePath(points: List<DataPoint>): Path {

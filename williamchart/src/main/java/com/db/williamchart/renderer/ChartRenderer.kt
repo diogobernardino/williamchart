@@ -16,10 +16,6 @@ class ChartRenderer(
 
     private var data: List<DataPoint> = listOf()
 
-    private var xLabels: List<Label> = arrayListOf()
-
-    private var yLabels: List<Label> = arrayListOf()
-
     private var innerFrameLeft: Float = 0F
 
     private var innerFrameTop: Float = 0F
@@ -38,6 +34,20 @@ class ChartRenderer(
 
     internal var yAtZero = false
 
+    private val xLabels: List<Label> by lazy {
+        data.map { Label(it.label, -1F, -1F) }
+    }
+
+    private val yLabels by lazy {
+        val scale = findBorderValues(data, yAtZero)
+        val scaleStep = (scale.max - scale.min) / defaultScaleNumberOfSteps
+
+        List(defaultScaleNumberOfSteps + 1) {
+            val scaleValue = scale.min + scaleStep * it
+            Label(scaleValue.toString(), -1F, -1F)
+        }
+    }
+
     override fun preDraw(
         width: Int,
         height: Int,
@@ -49,9 +59,11 @@ class ChartRenderer(
         labelsSize: Float
     ): Boolean {
 
-        if (isProcessed) return true // Data already processed, proceed with drawing
+        if (isProcessed) // Data already processed, proceed with drawing
+            return true
 
-        if (data.size <= 1) throw IllegalArgumentException("A chart needs more than one entry.")
+        if (data.size <= 1)
+            throw IllegalArgumentException("A chart needs more than one entry.")
 
         val frameLeft = paddingLeft.toFloat()
         val frameTop = paddingTop.toFloat()
@@ -60,9 +72,6 @@ class ChartRenderer(
 
         this.axis = axis
         this.labelsSize = labelsSize
-
-        xLabels = createLabelsX()
-        yLabels = createLabelsY()
 
         val paddings = negotiatePaddingsXY(measurePaddingsX(), measurePaddingsY())
 
@@ -134,21 +143,6 @@ class ChartRenderer(
         }
     }
 
-    private fun createLabelsX(): List<Label> {
-        return data.map { Label(it.label, -1F, -1F) }
-    }
-
-    private fun createLabelsY(): List<Label> {
-
-        val scale = findBorderValues(data, yAtZero)
-        val scaleStep = (scale.max - scale.min) / defaultScaleNumberOfSteps
-
-        return List(defaultScaleNumberOfSteps + 1) {
-            val scaleValue = scale.min + scaleStep * it
-            Label(scaleValue.toString(), -1F, -1F)
-        }
-    }
-
     private fun placeLabelsX(
         chartLeft: Float,
         chartTop: Float,
@@ -200,13 +194,13 @@ class ChartRenderer(
         frameBottom: Float
     ) {
 
-        val borders = findBorderValues(data, yAtZero)
+        val scale = findBorderValues(data, yAtZero)
 
         data.forEachIndexed { index, entry ->
             entry.screenPositionX = xLabels[index].x
             entry.screenPositionY = frameBottom -
-                ((frameBottom - frameTop) * (entry.value - borders.min) /
-                    (borders.max - borders.min))
+                ((frameBottom - frameTop) * (entry.value - scale.min) /
+                    (scale.max - scale.min))
         }
     }
 

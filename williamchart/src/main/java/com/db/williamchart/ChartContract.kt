@@ -1,9 +1,9 @@
 package com.db.williamchart
 
 import com.db.williamchart.animation.ChartAnimation
+import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Label
-import com.db.williamchart.view.ChartView.Axis
 
 interface ChartContract {
 
@@ -31,7 +31,7 @@ interface ChartContract {
             paddingTop: Int,
             paddingRight: Int,
             paddingBottom: Int,
-            axis: Axis,
+            axis: AxisType,
             labelsSize: Float
         ): Boolean
 

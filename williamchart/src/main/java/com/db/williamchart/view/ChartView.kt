@@ -13,6 +13,7 @@ import com.db.williamchart.Painter
 import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
+import com.db.williamchart.data.AxisType
 import com.db.williamchart.renderer.ChartRenderer
 
 abstract class ChartView @JvmOverloads constructor(
@@ -20,8 +21,6 @@ abstract class ChartView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-
-    enum class Axis { NONE, X, Y, XY }
 
     /**
      * API
@@ -33,7 +32,7 @@ abstract class ChartView @JvmOverloads constructor(
 
     var labelsFont: Typeface? = null
 
-    var axis: Axis = Axis.XY
+    var axis: AxisType = AxisType.XY
 
     var animation: ChartAnimation = DefaultAnimation()
 
@@ -123,10 +122,10 @@ abstract class ChartView @JvmOverloads constructor(
     private fun handleAttributes(typedArray: TypedArray) {
 
         axis = when (typedArray.getString(R.styleable.ChartAttrs_chart_axis)) {
-            "0" -> Axis.NONE
-            "1" -> Axis.X
-            "2" -> Axis.Y
-            else -> Axis.XY
+            "0" -> AxisType.NONE
+            "1" -> AxisType.X
+            "2" -> AxisType.Y
+            else -> AxisType.XY
         }
         labelsSize = typedArray.getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
         labelsColor = typedArray.getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)

@@ -3,10 +3,12 @@ package com.db.williamchart.renderer
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
+import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.shouldDisplayAxisX
+import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.extensions.limits
-import com.db.williamchart.view.ChartView.Axis
 
 class ChartRenderer(
     private val view: ChartContract.View,
@@ -16,7 +18,7 @@ class ChartRenderer(
 
     private lateinit var data: List<DataPoint>
 
-    private lateinit var axis: Axis
+    private lateinit var axis: AxisType
 
     private var innerFrameLeft: Float = -1f
 
@@ -55,7 +57,7 @@ class ChartRenderer(
         paddingTop: Int,
         paddingRight: Int,
         paddingBottom: Int,
-        axis: Axis,
+        axis: AxisType,
         labelsSize: Float
     ): Boolean {
 
@@ -94,8 +96,8 @@ class ChartRenderer(
 
     override fun draw() {
 
-        if (axis == Axis.XY || axis == Axis.X) view.drawLabels(xLabels)
-        if (axis == Axis.XY || axis == Axis.Y) view.drawLabels(yLabels)
+        if (axis.shouldDisplayAxisX()) view.drawLabels(xLabels)
+        if (axis.shouldDisplayAxisY()) view.drawLabels(yLabels)
 
         view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data)
     }
@@ -123,7 +125,7 @@ class ChartRenderer(
     }
 
     private fun measurePaddingsX(): Paddings {
-        return if (axis != Axis.XY && axis != Axis.X)
+        return if (!axis.shouldDisplayAxisX())
             Paddings(0F, 0F, 0F, 0F)
         else
             Paddings(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
@@ -131,8 +133,9 @@ class ChartRenderer(
 
     private fun measurePaddingsY(): Paddings {
 
-        return if (axis != Axis.XY && axis != Axis.Y) return Paddings(0F, 0F, 0F, 0F)
-        else {
+        return if (!axis.shouldDisplayAxisY()) {
+            return Paddings(0F, 0F, 0F, 0F)
+        } else {
             val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             Paddings(
                 if (longestChartLabel != null) painter.measureLabelWidth(longestChartLabel.label, labelsSize) else 0F,
@@ -150,24 +153,28 @@ class ChartRenderer(
         chartBottom: Float
     ) {
 
-        val auxLeft: Float
-        val auxRight: Float
+        val labelsStartPosition: Float
+        val labelsEndPosition: Float
 
-        if (xPacked) { // Pack labels
-            val entryWidth = (chartRight - chartLeft) / (xLabels.size)
-            auxLeft = chartLeft + entryWidth / 2
-            auxRight = chartRight - entryWidth / 2
-        } else if (axis == Axis.XY || axis == Axis.X) {
-            auxLeft = chartLeft + painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
-            auxRight = chartRight - painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
-        } else { // X not displayed
-            auxLeft = chartLeft
-            auxRight = chartRight
+        when {
+            xPacked -> { // Pack labels - used in Bar charts
+                val barWidth = (chartRight - chartLeft) / (xLabels.size)
+                labelsStartPosition = chartLeft + barWidth / 2
+                labelsEndPosition = chartRight - barWidth / 2
+            }
+            axis.shouldDisplayAxisX() -> {
+                labelsStartPosition = chartLeft + painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
+                labelsEndPosition = chartRight - painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
+            }
+            else -> { // No axis
+                labelsStartPosition = chartLeft
+                labelsEndPosition = chartRight
+            }
         }
 
-        val stepX = (auxRight - auxLeft) / (xLabels.size - 1)
+        val stepX = (labelsEndPosition - labelsStartPosition) / (xLabels.size - 1)
         xLabels.forEachIndexed { index, label ->
-            label.x = auxLeft + stepX * index
+            label.x = labelsStartPosition + stepX * index
             label.y = chartBottom + painter.measureLabelHeight(labelsSize)
         }
     }

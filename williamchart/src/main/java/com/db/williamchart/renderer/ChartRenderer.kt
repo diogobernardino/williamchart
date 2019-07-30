@@ -14,21 +14,21 @@ class ChartRenderer(
     private var animation: ChartAnimation
 ) : ChartContract.Renderer {
 
-    private var data: List<DataPoint> = listOf()
+    private lateinit var data: List<DataPoint>
 
-    private var innerFrameLeft: Float = 0F
+    private lateinit var axis: Axis
 
-    private var innerFrameTop: Float = 0F
+    private var innerFrameLeft: Float = -1f
 
-    private var innerFrameRight: Float = 0F
+    private var innerFrameTop: Float = -1f
 
-    private var innerFrameBottom: Float = 0F
+    private var innerFrameRight: Float = -1f
+
+    private var innerFrameBottom: Float = -1f
+
+    private var labelsSize: Float = -1f
 
     private var isProcessed: Boolean = false
-
-    private var axis: Axis = Axis.XY
-
-    private var labelsSize: Float = 60F
 
     internal var xPacked = false
 
@@ -65,13 +65,13 @@ class ChartRenderer(
         if (data.size <= 1)
             throw IllegalArgumentException("A chart needs more than one entry.")
 
+        this.axis = axis
+        this.labelsSize = labelsSize
+
         val frameLeft = paddingLeft.toFloat()
         val frameTop = paddingTop.toFloat()
         val frameRight = width - paddingRight.toFloat()
         val frameBottom = height - paddingBottom.toFloat()
-
-        this.axis = axis
-        this.labelsSize = labelsSize
 
         val paddings = negotiatePaddingsXY(measurePaddingsX(), measurePaddingsY())
 

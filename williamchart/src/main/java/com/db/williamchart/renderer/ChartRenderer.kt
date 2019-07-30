@@ -177,9 +177,9 @@ class ChartRenderer(
             }
         }
 
-        val stepX = (labelsEndPosition - labelsStartPosition) / (xLabels.size - 1)
+        val stepWidth = (labelsEndPosition - labelsStartPosition) / (xLabels.size - 1)
         xLabels.forEachIndexed { index, label ->
-            label.x = labelsStartPosition + stepX * index
+            label.x = labelsStartPosition + stepWidth * index
             label.y = chartBottom + painter.measureLabelHeight(labelsSize)
         }
     }

@@ -5,6 +5,7 @@ import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Label
+import com.db.williamchart.extensions.limits
 import com.db.williamchart.view.ChartView.Axis
 
 class ChartRenderer(
@@ -139,12 +140,12 @@ class ChartRenderer(
 
     private fun createLabelsY(): List<Label> {
 
-        val borders = findBorderValues(data)
-        val valuesStep = (borders.max - borders.min) / defaultStepNumY
+        val scale = findBorderValues(data, yAtZero)
+        val scaleStep = (scale.max - scale.min) / defaultStepNumY
 
         return List(defaultStepNumY + 1) {
-            val aux = borders.min + valuesStep * it
-            Label(aux.toString(), -1F, -1F)
+            val scaleValue = scale.min + scaleStep * it
+            Label(scaleValue.toString(), -1F, -1F)
         }
     }
 
@@ -199,7 +200,7 @@ class ChartRenderer(
         frameBottom: Float
     ) {
 
-        val borders = findBorderValues(data)
+        val borders = findBorderValues(data, yAtZero)
 
         data.forEachIndexed { index, entry ->
             entry.screenPositionX = xLabels[index].x
@@ -209,17 +210,12 @@ class ChartRenderer(
         }
     }
 
-    private fun findBorderValues(entries: List<DataPoint>): Borders {
-
-        if (entries.isEmpty()) return Borders(0F, 1F)
-
-        val values = entries.map { it.value }
-        val min: Float = if (yAtZero) 0F else values.min()!!
-        var max: Float = values.max()!!
-
-        if (min == max) max += 1f // All given values are equal
-
-        return Borders(min, max)
+    private fun findBorderValues(entries: List<DataPoint>, startScaleAtZero: Boolean): Scale {
+        val limits = entries.limits()
+        return Scale(
+            min = if (startScaleAtZero) 0F else limits.first,
+            max = limits.second
+        )
     }
 
     private fun negotiatePaddingsXY(paddingsX: Paddings, paddingsY: Paddings): Paddings {
@@ -236,6 +232,6 @@ class ChartRenderer(
     }
 }
 
-class Borders(val min: Float, val max: Float)
+class Scale(val min: Float, val max: Float)
 
 class Paddings(val left: Float, val top: Float, val right: Float, val bottom: Float)

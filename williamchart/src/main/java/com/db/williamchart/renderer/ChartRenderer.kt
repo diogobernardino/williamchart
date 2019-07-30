@@ -125,25 +125,30 @@ class ChartRenderer(
     }
 
     private fun measurePaddingsX(): Paddings {
-        return if (!axis.shouldDisplayAxisX())
-            Paddings(0F, 0F, 0F, 0F)
-        else
-            Paddings(0F, 0F, 0f, painter.measureLabelHeight(labelsSize))
+        return Paddings(
+            left = 0F,
+            top = 0F,
+            right = 0f,
+            bottom = if (axis.shouldDisplayAxisX()) painter.measureLabelHeight(labelsSize) else 0F
+        )
     }
 
     private fun measurePaddingsY(): Paddings {
 
-        return if (!axis.shouldDisplayAxisY()) {
+        if (!axis.shouldDisplayAxisY())
             return Paddings(0F, 0F, 0F, 0F)
-        } else {
-            val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
-            Paddings(
-                if (longestChartLabel != null) painter.measureLabelWidth(longestChartLabel.label, labelsSize) else 0F,
-                painter.measureLabelHeight(labelsSize) / 2,
-                0F,
-                painter.measureLabelHeight(labelsSize) / 2
-            )
-        }
+
+        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
+        return Paddings(
+            left = if (longestChartLabel != null)
+                painter.measureLabelWidth(
+                    longestChartLabel.label,
+                    labelsSize
+                ) else 0F,
+            top = painter.measureLabelHeight(labelsSize) / 2,
+            right = 0F,
+            bottom = painter.measureLabelHeight(labelsSize) / 2
+        )
     }
 
     private fun placeLabelsX(

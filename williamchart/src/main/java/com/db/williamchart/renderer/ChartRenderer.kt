@@ -141,9 +141,9 @@ class ChartRenderer(
     private fun createLabelsY(): List<Label> {
 
         val scale = findBorderValues(data, yAtZero)
-        val scaleStep = (scale.max - scale.min) / defaultStepNumY
+        val scaleStep = (scale.max - scale.min) / defaultScaleNumberOfSteps
 
-        return List(defaultStepNumY + 1) {
+        return List(defaultScaleNumberOfSteps + 1) {
             val scaleValue = scale.min + scaleStep * it
             Label(scaleValue.toString(), -1F, -1F)
         }
@@ -185,7 +185,7 @@ class ChartRenderer(
         chartBottom: Float
     ) {
 
-        val screenStep = (chartBottom - chartTop) / defaultStepNumY
+        val screenStep = (chartBottom - chartTop) / defaultScaleNumberOfSteps
         var screenCursor = chartBottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEach {
@@ -228,7 +228,7 @@ class ChartRenderer(
     }
 
     companion object {
-        private const val defaultStepNumY = 3
+        private const val defaultScaleNumberOfSteps = 3
     }
 }
 

@@ -3,6 +3,7 @@ package com.db.williamchart
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 
 interface ChartContract {
@@ -21,7 +22,7 @@ interface ChartContract {
 
         fun postInvalidate()
 
-        fun drawDebugFrame()
+        fun drawDebugFrame(outerFrame: Frame, innerFrame: Frame)
     }
 
     interface Renderer {

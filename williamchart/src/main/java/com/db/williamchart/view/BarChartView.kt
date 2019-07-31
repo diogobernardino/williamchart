@@ -8,7 +8,9 @@ import androidx.annotation.ColorInt
 import com.db.williamchart.ChartContract
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.toRect
 import com.db.williamchart.renderer.ChartRenderer
 
 class BarChartView @JvmOverloads constructor(
@@ -82,6 +84,9 @@ class BarChartView @JvmOverloads constructor(
         }
     }
 
-    override fun drawDebugFrame() {
+    override fun drawDebugFrame(outerFrame: Frame, innerFrame: Frame) {
+        painter.prepare(color = -0x1000000, style = Paint.Style.STROKE)
+        canvas.drawRect(outerFrame.toRect(), painter.paint)
+        canvas.drawRect(innerFrame.toRect(), painter.paint)
     }
 }

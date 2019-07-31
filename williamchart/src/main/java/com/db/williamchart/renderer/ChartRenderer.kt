@@ -5,6 +5,7 @@ import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.Scale
@@ -23,13 +24,9 @@ class ChartRenderer(
 
     private lateinit var axis: AxisType
 
-    private var innerFrameLeft: Float = notInitialized
+    private lateinit var outerFrame: Frame
 
-    private var innerFrameTop: Float = notInitialized
-
-    private var innerFrameRight: Float = notInitialized
-
-    private var innerFrameBottom: Float = notInitialized
+    private lateinit var innerFrame: Frame
 
     private var labelsSize: Float = notInitialized
 
@@ -72,7 +69,7 @@ class ChartRenderer(
         labelsSize: Float
     ): Boolean {
 
-        if (innerFrameTop != notInitialized) // Data already processed, proceed with drawing
+        if (this.labelsSize != notInitialized) // Data already processed, proceed with drawing
             return true
 
         if (data.size <= 1)
@@ -81,34 +78,45 @@ class ChartRenderer(
         this.axis = axis
         this.labelsSize = labelsSize
 
-        val frameLeft = paddingLeft.toFloat()
-        val frameTop = paddingTop.toFloat()
-        val frameRight = width - paddingRight.toFloat()
-        val frameBottom = height - paddingBottom.toFloat()
+        outerFrame = Frame(
+            left = paddingLeft.toFloat(),
+            top = paddingTop.toFloat(),
+            right = width - paddingRight.toFloat(),
+            bottom = height - paddingBottom.toFloat()
+        )
 
         val paddings = measurePaddingsX().mergeWith(measurePaddingsY())
 
-        innerFrameLeft = frameLeft + paddings.left
-        innerFrameTop = frameTop + paddings.top
-        innerFrameRight = frameRight - paddings.right
-        innerFrameBottom = frameBottom - paddings.bottom
+        innerFrame = Frame(
+            left = outerFrame.left + paddings.left,
+            top = outerFrame.top + paddings.top,
+            right = outerFrame.right - paddings.right,
+            bottom = outerFrame.bottom - paddings.bottom
+        )
 
-        placeLabelsX(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
-        placeLabelsY(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom)
+        placeLabelsX(innerFrame.left, innerFrame.top, innerFrame.right, innerFrame.bottom)
+        placeLabelsY(innerFrame.left, innerFrame.top, innerFrame.right, innerFrame.bottom)
 
-        placeDataPoints(innerFrameTop, innerFrameBottom)
+        placeDataPoints(innerFrame.top, innerFrame.bottom)
 
-        animation.animateFrom(innerFrameBottom, data) { view.postInvalidate() }
+        animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
 
         return false
     }
 
     override fun draw() {
 
-        if (axis.shouldDisplayAxisX()) view.drawLabels(xLabels)
-        if (axis.shouldDisplayAxisY()) view.drawLabels(yLabels)
+        if (axis.shouldDisplayAxisX())
+            view.drawLabels(xLabels)
 
-        view.drawData(innerFrameLeft, innerFrameTop, innerFrameRight, innerFrameBottom, data)
+        if (axis.shouldDisplayAxisY())
+            view.drawLabels(yLabels)
+
+        view.drawData(innerFrame.left, innerFrame.top, innerFrame.right, innerFrame.bottom, data)
+
+        if (inDebug) {
+            view.drawDebugFrame(outerFrame, innerFrame)
+        }
     }
 
     override fun render(entries: HashMap<String, Float>) {
@@ -238,5 +246,6 @@ class ChartRenderer(
     companion object {
         private const val defaultScaleNumberOfSteps = 3
         private const val notInitialized = -1f
+        private const val inDebug = true
     }
 }

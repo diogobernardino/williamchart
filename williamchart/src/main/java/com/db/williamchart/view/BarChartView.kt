@@ -72,6 +72,16 @@ class BarChartView @JvmOverloads constructor(
             color = labelsColor,
             font = labelsFont
         )
-        xLabels.forEach { canvas.drawText(it.label, it.x, it.y, painter.paint) }
+        xLabels.forEach {
+            canvas.drawText(
+                it.label,
+                it.screenPositionX,
+                it.screenPositionY,
+                painter.paint
+            )
+        }
+    }
+
+    override fun drawDebugFrame() {
     }
 }

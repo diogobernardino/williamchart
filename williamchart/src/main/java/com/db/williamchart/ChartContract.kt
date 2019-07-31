@@ -20,6 +20,8 @@ interface ChartContract {
         )
 
         fun postInvalidate()
+
+        fun drawDebugFrame()
     }
 
     interface Renderer {

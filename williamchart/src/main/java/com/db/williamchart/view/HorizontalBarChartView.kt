@@ -83,10 +83,13 @@ class HorizontalBarChartView @JvmOverloads constructor(
         xLabels.forEach {
             canvas.drawText(
                 it.label,
-                it.x,
-                it.y,
+                it.screenPositionX,
+                it.screenPositionY,
                 painter.paint
             )
         }
+    }
+
+    override fun drawDebugFrame() {
     }
 }

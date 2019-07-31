@@ -6,6 +6,9 @@ import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.Paddings
+import com.db.williamchart.data.Scale
+import com.db.williamchart.data.mergeWith
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.extensions.limits
@@ -229,17 +232,4 @@ class ChartRenderer(
     companion object {
         private const val defaultScaleNumberOfSteps = 3
     }
-}
-
-class Scale(val min: Float, val max: Float)
-
-class Paddings(val left: Float, val top: Float, val right: Float, val bottom: Float)
-
-fun Paddings.mergeWith(paddings: Paddings): Paddings {
-    return Paddings(
-        maxOf(this.left, paddings.left),
-        maxOf(this.top, paddings.top),
-        maxOf(this.right, paddings.right),
-        maxOf(this.bottom, paddings.bottom)
-    )
 }

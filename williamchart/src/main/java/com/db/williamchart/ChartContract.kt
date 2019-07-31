@@ -12,13 +12,7 @@ interface ChartContract {
 
         fun drawLabels(xLabels: List<Label>)
 
-        fun drawData(
-            innerFrameLeft: Float,
-            innerFrameTop: Float,
-            innerFrameRight: Float,
-            innerFrameBottom: Float,
-            entries: List<DataPoint>
-        )
+        fun drawData(innerFrame: Frame, entries: List<DataPoint>)
 
         fun postInvalidate()
 

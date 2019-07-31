@@ -112,7 +112,7 @@ class ChartRenderer(
         if (axis.shouldDisplayAxisY())
             view.drawLabels(yLabels)
 
-        view.drawData(innerFrame.left, innerFrame.top, innerFrame.right, innerFrame.bottom, data)
+        view.drawData(innerFrame, data)
 
         if (inDebug) {
             view.drawDebugFrame(outerFrame, innerFrame)

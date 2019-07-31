@@ -42,15 +42,12 @@ class HorizontalBarChartView @JvmOverloads constructor(
     }
 
     override fun drawData(
-        innerFrameLeft: Float,
-        innerFrameTop: Float,
-        innerFrameRight: Float,
-        innerFrameBottom: Float,
+        innerFrame: Frame,
         entries: List<DataPoint>
     ) {
 
         val halfBarWidth =
-            (innerFrameBottom - innerFrameTop - (entries.size + 1) * spacing) /
+            (innerFrame.bottom - innerFrame.top - (entries.size + 1) * spacing) /
                 entries.size /
                 2
 
@@ -62,7 +59,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
         entries.forEach {
             canvas.drawRoundRect(
                 RectF(
-                    innerFrameLeft,
+                    innerFrame.left,
                     it.screenPositionY - halfBarWidth,
                     it.screenPositionX,
                     it.screenPositionY + halfBarWidth

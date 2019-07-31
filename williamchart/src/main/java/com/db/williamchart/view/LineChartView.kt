@@ -46,10 +46,7 @@ class LineChartView @JvmOverloads constructor(
     }
 
     override fun drawData(
-        innerFrameLeft: Float,
-        innerFrameTop: Float,
-        innerFrameRight: Float,
-        innerFrameBottom: Float,
+        innerFrame: Frame,
         entries: List<DataPoint>
     ) {
 
@@ -63,10 +60,10 @@ class LineChartView @JvmOverloads constructor(
                 painter.prepare(color = fillColor, style = Paint.Style.FILL)
             else painter.prepare(
                 shader = LinearGradient(
-                    innerFrameLeft,
-                    innerFrameTop,
-                    innerFrameLeft,
-                    innerFrameBottom,
+                    innerFrame.left,
+                    innerFrame.top,
+                    innerFrame.left,
+                    innerFrame.bottom,
                     gradientFillColors[0],
                     gradientFillColors[1],
                     Shader.TileMode.MIRROR
@@ -75,7 +72,7 @@ class LineChartView @JvmOverloads constructor(
             )
 
             canvas.drawPath(
-                createBackgroundPath(linePath, entries, innerFrameBottom),
+                createBackgroundPath(linePath, entries, innerFrame.bottom),
                 painter.paint
             )
         }

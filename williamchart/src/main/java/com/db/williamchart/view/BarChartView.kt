@@ -42,14 +42,11 @@ class BarChartView @JvmOverloads constructor(
     }
 
     override fun drawData(
-        innerFrameLeft: Float,
-        innerFrameTop: Float,
-        innerFrameRight: Float,
-        innerFrameBottom: Float,
+        innerFrame: Frame,
         entries: List<DataPoint>
     ) {
 
-        val halfBarWidth = (innerFrameRight - innerFrameLeft - (entries.size + 1) * spacing) / entries.size / 2
+        val halfBarWidth = (innerFrame.right - innerFrame.left - (entries.size + 1) * spacing) / entries.size / 2
 
         painter.prepare(color = barColor, style = Paint.Style.FILL)
         entries.forEach {
@@ -58,7 +55,7 @@ class BarChartView @JvmOverloads constructor(
                     it.screenPositionX - halfBarWidth,
                     it.screenPositionY,
                     it.screenPositionX + halfBarWidth,
-                    innerFrameBottom
+                    innerFrame.bottom
                 ),
                 barRadius,
                 barRadius,

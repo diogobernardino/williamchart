@@ -38,7 +38,13 @@ class ChartRenderer(
     internal var yAtZero = false
 
     private val xLabels: List<Label> by lazy {
-        data.map { Label(it.label) }
+        data.map {
+            Label(
+                label = it.label,
+                screenPositionX = 0f,
+                screenPositionY = 0f
+            )
+        }
     }
 
     private val yLabels by lazy {
@@ -47,7 +53,11 @@ class ChartRenderer(
 
         List(defaultScaleNumberOfSteps + 1) {
             val scaleValue = scale.min + scaleStep * it
-            Label(scaleValue.toString())
+            Label(
+                label = scaleValue.toString(),
+                screenPositionX = 0F,
+                screenPositionY = 0F
+            )
         }
     }
 
@@ -180,8 +190,8 @@ class ChartRenderer(
         val xLabelsVerticalPosition = chartBottom + painter.measureLabelHeight(labelsSize)
 
         xLabels.forEachIndexed { index, label ->
-            label.x = labelsStartPosition + stepWidth * index
-            label.y = xLabelsVerticalPosition
+            label.screenPositionX = labelsStartPosition + stepWidth * index
+            label.screenPositionY = xLabelsVerticalPosition
         }
     }
 
@@ -196,8 +206,8 @@ class ChartRenderer(
         var screenCursor = chartBottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEach {
-            it.x = chartLeft - painter.measureLabelWidth(it.label, labelsSize) / 2
-            it.y = screenCursor
+            it.screenPositionX = chartLeft - painter.measureLabelWidth(it.label, labelsSize) / 2
+            it.screenPositionY = screenCursor
             screenCursor -= screenStep
         }
     }
@@ -212,7 +222,7 @@ class ChartRenderer(
         val frameHeight = frameBottom - frameTop
 
         data.forEachIndexed { index, entry ->
-            entry.screenPositionX = xLabels[index].x
+            entry.screenPositionX = xLabels[index].screenPositionX
             entry.screenPositionY = frameBottom - (frameHeight * (entry.value - scale.min) / scaleSize)
         }
     }

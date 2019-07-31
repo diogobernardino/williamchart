@@ -75,7 +75,7 @@ class ChartRenderer(
         val frameRight = width - paddingRight.toFloat()
         val frameBottom = height - paddingBottom.toFloat()
 
-        val paddings = negotiatePaddingsXY(measurePaddingsX(), measurePaddingsY())
+        val paddings = measurePaddingsX().mergeWith(measurePaddingsY())
 
         innerFrameLeft = frameLeft + paddings.left
         innerFrameTop = frameTop + paddings.top
@@ -226,15 +226,6 @@ class ChartRenderer(
         )
     }
 
-    private fun negotiatePaddingsXY(paddingsX: Paddings, paddingsY: Paddings): Paddings {
-        return Paddings(
-            maxOf(paddingsX.left, paddingsY.left),
-            maxOf(paddingsX.top, paddingsY.top),
-            maxOf(paddingsX.right, paddingsY.right),
-            maxOf(paddingsX.bottom, paddingsY.bottom)
-        )
-    }
-
     companion object {
         private const val defaultScaleNumberOfSteps = 3
     }
@@ -243,3 +234,12 @@ class ChartRenderer(
 class Scale(val min: Float, val max: Float)
 
 class Paddings(val left: Float, val top: Float, val right: Float, val bottom: Float)
+
+fun Paddings.mergeWith(paddings: Paddings): Paddings {
+    return Paddings(
+        maxOf(this.left, paddings.left),
+        maxOf(this.top, paddings.top),
+        maxOf(this.right, paddings.right),
+        maxOf(this.bottom, paddings.bottom)
+    )
+}

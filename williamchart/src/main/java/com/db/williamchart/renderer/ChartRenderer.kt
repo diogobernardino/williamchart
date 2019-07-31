@@ -178,9 +178,11 @@ class ChartRenderer(
         }
 
         val stepWidth = (labelsEndPosition - labelsStartPosition) / (xLabels.size - 1)
+        val xLabelsVerticalPosition = chartBottom + painter.measureLabelHeight(labelsSize)
+
         xLabels.forEachIndexed { index, label ->
             label.x = labelsStartPosition + stepWidth * index
-            label.y = chartBottom + painter.measureLabelHeight(labelsSize)
+            label.y = xLabelsVerticalPosition
         }
     }
 
@@ -207,12 +209,12 @@ class ChartRenderer(
     ) {
 
         val scale = findBorderValues(data, yAtZero)
+        val scaleSize = scale.max - scale.min
+        val frameHeight = frameBottom - frameTop
 
         data.forEachIndexed { index, entry ->
             entry.screenPositionX = xLabels[index].x
-            entry.screenPositionY = frameBottom -
-                ((frameBottom - frameTop) * (entry.value - scale.min) /
-                    (scale.max - scale.min))
+            entry.screenPositionY = frameBottom - (frameHeight * (entry.value - scale.min) / scaleSize)
         }
     }
 

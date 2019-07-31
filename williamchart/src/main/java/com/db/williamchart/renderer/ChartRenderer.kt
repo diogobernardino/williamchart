@@ -23,24 +23,22 @@ class ChartRenderer(
 
     private lateinit var axis: AxisType
 
-    private var innerFrameLeft: Float = -1f
+    private var innerFrameLeft: Float = notInitialized
 
-    private var innerFrameTop: Float = -1f
+    private var innerFrameTop: Float = notInitialized
 
-    private var innerFrameRight: Float = -1f
+    private var innerFrameRight: Float = notInitialized
 
-    private var innerFrameBottom: Float = -1f
+    private var innerFrameBottom: Float = notInitialized
 
-    private var labelsSize: Float = -1f
-
-    private var isProcessed: Boolean = false
+    private var labelsSize: Float = notInitialized
 
     internal var xPacked = false
 
     internal var yAtZero = false
 
     private val xLabels: List<Label> by lazy {
-        data.map { Label(it.label, -1F, -1F) }
+        data.map { Label(it.label) }
     }
 
     private val yLabels by lazy {
@@ -49,7 +47,7 @@ class ChartRenderer(
 
         List(defaultScaleNumberOfSteps + 1) {
             val scaleValue = scale.min + scaleStep * it
-            Label(scaleValue.toString(), -1F, -1F)
+            Label(scaleValue.toString())
         }
     }
 
@@ -64,7 +62,7 @@ class ChartRenderer(
         labelsSize: Float
     ): Boolean {
 
-        if (isProcessed) // Data already processed, proceed with drawing
+        if (innerFrameTop != notInitialized) // Data already processed, proceed with drawing
             return true
 
         if (data.size <= 1)
@@ -91,8 +89,6 @@ class ChartRenderer(
         placeDataPoints(innerFrameTop, innerFrameBottom)
 
         animation.animateFrom(innerFrameBottom, data) { view.postInvalidate() }
-
-        isProcessed = true
 
         return false
     }
@@ -231,5 +227,6 @@ class ChartRenderer(
 
     companion object {
         private const val defaultScaleNumberOfSteps = 3
+        private const val notInitialized = -1f
     }
 }

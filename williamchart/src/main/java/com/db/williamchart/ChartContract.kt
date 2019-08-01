@@ -16,7 +16,11 @@ interface ChartContract {
 
         fun postInvalidate()
 
-        fun drawDebugFrame(outerFrame: Frame, innerFrame: Frame)
+        fun drawDebugFrame(
+            outerFrame: Frame,
+            innerFrame: Frame,
+            labelsFrame: List<Frame>
+        )
     }
 
     interface Renderer {

@@ -115,7 +115,29 @@ class ChartRenderer(
         view.drawData(innerFrame, data)
 
         if (inDebug) {
-            view.drawDebugFrame(outerFrame, innerFrame)
+            val labelsFrame = getLabelsFrameForDebug()
+            view.drawDebugFrame(outerFrame, innerFrame, labelsFrame)
+        }
+    }
+
+    private fun getLabelsFrameForDebug(): List<Frame> {
+        val labelHeight = painter.measureLabelHeight(labelsSize)
+        return xLabels.map {
+            val labelHalftWidth = painter.measureLabelWidth(it.label, labelsSize) / 2
+            Frame(
+                left = it.screenPositionX - labelHalftWidth,
+                top = it.screenPositionY - labelHeight,
+                right = it.screenPositionX + labelHalftWidth,
+                bottom = it.screenPositionY
+            )
+        } + yLabels.map {
+            val labelHalftWidth = painter.measureLabelWidth(it.label, labelsSize) / 2
+            Frame(
+                left = it.screenPositionX - labelHalftWidth,
+                top = it.screenPositionY - labelHeight,
+                right = it.screenPositionX + labelHalftWidth,
+                bottom = it.screenPositionY
+            )
         }
     }
 
@@ -246,6 +268,6 @@ class ChartRenderer(
     companion object {
         private const val defaultScaleNumberOfSteps = 3
         private const val notInitialized = -1f
-        private const val inDebug = true
+        private const val inDebug = false
     }
 }

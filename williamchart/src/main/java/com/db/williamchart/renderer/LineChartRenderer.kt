@@ -7,14 +7,13 @@ import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
-import com.db.williamchart.data.Scale
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
-import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
+import com.db.williamchart.extensions.toScale
 
-class ChartRenderer(
+class LineChartRenderer(
     private val view: ChartContract.View,
     private val painter: Painter,
     private var animation: ChartAnimation
@@ -30,16 +29,12 @@ class ChartRenderer(
 
     private var labelsSize: Float = notInitialized
 
-    internal var xPacked = false
-
-    internal var yAtZero = false
-
     private val xLabels: List<Label> by lazy {
         data.toLabels()
     }
 
     private val yLabels by lazy {
-        val scale = findBorderValues(data, yAtZero)
+        val scale = data.toScale()
         val scaleStep = (scale.max - scale.min) / defaultScaleNumberOfSteps
 
         List(defaultScaleNumberOfSteps + 1) {
@@ -79,8 +74,9 @@ class ChartRenderer(
             bottom = height - paddingBottom.toFloat()
         )
 
-        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
-            ?: throw IllegalArgumentException("A chart needs more than one entry.")
+        val longestChartLabel =
+            yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
+                ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasurePaddingsNeeded().invoke(
             axisType = axis,
@@ -164,11 +160,6 @@ class ChartRenderer(
         val labelsEndPosition: Float
 
         when {
-            xPacked -> { // Pack labels - used in Bar charts
-                val barWidth = (chartRight - chartLeft) / (xLabels.size)
-                labelsStartPosition = chartLeft + barWidth / 2
-                labelsEndPosition = chartRight - barWidth / 2
-            }
             axis.shouldDisplayAxisX() -> {
                 labelsStartPosition = chartLeft + painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
                 labelsEndPosition = chartRight - painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
@@ -210,7 +201,7 @@ class ChartRenderer(
         frameBottom: Float
     ) {
 
-        val scale = findBorderValues(data, yAtZero)
+        val scale = data.toScale()
         val scaleSize = scale.max - scale.min
         val frameHeight = frameBottom - frameTop
 
@@ -218,14 +209,6 @@ class ChartRenderer(
             entry.screenPositionX = xLabels[index].screenPositionX
             entry.screenPositionY = frameBottom - (frameHeight * (entry.value - scale.min) / scaleSize)
         }
-    }
-
-    private fun findBorderValues(entries: List<DataPoint>, startScaleAtZero: Boolean): Scale {
-        val limits = entries.limits()
-        return Scale(
-            min = if (startScaleAtZero) 0F else limits.first,
-            max = limits.second
-        )
     }
 
     companion object {

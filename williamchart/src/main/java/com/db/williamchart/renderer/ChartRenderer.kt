@@ -11,6 +11,7 @@ import com.db.williamchart.data.Scale
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.extensions.limits
+import com.db.williamchart.extensions.toDataPoints
 
 class ChartRenderer(
     private val view: ChartContract.View,
@@ -147,25 +148,14 @@ class ChartRenderer(
     }
 
     override fun render(entries: HashMap<String, Float>) {
-        add(entries)
+        data = entries.toDataPoints()
         view.postInvalidate()
     }
 
     override fun anim(entries: HashMap<String, Float>, animation: ChartAnimation) {
-        add(entries)
+        data = entries.toDataPoints()
         this.animation = animation
         view.postInvalidate()
-    }
-
-    private fun add(entries: HashMap<String, Float>) {
-        data = entries.map {
-            DataPoint(
-                label = it.key,
-                value = it.value,
-                screenPositionX = 0f,
-                screenPositionY = 0f
-            )
-        }
     }
 
     private fun placeLabelsX(

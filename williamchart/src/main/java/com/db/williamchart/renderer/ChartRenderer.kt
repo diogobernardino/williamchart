@@ -7,9 +7,7 @@ import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
-import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.Scale
-import com.db.williamchart.data.mergeWith
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.extensions.limits
@@ -85,7 +83,14 @@ class ChartRenderer(
             bottom = height - paddingBottom.toFloat()
         )
 
-        val paddings = measurePaddingsX().mergeWith(measurePaddingsY())
+        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
+            ?: throw IllegalArgumentException("A chart needs more than one entry.")
+
+        val paddings = MeasurePaddingsNeeded().invoke(
+            axisType = axis,
+            labelsHeight = painter.measureLabelHeight(labelsSize),
+            longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize)
+        )
 
         innerFrame = Frame(
             left = outerFrame.left + paddings.left,
@@ -161,33 +166,6 @@ class ChartRenderer(
                 screenPositionY = 0f
             )
         }
-    }
-
-    private fun measurePaddingsX(): Paddings {
-        return Paddings(
-            left = 0F,
-            top = 0F,
-            right = 0f,
-            bottom = if (axis.shouldDisplayAxisX()) painter.measureLabelHeight(labelsSize) else 0F
-        )
-    }
-
-    private fun measurePaddingsY(): Paddings {
-
-        if (!axis.shouldDisplayAxisY())
-            return Paddings(0F, 0F, 0F, 0F)
-
-        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
-        return Paddings(
-            left = if (longestChartLabel != null)
-                painter.measureLabelWidth(
-                    longestChartLabel.label,
-                    labelsSize
-                ) else 0F,
-            top = painter.measureLabelHeight(labelsSize) / 2,
-            right = 0F,
-            bottom = painter.measureLabelHeight(labelsSize) / 2
-        )
     }
 
     private fun placeLabelsX(

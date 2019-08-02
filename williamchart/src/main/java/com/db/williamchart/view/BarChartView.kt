@@ -11,7 +11,7 @@ import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.toRect
-import com.db.williamchart.renderer.ChartRenderer
+import com.db.williamchart.renderer.BarChartRenderer
 
 class BarChartView @JvmOverloads constructor(
     context: Context,
@@ -34,11 +34,7 @@ class BarChartView @JvmOverloads constructor(
     var barRadius: Float = 0F
 
     init {
-        renderer = ChartRenderer(this, painter, NoAnimation())
-
-        // Mandatory requirements in a bar chart
-        renderer.xPacked = true
-        renderer.yAtZero = true
+        renderer = BarChartRenderer(this, painter, NoAnimation())
     }
 
     override fun drawData(

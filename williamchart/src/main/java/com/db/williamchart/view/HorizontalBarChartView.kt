@@ -35,10 +35,6 @@ class HorizontalBarChartView @JvmOverloads constructor(
 
     init {
         renderer = ChartRenderer(this, painter, NoAnimation())
-
-        // Mandatory requirements in a bar chart
-        renderer.xPacked = true
-        renderer.yAtZero = true
     }
 
     override fun drawData(

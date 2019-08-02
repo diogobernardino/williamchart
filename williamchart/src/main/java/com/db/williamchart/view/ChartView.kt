@@ -9,12 +9,12 @@ import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
+import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.AxisType
-import com.db.williamchart.renderer.ChartRenderer
 
 abstract class ChartView @JvmOverloads constructor(
     context: Context,
@@ -45,7 +45,7 @@ abstract class ChartView @JvmOverloads constructor(
     protected val painter: Painter = Painter()
 
     // Initialized in init() by chart views extending `ChartView` (e.g. LineChartView)
-    protected lateinit var renderer: ChartRenderer
+    protected lateinit var renderer: ChartContract.Renderer
 
     private val drawListener = ViewTreeObserver.OnPreDrawListener {
         renderer.preDraw(

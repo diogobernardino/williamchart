@@ -13,7 +13,7 @@ import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.toRect
-import com.db.williamchart.renderer.ChartRenderer
+import com.db.williamchart.renderer.LineChartRenderer
 
 class LineChartView @JvmOverloads constructor(
     context: Context,
@@ -42,7 +42,7 @@ class LineChartView @JvmOverloads constructor(
     var gradientFillColors: IntArray = intArrayOf(0, 0)
 
     init {
-        renderer = ChartRenderer(this, painter, NoAnimation())
+        renderer = LineChartRenderer(this, painter, NoAnimation())
     }
 
     override fun drawData(

@@ -7,13 +7,14 @@ import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.Scale
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
+import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
-import com.db.williamchart.extensions.toScale
 
-class LineChartRenderer(
+class HorizontalBarChartRenderer(
     private val view: ChartContract.View,
     private val painter: Painter,
     private var animation: ChartAnimation
@@ -30,11 +31,7 @@ class LineChartRenderer(
     private var labelsSize: Float = notInitialized
 
     private val xLabels: List<Label> by lazy {
-        data.toLabels()
-    }
-
-    private val yLabels by lazy {
-        val scale = data.toScale()
+        val scale = Scale(min = 0F, max = data.limits().second)
         val scaleStep = (scale.max - scale.min) / defaultScaleNumberOfSteps
 
         List(defaultScaleNumberOfSteps + 1) {
@@ -45,6 +42,10 @@ class LineChartRenderer(
                 screenPositionY = 0F
             )
         }
+    }
+
+    private val yLabels by lazy {
+        data.toLabels()
     }
 
     override fun preDraw(
@@ -74,9 +75,8 @@ class LineChartRenderer(
             bottom = height - paddingBottom.toFloat()
         )
 
-        val longestChartLabel =
-            yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
-                ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
+        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
+            ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasurePaddingsNeeded()(
             axisType = axis,
@@ -93,7 +93,6 @@ class LineChartRenderer(
 
         placeLabelsX(innerFrame)
         placeLabelsY(innerFrame)
-
         placeDataPoints(innerFrame.top, innerFrame.bottom)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
@@ -138,34 +137,25 @@ class LineChartRenderer(
 
     private fun placeLabelsX(chartFrame: Frame) {
 
-        val labelsStartPosition: Float
-        val labelsEndPosition: Float
-
-        if (axis.shouldDisplayAxisX()) {
-            labelsStartPosition = chartFrame.left + painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
-            labelsEndPosition = chartFrame.right - painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
-        } else {
-            labelsStartPosition = chartFrame.left
-            labelsEndPosition = chartFrame.right
-        }
-
-        val stepWidth = (labelsEndPosition - labelsStartPosition) / (xLabels.size - 1)
+        val screenStep = (chartFrame.right - chartFrame.left) / defaultScaleNumberOfSteps
         val xLabelsVerticalPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize)
 
         xLabels.forEachIndexed { index, label ->
-            label.screenPositionX = labelsStartPosition + stepWidth * index
+            label.screenPositionX = chartFrame.left + screenStep * index
             label.screenPositionY = xLabelsVerticalPosition
         }
     }
 
     private fun placeLabelsY(chartFrame: Frame) {
 
-        val screenStep = (chartFrame.bottom - chartFrame.top) / defaultScaleNumberOfSteps
-        val labelsBottomPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
+        val barWidth = (chartFrame.bottom - chartFrame.top) / yLabels.size
+        val labelsTopPosition = chartFrame.top + barWidth / 2
+        val labelsBottomPosition = chartFrame.bottom - barWidth / 2
+        val stepHeight = (labelsBottomPosition - labelsTopPosition) / (yLabels.size - 1)
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX = chartFrame.left - painter.measureLabelWidth(label.label, labelsSize) / 2
-            label.screenPositionY = labelsBottomPosition - screenStep * index
+            label.screenPositionY = labelsTopPosition + stepHeight * index
         }
     }
 
@@ -174,7 +164,7 @@ class LineChartRenderer(
         frameBottom: Float
     ) {
 
-        val scale = data.toScale()
+        val scale = Scale(min = 0F, max = data.limits().second)
         val scaleSize = scale.max - scale.min
         val frameHeight = frameBottom - frameTop
 

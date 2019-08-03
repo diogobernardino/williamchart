@@ -138,12 +138,9 @@ class BarChartRenderer(
 
     private fun placeLabelsX(chartFrame: Frame) {
 
-        val labelsStartPosition: Float
-        val labelsEndPosition: Float
-
-        val barWidth = (chartFrame.right - chartFrame.left) / (xLabels.size)
-        labelsStartPosition = chartFrame.left + barWidth / 2
-        labelsEndPosition = chartFrame.right - barWidth / 2
+        val barWidth = (chartFrame.right - chartFrame.left) / xLabels.size
+        val labelsStartPosition = chartFrame.left + barWidth / 2
+        val labelsEndPosition = chartFrame.right - barWidth / 2
 
         val stepWidth = (labelsEndPosition - labelsStartPosition) / (xLabels.size - 1)
         val xLabelsVerticalPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize)
@@ -157,12 +154,11 @@ class BarChartRenderer(
     private fun placeLabelsY(chartFrame: Frame) {
 
         val screenStep = (chartFrame.bottom - chartFrame.top) / defaultScaleNumberOfSteps
-        var screenCursor = chartFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
+        val labelsBottomPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
 
-        yLabels.forEach {
-            it.screenPositionX = chartFrame.left - painter.measureLabelWidth(it.label, labelsSize) / 2
-            it.screenPositionY = screenCursor
-            screenCursor -= screenStep
+        yLabels.forEachIndexed { index, label ->
+            label.screenPositionX = chartFrame.left - painter.measureLabelWidth(label.label, labelsSize) / 2
+            label.screenPositionY = labelsBottomPosition - screenStep * index
         }
     }
 

@@ -55,7 +55,7 @@ class DemoFragment : Fragment() {
         )
 
         barChart.animation.duration = 10000
-        barChart.axis = AxisType.X
+        barChart.axis = AxisType.XY
         barChart.show(barSet)
     }
 }

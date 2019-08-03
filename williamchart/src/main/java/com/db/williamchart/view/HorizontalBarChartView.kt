@@ -11,7 +11,7 @@ import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.toRect
-import com.db.williamchart.renderer.ChartRenderer
+import com.db.williamchart.renderer.HorizontalBarChartRenderer
 
 class HorizontalBarChartView @JvmOverloads constructor(
     context: Context,
@@ -34,7 +34,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
     var barRadius: Float = 0F
 
     init {
-        renderer = ChartRenderer(this, painter, NoAnimation())
+        renderer = HorizontalBarChartRenderer(this, painter, NoAnimation())
     }
 
     override fun drawData(

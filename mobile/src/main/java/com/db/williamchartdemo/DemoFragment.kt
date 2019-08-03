@@ -55,7 +55,17 @@ class DemoFragment : Fragment() {
         )
 
         barChart.animation.duration = 10000
-        barChart.axis = AxisType.XY
+        barChart.axis = AxisType.X
         barChart.show(barSet)
+
+        val horizontalBarSet = hashMapOf(
+            "label1" to 400F,
+            "label2" to 940F,
+            "label3" to 200F
+        )
+
+        horizontalBarChart.animation.duration = 10000
+        horizontalBarChart.axis = AxisType.Y
+        horizontalBarChart.show(horizontalBarSet)
     }
 }

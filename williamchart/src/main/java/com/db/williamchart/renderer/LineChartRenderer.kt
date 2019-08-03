@@ -91,9 +91,11 @@ class LineChartRenderer(
             bottom = outerFrame.bottom - paddings.bottom
         )
 
-        placeLabelsX(innerFrame)
+        if (axis.shouldDisplayAxisX())
+            placeLabelsX(innerFrame)
+
         placeLabelsY(innerFrame)
-        placeDataPoints(innerFrame.top, innerFrame.bottom)
+        placeDataPoints(innerFrame)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
 
@@ -137,17 +139,12 @@ class LineChartRenderer(
 
     private fun placeLabelsX(chartFrame: Frame) {
 
-        val labelsLeftPosition: Float
-        val labelsRightPosition: Float
-
-        if (axis.shouldDisplayAxisX()) {
-            labelsLeftPosition = chartFrame.left + painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
-            labelsRightPosition = chartFrame.right - painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
-        } else {
-            labelsLeftPosition = chartFrame.left
-            labelsRightPosition = chartFrame.right
-        }
-
+        val labelsLeftPosition =
+            chartFrame.left +
+                painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
+        val labelsRightPosition =
+            chartFrame.right -
+                painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
         val widthBetweenLabels = (labelsRightPosition - labelsLeftPosition) / (xLabels.size - 1)
         val xLabelsVerticalPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize)
 
@@ -168,19 +165,17 @@ class LineChartRenderer(
         }
     }
 
-    private fun placeDataPoints(
-        chartTop: Float,
-        chartBottom: Float
-    ) {
+    private fun placeDataPoints(chartFrame: Frame) {
 
         val scale = data.toScale()
         val scaleSize = scale.max - scale.min
-        val chartHeight = chartBottom - chartTop
+        val chartHeight = chartFrame.bottom - chartFrame.top
+        val widthBetweenLabels = (chartFrame.right - chartFrame.left) / (xLabels.size - 1)
 
         data.forEachIndexed { index, dataPoint ->
-            dataPoint.screenPositionX = xLabels[index].screenPositionX
+            dataPoint.screenPositionX = chartFrame.left + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
-                chartBottom -
+                chartFrame.bottom -
                     (chartHeight * (dataPoint.value - scale.min) / scaleSize)
         }
     }

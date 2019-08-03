@@ -91,9 +91,13 @@ class BarChartRenderer(
             bottom = outerFrame.bottom - paddings.bottom
         )
 
-        placeLabelsX(innerFrame)
-        placeLabelsY(innerFrame)
-        placeDataPoints(innerFrame.top, innerFrame.bottom)
+        if (axis.shouldDisplayAxisX())
+            placeLabelsX(innerFrame)
+
+        if (axis.shouldDisplayAxisY())
+            placeLabelsY(innerFrame)
+
+        placeDataPoints(innerFrame)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
 
@@ -160,19 +164,20 @@ class BarChartRenderer(
         }
     }
 
-    private fun placeDataPoints(
-        chartTop: Float,
-        chartBottom: Float
-    ) {
+    private fun placeDataPoints(chartFrame: Frame) {
 
         val scale = Scale(min = 0F, max = data.limits().second)
         val scaleSize = scale.max - scale.min
-        val chartHeight = chartBottom - chartTop
+        val chartHeight = chartFrame.bottom - chartFrame.top
+        val halfBarWidth = (chartFrame.right - chartFrame.left) / xLabels.size / 2
+        val labelsLeftPosition = chartFrame.left + halfBarWidth
+        val labelsRightPosition = chartFrame.right - halfBarWidth
+        val widthBetweenLabels = (labelsRightPosition - labelsLeftPosition) / (xLabels.size - 1)
 
         data.forEachIndexed { index, dataPoint ->
-            dataPoint.screenPositionX = xLabels[index].screenPositionX
+            dataPoint.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
-                chartBottom -
+                chartFrame.bottom -
                     (chartHeight * (dataPoint.value - scale.min) / scaleSize)
         }
     }

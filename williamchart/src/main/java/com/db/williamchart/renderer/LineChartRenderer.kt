@@ -74,9 +74,8 @@ class LineChartRenderer(
             bottom = height - paddingBottom.toFloat()
         )
 
-        val longestChartLabel =
-            yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
-                ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
+        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
+            ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasurePaddingsNeeded()(
             axisType = axis,
@@ -94,7 +93,9 @@ class LineChartRenderer(
         if (axis.shouldDisplayAxisX())
             placeLabelsX(innerFrame)
 
-        placeLabelsY(innerFrame)
+        if (axis.shouldDisplayAxisY())
+            placeLabelsY(innerFrame)
+
         placeDataPoints(innerFrame)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }

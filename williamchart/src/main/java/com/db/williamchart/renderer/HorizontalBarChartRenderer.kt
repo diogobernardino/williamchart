@@ -93,7 +93,7 @@ class HorizontalBarChartRenderer(
 
         placeLabelsX(innerFrame)
         placeLabelsY(innerFrame)
-        placeDataPoints(innerFrame.top, innerFrame.bottom)
+        placeDataPoints(innerFrame.left, innerFrame.right)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
 
@@ -137,40 +137,48 @@ class HorizontalBarChartRenderer(
 
     private fun placeLabelsX(chartFrame: Frame) {
 
-        val screenStep = (chartFrame.right - chartFrame.left) / defaultScaleNumberOfSteps
+        val widthBetweenLabels = (chartFrame.right - chartFrame.left) / defaultScaleNumberOfSteps
         val xLabelsVerticalPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize)
 
         xLabels.forEachIndexed { index, label ->
-            label.screenPositionX = chartFrame.left + screenStep * index
+            label.screenPositionX = chartFrame.left + widthBetweenLabels * index
             label.screenPositionY = xLabelsVerticalPosition
         }
     }
 
     private fun placeLabelsY(chartFrame: Frame) {
 
-        val barWidth = (chartFrame.bottom - chartFrame.top) / yLabels.size
-        val labelsTopPosition = chartFrame.top + barWidth / 2
-        val labelsBottomPosition = chartFrame.bottom - barWidth / 2
-        val stepHeight = (labelsBottomPosition - labelsTopPosition) / (yLabels.size - 1)
+        val halfBarWidth = (chartFrame.bottom - chartFrame.top) / yLabels.size / 2
+        val halfLabelHeight = painter.measureLabelHeight(labelsSize) / 2
+        val labelsTopPosition = chartFrame.top + halfBarWidth
+        val labelsBottomPosition = chartFrame.bottom - halfBarWidth
+        val heightBetweenLabels = (labelsBottomPosition - labelsTopPosition) / (yLabels.size - 1)
 
         yLabels.forEachIndexed { index, label ->
-            label.screenPositionX = chartFrame.left - painter.measureLabelWidth(label.label, labelsSize) / 2
-            label.screenPositionY = labelsTopPosition + stepHeight * index
+            label.screenPositionX =
+                chartFrame.left -
+                    painter.measureLabelWidth(label.label, labelsSize) / 2
+            label.screenPositionY =
+                labelsTopPosition +
+                    heightBetweenLabels * index +
+                    halfLabelHeight // Because text is drawn from bottom
+
         }
     }
 
     private fun placeDataPoints(
-        frameTop: Float,
-        frameBottom: Float
+        chartLeft: Float,
+        chartRight: Float
     ) {
 
         val scale = Scale(min = 0F, max = data.limits().second)
         val scaleSize = scale.max - scale.min
-        val frameHeight = frameBottom - frameTop
+        val chartWidth = chartRight - chartLeft
+        val halfLabelHeight = painter.measureLabelHeight(labelsSize) / 2
 
         data.forEachIndexed { index, entry ->
-            entry.screenPositionX = xLabels[index].screenPositionX
-            entry.screenPositionY = frameBottom - (frameHeight * (entry.value - scale.min) / scaleSize)
+            entry.screenPositionX = chartLeft + (chartWidth * (entry.value - scale.min) / scaleSize)
+            entry.screenPositionY = yLabels[index].screenPositionY - halfLabelHeight
         }
     }
 }

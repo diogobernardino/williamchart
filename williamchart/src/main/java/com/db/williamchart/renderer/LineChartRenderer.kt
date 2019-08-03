@@ -187,10 +187,4 @@ class LineChartRenderer(
             entry.screenPositionY = frameBottom - (frameHeight * (entry.value - scale.min) / scaleSize)
         }
     }
-
-    companion object {
-        private const val defaultScaleNumberOfSteps = 3
-        private const val notInitialized = -1f
-        private const val inDebug = false
-    }
 }

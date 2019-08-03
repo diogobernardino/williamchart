@@ -78,7 +78,7 @@ class LineChartRenderer(
             yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
                 ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
-        val paddings = MeasurePaddingsNeeded().invoke(
+        val paddings = MeasurePaddingsNeeded()(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
             longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize)
@@ -91,8 +91,8 @@ class LineChartRenderer(
             bottom = outerFrame.bottom - paddings.bottom
         )
 
-        placeLabelsX(innerFrame.left, innerFrame.top, innerFrame.right, innerFrame.bottom)
-        placeLabelsY(innerFrame.left, innerFrame.top, innerFrame.right, innerFrame.bottom)
+        placeLabelsX(innerFrame)
+        placeLabelsY(innerFrame)
 
         placeDataPoints(innerFrame.top, innerFrame.bottom)
 
@@ -115,7 +115,7 @@ class LineChartRenderer(
             view.drawDebugFrame(
                 outerFrame,
                 innerFrame,
-                DebugWithLabelsFrame().invoke(
+                DebugWithLabelsFrame()(
                     painter = painter,
                     xLabels = xLabels,
                     yLabels = yLabels,
@@ -136,29 +136,24 @@ class LineChartRenderer(
         view.postInvalidate()
     }
 
-    private fun placeLabelsX(
-        chartLeft: Float,
-        chartTop: Float,
-        chartRight: Float,
-        chartBottom: Float
-    ) {
+    private fun placeLabelsX(chartFrame: Frame) {
 
         val labelsStartPosition: Float
         val labelsEndPosition: Float
 
         when {
             axis.shouldDisplayAxisX() -> {
-                labelsStartPosition = chartLeft + painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
-                labelsEndPosition = chartRight - painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
+                labelsStartPosition = chartFrame.left + painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
+                labelsEndPosition = chartFrame.right - painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
             }
             else -> { // No axis
-                labelsStartPosition = chartLeft
-                labelsEndPosition = chartRight
+                labelsStartPosition = chartFrame.left
+                labelsEndPosition = chartFrame.right
             }
         }
 
         val stepWidth = (labelsEndPosition - labelsStartPosition) / (xLabels.size - 1)
-        val xLabelsVerticalPosition = chartBottom + painter.measureLabelHeight(labelsSize)
+        val xLabelsVerticalPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize)
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsStartPosition + stepWidth * index
@@ -166,18 +161,13 @@ class LineChartRenderer(
         }
     }
 
-    private fun placeLabelsY(
-        chartLeft: Float,
-        chartTop: Float,
-        chartRight: Float,
-        chartBottom: Float
-    ) {
+    private fun placeLabelsY(chartFrame: Frame) {
 
-        val screenStep = (chartBottom - chartTop) / defaultScaleNumberOfSteps
-        var screenCursor = chartBottom + painter.measureLabelHeight(labelsSize) / 2
+        val screenStep = (chartFrame.bottom - chartFrame.top) / defaultScaleNumberOfSteps
+        var screenCursor = chartFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEach {
-            it.screenPositionX = chartLeft - painter.measureLabelWidth(it.label, labelsSize) / 2
+            it.screenPositionX = chartFrame.left - painter.measureLabelWidth(it.label, labelsSize) / 2
             it.screenPositionY = screenCursor
             screenCursor -= screenStep
         }

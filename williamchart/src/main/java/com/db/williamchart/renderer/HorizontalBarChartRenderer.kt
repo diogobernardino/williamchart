@@ -160,10 +160,9 @@ class HorizontalBarChartRenderer(
                 chartFrame.left -
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY =
-                labelsTopPosition +
+                labelsBottomPosition -
                     heightBetweenLabels * index +
                     halfLabelHeight // Because text is drawn from bottom
-
         }
     }
 

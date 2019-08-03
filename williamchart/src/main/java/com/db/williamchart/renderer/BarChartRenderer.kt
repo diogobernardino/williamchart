@@ -76,7 +76,7 @@ class BarChartRenderer(
         )
 
         val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
-            ?: throw IllegalArgumentException("A chart needs more than one entry.")
+            ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasurePaddingsNeeded()(
             axisType = axis,

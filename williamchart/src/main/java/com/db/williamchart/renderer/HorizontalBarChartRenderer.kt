@@ -177,9 +177,11 @@ class HorizontalBarChartRenderer(
         val chartWidth = chartRight - chartLeft
         val halfLabelHeight = painter.measureLabelHeight(labelsSize) / 2
 
-        data.forEachIndexed { index, entry ->
-            entry.screenPositionX = chartLeft + (chartWidth * (entry.value - scale.min) / scaleSize)
-            entry.screenPositionY = yLabels[index].screenPositionY - halfLabelHeight
+        data.forEachIndexed { index, dataPoint ->
+            dataPoint.screenPositionX =
+                chartLeft +
+                    (chartWidth * (dataPoint.value - scale.min) / scaleSize)
+            dataPoint.screenPositionY = yLabels[index].screenPositionY - halfLabelHeight
         }
     }
 }

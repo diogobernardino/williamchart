@@ -75,13 +75,14 @@ class HorizontalBarChartRenderer(
             bottom = height - paddingBottom.toFloat()
         )
 
-        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
+        val yLongestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
-        val paddings = MeasurePaddingsNeeded()(
+        val paddings = HorizontalMeasurePaddingsNeeded()(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
-            longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize)
+            xLastLabelWidth = painter.measureLabelWidth(xLabels.last().label, labelsSize),
+            yLongestLabelWidth = painter.measureLabelWidth(yLongestChartLabel.label, labelsSize)
         )
 
         innerFrame = Frame(

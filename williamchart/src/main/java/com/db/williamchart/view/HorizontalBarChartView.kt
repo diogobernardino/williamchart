@@ -1,11 +1,13 @@
 package com.db.williamchart.view
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
 import com.db.williamchart.ChartContract
+import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
@@ -24,7 +26,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
      */
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var spacing = 10
+    var spacing = 10f
 
     @ColorInt
     @Suppress("MemberVisibilityCanBePrivate")
@@ -35,6 +37,15 @@ class HorizontalBarChartView @JvmOverloads constructor(
 
     init {
         renderer = HorizontalBarChartRenderer(this, painter, NoAnimation())
+
+        val styledAttributes =
+            context.theme.obtainStyledAttributes(
+                attrs,
+                R.styleable.BarChartAttrs,
+                0,
+                0
+            )
+        handleAttributes(styledAttributes)
     }
 
     override fun drawData(
@@ -90,5 +101,10 @@ class HorizontalBarChartView @JvmOverloads constructor(
         canvas.drawRect(outerFrame.toRect(), painter.paint)
         canvas.drawRect(innerFrame.toRect(), painter.paint)
         labelsFrame.forEach { canvas.drawRect(it.toRect(), painter.paint) }
+    }
+
+    private fun handleAttributes(typedArray: TypedArray) {
+        spacing = typedArray.getDimension(R.styleable.BarChartAttrs_chart_spacing, spacing)
+        typedArray.recycle()
     }
 }

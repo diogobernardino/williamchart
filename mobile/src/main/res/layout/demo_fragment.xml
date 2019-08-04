@@ -116,7 +116,7 @@
         app:layout_constraintLeft_toLeftOf="@id/lineChartCard"
         app:layout_constraintRight_toRightOf="@id/lineChartCard"/>
 
-    <com.db.williamchart.view.HorizontalBarChartView
+    <com.db.williamchart.view.BarChartView
         android:id="@+id/barChart"
         android:layout_width="0dp"
         android:layout_height="0dp"

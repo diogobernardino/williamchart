@@ -1,4 +1,4 @@
-package com.db.williamchart.renderer
+package com.db.williamchart.renderer.executor
 
 import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.Paddings

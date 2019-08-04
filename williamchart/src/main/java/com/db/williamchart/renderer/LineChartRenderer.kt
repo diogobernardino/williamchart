@@ -12,6 +12,8 @@ import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.extensions.toScale
+import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
+import com.db.williamchart.renderer.executor.MeasurePaddingsNeeded
 
 class LineChartRenderer(
     private val view: ChartContract.View,

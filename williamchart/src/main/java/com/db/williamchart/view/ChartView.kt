@@ -6,9 +6,9 @@ import android.graphics.Canvas
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.R
@@ -47,21 +47,19 @@ abstract class ChartView @JvmOverloads constructor(
     // Initialized in init() by chart views extending `ChartView` (e.g. LineChartView)
     protected lateinit var renderer: ChartContract.Renderer
 
-    private val drawListener = ViewTreeObserver.OnPreDrawListener {
-        renderer.preDraw(
-            measuredWidth,
-            measuredHeight,
-            paddingLeft,
-            paddingTop,
-            paddingRight,
-            paddingBottom,
-            axis,
-            labelsSize
-        )
-    }
-
     init {
-        viewTreeObserver.addOnPreDrawListener(drawListener)
+        doOnPreDraw {
+            renderer.preDraw(
+                measuredWidth,
+                measuredHeight,
+                paddingLeft,
+                paddingTop,
+                paddingRight,
+                paddingBottom,
+                axis,
+                labelsSize
+            )
+        }
 
         val styledAttributes =
             context.theme.obtainStyledAttributes(

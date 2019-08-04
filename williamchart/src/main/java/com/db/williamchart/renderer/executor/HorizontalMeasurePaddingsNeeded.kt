@@ -28,11 +28,14 @@ class HorizontalMeasurePaddingsNeeded {
         xLastLabelWidth: Float
     ): Paddings {
 
+        if (!axisType.shouldDisplayAxisX())
+            return Paddings(0F, 0F, 0F, 0F)
+
         return Paddings(
             left = 0F,
             top = 0F,
             right = xLastLabelWidth / 2,
-            bottom = if (axisType.shouldDisplayAxisX()) labelsHeight else 0F
+            bottom = labelsHeight
         )
     }
 

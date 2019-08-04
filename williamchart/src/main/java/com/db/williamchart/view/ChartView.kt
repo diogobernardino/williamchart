@@ -109,11 +109,11 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.draw()
     }
 
-    fun show(entries: HashMap<String, Float>) {
+    fun show(entries: LinkedHashMap<String, Float>) {
         renderer.render(entries)
     }
 
-    fun anim(entries: HashMap<String, Float>) {
+    fun anim(entries: LinkedHashMap<String, Float>) {
         renderer.anim(entries, animation)
     }
 

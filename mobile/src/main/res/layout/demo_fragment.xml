@@ -52,7 +52,8 @@
         app:layout_constraintTop_toBottomOf="@id/lineChart"
         app:layout_constraintBottom_toTopOf="@id/horizontalBarChart"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:chart_labelsSize="10sp"/>
 
     <com.db.williamchart.view.HorizontalBarChartView
         android:id="@+id/horizontalBarChart"

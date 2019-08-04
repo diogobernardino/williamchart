@@ -21,7 +21,7 @@ class DemoFragment : Fragment() {
 
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {
 
-        val lineSet = hashMapOf(
+        val lineSet = linkedMapOf(
             "label1" to 5f,
             "label2" to 4.5f,
             "label3" to 4.7f,
@@ -48,17 +48,26 @@ class DemoFragment : Fragment() {
         lineChart.axis = AxisType.NONE
         lineChart.show(lineSet)
 
-        val barSet = hashMapOf(
-            "label1" to 400F,
-            "label2" to 940F,
-            "label3" to 200F
+        val barSet = linkedMapOf(
+            "JAN" to 400F,
+            "FEB" to 940F,
+            "MAR" to 200F,
+            "MAY" to 200F,
+            "APR" to 200F,
+            "JUN" to 200F,
+            "JUL" to 200F,
+            "AUG" to 200F,
+            "SEP" to 200F,
+            "OCT" to 200F,
+            "NOV" to 200F,
+            "DEC" to 200F
         )
 
         barChart.animation.duration = 10000
         barChart.axis = AxisType.X
         barChart.show(barSet)
 
-        val horizontalBarSet = hashMapOf(
+        val horizontalBarSet = linkedMapOf(
             "label1" to 400F,
             "label2" to 940F,
             "label3" to 200F

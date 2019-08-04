@@ -130,12 +130,12 @@ class LineChartRenderer(
         }
     }
 
-    override fun render(entries: HashMap<String, Float>) {
+    override fun render(entries: LinkedHashMap<String, Float>) {
         data = entries.toDataPoints()
         view.postInvalidate()
     }
 
-    override fun anim(entries: HashMap<String, Float>, animation: ChartAnimation) {
+    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation) {
         data = entries.toDataPoints()
         this.animation = animation
         view.postInvalidate()

@@ -38,8 +38,8 @@ interface ChartContract {
 
         fun draw()
 
-        fun render(entries: HashMap<String, Float>)
+        fun render(entries: LinkedHashMap<String, Float>)
 
-        fun anim(entries: HashMap<String, Float>, animation: ChartAnimation)
+        fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation)
     }
 }

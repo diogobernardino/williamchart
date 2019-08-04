@@ -12,11 +12,14 @@ class HorizontalMeasurePaddingsNeeded {
         axisType: AxisType,
         labelsHeight: Float,
         xLastLabelWidth: Float,
-        yLongestLabelWidth: Float
+        yLongestLabelWidth: Float,
+        yLabelsPadding: Float
     ): Paddings {
 
         return measurePaddingsX(axisType, labelsHeight, xLastLabelWidth)
-            .mergeWith(measurePaddingsY(axisType, labelsHeight, yLongestLabelWidth))
+            .mergeWith(
+                measurePaddingsY(axisType, labelsHeight, yLongestLabelWidth, yLabelsPadding)
+            )
     }
 
     private fun measurePaddingsX(
@@ -36,14 +39,15 @@ class HorizontalMeasurePaddingsNeeded {
     private fun measurePaddingsY(
         axisType: AxisType,
         labelsHeight: Float,
-        yLongestLabelWidth: Float
+        yLongestLabelWidth: Float,
+        yLabelsPadding: Float
     ): Paddings {
 
         if (!axisType.shouldDisplayAxisY())
             return Paddings(0F, 0F, 0F, 0F)
 
         return Paddings(
-            left = yLongestLabelWidth,
+            left = yLongestLabelWidth + yLabelsPadding,
             top = 0f,
             right = 0F,
             bottom = labelsHeight / 2

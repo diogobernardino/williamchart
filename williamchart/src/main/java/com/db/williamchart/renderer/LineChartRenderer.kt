@@ -82,7 +82,8 @@ class LineChartRenderer(
         val paddings = MeasurePaddingsNeeded()(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
-            longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize)
+            longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize),
+            yLabelsPadding = yLabelsPadding
         )
 
         innerFrame = Frame(
@@ -163,7 +164,10 @@ class LineChartRenderer(
         val labelsBottomPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->
-            label.screenPositionX = chartFrame.left - painter.measureLabelWidth(label.label, labelsSize) / 2
+            label.screenPositionX =
+                chartFrame.left -
+                    yLabelsPadding -
+                    painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }
     }

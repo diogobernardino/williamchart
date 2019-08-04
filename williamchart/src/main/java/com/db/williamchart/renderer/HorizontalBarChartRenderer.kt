@@ -84,7 +84,8 @@ class HorizontalBarChartRenderer(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
             xLastLabelWidth = painter.measureLabelWidth(xLabels.last().label, labelsSize),
-            yLongestLabelWidth = painter.measureLabelWidth(yLongestChartLabel.label, labelsSize)
+            yLongestLabelWidth = painter.measureLabelWidth(yLongestChartLabel.label, labelsSize),
+            yLabelsPadding = yLabelsPadding
         )
 
         innerFrame = Frame(
@@ -160,6 +161,7 @@ class HorizontalBarChartRenderer(
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 chartFrame.left -
+                    yLabelsPadding -
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY =
                 labelsBottomPosition -

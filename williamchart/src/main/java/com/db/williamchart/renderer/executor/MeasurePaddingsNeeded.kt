@@ -8,9 +8,16 @@ import com.db.williamchart.data.shouldDisplayAxisY
 
 class MeasurePaddingsNeeded {
 
-    operator fun invoke(axisType: AxisType, labelsHeight: Float, longestLabelWidth: Float): Paddings {
+    operator fun invoke(
+        axisType: AxisType,
+        labelsHeight: Float,
+        longestLabelWidth: Float,
+        yLabelsPadding: Float
+    ): Paddings {
         return measurePaddingsX(axisType, labelsHeight)
-            .mergeWith(measurePaddingsY(axisType, labelsHeight, longestLabelWidth))
+            .mergeWith(
+                measurePaddingsY(axisType, labelsHeight, longestLabelWidth, yLabelsPadding)
+            )
     }
 
     private fun measurePaddingsX(axisType: AxisType, labelsHeight: Float): Paddings {
@@ -22,13 +29,18 @@ class MeasurePaddingsNeeded {
         )
     }
 
-    private fun measurePaddingsY(axisType: AxisType, labelsHeight: Float, longestLabelWidth: Float): Paddings {
+    private fun measurePaddingsY(
+        axisType: AxisType,
+        labelsHeight: Float,
+        longestLabelWidth: Float,
+        yLabelsPadding: Float
+    ): Paddings {
 
         if (!axisType.shouldDisplayAxisY())
             return Paddings(0F, 0F, 0F, 0F)
 
         return Paddings(
-            left = longestLabelWidth,
+            left = longestLabelWidth + yLabelsPadding,
             top = labelsHeight / 2,
             right = 0F,
             bottom = labelsHeight / 2

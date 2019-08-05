@@ -101,7 +101,7 @@ class HorizontalBarChartRenderer(
         if (axis.shouldDisplayAxisY())
             placeLabelsY(innerFrame)
 
-        placeDataPoints(innerFrame.left, innerFrame.right)
+        placeDataPoints(innerFrame)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
 
@@ -174,21 +174,23 @@ class HorizontalBarChartRenderer(
         }
     }
 
-    private fun placeDataPoints(
-        chartLeft: Float,
-        chartRight: Float
-    ) {
+    private fun placeDataPoints(chartFrame: Frame) {
 
         val scale = Scale(min = 0F, max = data.limits().second)
         val scaleSize = scale.max - scale.min
-        val chartWidth = chartRight - chartLeft
-        val halfLabelHeight = painter.measureLabelHeight(labelsSize) / 2
+        val chartWidth = chartFrame.right - chartFrame.left
+        val halfBarWidth = (chartFrame.bottom - chartFrame.top) / yLabels.size / 2
+        val labelsBottomPosition = chartFrame.bottom - halfBarWidth
+        val labelsTopPosition = chartFrame.top + halfBarWidth
+        val heightBetweenLabels = (labelsBottomPosition - labelsTopPosition) / (yLabels.size - 1)
 
         data.forEachIndexed { index, dataPoint ->
             dataPoint.screenPositionX =
-                chartLeft +
+                chartFrame.left +
                     (chartWidth * (dataPoint.value - scale.min) / scaleSize)
-            dataPoint.screenPositionY = yLabels[index].screenPositionY - halfLabelHeight
+            dataPoint.screenPositionY =
+                labelsBottomPosition -
+                    heightBetweenLabels * index
         }
     }
 }

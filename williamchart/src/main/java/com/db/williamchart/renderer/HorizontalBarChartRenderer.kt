@@ -14,7 +14,7 @@ import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
-import com.db.williamchart.renderer.executor.HorizontalMeasurePaddingsNeeded
+import com.db.williamchart.renderer.executor.MeasureHorizontalBarChartPaddings
 
 class HorizontalBarChartRenderer(
     private val view: ChartContract.View,
@@ -80,7 +80,7 @@ class HorizontalBarChartRenderer(
         val yLongestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
-        val paddings = HorizontalMeasurePaddingsNeeded()(
+        val paddings = MeasureHorizontalBarChartPaddings()(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
             xLastLabelWidth = painter.measureLabelWidth(xLabels.last().label, labelsSize),

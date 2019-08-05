@@ -6,7 +6,7 @@ import com.db.williamchart.data.mergeWith
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 
-class HorizontalMeasurePaddingsNeeded {
+class MeasureHorizontalBarChartPaddings {
 
     operator fun invoke(
         axisType: AxisType,

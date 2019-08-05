@@ -109,6 +109,7 @@
         app:layout_constraintTop_toBottomOf="@id/horizontalBarChartTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:chart_spacing="10dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

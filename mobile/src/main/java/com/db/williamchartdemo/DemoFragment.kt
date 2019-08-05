@@ -68,9 +68,9 @@ class DemoFragment : Fragment() {
         barChart.show(barSet)
 
         val horizontalBarSet = linkedMapOf(
-            "label1" to 400F,
-            "label2" to 940F,
-            "label3" to 200F
+            "Sharks" to 400F,
+            "Pigs" to 940F,
+            "Dogs" to 200F
         )
 
         horizontalBarChart.animation.duration = 10000

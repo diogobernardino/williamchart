@@ -31,6 +31,8 @@ class LineChartRenderer(
 
     private var labelsSize: Float = notInitialized
 
+    internal var lineThickness: Float = notInitialized
+
     private val xLabels: List<Label> by lazy {
         data.toLabels()
     }

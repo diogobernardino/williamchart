@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
+import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
@@ -36,6 +37,19 @@ class BarChartView @JvmOverloads constructor(
     var barRadius: Float = 0F
 
     init {
+        doOnPreDraw {
+            renderer.preDraw(
+                measuredWidth,
+                measuredHeight,
+                paddingLeft,
+                paddingTop,
+                paddingRight,
+                paddingBottom,
+                axis,
+                labelsSize
+            )
+        }
+
         renderer = BarChartRenderer(this, painter, NoAnimation())
 
         val styledAttributes =

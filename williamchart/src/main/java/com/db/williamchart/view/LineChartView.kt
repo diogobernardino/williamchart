@@ -7,6 +7,7 @@ import android.graphics.Path
 import android.graphics.Shader
 import android.util.AttributeSet
 import androidx.annotation.Size
+import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.DataPoint
@@ -42,6 +43,19 @@ class LineChartView @JvmOverloads constructor(
     var gradientFillColors: IntArray = intArrayOf(0, 0)
 
     init {
+        doOnPreDraw {
+            (renderer as LineChartRenderer).lineThickness = strokeWidth
+            renderer.preDraw(
+                measuredWidth,
+                measuredHeight,
+                paddingLeft,
+                paddingTop,
+                paddingRight,
+                paddingBottom,
+                axis,
+                labelsSize
+            )
+        }
         renderer = LineChartRenderer(this, painter, NoAnimation())
     }
 

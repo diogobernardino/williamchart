@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.R
@@ -48,18 +47,6 @@ abstract class ChartView @JvmOverloads constructor(
     protected lateinit var renderer: ChartContract.Renderer
 
     init {
-        doOnPreDraw {
-            renderer.preDraw(
-                measuredWidth,
-                measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom,
-                axis,
-                labelsSize
-            )
-        }
 
         val styledAttributes =
             context.theme.obtainStyledAttributes(

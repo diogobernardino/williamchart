@@ -53,7 +53,7 @@ class MeasureHorizontalBarChartPaddings {
             left = yLongestLabelWidth + yLabelsPadding,
             top = 0f,
             right = 0F,
-            bottom = labelsHeight / 2
+            bottom = 0f
         )
     }
 }

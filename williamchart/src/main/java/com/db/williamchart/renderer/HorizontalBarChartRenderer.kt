@@ -95,8 +95,12 @@ class HorizontalBarChartRenderer(
             bottom = outerFrame.bottom - paddings.bottom
         )
 
-        placeLabelsX(innerFrame)
-        placeLabelsY(innerFrame)
+        if (axis.shouldDisplayAxisX())
+            placeLabelsX(innerFrame)
+
+        if (axis.shouldDisplayAxisY())
+            placeLabelsY(innerFrame)
+
         placeDataPoints(innerFrame.left, innerFrame.right)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }

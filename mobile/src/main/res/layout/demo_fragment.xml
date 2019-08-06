@@ -81,7 +81,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:chart_labelsSize="10sp"
-        app:chart_spacing="20dp"/>
+        app:chart_labelsColor="#fff"
+        app:chart_spacing="20dp"
+        app:chart_barsColor="#fff"/>
 
     <TextView
         android:id="@+id/horizontalBarChartTitle"
@@ -103,6 +105,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:chart_spacing="10dp"/>
+        app:chart_labelsColor="#fff"
+        app:chart_spacing="10dp"
+        app:chart_barsColor="#fff"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

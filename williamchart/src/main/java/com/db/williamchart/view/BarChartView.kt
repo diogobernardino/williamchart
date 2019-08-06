@@ -31,7 +31,7 @@ class BarChartView @JvmOverloads constructor(
 
     @ColorInt
     @Suppress("MemberVisibilityCanBePrivate")
-    var barColor: Int = -0x1000000
+    var barsColor: Int = -0x1000000
 
     @Suppress("MemberVisibilityCanBePrivate")
     var barRadius: Float = 0F
@@ -69,7 +69,7 @@ class BarChartView @JvmOverloads constructor(
 
         val halfBarWidth = (innerFrame.right - innerFrame.left - (entries.size + 1) * spacing) / entries.size / 2
 
-        painter.prepare(color = barColor, style = Paint.Style.FILL)
+        painter.prepare(color = barsColor, style = Paint.Style.FILL)
         entries.forEach {
             canvas.drawRoundRect(
                 RectF(
@@ -111,6 +111,7 @@ class BarChartView @JvmOverloads constructor(
 
     private fun handleAttributes(typedArray: TypedArray) {
         spacing = typedArray.getDimension(R.styleable.BarChartAttrs_chart_spacing, spacing)
+        barsColor = typedArray.getColor(R.styleable.BarChartAttrs_chart_barsColor, barsColor)
         typedArray.recycle()
     }
 }

@@ -16,6 +16,7 @@
 
     <declare-styleable name="BarChartAttrs">
         <attr name="chart_spacing" format="dimension"/>
+        <attr name="chart_barsColor" format="reference|color"/>
     </declare-styleable>
 
     <declare-styleable name="LineChartAttrs">

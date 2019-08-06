@@ -124,6 +124,7 @@ class HorizontalBarChartRenderer(
                 innerFrame,
                 DebugWithLabelsFrame()(
                     painter = painter,
+                    axisType = axis,
                     xLabels = xLabels,
                     yLabels = yLabels,
                     labelsSize = labelsSize
@@ -168,8 +169,8 @@ class HorizontalBarChartRenderer(
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY =
                 labelsBottomPosition -
-                    heightBetweenLabels * index +
-                    halfLabelHeight // Because text is drawn from bottom
+                    heightBetweenLabels * index -
+                    painter.measureLabelAscent(labelsSize) / 2 // Ascent is a negative value
         }
     }
 

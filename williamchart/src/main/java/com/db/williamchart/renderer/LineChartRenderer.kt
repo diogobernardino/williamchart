@@ -125,6 +125,7 @@ class LineChartRenderer(
                 innerFrame,
                 DebugWithLabelsFrame()(
                     painter = painter,
+                    axisType = axis,
                     xLabels = xLabels,
                     yLabels = yLabels,
                     labelsSize = labelsSize

@@ -37,6 +37,16 @@ class Painter(val paint: Paint = Paint()) {
         return paint.descent() - paint.ascent()
     }
 
+    fun measureLabelAscent(textSize: Float): Float {
+        paint.textSize = textSize
+        return paint.ascent()
+    }
+
+    fun measureLabelDescent(textSize: Float): Float {
+        paint.textSize = textSize
+        return paint.descent()
+    }
+
     /**
      * Prepares a Paint object already configured to be used.
      *

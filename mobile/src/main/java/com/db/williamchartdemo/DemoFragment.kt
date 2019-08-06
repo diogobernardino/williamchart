@@ -43,7 +43,6 @@ class DemoFragment : Fragment() {
                 Color.TRANSPARENT
             )
         lineChart.strokeWidth = 11F
-        lineChart.lineColor = Color.parseColor("#ffffff")
         lineChart.animation.duration = 10000
         lineChart.axis = AxisType.NONE
         lineChart.show(lineSet)

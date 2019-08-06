@@ -1,6 +1,8 @@
 package com.db.williamchart.view
 
 import android.content.Context
+import android.content.res.TypedArray
+import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
@@ -9,6 +11,7 @@ import android.util.AttributeSet
 import androidx.annotation.Size
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
+import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
@@ -36,7 +39,7 @@ class LineChartView @JvmOverloads constructor(
     var fillColor: Int = 0
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var lineColor: Int = -0x1000000 // Black as default
+    var lineColor: Int = Color.BLACK
 
     @Size(min = 2, max = 2)
     @Suppress("MemberVisibilityCanBePrivate")
@@ -57,6 +60,15 @@ class LineChartView @JvmOverloads constructor(
             )
         }
         renderer = LineChartRenderer(this, painter, NoAnimation())
+
+        val styledAttributes =
+            context.theme.obtainStyledAttributes(
+                attrs,
+                R.styleable.LineChartAttrs,
+                0,
+                0
+            )
+        handleAttributes(styledAttributes)
     }
 
     override fun drawData(
@@ -194,6 +206,11 @@ class LineChartView @JvmOverloads constructor(
             i < 0 -> 0
             else -> i
         }
+    }
+
+    private fun handleAttributes(typedArray: TypedArray) {
+        lineColor = typedArray.getColor(R.styleable.LineChartAttrs_chart_lineColor, lineColor)
+        typedArray.recycle()
     }
 
     companion object {

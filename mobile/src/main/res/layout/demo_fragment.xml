@@ -47,7 +47,8 @@
         app:layout_constraintTop_toBottomOf="@id/lineChartTitle"
         app:layout_constraintBottom_toTopOf="@id/lineChartValue"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:chart_lineColor="#ffffff"/>
 
     <TextView
         android:id="@+id/lineChartValue"

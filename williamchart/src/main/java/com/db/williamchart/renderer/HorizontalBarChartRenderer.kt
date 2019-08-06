@@ -99,7 +99,7 @@ class HorizontalBarChartRenderer(
             placeLabelsX(innerFrame)
 
         if (axis.shouldDisplayAxisY())
-            placeLabelsY(innerFrame)
+            placeLabelsY(outerFrame, innerFrame)
 
         placeDataPoints(innerFrame)
 
@@ -154,7 +154,7 @@ class HorizontalBarChartRenderer(
         }
     }
 
-    private fun placeLabelsY(chartFrame: Frame) {
+    private fun placeLabelsY(outerFrame: Frame, chartFrame: Frame) {
 
         val halfBarWidth = (chartFrame.bottom - chartFrame.top) / yLabels.size / 2
         val halfLabelHeight = painter.measureLabelHeight(labelsSize) / 2
@@ -164,8 +164,7 @@ class HorizontalBarChartRenderer(
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
-                chartFrame.left -
-                    yLabelsPadding -
+                outerFrame.left +
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY =
                 labelsBottomPosition -

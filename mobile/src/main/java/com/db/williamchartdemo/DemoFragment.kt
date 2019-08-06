@@ -39,11 +39,11 @@ class DemoFragment : Fragment() {
         lineChart.smooth = true
         lineChart.gradientFillColors =
             intArrayOf(
-                Color.parseColor("#FFD1F2"),
+                Color.parseColor("#ffffff"),
                 Color.TRANSPARENT
             )
         lineChart.strokeWidth = 11F
-        lineChart.lineColor = Color.parseColor("#F971AC")
+        lineChart.lineColor = Color.parseColor("#ffffff")
         lineChart.animation.duration = 10000
         lineChart.axis = AxisType.NONE
         lineChart.show(lineSet)

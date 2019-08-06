@@ -210,6 +210,7 @@ class LineChartView @JvmOverloads constructor(
 
     private fun handleAttributes(typedArray: TypedArray) {
         lineColor = typedArray.getColor(R.styleable.LineChartAttrs_chart_lineColor, lineColor)
+        smooth = typedArray.getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
         typedArray.recycle()
     }
 

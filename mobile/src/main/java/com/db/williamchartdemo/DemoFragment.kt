@@ -36,7 +36,6 @@ class DemoFragment : Fragment() {
             "label12" to 4f
         )
 
-        lineChart.smooth = true
         lineChart.gradientFillColors =
             intArrayOf(
                 Color.parseColor("#ffffff"),

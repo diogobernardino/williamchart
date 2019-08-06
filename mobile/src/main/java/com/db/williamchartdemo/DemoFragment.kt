@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.db.williamchart.data.AxisType
 import kotlinx.android.synthetic.main.demo_fragment.*
 
 class DemoFragment : Fragment() {
@@ -43,7 +42,6 @@ class DemoFragment : Fragment() {
             )
         lineChart.strokeWidth = 11F
         lineChart.animation.duration = 10000
-        lineChart.axis = AxisType.NONE
         lineChart.show(lineSet)
 
         val barSet = linkedMapOf(
@@ -62,7 +60,6 @@ class DemoFragment : Fragment() {
         )
 
         barChart.animation.duration = 10000
-        barChart.axis = AxisType.X
         barChart.show(barSet)
 
         val horizontalBarSet = linkedMapOf(
@@ -72,7 +69,6 @@ class DemoFragment : Fragment() {
         )
 
         horizontalBarChart.animation.duration = 10000
-        horizontalBarChart.axis = AxisType.Y
         horizontalBarChart.show(horizontalBarSet)
     }
 }

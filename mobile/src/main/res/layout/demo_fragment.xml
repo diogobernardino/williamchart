@@ -49,6 +49,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:chart_lineColor="#ffffff"
+        app:chart_lineThickness="3dp"
         app:chart_smoothLine="true"
         app:chart_axis="none"/>
 

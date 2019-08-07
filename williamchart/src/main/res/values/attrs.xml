@@ -22,6 +22,7 @@
     <declare-styleable name="LineChartAttrs">
         <attr name="chart_lineColor" format="reference|color"/>
         <attr name="chart_smoothLine" format="boolean"/>
+        <attr name="chart_lineThickness" format="dimension"/>
     </declare-styleable>
 </resources>
 

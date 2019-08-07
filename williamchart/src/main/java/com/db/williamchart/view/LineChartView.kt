@@ -33,7 +33,7 @@ class LineChartView @JvmOverloads constructor(
     var smooth: Boolean = false
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var strokeWidth: Float = 4F
+    var lineThickness: Float = 4F
 
     @Suppress("MemberVisibilityCanBePrivate")
     var fillColor: Int = 0
@@ -47,7 +47,7 @@ class LineChartView @JvmOverloads constructor(
 
     init {
         doOnPreDraw {
-            (renderer as LineChartRenderer).lineThickness = strokeWidth
+            (renderer as LineChartRenderer).lineThickness = lineThickness
             renderer.preDraw(
                 measuredWidth,
                 measuredHeight,
@@ -104,7 +104,7 @@ class LineChartView @JvmOverloads constructor(
         }
 
         // Draw line
-        painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = strokeWidth)
+        painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
         canvas.drawPath(linePath, painter.paint)
     }
 
@@ -210,6 +210,7 @@ class LineChartView @JvmOverloads constructor(
 
     private fun handleAttributes(typedArray: TypedArray) {
         lineColor = typedArray.getColor(R.styleable.LineChartAttrs_chart_lineColor, lineColor)
+        lineThickness = typedArray.getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
         smooth = typedArray.getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
         typedArray.recycle()
     }

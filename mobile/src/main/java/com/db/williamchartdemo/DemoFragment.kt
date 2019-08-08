@@ -37,7 +37,7 @@ class DemoFragment : Fragment() {
 
         lineChart.gradientFillColors =
             intArrayOf(
-                Color.parseColor("#ffffff"),
+                Color.parseColor("#81FFFFFF"),
                 Color.TRANSPARENT
             )
         lineChart.animation.duration = 10000
@@ -62,9 +62,9 @@ class DemoFragment : Fragment() {
         barChart.show(barSet)
 
         val horizontalBarSet = linkedMapOf(
-            "Sharks" to 400F,
-            "Pigs" to 940F,
-            "Dogs" to 200F
+            "PORRO" to 400F,
+            "FUSCE" to 940F,
+            "EGET" to 200F
         )
 
         horizontalBarChart.animation.duration = 10000

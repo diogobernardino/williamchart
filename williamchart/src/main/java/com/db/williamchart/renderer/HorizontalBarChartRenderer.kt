@@ -147,7 +147,7 @@ class HorizontalBarChartRenderer(
     private fun placeLabelsX(chartFrame: Frame) {
 
         val widthBetweenLabels = (chartFrame.right - chartFrame.left) / defaultScaleNumberOfSteps
-        val xLabelsVerticalPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize)
+        val xLabelsVerticalPosition = chartFrame.bottom - painter.measureLabelAscent(labelsSize)
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = chartFrame.left + widthBetweenLabels * index

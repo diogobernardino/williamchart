@@ -154,7 +154,7 @@ class LineChartRenderer(
             chartFrame.right -
                 painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
         val widthBetweenLabels = (labelsRightPosition - labelsLeftPosition) / (xLabels.size - 1)
-        val xLabelsVerticalPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize)
+        val xLabelsVerticalPosition = chartFrame.bottom - painter.measureLabelAscent(labelsSize)
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)

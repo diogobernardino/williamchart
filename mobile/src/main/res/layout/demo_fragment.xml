@@ -110,6 +110,7 @@
         app:chart_labelsSize="10sp"
         app:chart_labelsColor="#FF70977F"
         app:chart_labelsFont="@font/open_sans_bold"
+        app:chart_barsRadius="4dp"
         app:chart_spacing="15dp"
         app:chart_barsColor="#fff"
         app:chart_axis="x"/>
@@ -126,8 +127,10 @@
         app:chart_labelsSize="15sp"
         app:chart_labelsColor="#475F50"
         app:chart_labelsFont="@font/open_sans_bold"
+        app:chart_barsRadius="6dp"
         app:chart_spacing="20dp"
         app:chart_barsColor="#fff"
-        app:chart_axis="y" android:layout_marginEnd="20dp"/>
+        app:chart_axis="y"
+        android:layout_marginEnd="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

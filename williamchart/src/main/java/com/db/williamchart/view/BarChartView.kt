@@ -110,8 +110,11 @@ class BarChartView @JvmOverloads constructor(
     }
 
     private fun handleAttributes(typedArray: TypedArray) {
-        spacing = typedArray.getDimension(R.styleable.BarChartAttrs_chart_spacing, spacing)
-        barsColor = typedArray.getColor(R.styleable.BarChartAttrs_chart_barsColor, barsColor)
-        typedArray.recycle()
+        typedArray.apply {
+            spacing = getDimension(R.styleable.BarChartAttrs_chart_spacing, spacing)
+            barsColor = getColor(R.styleable.BarChartAttrs_chart_barsColor, barsColor)
+            barRadius = getDimension(R.styleable.BarChartAttrs_chart_barsRadius, barRadius)
+            recycle()
+        }
     }
 }

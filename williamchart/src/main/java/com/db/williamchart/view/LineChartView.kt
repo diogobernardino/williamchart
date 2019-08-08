@@ -209,10 +209,12 @@ class LineChartView @JvmOverloads constructor(
     }
 
     private fun handleAttributes(typedArray: TypedArray) {
-        lineColor = typedArray.getColor(R.styleable.LineChartAttrs_chart_lineColor, lineColor)
-        lineThickness = typedArray.getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
-        smooth = typedArray.getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
-        typedArray.recycle()
+        typedArray.apply {
+            lineColor = getColor(R.styleable.LineChartAttrs_chart_lineColor, lineColor)
+            lineThickness = getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
+            smooth = getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
+            recycle()
+        }
     }
 
     companion object {

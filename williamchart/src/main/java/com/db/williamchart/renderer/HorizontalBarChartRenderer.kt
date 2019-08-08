@@ -158,7 +158,6 @@ class HorizontalBarChartRenderer(
     private fun placeLabelsY(outerFrame: Frame, chartFrame: Frame) {
 
         val halfBarWidth = (chartFrame.bottom - chartFrame.top) / yLabels.size / 2
-        val halfLabelHeight = painter.measureLabelHeight(labelsSize) / 2
         val labelsTopPosition = chartFrame.top + halfBarWidth
         val labelsBottomPosition = chartFrame.bottom - halfBarWidth
         val heightBetweenLabels = (labelsBottomPosition - labelsTopPosition) / (yLabels.size - 1)

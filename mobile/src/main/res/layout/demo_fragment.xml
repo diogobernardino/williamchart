@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/layout_background">
+    android:background="@drawable/layout_background"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/backgroundGuideline"
@@ -34,9 +36,11 @@
         android:layout_height="wrap_content"
         android:text="Lorem"
         android:textSize="20sp"
+        android:textColor="#475F50"
         app:layout_constraintTop_toTopOf="@id/backgroundGuideline"
         app:layout_constraintBottom_toTopOf="@id/lineChart"
-        app:layout_constraintLeft_toLeftOf="@id/lineChart"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:fontFamily="@font/open_sans_bold"/>
 
     <com.db.williamchart.view.LineChartView
         android:id="@+id/lineChart"
@@ -57,11 +61,29 @@
         android:id="@+id/lineChartValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="320 Likes"
-        android:textSize="20sp"
+        android:text="320"
+        android:textSize="24sp"
+        android:textColor="#FF70977F"
+        android:layout_marginLeft="20dp"
         app:layout_constraintTop_toBottomOf="@id/lineChart"
         app:layout_constraintBottom_toTopOf="@id/barChartTitle"
-        app:layout_constraintLeft_toLeftOf="@id/lineChart"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:fontFamily="@font/open_sans_bold"
+        android:layout_marginStart="20dp"/>
+
+    <TextView
+        android:id="@+id/lineChartUnits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="stinu"
+        android:textSize="17sp"
+        android:textColor="#FF70977F"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintTop_toTopOf="@id/lineChartValue"
+        app:layout_constraintBaseline_toBaselineOf="@id/lineChartValue"
+        app:layout_constraintLeft_toRightOf="@id/lineChartValue"
+        android:fontFamily="@font/open_sans_bold"/>
 
     <TextView
         android:id="@+id/barChartTitle"
@@ -69,9 +91,11 @@
         android:layout_height="wrap_content"
         android:text="Ipsum Dolor"
         android:textSize="20sp"
+        android:textColor="#475F50"
         app:layout_constraintTop_toBottomOf="@id/lineChartValue"
         app:layout_constraintBottom_toTopOf="@id/barChart"
-        app:layout_constraintLeft_toLeftOf="@id/barChart"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:fontFamily="@font/open_sans_bold"/>
 
     <com.db.williamchart.view.BarChartView
         android:id="@+id/barChart"
@@ -80,39 +104,30 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         app:layout_constraintTop_toBottomOf="@id/barChartTitle"
-        app:layout_constraintBottom_toTopOf="@id/horizontalBarChartTitle"
+        app:layout_constraintBottom_toTopOf="@id/horizontalBarChart"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:chart_labelsSize="10sp"
-        app:chart_labelsColor="#fff"
-        app:chart_spacing="20dp"
+        app:chart_labelsColor="#FF70977F"
+        app:chart_labelsFont="@font/open_sans_bold"
+        app:chart_spacing="15dp"
         app:chart_barsColor="#fff"
         app:chart_axis="x"/>
-
-    <TextView
-        android:id="@+id/horizontalBarChartTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Amet"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/barChart"
-        app:layout_constraintBottom_toTopOf="@id/horizontalBarChart"
-        app:layout_constraintLeft_toLeftOf="@id/horizontalBarChart"/>
 
     <com.db.williamchart.view.HorizontalBarChartView
         android:id="@+id/horizontalBarChart"
         android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_marginLeft="20dp"
+        android:layout_height="120dp"
         android:layout_marginRight="20dp"
-        app:layout_constraintTop_toBottomOf="@id/horizontalBarChartTitle"
+        app:layout_constraintTop_toBottomOf="@id/barChart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:chart_labelsSize="15sp"
-        app:chart_labelsColor="#fff"
-        app:chart_spacing="10dp"
+        app:chart_labelsColor="#475F50"
+        app:chart_labelsFont="@font/open_sans_bold"
+        app:chart_spacing="20dp"
         app:chart_barsColor="#fff"
-        app:chart_axis="y"/>
+        app:chart_axis="y" android:layout_marginEnd="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

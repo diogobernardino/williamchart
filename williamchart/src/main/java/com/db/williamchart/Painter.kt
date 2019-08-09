@@ -8,7 +8,10 @@ import android.graphics.Typeface
  * The Paint class holds the paint object used to draw charts
  * and provides methods to speed up its customization before drawing.
  */
-class Painter(val paint: Paint = Paint()) {
+class Painter(
+    val paint: Paint = Paint(),
+    var labelsFont: Typeface?
+) {
 
     init {
         paint.textAlign = Paint.Align.CENTER
@@ -22,6 +25,7 @@ class Painter(val paint: Paint = Paint()) {
      * @return width of the text.
      */
     fun measureLabelWidth(text: String, textSize: Float): Float {
+        paint.typeface = labelsFont
         paint.textSize = textSize
         return paint.measureText(text)
     }

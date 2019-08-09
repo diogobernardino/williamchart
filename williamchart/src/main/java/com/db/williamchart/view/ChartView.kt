@@ -41,7 +41,7 @@ abstract class ChartView @JvmOverloads constructor(
 
     protected lateinit var canvas: Canvas
 
-    protected val painter: Painter = Painter()
+    protected val painter: Painter = Painter(labelsFont = labelsFont)
 
     // Initialized in init() by chart views extending `ChartView` (e.g. LineChartView)
     protected lateinit var renderer: ChartContract.Renderer
@@ -105,23 +105,30 @@ abstract class ChartView @JvmOverloads constructor(
     }
 
     private fun handleAttributes(typedArray: TypedArray) {
+        typedArray.apply {
 
-        axis = when (typedArray.getString(R.styleable.ChartAttrs_chart_axis)) {
-            "0" -> AxisType.NONE
-            "1" -> AxisType.X
-            "2" -> AxisType.Y
-            else -> AxisType.XY
+            axis = when (getString(R.styleable.ChartAttrs_chart_axis)) {
+                "0" -> AxisType.NONE
+                "1" -> AxisType.X
+                "2" -> AxisType.Y
+                else -> AxisType.XY
+            }
+
+            labelsSize = getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
+
+            labelsColor = getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
+
+            if (hasValue(R.styleable.ChartAttrs_chart_labelsFont)) {
+                labelsFont =
+                    ResourcesCompat.getFont(
+                        context,
+                        getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1)
+                    )
+                painter.labelsFont = labelsFont
+            }
+
+            recycle()
         }
-        labelsSize = typedArray.getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
-        labelsColor = typedArray.getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
-        if (typedArray.hasValue(R.styleable.ChartAttrs_chart_labelsFont))
-            labelsFont =
-                ResourcesCompat.getFont(
-                    context,
-                    typedArray.getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1)
-                )
-
-        typedArray.recycle()
     }
 
     companion object {

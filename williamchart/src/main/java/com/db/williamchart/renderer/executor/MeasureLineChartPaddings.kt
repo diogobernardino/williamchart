@@ -12,12 +12,12 @@ class MeasureLineChartPaddings {
         axisType: AxisType,
         labelsHeight: Float,
         longestLabelWidth: Float,
-        yLabelsPadding: Float,
+        labelsPaddingToInnerChart: Float,
         lineThickness: Float
     ): Paddings {
         val paddings = measurePaddingsX(axisType, labelsHeight)
             .mergeWith(
-                measurePaddingsY(axisType, labelsHeight, longestLabelWidth, yLabelsPadding)
+                measurePaddingsY(axisType, labelsHeight, longestLabelWidth, labelsPaddingToInnerChart)
             )
         return paddings.copy(
             top = paddings.top + lineThickness,
@@ -38,14 +38,14 @@ class MeasureLineChartPaddings {
         axisType: AxisType,
         labelsHeight: Float,
         longestLabelWidth: Float,
-        yLabelsPadding: Float
+        labelsPaddingToInnerChart: Float
     ): Paddings {
 
         if (!axisType.shouldDisplayAxisY())
             return Paddings(0F, 0f, 0F, 0F)
 
         return Paddings(
-            left = longestLabelWidth + yLabelsPadding,
+            left = longestLabelWidth + labelsPaddingToInnerChart,
             top = labelsHeight / 2,
             right = 0F,
             bottom = labelsHeight / 2

@@ -85,7 +85,7 @@ class LineChartRenderer(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
             longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize),
-            yLabelsPadding = yLabelsPadding,
+            labelsPaddingToInnerChart = labelsPaddingToInnerChart,
             lineThickness = lineThickness
         )
 
@@ -170,7 +170,7 @@ class LineChartRenderer(
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 chartFrame.left -
-                    yLabelsPadding -
+                    labelsPaddingToInnerChart -
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }

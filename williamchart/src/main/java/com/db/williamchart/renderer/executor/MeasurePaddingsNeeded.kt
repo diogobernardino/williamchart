@@ -12,11 +12,11 @@ class MeasurePaddingsNeeded {
         axisType: AxisType,
         labelsHeight: Float,
         longestLabelWidth: Float,
-        yLabelsPadding: Float
+        labelsPaddingToInnerChart: Float
     ): Paddings {
         return measurePaddingsX(axisType, labelsHeight)
             .mergeWith(
-                measurePaddingsY(axisType, labelsHeight, longestLabelWidth, yLabelsPadding)
+                measurePaddingsY(axisType, labelsHeight, longestLabelWidth, labelsPaddingToInnerChart)
             )
     }
 
@@ -33,14 +33,14 @@ class MeasurePaddingsNeeded {
         axisType: AxisType,
         labelsHeight: Float,
         longestLabelWidth: Float,
-        yLabelsPadding: Float
+        labelsPaddingToInnerChart: Float
     ): Paddings {
 
         if (!axisType.shouldDisplayAxisY())
             return Paddings(0F, 0F, 0F, 0F)
 
         return Paddings(
-            left = longestLabelWidth + yLabelsPadding,
+            left = longestLabelWidth + labelsPaddingToInnerChart,
             top = labelsHeight / 2,
             right = 0F,
             bottom = labelsHeight / 2

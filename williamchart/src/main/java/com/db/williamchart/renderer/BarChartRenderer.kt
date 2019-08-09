@@ -84,7 +84,7 @@ class BarChartRenderer(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
             longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize),
-            yLabelsPadding = yLabelsPadding
+            labelsPaddingToInnerChart = labelsPaddingToInnerChart
         )
 
         innerFrame = Frame(
@@ -165,7 +165,7 @@ class BarChartRenderer(
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 chartFrame.left -
-                    yLabelsPadding -
+                    labelsPaddingToInnerChart -
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }

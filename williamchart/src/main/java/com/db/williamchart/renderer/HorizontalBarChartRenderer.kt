@@ -85,7 +85,7 @@ class HorizontalBarChartRenderer(
             labelsHeight = painter.measureLabelHeight(labelsSize),
             xLastLabelWidth = painter.measureLabelWidth(xLabels.last().label, labelsSize),
             yLongestLabelWidth = painter.measureLabelWidth(yLongestChartLabel.label, labelsSize),
-            yLabelsPadding = yLabelsPadding
+            labelsPaddingToInnerChart = labelsPaddingToInnerChart
         )
 
         innerFrame = Frame(

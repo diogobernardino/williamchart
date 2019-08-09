@@ -13,12 +13,12 @@ class MeasureHorizontalBarChartPaddings {
         labelsHeight: Float,
         xLastLabelWidth: Float,
         yLongestLabelWidth: Float,
-        yLabelsPadding: Float
+        labelsPaddingToInnerChart: Float
     ): Paddings {
 
         return measurePaddingsX(axisType, labelsHeight, xLastLabelWidth)
             .mergeWith(
-                measurePaddingsY(axisType, labelsHeight, yLongestLabelWidth, yLabelsPadding)
+                measurePaddingsY(axisType, yLongestLabelWidth, labelsPaddingToInnerChart)
             )
     }
 
@@ -41,16 +41,15 @@ class MeasureHorizontalBarChartPaddings {
 
     private fun measurePaddingsY(
         axisType: AxisType,
-        labelsHeight: Float,
         yLongestLabelWidth: Float,
-        yLabelsPadding: Float
+        labelsPaddingToInnerChart: Float
     ): Paddings {
 
         if (!axisType.shouldDisplayAxisY())
             return Paddings(0F, 0F, 0F, 0F)
 
         return Paddings(
-            left = yLongestLabelWidth + yLabelsPadding,
+            left = yLongestLabelWidth + labelsPaddingToInnerChart,
             top = 0f,
             right = 0F,
             bottom = 0f

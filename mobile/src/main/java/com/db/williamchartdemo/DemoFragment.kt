@@ -44,27 +44,27 @@ class DemoFragment : Fragment() {
         lineChart.show(lineSet)
 
         val barSet = linkedMapOf(
-            "JAN" to 400F,
-            "FEB" to 940F,
-            "MAR" to 200F,
-            "MAY" to 200F,
-            "APR" to 200F,
-            "JUN" to 200F,
-            "JUL" to 200F,
-            "AUG" to 200F,
-            "SEP" to 200F,
-            "OCT" to 200F,
-            "NOV" to 200F,
-            "DEC" to 200F
+            "JAN" to 4F,
+            "FEB" to 7F,
+            "MAR" to 2F,
+            "MAY" to 2.3F,
+            "APR" to 5F,
+            "JUN" to 4F,
+            "JUL" to 2F,
+            "AUG" to 4F,
+            "SEP" to 5F,
+            "OCT" to 6F,
+            "NOV" to 4F,
+            "DEC" to 3F
         )
 
         barChart.animation.duration = 10000
         barChart.show(barSet)
 
         val horizontalBarSet = linkedMapOf(
-            "PORRO" to 400F,
-            "FUSCE" to 940F,
-            "EGET" to 200F
+            "PORRO" to 5F,
+            "FUSCE" to 6.4F,
+            "EGET" to 3F
         )
 
         horizontalBarChart.animation.duration = 10000

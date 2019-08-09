@@ -14,7 +14,7 @@ import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
-import com.db.williamchart.renderer.executor.MeasurePaddingsNeeded
+import com.db.williamchart.renderer.executor.MeasureBarChartPaddings
 
 class BarChartRenderer(
     private val view: ChartContract.View,
@@ -80,7 +80,7 @@ class BarChartRenderer(
         val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
-        val paddings = MeasurePaddingsNeeded()(
+        val paddings = MeasureBarChartPaddings()(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
             longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize),
@@ -143,13 +143,16 @@ class BarChartRenderer(
         view.postInvalidate()
     }
 
-    private fun placeLabelsX(chartFrame: Frame) {
+    private fun placeLabelsX(innerFrame: Frame) {
 
-        val halfBarWidth = (chartFrame.right - chartFrame.left) / xLabels.size / 2
-        val labelsLeftPosition = chartFrame.left + halfBarWidth
-        val labelsRightPosition = chartFrame.right - halfBarWidth
+        val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2
+        val labelsLeftPosition = innerFrame.left + halfBarWidth
+        val labelsRightPosition = innerFrame.right - halfBarWidth
         val widthBetweenLabels = (labelsRightPosition - labelsLeftPosition) / (xLabels.size - 1)
-        val xLabelsVerticalPosition = chartFrame.bottom - painter.measureLabelAscent(labelsSize)
+        val xLabelsVerticalPosition =
+            innerFrame.bottom -
+                painter.measureLabelAscent(labelsSize) +
+                labelsPaddingToInnerChart
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
@@ -157,34 +160,34 @@ class BarChartRenderer(
         }
     }
 
-    private fun placeLabelsY(chartFrame: Frame) {
+    private fun placeLabelsY(innerFrame: Frame) {
 
-        val heightBetweenLabels = (chartFrame.bottom - chartFrame.top) / defaultScaleNumberOfSteps
-        val labelsBottomPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
+        val heightBetweenLabels = (innerFrame.bottom - innerFrame.top) / defaultScaleNumberOfSteps
+        val labelsBottomPosition = innerFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
-                chartFrame.left -
+                innerFrame.left -
                     labelsPaddingToInnerChart -
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }
     }
 
-    private fun placeDataPoints(chartFrame: Frame) {
+    private fun placeDataPoints(innerFrame: Frame) {
 
         val scale = Scale(min = 0F, max = data.limits().second)
         val scaleSize = scale.max - scale.min
-        val chartHeight = chartFrame.bottom - chartFrame.top
-        val halfBarWidth = (chartFrame.right - chartFrame.left) / xLabels.size / 2
-        val labelsLeftPosition = chartFrame.left + halfBarWidth
-        val labelsRightPosition = chartFrame.right - halfBarWidth
+        val chartHeight = innerFrame.bottom - innerFrame.top
+        val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2
+        val labelsLeftPosition = innerFrame.left + halfBarWidth
+        val labelsRightPosition = innerFrame.right - halfBarWidth
         val widthBetweenLabels = (labelsRightPosition - labelsLeftPosition) / (xLabels.size - 1)
 
         data.forEachIndexed { index, dataPoint ->
             dataPoint.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
-                chartFrame.bottom -
+                innerFrame.bottom -
                     (chartHeight * (dataPoint.value - scale.min) / scaleSize)
         }
     }

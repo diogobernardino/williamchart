@@ -6,7 +6,7 @@ import com.db.williamchart.data.mergeWith
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 
-class MeasurePaddingsNeeded {
+class MeasureBarChartPaddings {
 
     operator fun invoke(
         axisType: AxisType,
@@ -14,18 +14,22 @@ class MeasurePaddingsNeeded {
         longestLabelWidth: Float,
         labelsPaddingToInnerChart: Float
     ): Paddings {
-        return measurePaddingsX(axisType, labelsHeight)
+        return measurePaddingsX(axisType, labelsHeight, labelsPaddingToInnerChart)
             .mergeWith(
                 measurePaddingsY(axisType, labelsHeight, longestLabelWidth, labelsPaddingToInnerChart)
             )
     }
 
-    private fun measurePaddingsX(axisType: AxisType, labelsHeight: Float): Paddings {
+    private fun measurePaddingsX(
+        axisType: AxisType,
+        labelsHeight: Float,
+        labelsPaddingToInnerChart: Float
+    ): Paddings {
         return Paddings(
             left = 0F,
             top = 0F,
             right = 0f,
-            bottom = if (axisType.shouldDisplayAxisX()) labelsHeight else 0F
+            bottom = if (axisType.shouldDisplayAxisX()) labelsHeight + labelsPaddingToInnerChart else 0F
         )
     }
 

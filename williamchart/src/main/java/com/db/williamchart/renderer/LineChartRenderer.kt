@@ -145,16 +145,19 @@ class LineChartRenderer(
         view.postInvalidate()
     }
 
-    private fun placeLabelsX(chartFrame: Frame) {
+    private fun placeLabelsX(innerFrame: Frame) {
 
         val labelsLeftPosition =
-            chartFrame.left +
+            innerFrame.left +
                 painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
         val labelsRightPosition =
-            chartFrame.right -
+            innerFrame.right -
                 painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
         val widthBetweenLabels = (labelsRightPosition - labelsLeftPosition) / (xLabels.size - 1)
-        val xLabelsVerticalPosition = chartFrame.bottom - painter.measureLabelAscent(labelsSize)
+        val xLabelsVerticalPosition =
+            innerFrame.bottom -
+                painter.measureLabelAscent(labelsSize) +
+                labelsPaddingToInnerChart
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
@@ -162,31 +165,31 @@ class LineChartRenderer(
         }
     }
 
-    private fun placeLabelsY(chartFrame: Frame) {
+    private fun placeLabelsY(innerFrame: Frame) {
 
-        val heightBetweenLabels = (chartFrame.bottom - chartFrame.top) / defaultScaleNumberOfSteps
-        val labelsBottomPosition = chartFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
+        val heightBetweenLabels = (innerFrame.bottom - innerFrame.top) / defaultScaleNumberOfSteps
+        val labelsBottomPosition = innerFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
-                chartFrame.left -
+                innerFrame.left -
                     labelsPaddingToInnerChart -
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }
     }
 
-    private fun placeDataPoints(chartFrame: Frame) {
+    private fun placeDataPoints(innerFrame: Frame) {
 
         val scale = data.toScale()
         val scaleSize = scale.max - scale.min
-        val chartHeight = chartFrame.bottom - chartFrame.top
-        val widthBetweenLabels = (chartFrame.right - chartFrame.left) / (xLabels.size - 1)
+        val chartHeight = innerFrame.bottom - innerFrame.top
+        val widthBetweenLabels = (innerFrame.right - innerFrame.left) / (xLabels.size - 1)
 
         data.forEachIndexed { index, dataPoint ->
-            dataPoint.screenPositionX = chartFrame.left + (widthBetweenLabels * index)
+            dataPoint.screenPositionX = innerFrame.left + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
-                chartFrame.bottom -
+                innerFrame.bottom -
                     (chartHeight * (dataPoint.value - scale.min) / scaleSize)
         }
     }

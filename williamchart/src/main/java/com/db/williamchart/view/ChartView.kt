@@ -100,7 +100,7 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.render(entries)
     }
 
-    fun anim(entries: LinkedHashMap<String, Float>) {
+    fun animate(entries: LinkedHashMap<String, Float>) {
         renderer.anim(entries, animation)
     }
 

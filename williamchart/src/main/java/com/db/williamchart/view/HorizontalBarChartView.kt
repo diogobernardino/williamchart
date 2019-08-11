@@ -9,6 +9,7 @@ import androidx.annotation.ColorInt
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
+import com.db.williamchart.animation.DefaultHorizontalAnimation
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
@@ -51,6 +52,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
         }
 
         renderer = HorizontalBarChartRenderer(this, painter, NoAnimation())
+        animation = DefaultHorizontalAnimation()
 
         val styledAttributes =
             context.theme.obtainStyledAttributes(

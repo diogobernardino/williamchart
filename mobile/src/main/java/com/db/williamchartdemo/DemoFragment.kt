@@ -40,8 +40,8 @@ class DemoFragment : Fragment() {
                 Color.parseColor("#81FFFFFF"),
                 Color.TRANSPARENT
             )
-        lineChart.animation.duration = 10000
-        lineChart.show(lineSet)
+        lineChart.animation.duration = 1000
+        lineChart.animate(lineSet)
 
         val barSet = linkedMapOf(
             "JAN" to 4F,
@@ -58,8 +58,8 @@ class DemoFragment : Fragment() {
             "DEC" to 3F
         )
 
-        barChart.animation.duration = 10000
-        barChart.show(barSet)
+        barChart.animation.duration = 1000
+        barChart.animate(barSet)
 
         val horizontalBarSet = linkedMapOf(
             "PORRO" to 5F,
@@ -67,7 +67,7 @@ class DemoFragment : Fragment() {
             "EGET" to 3F
         )
 
-        horizontalBarChart.animation.duration = 10000
-        horizontalBarChart.show(horizontalBarSet)
+        horizontalBarChart.animation.duration = 1000
+        horizontalBarChart.animate(horizontalBarSet)
     }
 }

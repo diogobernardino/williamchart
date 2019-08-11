@@ -4,7 +4,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import com.db.williamchart.data.DataPoint
 
-class DefaultAnimation : ChartAnimation() {
+class DefaultHorizontalAnimation : ChartAnimation() {
 
     override fun animateFrom(
         y: Float,
@@ -15,7 +15,7 @@ class DefaultAnimation : ChartAnimation() {
         // Entries animators
         entries.forEach { dataPoint ->
             val eAnimator: ObjectAnimator =
-                ObjectAnimator.ofFloat(dataPoint, "screenPositionY", y, dataPoint.screenPositionY)
+                ObjectAnimator.ofFloat(dataPoint, "screenPositionX", y, dataPoint.screenPositionX)
             eAnimator.duration = duration
             eAnimator.interpolator = interpolator
             eAnimator.start()

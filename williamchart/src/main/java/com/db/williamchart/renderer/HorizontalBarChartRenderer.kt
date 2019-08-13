@@ -171,8 +171,8 @@ class HorizontalBarChartRenderer(
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY =
                 labelsBottomPosition -
-                    heightBetweenLabels * index -
-                    painter.measureLabelAscent(labelsSize) / 2 // Ascent is a negative value
+                    heightBetweenLabels * index +
+                    painter.measureLabelDescent(labelsSize)
         }
     }
 

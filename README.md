@@ -4,15 +4,11 @@ Williamchart is an Android Library to rapidly implement attractive and insightfu
 
 Note: WilliamChart v3 has been completely re-written from scratch in Kotlin and does not guarantee any API/features compatibility with previous versions. Android development has been evolving quickly, and much has changed since I first started developing williamchart (e.g patterns, testing, tools), so I decided it was time to rewrite it with all these new tools in mind. I intend to keep it as light and modular as possible.
 
-So far it supports:
-
-* Line charts
-* Bar charts
-* Horizontal bar charts
+![screenshot][4]
 
 ### Gradle 
 ``` groovy
-   implementation 'com.diogobernardino:williamchart:3.0'
+implementation 'com.diogobernardino:williamchart:3.0'
 ```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][1], I will be happy to know about it.
@@ -37,3 +33,4 @@ License
 [1]: https://twitter.com/dfbernardino
 [2]: ./art/phone.png
 [3]: ./art/watch.png
+[4]: ./art/demo_screenshot.png

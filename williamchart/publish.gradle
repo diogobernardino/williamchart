@@ -1,0 +1,56 @@
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+version '3.0-alpha1' // your library version
+group 'com.diogobernardino' // whatever group name you'd like
+
+publishing {
+    publications {
+        Production(MavenPublication) {
+            artifact("$buildDir/outputs/aar/williamchart-release.aar") // replace with your library name
+            groupId this.group
+            artifactId 'williamchart' // replace with your library artifact id
+            version this.version
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+
+                // Iterate over the implementation dependencies (we don't want the test ones),
+                // adding a <dependency> node for each
+                configurations.implementation.allDependencies.each {
+                    // Ensure dependencies such as fileTree are not included in the pom.
+                    if (it.name != 'unspecified') {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    user = properties.containsKey('bintrayUser') ? properties.getProperty('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = properties.containsKey('bintrayApiKey') ? properties.getProperty('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    publications = ['Production']
+    configurations = ['archives']
+    // Default: false. Whether to run this as dry-run, without deploying
+    dryRun = false
+    // Default: false. Whether to override version artifacts already published
+    override = false
+    // Default: false. Whether version should be auto published after an upload
+    publish = true
+    pkg {
+        repo = 'maven' // the name of the repository you created on Bintray
+        name = 'com.diogobernardino:williamchart' // the name of the package you created inside it
+        version {
+            name = this.version
+            released = new Date()
+            vcsTag = this.version
+        }
+    }
+}

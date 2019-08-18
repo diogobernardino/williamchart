@@ -20,7 +20,23 @@ class DemoFragment : Fragment() {
 
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {
 
-        val lineSet = linkedMapOf(
+        lineChart.gradientFillColors =
+            intArrayOf(
+                Color.parseColor("#81FFFFFF"),
+                Color.TRANSPARENT
+            )
+        lineChart.animation.duration = 1000
+        lineChart.animate(lineSet)
+
+        barChart.animation.duration = 1000
+        barChart.animate(barSet)
+
+        horizontalBarChart.animation.duration = 1000
+        horizontalBarChart.animate(horizontalBarSet)
+    }
+
+    companion object {
+        private val lineSet = linkedMapOf(
             "label1" to 5f,
             "label2" to 4.5f,
             "label3" to 4.7f,
@@ -35,15 +51,7 @@ class DemoFragment : Fragment() {
             "label12" to 4f
         )
 
-        lineChart.gradientFillColors =
-            intArrayOf(
-                Color.parseColor("#81FFFFFF"),
-                Color.TRANSPARENT
-            )
-        lineChart.animation.duration = 1000
-        lineChart.animate(lineSet)
-
-        val barSet = linkedMapOf(
+        private val barSet = linkedMapOf(
             "JAN" to 4F,
             "FEB" to 7F,
             "MAR" to 2F,
@@ -58,16 +66,10 @@ class DemoFragment : Fragment() {
             "DEC" to 3F
         )
 
-        barChart.animation.duration = 1000
-        barChart.animate(barSet)
-
-        val horizontalBarSet = linkedMapOf(
+        private val horizontalBarSet = linkedMapOf(
             "PORRO" to 5F,
             "FUSCE" to 6.4F,
             "EGET" to 3F
         )
-
-        horizontalBarChart.animation.duration = 1000
-        horizontalBarChart.animate(horizontalBarSet)
     }
 }

@@ -30,7 +30,7 @@ class BarChartRenderer(
 
     private lateinit var innerFrame: Frame
 
-    private var labelsSize: Float = notInitialized
+    private var labelsSize: Float = NOT_INITIALIZE
 
     private val xLabels: List<Label> by lazy {
         data.toLabels()
@@ -38,9 +38,9 @@ class BarChartRenderer(
 
     private val yLabels by lazy {
         val scale = Scale(min = 0F, max = data.limits().second)
-        val scaleStep = (scale.max - scale.min) / defaultScaleNumberOfSteps
+        val scaleStep = (scale.max - scale.min) / DEFAULT_SCALE_NUMBER_OF_STEPS
 
-        List(defaultScaleNumberOfSteps + 1) {
+        List(DEFAULT_SCALE_NUMBER_OF_STEPS + 1) {
             val scaleValue = scale.min + scaleStep * it
             Label(
                 label = scaleValue.toString(),
@@ -61,7 +61,7 @@ class BarChartRenderer(
         labelsSize: Float
     ): Boolean {
 
-        if (this.labelsSize != notInitialized) // Data already processed, proceed with drawing
+        if (this.labelsSize != NOT_INITIALIZE) // Data already processed, proceed with drawing
             return true
 
         if (data.size <= 1)
@@ -84,7 +84,7 @@ class BarChartRenderer(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
             longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize),
-            labelsPaddingToInnerChart = labelsPaddingToInnerChart
+            labelsPaddingToInnerChart = LABELS_PADDING_TO_INNER_CHART
         )
 
         innerFrame = Frame(
@@ -117,7 +117,7 @@ class BarChartRenderer(
 
         view.drawData(innerFrame, data)
 
-        if (inDebug) {
+        if (IN_DEBUG) {
             view.drawDebugFrame(
                 outerFrame,
                 innerFrame,
@@ -152,7 +152,7 @@ class BarChartRenderer(
         val xLabelsVerticalPosition =
             innerFrame.bottom -
                 painter.measureLabelAscent(labelsSize) +
-                labelsPaddingToInnerChart
+                LABELS_PADDING_TO_INNER_CHART
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
@@ -162,13 +162,13 @@ class BarChartRenderer(
 
     private fun placeLabelsY(innerFrame: Frame) {
 
-        val heightBetweenLabels = (innerFrame.bottom - innerFrame.top) / defaultScaleNumberOfSteps
+        val heightBetweenLabels = (innerFrame.bottom - innerFrame.top) / DEFAULT_SCALE_NUMBER_OF_STEPS
         val labelsBottomPosition = innerFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 innerFrame.left -
-                    labelsPaddingToInnerChart -
+                    LABELS_PADDING_TO_INNER_CHART -
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }

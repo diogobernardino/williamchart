@@ -1,5 +1,8 @@
 # williamchart ![phone][2]![watch][3]
 
+[![Kotlin Version](https://img.shields.io/badge/kotlin-1.3.41-blue.svg)](https://kotlinlang.org)
+[![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
+
 Williamchart is an Android Library to rapidly implement attractive and insightful charts in android applications.
 
 Note: WilliamChart v3 has been completely re-written from scratch in Kotlin and does not guarantee any API/features compatibility with previous versions. Android development has been evolving quickly, and much has changed since I first started developing williamchart (e.g patterns, testing, tools), so I decided it was time to rewrite it with all these new tools in mind. I intend to keep it as light and modular as possible.

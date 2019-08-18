@@ -2,9 +2,9 @@ package com.db.williamchart.data
 
 enum class AxisType {
     NONE, // No axis
-    X,    // Only axis X
-    Y,    // Only axis Y
-    XY    // All axis
+    X, // Only axis X
+    Y, // Only axis Y
+    XY // All axis
 }
 
 fun AxisType.shouldDisplayAxisX(): Boolean {

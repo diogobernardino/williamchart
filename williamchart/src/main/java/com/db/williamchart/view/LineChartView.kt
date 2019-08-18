@@ -30,16 +30,16 @@ class LineChartView @JvmOverloads constructor(
      */
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var smooth: Boolean = false
+    var smooth: Boolean = defaultSmooth
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var lineThickness: Float = 4F
+    var lineThickness: Float = defaultLineThickness
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var fillColor: Int = 0
+    var fillColor: Int = defaultFillColor
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var lineColor: Int = Color.BLACK
+    var lineColor: Int = defaultLineColor
 
     @Size(min = 2, max = 2)
     @Suppress("MemberVisibilityCanBePrivate")
@@ -170,11 +170,11 @@ class LineChartView @JvmOverloads constructor(
             endDiffX = points[si(points.size, i + 2)].screenPositionX - thisPointX
             endDiffY = points[si(points.size, i + 2)].screenPositionY - thisPointY
 
-            firstControlX = thisPointX + SMOOTH_FACTOR * startDiffX
-            firstControlY = thisPointY + SMOOTH_FACTOR * startDiffY
+            firstControlX = thisPointX + defaultSmoothFactor * startDiffX
+            firstControlY = thisPointY + defaultSmoothFactor * startDiffY
 
-            secondControlX = nextPointX - SMOOTH_FACTOR * endDiffX
-            secondControlY = nextPointY - SMOOTH_FACTOR * endDiffY
+            secondControlX = nextPointX - defaultSmoothFactor * endDiffX
+            secondControlY = nextPointY - defaultSmoothFactor * endDiffY
 
             res.cubicTo(firstControlX, firstControlY, secondControlX, secondControlY, nextPointX, nextPointY)
         }
@@ -218,6 +218,10 @@ class LineChartView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val SMOOTH_FACTOR = 0.20f
+        private const val defaultSmoothFactor = 0.20f
+        private const val defaultSmooth = false
+        private const val defaultLineThickness = 4F
+        private const val defaultFillColor = 0
+        private const val defaultLineColor = Color.BLACK
     }
 }

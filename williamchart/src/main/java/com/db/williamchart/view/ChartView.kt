@@ -25,7 +25,7 @@ abstract class ChartView @JvmOverloads constructor(
      * API
      */
 
-    var labelsSize: Float = 60F
+    var labelsSize: Float = defaultLabelsSize
 
     var labelsColor: Int = -0x1000000
 
@@ -134,5 +134,6 @@ abstract class ChartView @JvmOverloads constructor(
     companion object {
         private const val defaultFrameWidth = 200
         private const val defaultFrameHeight = 100
+        private const val defaultLabelsSize = 60F
     }
 }

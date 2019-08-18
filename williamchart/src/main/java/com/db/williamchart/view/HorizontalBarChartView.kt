@@ -28,14 +28,14 @@ class HorizontalBarChartView @JvmOverloads constructor(
      */
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var spacing = 10f
+    var spacing = defaultSpacing
 
     @ColorInt
     @Suppress("MemberVisibilityCanBePrivate")
-    var barsColor: Int = -0x1000000
+    var barsColor: Int = defaultBarsColor
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var barRadius: Float = 0F
+    var barRadius: Float = defaultBarsRadius
 
     init {
         doOnPreDraw {
@@ -126,5 +126,11 @@ class HorizontalBarChartView @JvmOverloads constructor(
             barRadius = getDimension(R.styleable.BarChartAttrs_chart_barsRadius, barRadius)
             recycle()
         }
+    }
+
+    companion object {
+        private const val defaultSpacing = 10f
+        private const val defaultBarsColor = -0x1000000
+        private const val defaultBarsRadius = 0F
     }
 }

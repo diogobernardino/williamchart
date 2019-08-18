@@ -29,9 +29,9 @@ class LineChartRenderer(
 
     private lateinit var innerFrame: Frame
 
-    private var labelsSize: Float = NOT_INITIALIZE
+    private var labelsSize: Float = RendererConstants.notInitialized
 
-    internal var lineThickness: Float = NOT_INITIALIZE
+    internal var lineThickness: Float = RendererConstants.notInitialized
 
     private val xLabels: List<Label> by lazy {
         data.toLabels()
@@ -39,9 +39,9 @@ class LineChartRenderer(
 
     private val yLabels by lazy {
         val scale = data.toScale()
-        val scaleStep = (scale.max - scale.min) / DEFAULT_SCALE_NUMBER_OF_STEPS
+        val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
 
-        List(DEFAULT_SCALE_NUMBER_OF_STEPS + 1) {
+        List(RendererConstants.defaultScaleNumberOfSteps + 1) {
             val scaleValue = scale.min + scaleStep * it
             Label(
                 label = scaleValue.toString(),
@@ -62,7 +62,7 @@ class LineChartRenderer(
         labelsSize: Float
     ): Boolean {
 
-        if (this.labelsSize != NOT_INITIALIZE) // Data already processed, proceed with drawing
+        if (this.labelsSize != RendererConstants.notInitialized) // Data already processed, proceed with drawing
             return true
 
         if (data.size <= 1)
@@ -85,7 +85,7 @@ class LineChartRenderer(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
             longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize),
-            labelsPaddingToInnerChart = LABELS_PADDING_TO_INNER_CHART,
+            labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart,
             lineThickness = lineThickness
         )
 
@@ -119,7 +119,7 @@ class LineChartRenderer(
 
         view.drawData(innerFrame, data)
 
-        if (IN_DEBUG) {
+        if (RendererConstants.inDebug) {
             view.drawDebugFrame(
                 outerFrame,
                 innerFrame,
@@ -157,7 +157,7 @@ class LineChartRenderer(
         val xLabelsVerticalPosition =
             innerFrame.bottom -
                 painter.measureLabelAscent(labelsSize) +
-                LABELS_PADDING_TO_INNER_CHART
+                RendererConstants.labelsPaddingToInnerChart
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
@@ -167,13 +167,13 @@ class LineChartRenderer(
 
     private fun placeLabelsY(innerFrame: Frame) {
 
-        val heightBetweenLabels = (innerFrame.bottom - innerFrame.top) / DEFAULT_SCALE_NUMBER_OF_STEPS
+        val heightBetweenLabels = (innerFrame.bottom - innerFrame.top) / RendererConstants.defaultScaleNumberOfSteps
         val labelsBottomPosition = innerFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 innerFrame.left -
-                    LABELS_PADDING_TO_INNER_CHART -
+                    RendererConstants.labelsPaddingToInnerChart -
                     painter.measureLabelWidth(label.label, labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }

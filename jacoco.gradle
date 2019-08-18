@@ -1,0 +1,7 @@
+junitJacoco {
+    jacocoVersion = '0.8.2' // type String
+    ignoreProjects = [] // type String array
+    excludes // type String List
+    includeNoLocationClasses = false // type boolean
+    includeInstrumentationCoverageInMergedReport = false // type boolean
+}

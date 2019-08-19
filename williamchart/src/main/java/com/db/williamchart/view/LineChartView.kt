@@ -69,6 +69,7 @@ class LineChartView @JvmOverloads constructor(
                 0
             )
         handleAttributes(styledAttributes)
+        showEditMode()
     }
 
     override fun drawData(

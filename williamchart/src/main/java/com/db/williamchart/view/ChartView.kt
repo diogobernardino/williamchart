@@ -47,7 +47,6 @@ abstract class ChartView @JvmOverloads constructor(
     protected lateinit var renderer: ChartContract.Renderer
 
     init {
-
         val styledAttributes =
             context.theme.obtainStyledAttributes(
                 attrs,
@@ -118,7 +117,7 @@ abstract class ChartView @JvmOverloads constructor(
 
             labelsColor = getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
 
-            if (hasValue(R.styleable.ChartAttrs_chart_labelsFont)) {
+            if (hasValue(R.styleable.ChartAttrs_chart_labelsFont) && !isInEditMode) {
                 labelsFont =
                     ResourcesCompat.getFont(
                         context,
@@ -128,6 +127,18 @@ abstract class ChartView @JvmOverloads constructor(
             }
 
             recycle()
+        }
+    }
+
+    protected fun showEditMode() {
+        if (isInEditMode) {
+            show(
+                linkedMapOf(
+                    "PORRO" to 5F,
+                    "FUSCE" to 6.4F,
+                    "EGET" to 3F
+                )
+            )
         }
     }
 

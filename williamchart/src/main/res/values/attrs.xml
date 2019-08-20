@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ChartAttrs">
-
         <attr name="chart_axis">
             <enum name="none" value="0"/>
             <enum name="x" value="1"/>
@@ -11,7 +10,6 @@
         <attr name="chart_labelsColor" format="reference|color"/>
         <attr name="chart_labelsSize" format="dimension"/>
         <attr name="chart_labelsFont" format="reference"/>
-
     </declare-styleable>
 
     <declare-styleable name="BarChartAttrs">
@@ -24,6 +22,7 @@
         <attr name="chart_lineColor" format="reference|color"/>
         <attr name="chart_smoothLine" format="boolean"/>
         <attr name="chart_lineThickness" format="dimension"/>
+        <attr name="chart_showPoints" format="boolean" />
     </declare-styleable>
 </resources>
 

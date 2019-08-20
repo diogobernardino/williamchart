@@ -2,11 +2,7 @@ package com.db.williamchart.view
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.Shader
+import android.graphics.*
 import android.util.AttributeSet
 import androidx.annotation.Size
 import androidx.core.view.doOnPreDraw
@@ -45,16 +41,19 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var gradientFillColors: IntArray = intArrayOf(0, 0)
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var arePointsDisplayed: Boolean = false
+
     init {
         doOnPreDraw {
             (renderer as LineChartRenderer).lineThickness = lineThickness
             renderer.preDraw(
                 measuredWidth,
                 measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom,
+                paddingLeft + addPointWidth(),
+                paddingTop + addPointWidth(),
+                paddingRight + addPointWidth(),
+                paddingBottom + addPointWidth(),
                 axis,
                 labelsSize
             )
@@ -106,6 +105,19 @@ class LineChartView @JvmOverloads constructor(
         // Draw line
         painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
         canvas.drawPath(linePath, painter.paint)
+
+        // Draw points
+        if (arePointsDisplayed) {
+            painter.prepare(color = lineColor)
+            entries.forEach { dataPoint ->
+                canvas.drawCircle(
+                    dataPoint.screenPositionX,
+                    dataPoint.screenPositionY,
+                    lineThickness,
+                    painter.paint
+                )
+            }
+        }
     }
 
     override fun drawLabels(xLabels: List<Label>) {
@@ -208,11 +220,14 @@ class LineChartView @JvmOverloads constructor(
         }
     }
 
+    private fun addPointWidth() = if (arePointsDisplayed) lineThickness.toInt() else 0
+
     private fun handleAttributes(typedArray: TypedArray) {
         typedArray.apply {
             lineColor = getColor(R.styleable.LineChartAttrs_chart_lineColor, lineColor)
             lineThickness = getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
             smooth = getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
+            arePointsDisplayed = getBoolean(R.styleable.LineChartAttrs_chart_showPoints, false)
             recycle()
         }
     }

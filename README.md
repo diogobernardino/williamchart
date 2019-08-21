@@ -2,6 +2,7 @@
 
 [![Kotlin Version](https://img.shields.io/badge/kotlin-1.3.41-blue.svg)](https://kotlinlang.org)
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
+[![CodeFactor](https://www.codefactor.io/repository/github/diogobernardino/williamchart/badge)](https://www.codefactor.io/repository/github/diogobernardino/williamchart)
 
 Williamchart is an Android Library to rapidly implement attractive and insightful charts in android applications.
 

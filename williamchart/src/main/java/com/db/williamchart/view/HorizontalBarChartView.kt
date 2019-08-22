@@ -62,6 +62,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
                 0
             )
         handleAttributes(styledAttributes)
+        showEditMode()
     }
 
     override fun drawData(
@@ -71,8 +72,8 @@ class HorizontalBarChartView @JvmOverloads constructor(
 
         val halfBarWidth =
             (innerFrame.bottom - innerFrame.top - (entries.size + 1) * spacing) /
-                entries.size /
-                2
+                    entries.size /
+                    2
 
         painter.prepare(
             color = barsColor,

@@ -11,9 +11,11 @@ import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.DefaultHorizontalAnimation
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
 import com.db.williamchart.renderer.HorizontalBarChartRenderer
 
@@ -40,14 +42,18 @@ class HorizontalBarChartView @JvmOverloads constructor(
     init {
         doOnPreDraw {
             renderer.preDraw(
-                measuredWidth,
-                measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom,
-                axis,
-                labelsSize
+                ChartConfiguration(
+                    measuredWidth,
+                    measuredHeight,
+                    Paddings(
+                        paddingLeft.toFloat(),
+                        paddingTop.toFloat(),
+                        paddingRight.toFloat(),
+                        paddingBottom.toFloat()
+                    ),
+                    axis,
+                    labelsSize
+                )
             )
         }
 

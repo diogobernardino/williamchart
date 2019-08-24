@@ -10,9 +10,11 @@ import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
 import com.db.williamchart.renderer.BarChartRenderer
 
@@ -39,14 +41,18 @@ class BarChartView @JvmOverloads constructor(
     init {
         doOnPreDraw {
             renderer.preDraw(
-                measuredWidth,
-                measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom,
-                axis,
-                labelsSize
+                ChartConfiguration(
+                    measuredWidth,
+                    measuredHeight,
+                    Paddings(
+                        paddingLeft.toFloat(),
+                        paddingTop.toFloat(),
+                        paddingRight.toFloat(),
+                        paddingBottom.toFloat()
+                    ),
+                    axis,
+                    labelsSize
+                )
             )
         }
 
@@ -67,7 +73,8 @@ class BarChartView @JvmOverloads constructor(
         entries: List<DataPoint>
     ) {
 
-        val halfBarWidth = (innerFrame.right - innerFrame.left - (entries.size + 1) * spacing) / entries.size / 2
+        val halfBarWidth =
+            (innerFrame.right - innerFrame.left - (entries.size + 1) * spacing) / entries.size / 2
 
         painter.prepare(color = barsColor, style = Paint.Style.FILL)
         entries.forEach {

@@ -4,12 +4,14 @@ import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.AxisType
+import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Scale
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
+import com.db.williamchart.data.toOuterFrame
 import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
@@ -50,16 +52,7 @@ class HorizontalBarChartRenderer(
         data.toLabels()
     }
 
-    override fun preDraw(
-        width: Int,
-        height: Int,
-        paddingLeft: Int,
-        paddingTop: Int,
-        paddingRight: Int,
-        paddingBottom: Int,
-        axis: AxisType,
-        labelsSize: Float
-    ): Boolean {
+    override fun preDraw(chartConfiguration: ChartConfiguration): Boolean {
 
         if (this.labelsSize != RendererConstants.notInitialized) // Data already processed, proceed with drawing
             return true
@@ -67,15 +60,10 @@ class HorizontalBarChartRenderer(
         if (data.size <= 1)
             throw IllegalArgumentException("A chart needs more than one entry.")
 
-        this.axis = axis
-        this.labelsSize = labelsSize
+        this.axis = chartConfiguration.axis
+        this.labelsSize = chartConfiguration.labelsSize
 
-        outerFrame = Frame(
-            left = paddingLeft.toFloat(),
-            top = paddingTop.toFloat(),
-            right = width - paddingRight.toFloat(),
-            bottom = height - paddingBottom.toFloat()
-        )
+        outerFrame = chartConfiguration.toOuterFrame()
 
         val yLongestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")

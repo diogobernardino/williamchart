@@ -4,11 +4,13 @@ import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.AxisType
+import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
+import com.db.williamchart.data.toOuterFrame
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.extensions.toScale
@@ -51,16 +53,7 @@ class LineChartRenderer(
         }
     }
 
-    override fun preDraw(
-        width: Int,
-        height: Int,
-        paddingLeft: Int,
-        paddingTop: Int,
-        paddingRight: Int,
-        paddingBottom: Int,
-        axis: AxisType,
-        labelsSize: Float
-    ): Boolean {
+    override fun preDraw(chartConfiguration: ChartConfiguration): Boolean {
 
         if (this.labelsSize != RendererConstants.notInitialized) // Data already processed, proceed with drawing
             return true
@@ -68,15 +61,10 @@ class LineChartRenderer(
         if (data.size <= 1)
             throw IllegalArgumentException("A chart needs more than one entry.")
 
-        this.axis = axis
-        this.labelsSize = labelsSize
+        this.axis = chartConfiguration.axis
+        this.labelsSize = chartConfiguration.labelsSize
 
-        outerFrame = Frame(
-            left = paddingLeft.toFloat(),
-            top = paddingTop.toFloat(),
-            right = width - paddingRight.toFloat(),
-            bottom = height - paddingBottom.toFloat()
-        )
+        outerFrame = chartConfiguration.toOuterFrame()
 
         val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
@@ -167,7 +155,8 @@ class LineChartRenderer(
 
     private fun placeLabelsY(innerFrame: Frame) {
 
-        val heightBetweenLabels = (innerFrame.bottom - innerFrame.top) / RendererConstants.defaultScaleNumberOfSteps
+        val heightBetweenLabels =
+            (innerFrame.bottom - innerFrame.top) / RendererConstants.defaultScaleNumberOfSteps
         val labelsBottomPosition = innerFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->

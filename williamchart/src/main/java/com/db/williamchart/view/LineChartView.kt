@@ -13,9 +13,11 @@ import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
 import com.db.williamchart.renderer.LineChartRenderer
 
@@ -49,14 +51,18 @@ class LineChartView @JvmOverloads constructor(
         doOnPreDraw {
             (renderer as LineChartRenderer).lineThickness = lineThickness
             renderer.preDraw(
-                measuredWidth,
-                measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom,
-                axis,
-                labelsSize
+                ChartConfiguration(
+                    measuredWidth,
+                    measuredHeight,
+                    Paddings(
+                        paddingLeft.toFloat(),
+                        paddingTop.toFloat(),
+                        paddingRight.toFloat(),
+                        paddingBottom.toFloat()
+                    ),
+                    axis,
+                    labelsSize
+                )
             )
         }
         renderer = LineChartRenderer(this, painter, NoAnimation())
@@ -115,7 +121,14 @@ class LineChartView @JvmOverloads constructor(
             color = labelsColor,
             font = labelsFont
         )
-        xLabels.forEach { canvas.drawText(it.label, it.screenPositionX, it.screenPositionY, painter.paint) }
+        xLabels.forEach {
+            canvas.drawText(
+                it.label,
+                it.screenPositionX,
+                it.screenPositionY,
+                painter.paint
+            )
+        }
     }
 
     override fun drawDebugFrame(outerFrame: Frame, innerFrame: Frame, labelsFrame: List<Frame>) {
@@ -176,7 +189,14 @@ class LineChartView @JvmOverloads constructor(
             secondControlX = nextPointX - defaultSmoothFactor * endDiffX
             secondControlY = nextPointY - defaultSmoothFactor * endDiffY
 
-            res.cubicTo(firstControlX, firstControlY, secondControlX, secondControlY, nextPointX, nextPointY)
+            res.cubicTo(
+                firstControlX,
+                firstControlY,
+                secondControlX,
+                secondControlY,
+                nextPointX,
+                nextPointY
+            )
         }
 
         return res
@@ -211,7 +231,8 @@ class LineChartView @JvmOverloads constructor(
     private fun handleAttributes(typedArray: TypedArray) {
         typedArray.apply {
             lineColor = getColor(R.styleable.LineChartAttrs_chart_lineColor, lineColor)
-            lineThickness = getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
+            lineThickness =
+                getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
             smooth = getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
             recycle()
         }

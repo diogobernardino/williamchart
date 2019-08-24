@@ -4,6 +4,8 @@ import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.AxisType
+import com.db.williamchart.data.ChartConfiguration
+import com.db.williamchart.data.Paddings
 import com.nhaarman.mockito_kotlin.mock
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -26,19 +28,17 @@ class LineChartRendererTest {
     fun `at least 2 datapoints are needed to display chart`() {
         // Arrange
         val emptyData = linkedMapOf<String, Float>()
-
-        // Act
-        lineChartRenderer.render(emptyData)
-        lineChartRenderer.preDraw(
+        val chartConfiguration = ChartConfiguration(
             width = 0,
             height = 0,
-            paddingBottom = 0,
-            paddingLeft = 0,
-            paddingRight = 0,
-            paddingTop = 0,
+            paddingsPaddings = Paddings(0f, 0f, 0f, 0f),
             axis = AxisType.NONE,
             labelsSize = 0f
         )
+
+        // Act
+        lineChartRenderer.render(emptyData)
+        lineChartRenderer.preDraw(chartConfiguration)
     }
 
     @Test
@@ -48,29 +48,18 @@ class LineChartRendererTest {
             "this" to 999f,
             "that" to 111f
         )
+        val chartConfiguration = ChartConfiguration(
+            width = 0,
+            height = 0,
+            paddingsPaddings = Paddings(0f, 0f, 0f, 0f),
+            axis = AxisType.NONE,
+            labelsSize = 0f
+        )
 
         // Act
         lineChartRenderer.render(data)
-        lineChartRenderer.preDraw(
-            width = 0,
-            height = 0,
-            paddingBottom = 0,
-            paddingLeft = 0,
-            paddingRight = 0,
-            paddingTop = 0,
-            axis = AxisType.NONE,
-            labelsSize = 0f
-        )
-        val wasPreparedAlready = lineChartRenderer.preDraw(
-            width = 0,
-            height = 0,
-            paddingBottom = 0,
-            paddingLeft = 0,
-            paddingRight = 0,
-            paddingTop = 0,
-            axis = AxisType.NONE,
-            labelsSize = 0f
-        )
+        lineChartRenderer.preDraw(chartConfiguration)
+        val wasPreparedAlready = lineChartRenderer.preDraw(chartConfiguration)
 
         // Assert
         assertTrue(wasPreparedAlready)

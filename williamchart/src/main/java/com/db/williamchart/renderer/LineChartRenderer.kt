@@ -11,6 +11,7 @@ import com.db.williamchart.data.Label
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.data.toOuterFrame
+import com.db.williamchart.data.withPaddings
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.extensions.toScale
@@ -64,10 +65,10 @@ class LineChartRenderer(
         this.axis = chartConfiguration.axis
         this.labelsSize = chartConfiguration.labelsSize
 
-        outerFrame = chartConfiguration.toOuterFrame()
-
         val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
+
+        outerFrame = chartConfiguration.toOuterFrame()
 
         val paddings = MeasureLineChartPaddings()(
             axisType = axis,
@@ -77,12 +78,7 @@ class LineChartRenderer(
             lineThickness = lineThickness
         )
 
-        innerFrame = Frame(
-            left = outerFrame.left + paddings.left,
-            top = outerFrame.top + paddings.top,
-            right = outerFrame.right - paddings.right,
-            bottom = outerFrame.bottom - paddings.bottom
-        )
+        innerFrame = outerFrame.withPaddings(paddings)
 
         if (axis.shouldDisplayAxisX())
             placeLabelsX(innerFrame)

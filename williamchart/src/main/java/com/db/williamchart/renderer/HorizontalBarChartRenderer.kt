@@ -12,6 +12,7 @@ import com.db.williamchart.data.Scale
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.data.toOuterFrame
+import com.db.williamchart.data.withPaddings
 import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
@@ -63,10 +64,10 @@ class HorizontalBarChartRenderer(
         this.axis = chartConfiguration.axis
         this.labelsSize = chartConfiguration.labelsSize
 
-        outerFrame = chartConfiguration.toOuterFrame()
-
         val yLongestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
             ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
+
+        outerFrame = chartConfiguration.toOuterFrame()
 
         val paddings = MeasureHorizontalBarChartPaddings()(
             axisType = axis,
@@ -76,12 +77,7 @@ class HorizontalBarChartRenderer(
             labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart
         )
 
-        innerFrame = Frame(
-            left = outerFrame.left + paddings.left,
-            top = outerFrame.top + paddings.top,
-            right = outerFrame.right - paddings.right,
-            bottom = outerFrame.bottom - paddings.bottom
-        )
+        innerFrame = outerFrame.withPaddings(paddings)
 
         if (axis.shouldDisplayAxisX())
             placeLabelsX(innerFrame)

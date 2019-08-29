@@ -12,6 +12,7 @@ import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.data.toOuterFrame
 import com.db.williamchart.data.withPaddings
+import com.db.williamchart.extensions.maxValueBy
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.extensions.toScale
@@ -55,29 +56,27 @@ class LineChartRenderer(
     }
 
     override fun preDraw(chartConfiguration: ChartConfiguration): Boolean {
+        require(data.size > 1) { "A chart needs more than one entry." }
 
         if (this.labelsSize != RendererConstants.notInitialized) // Data already processed, proceed with drawing
             return true
 
-        if (data.size <= 1)
-            throw IllegalArgumentException("A chart needs more than one entry.")
-
         this.axis = chartConfiguration.axis
         this.labelsSize = chartConfiguration.labelsSize
 
-        val longestChartLabel = yLabels.maxBy { painter.measureLabelWidth(it.label, labelsSize) }
-            ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
-
-        outerFrame = chartConfiguration.toOuterFrame()
+        val longestChartLabelWidth =
+            yLabels.maxValueBy { painter.measureLabelWidth(it.label, labelsSize) }
+                ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasureLineChartPaddings()(
             axisType = axis,
             labelsHeight = painter.measureLabelHeight(labelsSize),
-            longestLabelWidth = painter.measureLabelWidth(longestChartLabel.label, labelsSize),
+            longestLabelWidth = longestChartLabelWidth,
             labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart,
             lineThickness = lineThickness
         )
 
+        outerFrame = chartConfiguration.toOuterFrame()
         innerFrame = outerFrame.withPaddings(paddings)
 
         if (axis.shouldDisplayAxisX())

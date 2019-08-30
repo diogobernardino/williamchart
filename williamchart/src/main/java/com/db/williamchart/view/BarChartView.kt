@@ -16,6 +16,8 @@ import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
+import com.db.williamchart.extensions.drawChartBar
+import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.BarChartRenderer
 
 class BarChartView @JvmOverloads constructor(
@@ -40,7 +42,7 @@ class BarChartView @JvmOverloads constructor(
 
     init {
         doOnPreDraw {
-            renderer.preDraw(
+            val chartConfiguration =
                 ChartConfiguration(
                     measuredWidth,
                     measuredHeight,
@@ -53,19 +55,12 @@ class BarChartView @JvmOverloads constructor(
                     axis,
                     labelsSize
                 )
-            )
+            renderer.preDraw(chartConfiguration)
         }
 
         renderer = BarChartRenderer(this, painter, NoAnimation())
 
-        val styledAttributes =
-            context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.BarChartAttrs,
-                0,
-                0
-            )
-        handleAttributes(styledAttributes)
+        handleAttributes(obtainStyledAttributes(attrs, R.styleable.BarChartAttrs))
     }
 
     override fun drawData(
@@ -78,17 +73,13 @@ class BarChartView @JvmOverloads constructor(
 
         painter.prepare(color = barsColor, style = Paint.Style.FILL)
         entries.forEach {
-            canvas.drawRoundRect(
-                RectF(
-                    it.screenPositionX - halfBarWidth,
-                    it.screenPositionY,
-                    it.screenPositionX + halfBarWidth,
-                    innerFrame.bottom
-                ),
-                barRadius,
-                barRadius,
-                painter.paint
+            val bar = RectF(
+                it.screenPositionX - halfBarWidth,
+                it.screenPositionY,
+                it.screenPositionX + halfBarWidth,
+                innerFrame.bottom
             )
+            canvas.drawChartBar(bar, barRadius, painter.paint)
         }
     }
 

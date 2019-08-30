@@ -17,6 +17,7 @@ import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
+import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.HorizontalBarChartRenderer
 
 class HorizontalBarChartView @JvmOverloads constructor(
@@ -41,7 +42,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
 
     init {
         doOnPreDraw {
-            renderer.preDraw(
+            val chartConfiguration =
                 ChartConfiguration(
                     measuredWidth,
                     measuredHeight,
@@ -54,20 +55,13 @@ class HorizontalBarChartView @JvmOverloads constructor(
                     axis,
                     labelsSize
                 )
-            )
+            renderer.preDraw(chartConfiguration)
         }
 
         renderer = HorizontalBarChartRenderer(this, painter, NoAnimation())
         animation = DefaultHorizontalAnimation()
 
-        val styledAttributes =
-            context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.BarChartAttrs,
-                0,
-                0
-            )
-        handleAttributes(styledAttributes)
+        handleAttributes(obtainStyledAttributes(attrs, R.styleable.BarChartAttrs))
     }
 
     override fun drawData(

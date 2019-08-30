@@ -3,10 +3,8 @@ package com.db.williamchart.view
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
-import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.Shader
 import android.util.AttributeSet
 import androidx.annotation.Size
 import androidx.core.view.doOnPreDraw
@@ -18,7 +16,11 @@ import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Paddings
+import com.db.williamchart.data.toLinearGradient
 import com.db.williamchart.data.toRect
+import com.db.williamchart.extensions.obtainStyledAttributes
+import com.db.williamchart.extensions.toLinePath
+import com.db.williamchart.extensions.toSmoothLinePath
 import com.db.williamchart.renderer.LineChartRenderer
 
 class LineChartView @JvmOverloads constructor(
@@ -50,7 +52,7 @@ class LineChartView @JvmOverloads constructor(
     init {
         doOnPreDraw {
             (renderer as LineChartRenderer).lineThickness = lineThickness
-            renderer.preDraw(
+            val chartConfiguration =
                 ChartConfiguration(
                     measuredWidth,
                     measuredHeight,
@@ -63,18 +65,11 @@ class LineChartView @JvmOverloads constructor(
                     axis,
                     labelsSize
                 )
-            )
+            renderer.preDraw(chartConfiguration)
         }
         renderer = LineChartRenderer(this, painter, NoAnimation())
 
-        val styledAttributes =
-            context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.LineChartAttrs,
-                0,
-                0
-            )
-        handleAttributes(styledAttributes)
+        handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
     }
 
     override fun drawData(
@@ -83,25 +78,18 @@ class LineChartView @JvmOverloads constructor(
     ) {
 
         val linePath =
-            if (!smooth) createLinePath(entries)
-            else createSmoothLinePath(entries)
+            if (!smooth) entries.toLinePath()
+            else entries.toSmoothLinePath(defaultSmoothFactor)
 
         if (fillColor != 0 || gradientFillColors.isNotEmpty()) { // Draw background
 
             if (fillColor != 0)
                 painter.prepare(color = fillColor, style = Paint.Style.FILL)
-            else painter.prepare(
-                shader = LinearGradient(
-                    innerFrame.left,
-                    innerFrame.top,
-                    innerFrame.left,
-                    innerFrame.bottom,
-                    gradientFillColors[0],
-                    gradientFillColors[1],
-                    Shader.TileMode.MIRROR
-                ),
-                style = Paint.Style.FILL
-            )
+            else
+                painter.prepare(
+                    shader = innerFrame.toLinearGradient(gradientFillColors),
+                    style = Paint.Style.FILL
+                )
 
             canvas.drawPath(
                 createBackgroundPath(linePath, entries, innerFrame.bottom),
@@ -138,70 +126,6 @@ class LineChartView @JvmOverloads constructor(
         labelsFrame.forEach { canvas.drawRect(it.toRect(), painter.paint) }
     }
 
-    private fun createLinePath(points: List<DataPoint>): Path {
-
-        val res = Path()
-
-        res.moveTo(points.first().screenPositionX, points.first().screenPositionY)
-        for (i in 1 until points.size)
-            res.lineTo(points[i].screenPositionX, points[i].screenPositionY)
-        return res
-    }
-
-    /**
-     * Credits: http://www.jayway.com/author/andersericsson/
-     */
-    private fun createSmoothLinePath(points: List<DataPoint>): Path {
-
-        var thisPointX: Float
-        var thisPointY: Float
-        var nextPointX: Float
-        var nextPointY: Float
-        var startDiffX: Float
-        var startDiffY: Float
-        var endDiffX: Float
-        var endDiffY: Float
-        var firstControlX: Float
-        var firstControlY: Float
-        var secondControlX: Float
-        var secondControlY: Float
-
-        val res = Path()
-        res.moveTo(points.first().screenPositionX, points.first().screenPositionY)
-
-        for (i in 0 until points.size - 1) {
-
-            thisPointX = points[i].screenPositionX
-            thisPointY = points[i].screenPositionY
-
-            nextPointX = points[i + 1].screenPositionX
-            nextPointY = points[i + 1].screenPositionY
-
-            startDiffX = nextPointX - points[si(points.size, i - 1)].screenPositionX
-            startDiffY = nextPointY - points[si(points.size, i - 1)].screenPositionY
-
-            endDiffX = points[si(points.size, i + 2)].screenPositionX - thisPointX
-            endDiffY = points[si(points.size, i + 2)].screenPositionY - thisPointY
-
-            firstControlX = thisPointX + defaultSmoothFactor * startDiffX
-            firstControlY = thisPointY + defaultSmoothFactor * startDiffY
-
-            secondControlX = nextPointX - defaultSmoothFactor * endDiffX
-            secondControlY = nextPointY - defaultSmoothFactor * endDiffY
-
-            res.cubicTo(
-                firstControlX,
-                firstControlY,
-                secondControlX,
-                secondControlY,
-                nextPointX,
-                nextPointY
-            )
-        }
-
-        return res
-    }
-
     private fun createBackgroundPath(
         path: Path,
         points: List<DataPoint>,
@@ -215,17 +139,6 @@ class LineChartView @JvmOverloads constructor(
         res.close()
 
         return res
-    }
-
-    /**
-     * Credits: http://www.jayway.com/author/andersericsson/
-     */
-    private fun si(setSize: Int, i: Int): Int {
-        return when {
-            i > setSize - 1 -> setSize - 1
-            i < 0 -> 0
-            else -> i
-        }
     }
 
     private fun handleAttributes(typedArray: TypedArray) {

@@ -30,11 +30,7 @@ class LineChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChartView(context, attrs, defStyleAttr), ChartContract.View {
-
-    /**
-     * API
-     */
+) : ChartView(context, attrs, defStyleAttr), ChartContract.LineView {
 
     @Suppress("MemberVisibilityCanBePrivate")
     var smooth: Boolean = defaultSmooth
@@ -78,7 +74,7 @@ class LineChartView @JvmOverloads constructor(
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
     }
 
-    override fun drawData(
+    override fun drawLine(
         innerFrame: Frame,
         entries: List<DataPoint>
     ) {
@@ -106,16 +102,6 @@ class LineChartView @JvmOverloads constructor(
         // Draw line
         painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
         canvas.drawPath(linePath, painter.paint)
-
-        // Draw points
-        if (pointDrawableRes != -1) {
-            entries.forEach { dataPoint ->
-                ContextCompat.getDrawable(context, pointDrawableRes)?.let {
-                    it.centerAt(dataPoint.screenPositionX, dataPoint.screenPositionY)
-                    it.draw(canvas)
-                }
-            }
-        }
     }
 
     override fun drawLabels(xLabels: List<Label>) {
@@ -132,6 +118,17 @@ class LineChartView @JvmOverloads constructor(
                 it.screenPositionY,
                 painter.paint
             )
+        }
+    }
+
+    override fun drawPoints(entries: List<DataPoint>) {
+        if (pointDrawableRes != -1) {
+            entries.forEach { dataPoint ->
+                ContextCompat.getDrawable(context, pointDrawableRes)?.let {
+                    it.centerAt(dataPoint.screenPositionX, dataPoint.screenPositionY)
+                    it.draw(canvas)
+                }
+            }
         }
     }
 

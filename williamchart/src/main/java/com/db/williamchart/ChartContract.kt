@@ -23,6 +23,23 @@ interface ChartContract {
         )
     }
 
+    interface LineView {
+
+        fun drawLabels(xLabels: List<Label>)
+
+        fun drawLine(innerFrame: Frame, entries: List<DataPoint>)
+
+        fun drawPoints(entries: List<DataPoint>)
+
+        fun postInvalidate()
+
+        fun drawDebugFrame(
+            outerFrame: Frame,
+            innerFrame: Frame,
+            labelsFrame: List<Frame>
+        )
+    }
+
     interface Renderer {
 
         fun preDraw(chartConfiguration: ChartConfiguration): Boolean

@@ -20,7 +20,7 @@ import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
 import com.db.williamchart.renderer.executor.MeasureLineChartPaddings
 
 class LineChartRenderer(
-    private val view: ChartContract.View,
+    private val view: ChartContract.LineView,
     private val painter: Painter,
     private var animation: ChartAnimation
 ) : ChartContract.Renderer {
@@ -100,7 +100,8 @@ class LineChartRenderer(
         if (axis.shouldDisplayAxisY())
             view.drawLabels(yLabels)
 
-        view.drawData(innerFrame, data)
+        view.drawLine(innerFrame, data)
+        view.drawPoints(data)
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(

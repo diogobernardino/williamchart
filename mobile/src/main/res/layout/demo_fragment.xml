@@ -54,7 +54,8 @@
         app:chart_lineColor="#ffffff"
         app:chart_lineThickness="3dp"
         app:chart_smoothLine="true"
-        app:chart_axis="none"/>
+        app:chart_axis="none"
+        app:chart_pointDrawable="@drawable/ic_barchart"/>
 
     <TextView
         android:id="@+id/lineChartValue"

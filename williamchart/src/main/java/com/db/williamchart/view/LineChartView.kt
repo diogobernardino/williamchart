@@ -6,7 +6,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import androidx.annotation.DrawableRes
 import androidx.annotation.Size
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
@@ -18,6 +20,7 @@ import com.db.williamchart.data.Label
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toLinearGradient
 import com.db.williamchart.data.toRect
+import com.db.williamchart.extensions.centerAt
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.extensions.toLinePath
 import com.db.williamchart.extensions.toSmoothLinePath
@@ -49,6 +52,10 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var gradientFillColors: IntArray = intArrayOf(0, 0)
 
+    @DrawableRes
+    @Suppress("MemberVisibilityCanBePrivate")
+    var pointDrawableRes = -1
+
     init {
         doOnPreDraw {
             (renderer as LineChartRenderer).lineThickness = lineThickness
@@ -68,7 +75,6 @@ class LineChartView @JvmOverloads constructor(
             renderer.preDraw(chartConfiguration)
         }
         renderer = LineChartRenderer(this, painter, NoAnimation())
-
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
     }
 
@@ -100,6 +106,16 @@ class LineChartView @JvmOverloads constructor(
         // Draw line
         painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
         canvas.drawPath(linePath, painter.paint)
+
+        // Draw points
+        if (pointDrawableRes != -1) {
+            entries.forEach { dataPoint ->
+                ContextCompat.getDrawable(context, pointDrawableRes)?.let {
+                    it.centerAt(dataPoint.screenPositionX, dataPoint.screenPositionY)
+                    it.draw(canvas)
+                }
+            }
+        }
     }
 
     override fun drawLabels(xLabels: List<Label>) {
@@ -147,6 +163,8 @@ class LineChartView @JvmOverloads constructor(
             lineThickness =
                 getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
             smooth = getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
+            pointDrawableRes =
+                getResourceId(R.styleable.LineChartAttrs_chart_pointDrawable, pointDrawableRes)
             recycle()
         }
     }

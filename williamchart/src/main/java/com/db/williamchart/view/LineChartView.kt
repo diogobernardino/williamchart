@@ -8,7 +8,6 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.annotation.Size
-import androidx.core.content.ContextCompat
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
@@ -21,6 +20,7 @@ import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toLinearGradient
 import com.db.williamchart.data.toRect
 import com.db.williamchart.extensions.centerAt
+import com.db.williamchart.extensions.getDrawable
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.extensions.toLinePath
 import com.db.williamchart.extensions.toSmoothLinePath
@@ -50,11 +50,15 @@ class LineChartView @JvmOverloads constructor(
 
     @DrawableRes
     @Suppress("MemberVisibilityCanBePrivate")
-    var pointDrawableRes = -1
+    var pointsDrawableRes = -1
 
     init {
         doOnPreDraw {
             (renderer as LineChartRenderer).lineThickness = lineThickness
+            (renderer as LineChartRenderer).pointsDrawableHeight =
+                getDrawable(pointsDrawableRes)?.intrinsicHeight ?: -1
+            (renderer as LineChartRenderer).pointsDrawableWidth =
+                getDrawable(pointsDrawableRes)?.intrinsicWidth ?: -1
             val chartConfiguration =
                 ChartConfiguration(
                     measuredWidth,
@@ -122,9 +126,9 @@ class LineChartView @JvmOverloads constructor(
     }
 
     override fun drawPoints(entries: List<DataPoint>) {
-        if (pointDrawableRes != -1) {
+        if (pointsDrawableRes != -1) {
             entries.forEach { dataPoint ->
-                ContextCompat.getDrawable(context, pointDrawableRes)?.let {
+                getDrawable(pointsDrawableRes)?.let {
                     it.centerAt(dataPoint.screenPositionX, dataPoint.screenPositionY)
                     it.draw(canvas)
                 }
@@ -160,8 +164,8 @@ class LineChartView @JvmOverloads constructor(
             lineThickness =
                 getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
             smooth = getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
-            pointDrawableRes =
-                getResourceId(R.styleable.LineChartAttrs_chart_pointDrawable, pointDrawableRes)
+            pointsDrawableRes =
+                getResourceId(R.styleable.LineChartAttrs_chart_pointDrawable, pointsDrawableRes)
             recycle()
         }
     }

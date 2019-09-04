@@ -37,6 +37,10 @@ class LineChartRenderer(
 
     internal var lineThickness: Float = RendererConstants.notInitialized
 
+    internal var pointsDrawableWidth: Int = -1
+
+    internal var pointsDrawableHeight: Int = -1
+
     private val xLabels: List<Label> by lazy {
         data.toLabels()
     }

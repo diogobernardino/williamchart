@@ -77,7 +77,9 @@ class LineChartRenderer(
             labelsHeight = painter.measureLabelHeight(labelsSize),
             longestLabelWidth = longestChartLabelWidth,
             labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart,
-            lineThickness = lineThickness
+            lineThickness = lineThickness,
+            pointsDrawableWidth = pointsDrawableWidth,
+            pointsDrawableHeight = pointsDrawableHeight
         )
 
         outerFrame = chartConfiguration.toOuterFrame()

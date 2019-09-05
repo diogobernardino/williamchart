@@ -12,10 +12,10 @@ import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
-import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.LineChartConfiguration
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toLinearGradient
 import com.db.williamchart.data.toRect
@@ -54,24 +54,23 @@ class LineChartView @JvmOverloads constructor(
 
     init {
         doOnPreDraw {
-            (renderer as LineChartRenderer).also {
-                it.lineThickness = lineThickness
-                it.pointsDrawableHeight = getDrawable(pointsDrawableRes)?.intrinsicHeight ?: -1
-                it.pointsDrawableWidth = getDrawable(pointsDrawableRes)?.intrinsicWidth ?: -1
-                it.hasLineBackground = fillColor != 0 || gradientFillColors.isNotEmpty()
-            }
             val chartConfiguration =
-                ChartConfiguration(
-                    measuredWidth,
-                    measuredHeight,
-                    Paddings(
+                LineChartConfiguration(
+                    width = measuredWidth,
+                    height = measuredHeight,
+                    paddings = Paddings(
                         paddingLeft.toFloat(),
                         paddingTop.toFloat(),
                         paddingRight.toFloat(),
                         paddingBottom.toFloat()
                     ),
-                    axis,
-                    labelsSize
+                    axis = axis,
+                    labelsSize = labelsSize,
+                    lineThickness = lineThickness,
+                    pointsDrawableWidth = getDrawable(pointsDrawableRes)?.intrinsicWidth ?: -1,
+                    pointsDrawableHeight = getDrawable(pointsDrawableRes)?.intrinsicHeight ?: -1,
+                    fillColor = fillColor,
+                    gradientFillColors = gradientFillColors
                 )
             renderer.preDraw(chartConfiguration)
         }
@@ -79,22 +78,22 @@ class LineChartView @JvmOverloads constructor(
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
     }
 
-    override fun drawLine(entries: List<DataPoint>) {
+    override fun drawLine(points: List<DataPoint>) {
 
         val linePath =
-            if (!smooth) entries.toLinePath()
-            else entries.toSmoothLinePath(defaultSmoothFactor)
+            if (!smooth) points.toLinePath()
+            else points.toSmoothLinePath(defaultSmoothFactor)
 
         painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
         canvas.drawPath(linePath, painter.paint)
     }
 
-    override fun drawLineBackground(innerFrame: Frame, entries: List<DataPoint>) {
+    override fun drawLineBackground(innerFrame: Frame, points: List<DataPoint>) {
 
         val linePath =
-            if (!smooth) entries.toLinePath()
-            else entries.toSmoothLinePath(defaultSmoothFactor)
-        val backgroundPath = createBackgroundPath(linePath, entries, innerFrame.bottom)
+            if (!smooth) points.toLinePath()
+            else points.toSmoothLinePath(defaultSmoothFactor)
+        val backgroundPath = createBackgroundPath(linePath, points, innerFrame.bottom)
 
         if (fillColor != 0)
             painter.prepare(color = fillColor, style = Paint.Style.FILL)
@@ -124,9 +123,9 @@ class LineChartView @JvmOverloads constructor(
         }
     }
 
-    override fun drawPoints(entries: List<DataPoint>) {
+    override fun drawPoints(points: List<DataPoint>) {
         if (pointsDrawableRes != -1) {
-            entries.forEach { dataPoint ->
+            points.forEach { dataPoint ->
                 getDrawable(pointsDrawableRes)?.let {
                     it.centerAt(dataPoint.screenPositionX, dataPoint.screenPositionY)
                     it.draw(canvas)

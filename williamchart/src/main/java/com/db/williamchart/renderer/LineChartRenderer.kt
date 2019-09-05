@@ -3,11 +3,11 @@ package com.db.williamchart.renderer
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.LineChartConfiguration
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.data.toOuterFrame
@@ -25,23 +25,15 @@ class LineChartRenderer(
     private var animation: ChartAnimation
 ) : ChartContract.Renderer {
 
-    private lateinit var data: List<DataPoint>
+    private var isAlreadyRendered = false
 
-    private lateinit var axis: AxisType
+    private lateinit var data: List<DataPoint>
 
     private lateinit var outerFrame: Frame
 
     private lateinit var innerFrame: Frame
 
-    private var labelsSize: Float = RendererConstants.notInitialized
-
-    internal var lineThickness: Float = RendererConstants.notInitialized
-
-    internal var pointsDrawableWidth: Int = -1
-
-    internal var pointsDrawableHeight: Int = -1
-
-    internal var hasLineBackground: Boolean = false
+    private lateinit var chartConfiguration: LineChartConfiguration
 
     private val xLabels: List<Label> by lazy {
         data.toLabels()
@@ -61,54 +53,61 @@ class LineChartRenderer(
         }
     }
 
-    override fun preDraw(chartConfiguration: ChartConfiguration): Boolean {
+    override fun preDraw(configuration: ChartConfiguration): Boolean {
         require(data.size > 1) { "A chart needs more than one entry." }
 
-        if (this.labelsSize != RendererConstants.notInitialized) // Data already processed, proceed with drawing
+        if (isAlreadyRendered) // Data already processed, proceed with drawing
             return true
 
-        this.axis = chartConfiguration.axis
-        this.labelsSize = chartConfiguration.labelsSize
+        this.chartConfiguration = configuration as LineChartConfiguration
 
         val longestChartLabelWidth =
-            yLabels.maxValueBy { painter.measureLabelWidth(it.label, labelsSize) }
+            yLabels.maxValueBy {
+                painter.measureLabelWidth(
+                    it.label,
+                    chartConfiguration.labelsSize
+                )
+            }
                 ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasureLineChartPaddings()(
-            axisType = axis,
-            labelsHeight = painter.measureLabelHeight(labelsSize),
+            axisType = chartConfiguration.axis,
+            labelsHeight = painter.measureLabelHeight(chartConfiguration.labelsSize),
             longestLabelWidth = longestChartLabelWidth,
             labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart,
-            lineThickness = lineThickness,
-            pointsDrawableWidth = pointsDrawableWidth,
-            pointsDrawableHeight = pointsDrawableHeight
+            lineThickness = chartConfiguration.lineThickness,
+            pointsDrawableWidth = chartConfiguration.pointsDrawableWidth,
+            pointsDrawableHeight = chartConfiguration.pointsDrawableHeight
         )
 
         outerFrame = chartConfiguration.toOuterFrame()
         innerFrame = outerFrame.withPaddings(paddings)
 
-        if (axis.shouldDisplayAxisX())
+        if (chartConfiguration.axis.shouldDisplayAxisX())
             placeLabelsX(innerFrame)
 
-        if (axis.shouldDisplayAxisY())
+        if (chartConfiguration.axis.shouldDisplayAxisY())
             placeLabelsY(innerFrame)
 
         placeDataPoints(innerFrame)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
 
+        isAlreadyRendered = true
         return false
     }
 
     override fun draw() {
 
-        if (axis.shouldDisplayAxisX())
+        if (chartConfiguration.axis.shouldDisplayAxisX())
             view.drawLabels(xLabels)
 
-        if (axis.shouldDisplayAxisY())
+        if (chartConfiguration.axis.shouldDisplayAxisY())
             view.drawLabels(yLabels)
 
-        if (hasLineBackground)
+        if (chartConfiguration.fillColor != 0 ||
+            chartConfiguration.gradientFillColors.isNotEmpty()
+        )
             view.drawLineBackground(innerFrame, data)
 
         view.drawLine(data)
@@ -120,10 +119,10 @@ class LineChartRenderer(
                 innerFrame,
                 DebugWithLabelsFrame()(
                     painter = painter,
-                    axisType = axis,
+                    axisType = chartConfiguration.axis,
                     xLabels = xLabels,
                     yLabels = yLabels,
-                    labelsSize = labelsSize
+                    labelsSize = chartConfiguration.labelsSize
                 )
             )
         }
@@ -144,14 +143,14 @@ class LineChartRenderer(
 
         val labelsLeftPosition =
             innerFrame.left +
-                painter.measureLabelWidth(xLabels.first().label, labelsSize) / 2
+                painter.measureLabelWidth(xLabels.first().label, chartConfiguration.labelsSize) / 2
         val labelsRightPosition =
             innerFrame.right -
-                painter.measureLabelWidth(xLabels.last().label, labelsSize) / 2
+                painter.measureLabelWidth(xLabels.last().label, chartConfiguration.labelsSize) / 2
         val widthBetweenLabels = (labelsRightPosition - labelsLeftPosition) / (xLabels.size - 1)
         val xLabelsVerticalPosition =
             innerFrame.bottom -
-                painter.measureLabelAscent(labelsSize) +
+                painter.measureLabelAscent(chartConfiguration.labelsSize) +
                 RendererConstants.labelsPaddingToInnerChart
 
         xLabels.forEachIndexed { index, label ->
@@ -164,13 +163,14 @@ class LineChartRenderer(
 
         val heightBetweenLabels =
             (innerFrame.bottom - innerFrame.top) / RendererConstants.defaultScaleNumberOfSteps
-        val labelsBottomPosition = innerFrame.bottom + painter.measureLabelHeight(labelsSize) / 2
+        val labelsBottomPosition =
+            innerFrame.bottom + painter.measureLabelHeight(chartConfiguration.labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 innerFrame.left -
                     RendererConstants.labelsPaddingToInnerChart -
-                    painter.measureLabelWidth(label.label, labelsSize) / 2
+                    painter.measureLabelWidth(label.label, chartConfiguration.labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }
     }

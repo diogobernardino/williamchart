@@ -1,18 +1,18 @@
 package com.db.williamchart.data
 
-data class ChartConfiguration(
-    val width: Int,
-    val height: Int,
-    val paddingsPaddings: Paddings,
-    val axis: AxisType,
-    val labelsSize: Float
+open class ChartConfiguration(
+    open val width: Int,
+    open val height: Int,
+    open val paddings: Paddings,
+    open val axis: AxisType,
+    open val labelsSize: Float
 )
 
 internal fun ChartConfiguration.toOuterFrame(): Frame {
     return Frame(
-        left = paddingsPaddings.left,
-        top = paddingsPaddings.top,
-        right = width - paddingsPaddings.right,
-        bottom = height - paddingsPaddings.bottom
+        left = paddings.left,
+        top = paddings.top,
+        right = width - paddings.right,
+        bottom = height - paddings.bottom
     )
 }

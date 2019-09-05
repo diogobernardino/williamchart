@@ -3,7 +3,7 @@ package com.db.williamchart.renderer
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.AxisType
+import com.db.williamchart.data.BarChartConfiguration
 import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
@@ -21,20 +21,20 @@ import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
 import com.db.williamchart.renderer.executor.MeasureHorizontalBarChartPaddings
 
 class HorizontalBarChartRenderer(
-    private val view: ChartContract.View,
+    private val view: ChartContract.BarView,
     private val painter: Painter,
     private var animation: ChartAnimation
 ) : ChartContract.Renderer {
 
-    private lateinit var data: List<DataPoint>
+    private var isAlreadyRendered = false
 
-    private lateinit var axis: AxisType
+    private lateinit var data: List<DataPoint>
 
     private lateinit var outerFrame: Frame
 
     private lateinit var innerFrame: Frame
 
-    private var labelsSize: Float = RendererConstants.notInitialized
+    private lateinit var chartConfiguration: BarChartConfiguration
 
     private val xLabels: List<Label> by lazy {
         val scale = Scale(min = 0F, max = data.limits().second)
@@ -54,23 +54,22 @@ class HorizontalBarChartRenderer(
         data.toLabels()
     }
 
-    override fun preDraw(chartConfiguration: ChartConfiguration): Boolean {
+    override fun preDraw(configuration: ChartConfiguration): Boolean {
         require(data.size > 1) { "A chart needs more than one entry." }
 
-        if (this.labelsSize != RendererConstants.notInitialized) // Data already processed, proceed with drawing
+        if (isAlreadyRendered) // Data already processed, proceed with drawing
             return true
 
-        this.axis = chartConfiguration.axis
-        this.labelsSize = chartConfiguration.labelsSize
+        chartConfiguration = configuration as BarChartConfiguration
 
         val yLongestChartLabelWidth =
-            yLabels.maxValueBy { painter.measureLabelWidth(it.label, labelsSize) }
+            yLabels.maxValueBy { painter.measureLabelWidth(it.label, chartConfiguration.labelsSize) }
                 ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasureHorizontalBarChartPaddings()(
-            axisType = axis,
-            labelsHeight = painter.measureLabelHeight(labelsSize),
-            xLastLabelWidth = painter.measureLabelWidth(xLabels.last().label, labelsSize),
+            axisType = chartConfiguration.axis,
+            labelsHeight = painter.measureLabelHeight(chartConfiguration.labelsSize),
+            xLastLabelWidth = painter.measureLabelWidth(xLabels.last().label, chartConfiguration.labelsSize),
             yLongestLabelWidth = yLongestChartLabelWidth,
             labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart
         )
@@ -78,10 +77,10 @@ class HorizontalBarChartRenderer(
         outerFrame = chartConfiguration.toOuterFrame()
         innerFrame = outerFrame.withPaddings(paddings)
 
-        if (axis.shouldDisplayAxisX())
+        if (chartConfiguration.axis.shouldDisplayAxisX())
             placeLabelsX(innerFrame)
 
-        if (axis.shouldDisplayAxisY())
+        if (chartConfiguration.axis.shouldDisplayAxisY())
             placeLabelsY(outerFrame, innerFrame)
 
         placeDataPoints(innerFrame)
@@ -93,13 +92,16 @@ class HorizontalBarChartRenderer(
 
     override fun draw() {
 
-        if (axis.shouldDisplayAxisX())
+        if (chartConfiguration.axis.shouldDisplayAxisX())
             view.drawLabels(xLabels)
 
-        if (axis.shouldDisplayAxisY())
+        if (chartConfiguration.axis.shouldDisplayAxisY())
             view.drawLabels(yLabels)
 
-        view.drawData(innerFrame, data)
+        if (chartConfiguration.barsBackgroundColor != -1)
+            view.drawBarsBackground(data, innerFrame)
+
+        view.drawBars(data, innerFrame)
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(
@@ -107,10 +109,10 @@ class HorizontalBarChartRenderer(
                 innerFrame,
                 DebugWithLabelsFrame()(
                     painter = painter,
-                    axisType = axis,
+                    axisType = chartConfiguration.axis,
                     xLabels = xLabels,
                     yLabels = yLabels,
-                    labelsSize = labelsSize
+                    labelsSize = chartConfiguration.labelsSize
                 )
             )
         }
@@ -133,7 +135,7 @@ class HorizontalBarChartRenderer(
             (innerFrame.right - innerFrame.left) / RendererConstants.defaultScaleNumberOfSteps
         val xLabelsVerticalPosition =
             innerFrame.bottom -
-                painter.measureLabelAscent(labelsSize) +
+                painter.measureLabelAscent(chartConfiguration.labelsSize) +
                 RendererConstants.labelsPaddingToInnerChart
 
         xLabels.forEachIndexed { index, label ->
@@ -152,11 +154,11 @@ class HorizontalBarChartRenderer(
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 outerFrame.left +
-                    painter.measureLabelWidth(label.label, labelsSize) / 2
+                    painter.measureLabelWidth(label.label, chartConfiguration.labelsSize) / 2
             label.screenPositionY =
                 labelsBottomPosition -
                     heightBetweenLabels * index +
-                    painter.measureLabelDescent(labelsSize)
+                    painter.measureLabelDescent(chartConfiguration.labelsSize)
         }
     }
 

@@ -11,7 +11,7 @@ import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.DefaultHorizontalAnimation
 import com.db.williamchart.animation.NoAnimation
-import com.db.williamchart.data.ChartConfiguration
+import com.db.williamchart.data.BarChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
@@ -24,11 +24,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChartView(context, attrs, defStyleAttr), ChartContract.View {
-
-    /**
-     * API
-     */
+) : ChartView(context, attrs, defStyleAttr), ChartContract.BarView {
 
     @Suppress("MemberVisibilityCanBePrivate")
     var spacing = defaultSpacing
@@ -40,10 +36,13 @@ class HorizontalBarChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var barRadius: Float = defaultBarsRadius
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var barsBackgroundColor: Int = -1
+
     init {
         doOnPreDraw {
             val chartConfiguration =
-                ChartConfiguration(
+                BarChartConfiguration(
                     measuredWidth,
                     measuredHeight,
                     Paddings(
@@ -53,38 +52,53 @@ class HorizontalBarChartView @JvmOverloads constructor(
                         paddingBottom.toFloat()
                     ),
                     axis,
-                    labelsSize
+                    labelsSize,
+                    barsBackgroundColor
                 )
             renderer.preDraw(chartConfiguration)
         }
 
         renderer = HorizontalBarChartRenderer(this, painter, NoAnimation())
         animation = DefaultHorizontalAnimation()
-
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.BarChartAttrs))
     }
 
-    override fun drawData(
-        innerFrame: Frame,
-        entries: List<DataPoint>
+    override fun drawBars(
+        points: List<DataPoint>,
+        innerFrame: Frame
     ) {
 
         val halfBarWidth =
-            (innerFrame.bottom - innerFrame.top - (entries.size + 1) * spacing) /
-                entries.size /
-                2
+            (innerFrame.bottom - innerFrame.top - (points.size + 1) * spacing) / points.size / 2
 
-        painter.prepare(
-            color = barsColor,
-            style = Paint.Style.FILL
-        )
-
-        entries.forEach {
+        painter.prepare(color = barsColor, style = Paint.Style.FILL)
+        points.forEach {
             canvas.drawRoundRect(
                 RectF(
                     innerFrame.left,
                     it.screenPositionY - halfBarWidth,
                     it.screenPositionX,
+                    it.screenPositionY + halfBarWidth
+                ),
+                barRadius,
+                barRadius,
+                painter.paint
+            )
+        }
+    }
+
+    override fun drawBarsBackground(points: List<DataPoint>, innerFrame: Frame) {
+
+        val halfBarWidth =
+            (innerFrame.bottom - innerFrame.top - (points.size + 1) * spacing) / points.size / 2
+
+        painter.prepare(color = barsBackgroundColor, style = Paint.Style.FILL)
+        points.forEach {
+            canvas.drawRoundRect(
+                RectF(
+                    innerFrame.left,
+                    it.screenPositionY - halfBarWidth,
+                    innerFrame.right,
                     it.screenPositionY + halfBarWidth
                 ),
                 barRadius,
@@ -124,6 +138,8 @@ class HorizontalBarChartView @JvmOverloads constructor(
             spacing = getDimension(R.styleable.BarChartAttrs_chart_spacing, spacing)
             barsColor = getColor(R.styleable.BarChartAttrs_chart_barsColor, barsColor)
             barRadius = getDimension(R.styleable.BarChartAttrs_chart_barsRadius, barRadius)
+            barsBackgroundColor =
+                getColor(R.styleable.BarChartAttrs_chart_barsBackgroundColor, barsBackgroundColor)
             recycle()
         }
     }

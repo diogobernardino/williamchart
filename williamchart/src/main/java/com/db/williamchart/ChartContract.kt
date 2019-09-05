@@ -32,6 +32,18 @@ interface ChartContract {
         )
     }
 
+    interface BarView {
+        fun postInvalidate()
+        fun drawLabels(xLabels: List<Label>)
+        fun drawBars(points: List<DataPoint>, innerFrame: Frame)
+        fun drawBarsBackground(points: List<DataPoint>, innerFrame: Frame)
+        fun drawDebugFrame(
+            outerFrame: Frame,
+            innerFrame: Frame,
+            labelsFrame: List<Frame>
+        )
+    }
+
     interface Renderer {
         fun preDraw(configuration: ChartConfiguration): Boolean
         fun draw()

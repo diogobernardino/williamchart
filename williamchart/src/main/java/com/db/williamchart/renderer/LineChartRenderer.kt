@@ -41,6 +41,8 @@ class LineChartRenderer(
 
     internal var pointsDrawableHeight: Int = -1
 
+    internal var hasLineBackground: Boolean = false
+
     private val xLabels: List<Label> by lazy {
         data.toLabels()
     }
@@ -106,7 +108,10 @@ class LineChartRenderer(
         if (axis.shouldDisplayAxisY())
             view.drawLabels(yLabels)
 
-        view.drawLine(innerFrame, data)
+        if (hasLineBackground)
+            view.drawLineBackground(innerFrame, data)
+
+        view.drawLine(data)
         view.drawPoints(data)
 
         if (RendererConstants.inDebug) {

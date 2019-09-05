@@ -27,7 +27,9 @@ interface ChartContract {
 
         fun drawLabels(xLabels: List<Label>)
 
-        fun drawLine(innerFrame: Frame, entries: List<DataPoint>)
+        fun drawLine(entries: List<DataPoint>)
+
+        fun drawLineBackground(innerFrame: Frame, entries: List<DataPoint>)
 
         fun drawPoints(entries: List<DataPoint>)
 

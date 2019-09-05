@@ -54,11 +54,12 @@ class LineChartView @JvmOverloads constructor(
 
     init {
         doOnPreDraw {
-            (renderer as LineChartRenderer).lineThickness = lineThickness
-            (renderer as LineChartRenderer).pointsDrawableHeight =
-                getDrawable(pointsDrawableRes)?.intrinsicHeight ?: -1
-            (renderer as LineChartRenderer).pointsDrawableWidth =
-                getDrawable(pointsDrawableRes)?.intrinsicWidth ?: -1
+            (renderer as LineChartRenderer).also {
+                it.lineThickness = lineThickness
+                it.pointsDrawableHeight = getDrawable(pointsDrawableRes)?.intrinsicHeight ?: -1
+                it.pointsDrawableWidth = getDrawable(pointsDrawableRes)?.intrinsicWidth ?: -1
+                it.hasLineBackground = fillColor != 0 || gradientFillColors.isNotEmpty()
+            }
             val chartConfiguration =
                 ChartConfiguration(
                     measuredWidth,
@@ -78,34 +79,32 @@ class LineChartView @JvmOverloads constructor(
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
     }
 
-    override fun drawLine(
-        innerFrame: Frame,
-        entries: List<DataPoint>
-    ) {
+    override fun drawLine(entries: List<DataPoint>) {
 
         val linePath =
             if (!smooth) entries.toLinePath()
             else entries.toSmoothLinePath(defaultSmoothFactor)
 
-        if (fillColor != 0 || gradientFillColors.isNotEmpty()) { // Draw background
-
-            if (fillColor != 0)
-                painter.prepare(color = fillColor, style = Paint.Style.FILL)
-            else
-                painter.prepare(
-                    shader = innerFrame.toLinearGradient(gradientFillColors),
-                    style = Paint.Style.FILL
-                )
-
-            canvas.drawPath(
-                createBackgroundPath(linePath, entries, innerFrame.bottom),
-                painter.paint
-            )
-        }
-
-        // Draw line
         painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
         canvas.drawPath(linePath, painter.paint)
+    }
+
+    override fun drawLineBackground(innerFrame: Frame, entries: List<DataPoint>) {
+
+        val linePath =
+            if (!smooth) entries.toLinePath()
+            else entries.toSmoothLinePath(defaultSmoothFactor)
+        val backgroundPath = createBackgroundPath(linePath, entries, innerFrame.bottom)
+
+        if (fillColor != 0)
+            painter.prepare(color = fillColor, style = Paint.Style.FILL)
+        else
+            painter.prepare(
+                shader = innerFrame.toLinearGradient(gradientFillColors),
+                style = Paint.Style.FILL
+            )
+
+        canvas.drawPath(backgroundPath, painter.paint)
     }
 
     override fun drawLabels(xLabels: List<Label>) {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.db.williamchart.data.Scale
 import kotlinx.android.synthetic.main.demo_fragment.*
 
 class DemoFragment : Fragment() {
@@ -35,6 +36,7 @@ class DemoFragment : Fragment() {
             "label12" to 4f
         )
 
+        lineChart.scale = Scale(0F, 20F)
         lineChart.gradientFillColors =
             intArrayOf(
                 Color.parseColor("#81FFFFFF"),

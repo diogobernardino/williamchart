@@ -17,6 +17,7 @@ import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.toRect
+import com.db.williamchart.data.Scale
 import com.db.williamchart.renderer.LineChartRenderer
 
 class LineChartView @JvmOverloads constructor(
@@ -36,6 +37,9 @@ class LineChartView @JvmOverloads constructor(
     var lineThickness: Float = 4F
 
     @Suppress("MemberVisibilityCanBePrivate")
+    var scale: Scale? = null
+
+    @Suppress("MemberVisibilityCanBePrivate")
     var fillColor: Int = 0
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -48,6 +52,7 @@ class LineChartView @JvmOverloads constructor(
     init {
         doOnPreDraw {
             (renderer as LineChartRenderer).lineThickness = lineThickness
+            (renderer as LineChartRenderer).scale = scale
             renderer.preDraw(
                 measuredWidth,
                 measuredHeight,

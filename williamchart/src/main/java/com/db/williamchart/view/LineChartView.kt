@@ -67,8 +67,10 @@ class LineChartView @JvmOverloads constructor(
                     axis = axis,
                     labelsSize = labelsSize,
                     lineThickness = lineThickness,
-                    pointsDrawableWidth = getDrawable(pointsDrawableRes)?.intrinsicWidth ?: -1,
-                    pointsDrawableHeight = getDrawable(pointsDrawableRes)?.intrinsicHeight ?: -1,
+                    pointsDrawableWidth = if (pointsDrawableRes != -1)
+                        getDrawable(pointsDrawableRes)!!.intrinsicWidth else -1,
+                    pointsDrawableHeight = if (pointsDrawableRes != -1)
+                        getDrawable(pointsDrawableRes)!!.intrinsicHeight else -1,
                     fillColor = fillColor,
                     gradientFillColors = gradientFillColors
                 )

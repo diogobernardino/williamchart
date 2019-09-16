@@ -166,7 +166,7 @@ class LineChartView @JvmOverloads constructor(
                 getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
             smooth = getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
             pointsDrawableRes =
-                getResourceId(R.styleable.LineChartAttrs_chart_pointDrawable, pointsDrawableRes)
+                getResourceId(R.styleable.LineChartAttrs_chart_pointsDrawable, pointsDrawableRes)
             recycle()
         }
     }

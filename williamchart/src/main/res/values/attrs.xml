@@ -25,7 +25,7 @@
         <attr name="chart_lineColor" format="reference|color" />
         <attr name="chart_smoothLine" format="boolean" />
         <attr name="chart_lineThickness" format="dimension" />
-        <attr name="chart_pointDrawable" format="reference" />
+        <attr name="chart_pointsDrawable" format="reference" />
     </declare-styleable>
 </resources>
 

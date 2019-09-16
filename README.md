@@ -17,6 +17,41 @@ implementation 'com.diogobernardino:williamchart:3.0'
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][1], I will be happy to know about it.
 
+### Usage
+
+#### Chart
+
+```xml
+<com.db.williamchart.view.<chart_view>
+	...
+	app:chart_labelsColor="color"
+	app:chart_labelsSize="dimension"
+	app:chart_labelsFont="font" />
+```
+
+#### Line Chart
+
+```xml
+<com.db.williamchart.view.LinechartView
+	...
+	app:chart_lineColor="color"
+	app:chart_lineThickness="dimension"
+	app:chart_smoothLine=[ "true" | "false" ]
+	app:chart_pointDrawable="drawable" />
+```
+
+#### Bar Chart
+
+```xml
+<com.db.williamchart.view.BarChartView|HorizontalBarChartView
+	...
+	app:chart_spacing="dimension"
+	app:chart_barsColor="color"
+	app:chart_barsBackgroundColor="color" ]
+	app:chart_barsRadius="dimension" />
+```
+
+
 License
 -------
 

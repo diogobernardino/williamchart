@@ -60,6 +60,7 @@ class BarChartView @JvmOverloads constructor(
         }
         renderer = BarChartRenderer(this, painter, NoAnimation())
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.BarChartAttrs))
+        showEditMode()
     }
 
     override fun drawBars(

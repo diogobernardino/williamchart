@@ -13,46 +13,61 @@ class MeasureLineChartPaddings {
         labelsHeight: Float,
         longestLabelWidth: Float,
         labelsPaddingToInnerChart: Float,
-        lineThickness: Float
+        lineThickness: Float,
+        pointsDrawableWidth: Int,
+        pointsDrawableHeight: Int
     ): Paddings {
-        val paddings = measurePaddingsX(axisType, labelsHeight, labelsPaddingToInnerChart)
-            .mergeWith(
-                measurePaddingsY(axisType, labelsHeight, longestLabelWidth, labelsPaddingToInnerChart)
+
+        val labelsPaddings =
+            measureLabelsPaddingsX(
+                axisType,
+                labelsHeight,
+                labelsPaddingToInnerChart
+            ).mergeWith(
+                measureLabelsPaddingsY(
+                    axisType,
+                    labelsHeight,
+                    longestLabelWidth,
+                    labelsPaddingToInnerChart
+                )
             )
-        return paddings.copy(
-            top = paddings.top + lineThickness,
-            bottom = paddings.bottom + lineThickness
+
+        return labelsPaddings.copy(
+            left = labelsPaddings.left + pointsDrawableWidth.toFloat() / 2,
+            top = labelsPaddings.top + lineThickness + pointsDrawableHeight.toFloat() / 2,
+            right = labelsPaddings.right + pointsDrawableWidth.toFloat() / 2,
+            bottom = labelsPaddings.bottom + lineThickness + pointsDrawableHeight.toFloat() / 2
         )
     }
 
-    private fun measurePaddingsX(
+    private fun measureLabelsPaddingsX(
         axisType: AxisType,
         labelsHeight: Float,
         labelsPaddingToInnerChart: Float
     ): Paddings {
         return Paddings(
-            left = 0F,
+            left = 0f,
             top = 0f,
             right = 0f,
             bottom = if (axisType.shouldDisplayAxisX()) labelsHeight + labelsPaddingToInnerChart else 0F
         )
     }
 
-    private fun measurePaddingsY(
+    private fun measureLabelsPaddingsY(
         axisType: AxisType,
         labelsHeight: Float,
         longestLabelWidth: Float,
         labelsPaddingToInnerChart: Float
     ): Paddings {
 
-        if (!axisType.shouldDisplayAxisY())
-            return Paddings(0F, 0f, 0F, 0F)
-
-        return Paddings(
-            left = longestLabelWidth + labelsPaddingToInnerChart,
-            top = labelsHeight / 2,
-            right = 0F,
-            bottom = labelsHeight / 2
-        )
+        return if (!axisType.shouldDisplayAxisY())
+            Paddings(0f, 0f, 0f, 0f)
+        else
+            Paddings(
+                left = longestLabelWidth + labelsPaddingToInnerChart,
+                top = labelsHeight / 2,
+                right = 0F,
+                bottom = labelsHeight / 2
+            )
     }
 }

@@ -18,7 +18,9 @@ class MeasureLineChartPaddingsTest {
             labelsHeight = 1f,
             longestLabelWidth = 1f,
             labelsPaddingToInnerChart = 1f,
-            lineThickness = 0f
+            lineThickness = 0f,
+            pointsDrawableWidth = 0,
+            pointsDrawableHeight = 0
         )
 
         // Assert
@@ -39,7 +41,9 @@ class MeasureLineChartPaddingsTest {
             labelsHeight = 0f,
             longestLabelWidth = 0f,
             labelsPaddingToInnerChart = 0f,
-            lineThickness = lineThickness
+            lineThickness = lineThickness,
+            pointsDrawableWidth = 0,
+            pointsDrawableHeight = 0
         )
 
         // Assert
@@ -61,7 +65,9 @@ class MeasureLineChartPaddingsTest {
             labelsHeight = labelsHeight,
             longestLabelWidth = 0f,
             labelsPaddingToInnerChart = 0f,
-            lineThickness = 0f
+            lineThickness = 0f,
+            pointsDrawableWidth = 0,
+            pointsDrawableHeight = 0
         )
 
         // Assert

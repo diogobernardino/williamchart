@@ -20,7 +20,7 @@ If you find this library useful and decide to use it in your projects please dro
 
 ### Usage
 
-#### Chart
+#### All charts
 
 ```xml
 <com.db.williamchart.view.chart_view

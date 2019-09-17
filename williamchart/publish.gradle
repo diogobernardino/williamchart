@@ -1,24 +1,20 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-version '3.0' // your library version
-group 'com.diogobernardino' // whatever group name you'd like
+version '3.1.0'
+group 'com.diogobernardino'
 
 publishing {
     publications {
         Production(MavenPublication) {
-            artifact("$buildDir/outputs/aar/williamchart-release.aar") // replace with your library name
+            artifact("$buildDir/outputs/aar/williamchart-release.aar")
             groupId this.group
-            artifactId 'williamchart' // replace with your library artifact id
+            artifactId 'williamchart'
             version this.version
 
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')
-
-                // Iterate over the implementation dependencies (we don't want the test ones),
-                // adding a <dependency> node for each
                 configurations.implementation.allDependencies.each {
-                    // Ensure dependencies such as fileTree are not included in the pom.
                     if (it.name != 'unspecified') {
                         def dependencyNode = dependenciesNode.appendNode('dependency')
                         dependencyNode.appendNode('groupId', it.group)

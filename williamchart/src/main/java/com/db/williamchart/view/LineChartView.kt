@@ -8,10 +8,10 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.annotation.Size
-import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
@@ -31,30 +31,6 @@ class LineChartView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ChartView(context, attrs, defStyleAttr), ChartContract.LineView {
-
-    val onPreDrawAction = {
-        val chartConfiguration =
-            LineChartConfiguration(
-                width = measuredWidth,
-                height = measuredHeight,
-                paddings = Paddings(
-                    paddingLeft.toFloat(),
-                    paddingTop.toFloat(),
-                    paddingRight.toFloat(),
-                    paddingBottom.toFloat()
-                ),
-                axis = axis,
-                labelsSize = labelsSize,
-                lineThickness = lineThickness,
-                pointsDrawableWidth = if (pointsDrawableRes != -1)
-                    getDrawable(pointsDrawableRes)!!.intrinsicWidth else -1,
-                pointsDrawableHeight = if (pointsDrawableRes != -1)
-                    getDrawable(pointsDrawableRes)!!.intrinsicHeight else -1,
-                fillColor = fillColor,
-                gradientFillColors = gradientFillColors
-            )
-        renderer.preDraw(chartConfiguration)
-    }
 
     @Suppress("MemberVisibilityCanBePrivate")
     var smooth: Boolean = defaultSmooth
@@ -76,20 +52,32 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
+    override val chartConfiguration: ChartConfiguration
+        get() =
+            LineChartConfiguration(
+                width = measuredWidth,
+                height = measuredHeight,
+                paddings = Paddings(
+                    paddingLeft.toFloat(),
+                    paddingTop.toFloat(),
+                    paddingRight.toFloat(),
+                    paddingBottom.toFloat()
+                ),
+                axis = axis,
+                labelsSize = labelsSize,
+                lineThickness = lineThickness,
+                pointsDrawableWidth = if (pointsDrawableRes != -1)
+                    getDrawable(pointsDrawableRes)!!.intrinsicWidth else -1,
+                pointsDrawableHeight = if (pointsDrawableRes != -1)
+                    getDrawable(pointsDrawableRes)!!.intrinsicHeight else -1,
+                fillColor = fillColor,
+                gradientFillColors = gradientFillColors
+            )
+
     init {
         renderer = LineChartRenderer(this, painter, NoAnimation())
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
         showEditMode()
-    }
-
-    override fun show(entries: LinkedHashMap<String, Float>) {
-        doOnPreDraw { onPreDrawAction() }
-        renderer.render(entries)
-    }
-
-    override fun animate(entries: LinkedHashMap<String, Float>) {
-        doOnPreDraw { onPreDrawAction() }
-        renderer.anim(entries, animation)
     }
 
     override fun drawLine(points: List<DataPoint>) {

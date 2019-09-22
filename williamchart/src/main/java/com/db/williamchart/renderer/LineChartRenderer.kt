@@ -25,8 +25,6 @@ class LineChartRenderer(
     private var animation: ChartAnimation
 ) : ChartContract.Renderer {
 
-    private var isAlreadyRendered = false
-
     private var data = emptyList<DataPoint>()
 
     private lateinit var outerFrame: Frame
@@ -55,8 +53,7 @@ class LineChartRenderer(
 
     override fun preDraw(configuration: ChartConfiguration): Boolean {
 
-        if (data.isEmpty())
-            return true
+        if (data.isEmpty()) return true
 
         this.chartConfiguration = configuration as LineChartConfiguration
 
@@ -92,7 +89,6 @@ class LineChartRenderer(
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
 
-        isAlreadyRendered = true
         return false
     }
 

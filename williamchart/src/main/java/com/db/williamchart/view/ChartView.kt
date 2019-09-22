@@ -7,12 +7,14 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.AxisType
+import com.db.williamchart.data.ChartConfiguration
 
 abstract class ChartView @JvmOverloads constructor(
     context: Context,
@@ -85,11 +87,15 @@ abstract class ChartView @JvmOverloads constructor(
         renderer.draw()
     }
 
-    open fun show(entries: LinkedHashMap<String, Float>) {
+    abstract val chartConfiguration: ChartConfiguration
+
+    fun show(entries: LinkedHashMap<String, Float>) {
+        doOnPreDraw { renderer.preDraw(chartConfiguration) }
         renderer.render(entries)
     }
 
-    open fun animate(entries: LinkedHashMap<String, Float>) {
+    fun animate(entries: LinkedHashMap<String, Float>) {
+        doOnPreDraw { renderer.preDraw(chartConfiguration) }
         renderer.anim(entries, animation)
     }
 

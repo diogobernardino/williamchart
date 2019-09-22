@@ -5,7 +5,6 @@ import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.view.MotionEvent
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import com.db.williamchart.ChartContract
@@ -80,26 +79,17 @@ abstract class ChartView @JvmOverloads constructor(
         )
     }
 
-    /**
-     * The method listens for chart clicks and checks whether it intercepts
-     * a known Region. It will then use the registered Listener.onClick
-     * to return the region's index.
-     */
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return super.onTouchEvent(event)
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         this.canvas = canvas
         renderer.draw()
     }
 
-    fun show(entries: LinkedHashMap<String, Float>) {
+    open fun show(entries: LinkedHashMap<String, Float>) {
         renderer.render(entries)
     }
 
-    fun animate(entries: LinkedHashMap<String, Float>) {
+    open fun animate(entries: LinkedHashMap<String, Float>) {
         renderer.anim(entries, animation)
     }
 

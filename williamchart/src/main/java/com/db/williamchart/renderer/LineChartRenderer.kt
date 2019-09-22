@@ -27,7 +27,7 @@ class LineChartRenderer(
 
     private var isAlreadyRendered = false
 
-    private lateinit var data: List<DataPoint>
+    private var data = emptyList<DataPoint>()
 
     private lateinit var outerFrame: Frame
 
@@ -54,9 +54,8 @@ class LineChartRenderer(
     }
 
     override fun preDraw(configuration: ChartConfiguration): Boolean {
-        require(data.size > 1) { "A chart needs more than one entry." }
 
-        if (isAlreadyRendered) // Data already processed, proceed with drawing
+        if (data.isEmpty())
             return true
 
         this.chartConfiguration = configuration as LineChartConfiguration
@@ -98,6 +97,8 @@ class LineChartRenderer(
     }
 
     override fun draw() {
+
+        if (data.isEmpty()) return
 
         if (chartConfiguration.axis.shouldDisplayAxisX())
             view.drawLabels(xLabels)

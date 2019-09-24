@@ -126,15 +126,9 @@ abstract class ChartView @JvmOverloads constructor(
         }
     }
 
-    protected fun showEditMode() {
+    protected fun handleEditMode() {
         if (isInEditMode) {
-            show(
-                linkedMapOf(
-                    "PORRO" to 5F,
-                    "FUSCE" to 6.4F,
-                    "EGET" to 3F
-                )
-            )
+            show(editModeSampleData)
         }
     }
 
@@ -142,5 +136,12 @@ abstract class ChartView @JvmOverloads constructor(
         private const val defaultFrameWidth = 200
         private const val defaultFrameHeight = 100
         private const val defaultLabelsSize = 60F
+        private val editModeSampleData =
+            linkedMapOf(
+                "Label1" to 1f,
+                "Label2" to 7.5f,
+                "Label3" to 4.7f,
+                "Label4" to 3.5f
+            )
     }
 }

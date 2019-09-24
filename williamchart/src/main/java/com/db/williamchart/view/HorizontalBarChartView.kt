@@ -58,7 +58,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
         renderer = HorizontalBarChartRenderer(this, painter, NoAnimation())
         animation = DefaultHorizontalAnimation()
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.BarChartAttrs))
-        showEditMode()
+        handleEditMode()
     }
 
     override fun drawBars(

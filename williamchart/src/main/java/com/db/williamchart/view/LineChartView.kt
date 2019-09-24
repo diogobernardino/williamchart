@@ -77,7 +77,7 @@ class LineChartView @JvmOverloads constructor(
     init {
         renderer = LineChartRenderer(this, painter, NoAnimation())
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
-        showEditMode()
+        handleEditMode()
     }
 
     override fun drawLine(points: List<DataPoint>) {

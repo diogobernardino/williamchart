@@ -3,6 +3,7 @@ package com.db.williamchart
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 
@@ -46,7 +47,7 @@ interface ChartContract {
 
     interface DonutView {
         fun postInvalidate()
-        fun drawArc(value: Float)
+        fun drawArc(value: Float, innerFrame: Frame)
         fun drawDebugFrame(innerFrame: Frame)
     }
 
@@ -55,5 +56,12 @@ interface ChartContract {
         fun draw()
         fun render(entries: LinkedHashMap<String, Float>)
         fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation)
+    }
+
+    interface DonutRenderer {
+        fun preDraw(configuration: DonutChartConfiguration): Boolean
+        fun draw()
+        fun render(datapoints: List<Float>)
+        fun anim(datapoints: List<Float>, animation: ChartAnimation)
     }
 }

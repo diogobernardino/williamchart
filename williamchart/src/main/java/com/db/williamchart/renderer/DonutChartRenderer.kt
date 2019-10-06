@@ -2,22 +2,30 @@ package com.db.williamchart.renderer
 
 import com.db.williamchart.ChartContract
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.ChartConfiguration
-import com.db.williamchart.data.DonutConfiguration
+import com.db.williamchart.data.DonutChartConfiguration
+import com.db.williamchart.data.Frame
 
-class DonutChartRenderer : ChartContract.Renderer {
+class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.DonutRenderer {
 
-    override fun preDraw(configuration: ChartConfiguration): Boolean {
-        val donutChartConfiguration = configuration as DonutConfiguration
+    private lateinit var innerFrame: Frame
+
+    override fun preDraw(configuration: DonutChartConfiguration): Boolean {
+
+        val left = configuration.paddings.left
+        val top = configuration.paddings.top
+        val right = configuration.width - configuration.paddings.right
+        val bottom = configuration.height - configuration.paddings.bottom
+        innerFrame = Frame(left, top, right, bottom)
         return true
     }
 
     override fun draw() {
+        view.drawArc(120f, innerFrame)
     }
 
-    override fun render(entries: LinkedHashMap<String, Float>) {
+    override fun render(datapoints: List<Float>) {
     }
 
-    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation) {
+    override fun anim(datapoints: List<Float>, animation: ChartAnimation) {
     }
 }

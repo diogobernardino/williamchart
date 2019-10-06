@@ -8,8 +8,11 @@ import android.widget.FrameLayout
 import androidx.core.graphics.toRectF
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
+import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.Frame
+import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
+import com.db.williamchart.renderer.DonutChartRenderer
 
 class PieChartView @JvmOverloads constructor(
     context: Context,
@@ -19,29 +22,52 @@ class PieChartView @JvmOverloads constructor(
 
     private val paint: Paint = Paint()
 
-    private lateinit var innerFrame: Frame
+    private lateinit var canvas: Canvas
+
+    private var renderer: ChartContract.DonutRenderer = DonutChartRenderer(this)
 
     init {
         doOnPreDraw {
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = STROKE_WIDTH
-            val left = paddingLeft + STROKE_WIDTH / 2
-            val top = paddingTop + STROKE_WIDTH / 2
-            val right = width - paddingRight - STROKE_WIDTH / 2
-            val bottom = height - paddingBottom - STROKE_WIDTH / 2
-            innerFrame = Frame(left, top, right, bottom)
+
+            val configuration = DonutChartConfiguration(
+                width = measuredWidth,
+                height = measuredHeight,
+                paddings = Paddings(
+                    paddingLeft.toFloat(),
+                    paddingTop.toFloat(),
+                    paddingRight.toFloat(),
+                    paddingBottom.toFloat()
+                )
+            )
+            renderer.preDraw(configuration)
         }
     }
 
-    override fun drawArc(value: Float) {
+    override fun drawArc(value: Float, innerFrame: Frame) {
+        val left = innerFrame.left + STROKE_WIDTH / 2
+        val top = innerFrame.top + STROKE_WIDTH / 2
+        val right = innerFrame.right - STROKE_WIDTH / 2
+        val bottom = innerFrame.bottom - STROKE_WIDTH / 2
+        val innerFrameWithStroke = Frame(left, top, right, bottom)
+
+        canvas.drawArc(
+            innerFrameWithStroke.toRect().toRectF(),
+            START_ANGLE,
+            CURRENT_ANGLE,
+            false,
+            paint
+        )
     }
 
     override fun drawDebugFrame(innerFrame: Frame) {
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas?.drawArc(innerFrame.toRect().toRectF(), START_ANGLE, CURRENT_ANGLE, false, paint)
+        this.canvas = canvas
+        renderer.draw()
     }
 
     companion object {

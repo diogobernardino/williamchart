@@ -21,7 +21,11 @@ class PieChartView @JvmOverloads constructor(
         super.onDraw(canvas)
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = 20f
-        val frame = Frame(0f, 0f, width.toFloat(), height.toFloat())
+        val left = paddingLeft
+        val top = paddingTop
+        val right = width - paddingRight
+        val bottom = height - paddingBottom
+        val frame = Frame(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
         canvas?.drawArc(frame.toRect().toRectF(), START_ANGLE, CURRENT_ANGLE, false, paint)
     }
 

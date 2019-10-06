@@ -44,6 +44,12 @@ interface ChartContract {
         )
     }
 
+    interface DonutView {
+        fun postInvalidate()
+        fun drawArc(value: Float)
+        fun drawDebugFrame(innerFrame: Frame)
+    }
+
     interface Renderer {
         fun preDraw(configuration: ChartConfiguration): Boolean
         fun draw()

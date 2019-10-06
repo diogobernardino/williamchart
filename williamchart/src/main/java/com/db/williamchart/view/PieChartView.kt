@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.core.graphics.toRectF
 import androidx.core.view.doOnPreDraw
+import com.db.williamchart.ChartContract
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.toRect
 
@@ -14,7 +15,7 @@ class PieChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), ChartContract.DonutView {
 
     private val paint: Paint = Paint()
 
@@ -30,6 +31,12 @@ class PieChartView @JvmOverloads constructor(
             val bottom = height - paddingBottom - STROKE_WIDTH / 2
             innerFrame = Frame(left, top, right, bottom)
         }
+    }
+
+    override fun drawArc(value: Float) {
+    }
+
+    override fun drawDebugFrame(innerFrame: Frame) {
     }
 
     override fun onDraw(canvas: Canvas?) {

@@ -23,12 +23,12 @@ class PieChartView @JvmOverloads constructor(
     init {
         doOnPreDraw {
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 20f
-            val left = paddingLeft
-            val top = paddingTop
-            val right = width - paddingRight
-            val bottom = height - paddingBottom
-            innerFrame = Frame(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
+            paint.strokeWidth = STROKE_WIDTH
+            val left = paddingLeft + STROKE_WIDTH / 2
+            val top = paddingTop + STROKE_WIDTH / 2
+            val right = width - paddingRight - STROKE_WIDTH / 2
+            val bottom = height - paddingBottom - STROKE_WIDTH / 2
+            innerFrame = Frame(left, top, right, bottom)
         }
     }
 
@@ -38,7 +38,8 @@ class PieChartView @JvmOverloads constructor(
     }
 
     companion object {
+        private const val STROKE_WIDTH = 20f
         private const val START_ANGLE = 90f
-        private const val CURRENT_ANGLE = 40f
+        private const val CURRENT_ANGLE = 120f
     }
 }

@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import androidx.core.graphics.toRectF
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
+import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Paddings
@@ -26,12 +27,9 @@ class PieChartView @JvmOverloads constructor(
 
     private var renderer: ChartContract.DonutRenderer = DonutChartRenderer(this)
 
-    init {
-        doOnPreDraw {
-            paint.style = Paint.Style.STROKE
-            paint.strokeWidth = STROKE_WIDTH
-
-            val configuration = DonutChartConfiguration(
+    private val configuration: DonutChartConfiguration
+        get() =
+            DonutChartConfiguration(
                 width = measuredWidth,
                 height = measuredHeight,
                 paddings = Paddings(
@@ -41,11 +39,15 @@ class PieChartView @JvmOverloads constructor(
                     paddingBottom.toFloat()
                 )
             )
-            renderer.preDraw(configuration)
-        }
+
+    init {
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = STROKE_WIDTH
+        show(listOf())
     }
 
     override fun drawArc(value: Float, innerFrame: Frame) {
+
         val left = innerFrame.left + STROKE_WIDTH / 2
         val top = innerFrame.top + STROKE_WIDTH / 2
         val right = innerFrame.right - STROKE_WIDTH / 2
@@ -62,12 +64,23 @@ class PieChartView @JvmOverloads constructor(
     }
 
     override fun drawDebugFrame(innerFrame: Frame) {
+        canvas.drawRect(innerFrame.toRect(), paint)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         this.canvas = canvas
         renderer.draw()
+    }
+
+    fun show(values: List<Float>) {
+        doOnPreDraw { renderer.preDraw(configuration) }
+        renderer.render(values)
+    }
+
+    fun animate(values: List<Float>) {
+        doOnPreDraw { renderer.preDraw(configuration) }
+        renderer.anim(values, DefaultAnimation())
     }
 
     companion object {

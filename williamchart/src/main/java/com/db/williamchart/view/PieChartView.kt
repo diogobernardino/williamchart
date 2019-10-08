@@ -37,7 +37,8 @@ class PieChartView @JvmOverloads constructor(
                     paddingTop.toFloat(),
                     paddingRight.toFloat(),
                     paddingBottom.toFloat()
-                )
+                ),
+                thickness = STROKE_WIDTH
             )
 
     init {
@@ -47,15 +48,8 @@ class PieChartView @JvmOverloads constructor(
     }
 
     override fun drawArc(value: Float, innerFrame: Frame) {
-
-        val left = innerFrame.left + STROKE_WIDTH / 2
-        val top = innerFrame.top + STROKE_WIDTH / 2
-        val right = innerFrame.right - STROKE_WIDTH / 2
-        val bottom = innerFrame.bottom - STROKE_WIDTH / 2
-        val innerFrameWithStroke = Frame(left, top, right, bottom)
-
         canvas.drawArc(
-            innerFrameWithStroke.toRect().toRectF(),
+            innerFrame.toRect().toRectF(),
             START_ANGLE,
             CURRENT_ANGLE,
             false,

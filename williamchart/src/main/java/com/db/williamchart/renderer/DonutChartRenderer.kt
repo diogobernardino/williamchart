@@ -7,23 +7,25 @@ import com.db.williamchart.data.Frame
 
 class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.DonutRenderer {
 
-    private var innerFrame: Frame = Frame(0f, 0f, 0f, 0f)
+    private var innerFrameWithStroke: Frame = Frame(0f, 0f, 0f, 0f)
 
     private var data = listOf<Float>()
 
     override fun preDraw(configuration: DonutChartConfiguration): Boolean {
-        println("DonutChartRenderer.preDraw")
-        val left = configuration.paddings.left
-        val top = configuration.paddings.top
-        val right = configuration.width - configuration.paddings.right
-        val bottom = configuration.height - configuration.paddings.bottom
-        innerFrame = Frame(left, top, right, bottom)
+        val left =
+            configuration.paddings.left + configuration.thickness / 2
+        val top =
+            configuration.paddings.top + configuration.thickness / 2
+        val right =
+            configuration.width - configuration.paddings.right - configuration.thickness / 2
+        val bottom =
+            configuration.height - configuration.paddings.bottom - configuration.thickness / 2
+        innerFrameWithStroke = Frame(left, top, right, bottom)
         return true
     }
 
     override fun draw() {
-        println("DonutChartRenderer.draw")
-        view.drawArc(120f, innerFrame)
+        view.drawArc(120f, innerFrameWithStroke)
     }
 
     override fun render(datapoints: List<Float>) {

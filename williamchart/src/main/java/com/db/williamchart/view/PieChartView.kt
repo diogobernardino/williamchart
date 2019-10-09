@@ -1,6 +1,7 @@
 package com.db.williamchart.view
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
@@ -8,11 +9,13 @@ import android.widget.FrameLayout
 import androidx.core.graphics.toRectF
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
+import com.db.williamchart.R
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
+import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.DonutChartRenderer
 
 class PieChartView @JvmOverloads constructor(
@@ -20,6 +23,9 @@ class PieChartView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), ChartContract.DonutView {
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var thickness = defaultDonutThickness
 
     private val paint: Paint = Paint()
 
@@ -38,12 +44,13 @@ class PieChartView @JvmOverloads constructor(
                     paddingRight.toFloat(),
                     paddingBottom.toFloat()
                 ),
-                thickness = STROKE_WIDTH
+                thickness = thickness
             )
 
     init {
+        handleAttributes(obtainStyledAttributes(attrs, R.styleable.DonutChartAttrs))
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = STROKE_WIDTH
+        paint.strokeWidth = thickness
         show(listOf())
     }
 
@@ -77,8 +84,15 @@ class PieChartView @JvmOverloads constructor(
         renderer.anim(values, DefaultAnimation())
     }
 
+    private fun handleAttributes(typedArray: TypedArray) {
+        typedArray.apply {
+            thickness = getDimension(R.styleable.DonutChartAttrs_chart_thickness, thickness)
+            recycle()
+        }
+    }
+
     companion object {
-        private const val STROKE_WIDTH = 20f
+        private const val defaultDonutThickness = 50f
         private const val START_ANGLE = 90f
         private const val CURRENT_ANGLE = 120f
     }

@@ -27,6 +27,9 @@ class PieChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var thickness = defaultDonutThickness
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var color = defaultColor
+
     private val paint: Paint = Paint()
 
     private lateinit var canvas: Canvas
@@ -49,12 +52,13 @@ class PieChartView @JvmOverloads constructor(
 
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.DonutChartAttrs))
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = thickness
         show(listOf())
     }
 
     override fun drawArc(value: Float, innerFrame: Frame) {
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = thickness
+        paint.color = color
         canvas.drawArc(
             innerFrame.toRect().toRectF(),
             START_ANGLE,
@@ -87,12 +91,14 @@ class PieChartView @JvmOverloads constructor(
     private fun handleAttributes(typedArray: TypedArray) {
         typedArray.apply {
             thickness = getDimension(R.styleable.DonutChartAttrs_chart_thickness, thickness)
+            color = getColor(R.styleable.DonutChartAttrs_chart_donutColor, color)
             recycle()
         }
     }
 
     companion object {
         private const val defaultDonutThickness = 50f
+        private const val defaultColor = 0
         private const val START_ANGLE = 90f
         private const val CURRENT_ANGLE = 120f
     }

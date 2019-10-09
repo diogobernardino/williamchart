@@ -32,6 +32,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="#fff"
+        app:chart_donutColor="#949"
         app:chart_thickness="30dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

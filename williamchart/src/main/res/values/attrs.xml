@@ -30,6 +30,7 @@
 
     <declare-styleable name="DonutChartAttrs">
         <attr name="chart_thickness" format="dimension" />
+        <attr name="chart_donutColor" format="color" />
     </declare-styleable>
 </resources>
 

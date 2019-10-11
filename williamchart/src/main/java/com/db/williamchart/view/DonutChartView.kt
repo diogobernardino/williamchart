@@ -18,7 +18,7 @@ import com.db.williamchart.data.toRect
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.DonutChartRenderer
 
-class PieChartView @JvmOverloads constructor(
+class DonutChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -30,11 +30,11 @@ class PieChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var color = defaultColor
 
-    private val paint: Paint = Paint()
-
     private lateinit var canvas: Canvas
 
     private var renderer: ChartContract.DonutRenderer = DonutChartRenderer(this)
+
+    private val paint: Paint = Paint()
 
     private val configuration: DonutChartConfiguration
         get() =

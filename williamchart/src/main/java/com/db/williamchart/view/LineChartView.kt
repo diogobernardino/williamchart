@@ -31,7 +31,7 @@ class LineChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChartView(context, attrs, defStyleAttr), ChartContract.LineView {
+) : AxisChartView(context, attrs, defStyleAttr), ChartContract.LineView {
 
     @Suppress("MemberVisibilityCanBePrivate")
     var smooth: Boolean = defaultSmooth

@@ -15,16 +15,13 @@ import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.ChartConfiguration
+import com.db.williamchart.extensions.obtainStyledAttributes
 
-abstract class ChartView @JvmOverloads constructor(
+abstract class AxisChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-
-    /**
-     * API
-     */
 
     var labelsSize: Float = defaultLabelsSize
 
@@ -36,26 +33,15 @@ abstract class ChartView @JvmOverloads constructor(
 
     var animation: ChartAnimation = DefaultAnimation()
 
-    /**
-     * Members to be used by the different charts extending `ChartView`
-     */
-
     protected lateinit var canvas: Canvas
 
     protected val painter: Painter = Painter(labelsFont = labelsFont)
 
-    // Initialized in init() by chart views extending `ChartView` (e.g. LineChartView)
+    // Initialized in init() by chart views extending `AxisChartView` (e.g. LineChartView)
     protected lateinit var renderer: ChartContract.Renderer
 
     init {
-        val styledAttributes =
-            context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.ChartAttrs,
-                0,
-                0
-            )
-        handleAttributes(styledAttributes)
+        handleAttributes(obtainStyledAttributes(attrs, R.styleable.ChartAttrs))
     }
 
     override fun onAttachedToWindow() {

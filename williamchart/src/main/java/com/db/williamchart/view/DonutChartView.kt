@@ -60,11 +60,26 @@ class DonutChartView @JvmOverloads constructor(
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = donutThickness
         paint.color = donutColor
+
         canvas.drawArc(
             innerFrame.toRect().toRectF(),
             START_ANGLE,
             CURRENT_ANGLE,
             false,
+            paint
+        )
+    }
+
+    override fun drawBackground(innerFrame: Frame) {
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = donutThickness
+        paint.color = donutBackgroundColor
+
+        val radius = (innerFrame.bottom - innerFrame.top) / 2
+        canvas.drawCircle(
+            innerFrame.left + radius,
+            innerFrame.top + radius,
+            radius,
             paint
         )
     }

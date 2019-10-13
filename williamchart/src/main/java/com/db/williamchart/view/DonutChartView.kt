@@ -3,6 +3,7 @@ package com.db.williamchart.view
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.widget.FrameLayout
@@ -24,11 +25,11 @@ class DonutChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), ChartContract.DonutView {
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    var thickness = defaultDonutThickness
+    var donutThickness = defaultDonutThickness
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    var color = defaultColor
+    var donutColor = defaultColor
+
+    var donutBackgroundColor = defaultBackgroundColor
 
     private lateinit var canvas: Canvas
 
@@ -47,7 +48,7 @@ class DonutChartView @JvmOverloads constructor(
                     paddingRight.toFloat(),
                     paddingBottom.toFloat()
                 ),
-                thickness = thickness
+                thickness = donutThickness
             )
 
     init {
@@ -57,8 +58,8 @@ class DonutChartView @JvmOverloads constructor(
 
     override fun drawArc(value: Float, innerFrame: Frame) {
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = thickness
-        paint.color = color
+        paint.strokeWidth = donutThickness
+        paint.color = donutColor
         canvas.drawArc(
             innerFrame.toRect().toRectF(),
             START_ANGLE,
@@ -90,8 +91,13 @@ class DonutChartView @JvmOverloads constructor(
 
     private fun handleAttributes(typedArray: TypedArray) {
         typedArray.apply {
-            thickness = getDimension(R.styleable.DonutChartAttrs_chart_thickness, thickness)
-            color = getColor(R.styleable.DonutChartAttrs_chart_donutColor, color)
+            donutThickness =
+                getDimension(R.styleable.DonutChartAttrs_chart_donutThickness, donutThickness)
+            donutColor = getColor(R.styleable.DonutChartAttrs_chart_donutColor, donutColor)
+            donutBackgroundColor = getColor(
+                R.styleable.DonutChartAttrs_chart_donutBackgroundColor,
+                donutBackgroundColor
+            )
             recycle()
         }
     }
@@ -99,6 +105,7 @@ class DonutChartView @JvmOverloads constructor(
     companion object {
         private const val defaultDonutThickness = 50f
         private const val defaultColor = 0
+        private const val defaultBackgroundColor = Color.TRANSPARENT
         private const val START_ANGLE = 90f
         private const val CURRENT_ANGLE = 120f
     }

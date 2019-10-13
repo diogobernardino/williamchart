@@ -25,7 +25,7 @@ class DonutChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), ChartContract.DonutView {
 
-    var donutThickness = defaultDonutThickness
+    var donutThickness = defaultThickness
 
     var donutColor = defaultColor
 
@@ -103,7 +103,7 @@ class DonutChartView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val defaultDonutThickness = 50f
+        private const val defaultThickness = 50f
         private const val defaultColor = 0
         private const val defaultBackgroundColor = Color.TRANSPARENT
         private const val START_ANGLE = 90f

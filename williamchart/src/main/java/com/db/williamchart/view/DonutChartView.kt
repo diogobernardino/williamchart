@@ -25,11 +25,17 @@ class DonutChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), ChartContract.DonutView {
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var donutThickness = defaultThickness
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var donutColor = defaultColor
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var donutBackgroundColor = defaultBackgroundColor
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var donutRoundCorners = false
 
     private lateinit var canvas: Canvas
 
@@ -57,6 +63,10 @@ class DonutChartView @JvmOverloads constructor(
     }
 
     override fun drawArc(value: Float, innerFrame: Frame) {
+
+        if (donutRoundCorners)
+            paint.strokeCap = Paint.Cap.ROUND
+
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = donutThickness
         paint.color = donutColor
@@ -113,6 +123,8 @@ class DonutChartView @JvmOverloads constructor(
                 R.styleable.DonutChartAttrs_chart_donutBackgroundColor,
                 donutBackgroundColor
             )
+            donutRoundCorners =
+                getBoolean(R.styleable.DonutChartAttrs_chart_donutRoundCorners, donutRoundCorners)
             recycle()
         }
     }

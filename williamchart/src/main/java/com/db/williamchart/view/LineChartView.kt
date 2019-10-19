@@ -3,11 +3,10 @@ package com.db.williamchart.view
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
-import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.Shader
 import android.util.AttributeSet
+import androidx.annotation.DrawableRes
 import androidx.annotation.Size
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
@@ -16,101 +15,103 @@ import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.LineChartConfiguration
+import com.db.williamchart.data.Paddings
+import com.db.williamchart.data.toLinearGradient
 import com.db.williamchart.data.toRect
 import com.db.williamchart.data.Scale
+import com.db.williamchart.extensions.centerAt
+import com.db.williamchart.extensions.getDrawable
+import com.db.williamchart.extensions.obtainStyledAttributes
+import com.db.williamchart.extensions.toLinePath
+import com.db.williamchart.extensions.toSmoothLinePath
 import com.db.williamchart.renderer.LineChartRenderer
 
 class LineChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChartView(context, attrs, defStyleAttr), ChartContract.View {
-
-    /**
-     * API
-     */
+) : ChartView(context, attrs, defStyleAttr), ChartContract.LineView {
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var smooth: Boolean = false
+    var smooth: Boolean = defaultSmooth
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var lineThickness: Float = 4F
+    var lineThickness: Float = defaultLineThickness
 
     @Suppress("MemberVisibilityCanBePrivate")
     var scale: Scale? = null
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var fillColor: Int = 0
+    var fillColor: Int = defaultFillColor
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var lineColor: Int = Color.BLACK
+    var lineColor: Int = defaultLineColor
 
     @Size(min = 2, max = 2)
     @Suppress("MemberVisibilityCanBePrivate")
     var gradientFillColors: IntArray = intArrayOf(0, 0)
 
+    @DrawableRes
+    @Suppress("MemberVisibilityCanBePrivate")
+    var pointsDrawableRes = -1
+
     init {
         doOnPreDraw {
-            (renderer as LineChartRenderer).lineThickness = lineThickness
-            (renderer as LineChartRenderer).scale = scale
-            renderer.preDraw(
-                measuredWidth,
-                measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom,
-                axis,
-                labelsSize
-            )
+            val chartConfiguration =
+                LineChartConfiguration(
+                    width = measuredWidth,
+                    height = measuredHeight,
+                    paddings = Paddings(
+                        paddingLeft.toFloat(),
+                        paddingTop.toFloat(),
+                        paddingRight.toFloat(),
+                        paddingBottom.toFloat()
+                    ),
+                    axis = axis,
+                    labelsSize = labelsSize,
+                    lineThickness = lineThickness,
+                    scale = scale,
+                    pointsDrawableWidth = if (pointsDrawableRes != -1)
+                        getDrawable(pointsDrawableRes)!!.intrinsicWidth else -1,
+                    pointsDrawableHeight = if (pointsDrawableRes != -1)
+                        getDrawable(pointsDrawableRes)!!.intrinsicHeight else -1,
+                    fillColor = fillColor,
+                    gradientFillColors = gradientFillColors
+                )
+            renderer.preDraw(chartConfiguration)
         }
         renderer = LineChartRenderer(this, painter, NoAnimation())
-
-        val styledAttributes =
-            context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.LineChartAttrs,
-                0,
-                0
-            )
-        handleAttributes(styledAttributes)
+        handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
+        showEditMode()
     }
 
-    override fun drawData(
-        innerFrame: Frame,
-        entries: List<DataPoint>
-    ) {
+    override fun drawLine(points: List<DataPoint>) {
 
         val linePath =
-            if (!smooth) createLinePath(entries)
-            else createSmoothLinePath(entries)
+            if (!smooth) points.toLinePath()
+            else points.toSmoothLinePath(defaultSmoothFactor)
 
-        if (fillColor != 0 || gradientFillColors.isNotEmpty()) { // Draw background
+        painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
+        canvas.drawPath(linePath, painter.paint)
+    }
 
-            if (fillColor != 0)
-                painter.prepare(color = fillColor, style = Paint.Style.FILL)
-            else painter.prepare(
-                shader = LinearGradient(
-                    innerFrame.left,
-                    innerFrame.top,
-                    innerFrame.left,
-                    innerFrame.bottom,
-                    gradientFillColors[0],
-                    gradientFillColors[1],
-                    Shader.TileMode.MIRROR
-                ),
+    override fun drawLineBackground(innerFrame: Frame, points: List<DataPoint>) {
+
+        val linePath =
+            if (!smooth) points.toLinePath()
+            else points.toSmoothLinePath(defaultSmoothFactor)
+        val backgroundPath = createBackgroundPath(linePath, points, innerFrame.bottom)
+
+        if (fillColor != 0)
+            painter.prepare(color = fillColor, style = Paint.Style.FILL)
+        else
+            painter.prepare(
+                shader = innerFrame.toLinearGradient(gradientFillColors),
                 style = Paint.Style.FILL
             )
 
-            canvas.drawPath(
-                createBackgroundPath(linePath, entries, innerFrame.bottom),
-                painter.paint
-            )
-        }
-
-        // Draw line
-        painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
-        canvas.drawPath(linePath, painter.paint)
+        canvas.drawPath(backgroundPath, painter.paint)
     }
 
     override fun drawLabels(xLabels: List<Label>) {
@@ -120,7 +121,25 @@ class LineChartView @JvmOverloads constructor(
             color = labelsColor,
             font = labelsFont
         )
-        xLabels.forEach { canvas.drawText(it.label, it.screenPositionX, it.screenPositionY, painter.paint) }
+        xLabels.forEach {
+            canvas.drawText(
+                it.label,
+                it.screenPositionX,
+                it.screenPositionY,
+                painter.paint
+            )
+        }
+    }
+
+    override fun drawPoints(points: List<DataPoint>) {
+        if (pointsDrawableRes != -1) {
+            points.forEach { dataPoint ->
+                getDrawable(pointsDrawableRes)?.let {
+                    it.centerAt(dataPoint.screenPositionX, dataPoint.screenPositionY)
+                    it.draw(canvas)
+                }
+            }
+        }
     }
 
     override fun drawDebugFrame(outerFrame: Frame, innerFrame: Frame, labelsFrame: List<Frame>) {
@@ -128,63 +147,6 @@ class LineChartView @JvmOverloads constructor(
         canvas.drawRect(outerFrame.toRect(), painter.paint)
         canvas.drawRect(innerFrame.toRect(), painter.paint)
         labelsFrame.forEach { canvas.drawRect(it.toRect(), painter.paint) }
-    }
-
-    private fun createLinePath(points: List<DataPoint>): Path {
-
-        val res = Path()
-
-        res.moveTo(points.first().screenPositionX, points.first().screenPositionY)
-        for (i in 1 until points.size)
-            res.lineTo(points[i].screenPositionX, points[i].screenPositionY)
-        return res
-    }
-
-    /**
-     * Credits: http://www.jayway.com/author/andersericsson/
-     */
-    private fun createSmoothLinePath(points: List<DataPoint>): Path {
-
-        var thisPointX: Float
-        var thisPointY: Float
-        var nextPointX: Float
-        var nextPointY: Float
-        var startDiffX: Float
-        var startDiffY: Float
-        var endDiffX: Float
-        var endDiffY: Float
-        var firstControlX: Float
-        var firstControlY: Float
-        var secondControlX: Float
-        var secondControlY: Float
-
-        val res = Path()
-        res.moveTo(points.first().screenPositionX, points.first().screenPositionY)
-
-        for (i in 0 until points.size - 1) {
-
-            thisPointX = points[i].screenPositionX
-            thisPointY = points[i].screenPositionY
-
-            nextPointX = points[i + 1].screenPositionX
-            nextPointY = points[i + 1].screenPositionY
-
-            startDiffX = nextPointX - points[si(points.size, i - 1)].screenPositionX
-            startDiffY = nextPointY - points[si(points.size, i - 1)].screenPositionY
-
-            endDiffX = points[si(points.size, i + 2)].screenPositionX - thisPointX
-            endDiffY = points[si(points.size, i + 2)].screenPositionY - thisPointY
-
-            firstControlX = thisPointX + SMOOTH_FACTOR * startDiffX
-            firstControlY = thisPointY + SMOOTH_FACTOR * startDiffY
-
-            secondControlX = nextPointX - SMOOTH_FACTOR * endDiffX
-            secondControlY = nextPointY - SMOOTH_FACTOR * endDiffY
-
-            res.cubicTo(firstControlX, firstControlY, secondControlX, secondControlY, nextPointX, nextPointY)
-        }
-
-        return res
     }
 
     private fun createBackgroundPath(
@@ -202,27 +164,23 @@ class LineChartView @JvmOverloads constructor(
         return res
     }
 
-    /**
-     * Credits: http://www.jayway.com/author/andersericsson/
-     */
-    private fun si(setSize: Int, i: Int): Int {
-        return when {
-            i > setSize - 1 -> setSize - 1
-            i < 0 -> 0
-            else -> i
-        }
-    }
-
     private fun handleAttributes(typedArray: TypedArray) {
         typedArray.apply {
             lineColor = getColor(R.styleable.LineChartAttrs_chart_lineColor, lineColor)
-            lineThickness = getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
+            lineThickness =
+                getDimension(R.styleable.LineChartAttrs_chart_lineThickness, lineThickness)
             smooth = getBoolean(R.styleable.LineChartAttrs_chart_smoothLine, smooth)
+            pointsDrawableRes =
+                getResourceId(R.styleable.LineChartAttrs_chart_pointsDrawable, pointsDrawableRes)
             recycle()
         }
     }
 
     companion object {
-        private const val SMOOTH_FACTOR = 0.20f
+        private const val defaultSmoothFactor = 0.20f
+        private const val defaultSmooth = false
+        private const val defaultLineThickness = 4F
+        private const val defaultFillColor = 0
+        private const val defaultLineColor = Color.BLACK
     }
 }

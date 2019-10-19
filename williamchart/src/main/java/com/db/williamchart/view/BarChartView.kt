@@ -2,6 +2,7 @@ package com.db.williamchart.view
 
 import android.content.Context
 import android.content.res.TypedArray
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
@@ -10,78 +11,92 @@ import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.BarChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
+import com.db.williamchart.extensions.drawChartBar
+import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.BarChartRenderer
 
 class BarChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChartView(context, attrs, defStyleAttr), ChartContract.View {
-
-    /**
-     * API
-     */
+) : ChartView(context, attrs, defStyleAttr), ChartContract.BarView {
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var spacing = 10f
+    var spacing = defaultSpacing
 
     @ColorInt
     @Suppress("MemberVisibilityCanBePrivate")
-    var barsColor: Int = -0x1000000
+    var barsColor: Int = defaultBarsColor
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var barRadius: Float = 0F
+    var barRadius: Float = defaultBarsRadius
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var barsBackgroundColor: Int = -1
 
     init {
         doOnPreDraw {
-            renderer.preDraw(
-                measuredWidth,
-                measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom,
-                axis,
-                labelsSize
-            )
+            val chartConfiguration =
+                BarChartConfiguration(
+                    width = measuredWidth,
+                    height = measuredHeight,
+                    paddings = Paddings(
+                        paddingLeft.toFloat(),
+                        paddingTop.toFloat(),
+                        paddingRight.toFloat(),
+                        paddingBottom.toFloat()
+                    ),
+                    axis = axis,
+                    labelsSize = labelsSize,
+                    barsBackgroundColor = barsBackgroundColor
+                )
+            renderer.preDraw(chartConfiguration)
         }
-
         renderer = BarChartRenderer(this, painter, NoAnimation())
-
-        val styledAttributes =
-            context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.BarChartAttrs,
-                0,
-                0
-            )
-        handleAttributes(styledAttributes)
+        handleAttributes(obtainStyledAttributes(attrs, R.styleable.BarChartAttrs))
+        showEditMode()
     }
 
-    override fun drawData(
-        innerFrame: Frame,
-        entries: List<DataPoint>
+    override fun drawBars(
+        points: List<DataPoint>,
+        innerFrame: Frame
     ) {
 
-        val halfBarWidth = (innerFrame.right - innerFrame.left - (entries.size + 1) * spacing) / entries.size / 2
+        val halfBarWidth =
+            (innerFrame.right - innerFrame.left - (points.size + 1) * spacing) / points.size / 2
 
         painter.prepare(color = barsColor, style = Paint.Style.FILL)
-        entries.forEach {
-            canvas.drawRoundRect(
-                RectF(
-                    it.screenPositionX - halfBarWidth,
-                    it.screenPositionY,
-                    it.screenPositionX + halfBarWidth,
-                    innerFrame.bottom
-                ),
-                barRadius,
-                barRadius,
-                painter.paint
+        points.forEach {
+            val bar = RectF(
+                it.screenPositionX - halfBarWidth,
+                it.screenPositionY,
+                it.screenPositionX + halfBarWidth,
+                innerFrame.bottom
             )
+            canvas.drawChartBar(bar, barRadius, painter.paint)
+        }
+    }
+
+    override fun drawBarsBackground(points: List<DataPoint>, innerFrame: Frame) {
+
+        val halfBarWidth =
+            (innerFrame.right - innerFrame.left - (points.size + 1) * spacing) / points.size / 2
+
+        painter.prepare(color = barsBackgroundColor, style = Paint.Style.FILL)
+        points.forEach {
+            val bar = RectF(
+                it.screenPositionX - halfBarWidth,
+                innerFrame.top,
+                it.screenPositionX + halfBarWidth,
+                innerFrame.bottom
+            )
+            canvas.drawChartBar(bar, barRadius, painter.paint)
         }
     }
 
@@ -114,7 +129,15 @@ class BarChartView @JvmOverloads constructor(
             spacing = getDimension(R.styleable.BarChartAttrs_chart_spacing, spacing)
             barsColor = getColor(R.styleable.BarChartAttrs_chart_barsColor, barsColor)
             barRadius = getDimension(R.styleable.BarChartAttrs_chart_barsRadius, barRadius)
+            barsBackgroundColor =
+                getColor(R.styleable.BarChartAttrs_chart_barsBackgroundColor, barsBackgroundColor)
             recycle()
         }
+    }
+
+    companion object {
+        private const val defaultSpacing = 10f
+        private const val defaultBarsColor = Color.BLACK
+        private const val defaultBarsRadius = 0F
     }
 }

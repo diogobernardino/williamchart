@@ -11,80 +11,95 @@ import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.DefaultHorizontalAnimation
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.BarChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
+import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.HorizontalBarChartRenderer
 
 class HorizontalBarChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChartView(context, attrs, defStyleAttr), ChartContract.View {
-
-    /**
-     * API
-     */
+) : ChartView(context, attrs, defStyleAttr), ChartContract.BarView {
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var spacing = 10f
+    var spacing = defaultSpacing
 
     @ColorInt
     @Suppress("MemberVisibilityCanBePrivate")
-    var barsColor: Int = -0x1000000
+    var barsColor: Int = defaultBarsColor
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var barRadius: Float = 0F
+    var barRadius: Float = defaultBarsRadius
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var barsBackgroundColor: Int = -1
 
     init {
         doOnPreDraw {
-            renderer.preDraw(
-                measuredWidth,
-                measuredHeight,
-                paddingLeft,
-                paddingTop,
-                paddingRight,
-                paddingBottom,
-                axis,
-                labelsSize
-            )
+            val chartConfiguration =
+                BarChartConfiguration(
+                    measuredWidth,
+                    measuredHeight,
+                    Paddings(
+                        paddingLeft.toFloat(),
+                        paddingTop.toFloat(),
+                        paddingRight.toFloat(),
+                        paddingBottom.toFloat()
+                    ),
+                    axis,
+                    labelsSize,
+                    barsBackgroundColor
+                )
+            renderer.preDraw(chartConfiguration)
         }
 
         renderer = HorizontalBarChartRenderer(this, painter, NoAnimation())
         animation = DefaultHorizontalAnimation()
-
-        val styledAttributes =
-            context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.BarChartAttrs,
-                0,
-                0
-            )
-        handleAttributes(styledAttributes)
+        handleAttributes(obtainStyledAttributes(attrs, R.styleable.BarChartAttrs))
+        showEditMode()
     }
 
-    override fun drawData(
-        innerFrame: Frame,
-        entries: List<DataPoint>
+    override fun drawBars(
+        points: List<DataPoint>,
+        innerFrame: Frame
     ) {
 
         val halfBarWidth =
-            (innerFrame.bottom - innerFrame.top - (entries.size + 1) * spacing) /
-                entries.size /
-                2
+            (innerFrame.bottom - innerFrame.top - (points.size + 1) * spacing) / points.size / 2
 
-        painter.prepare(
-            color = barsColor,
-            style = Paint.Style.FILL
-        )
-
-        entries.forEach {
+        painter.prepare(color = barsColor, style = Paint.Style.FILL)
+        points.forEach {
             canvas.drawRoundRect(
                 RectF(
                     innerFrame.left,
                     it.screenPositionY - halfBarWidth,
                     it.screenPositionX,
+                    it.screenPositionY + halfBarWidth
+                ),
+                barRadius,
+                barRadius,
+                painter.paint
+            )
+        }
+    }
+
+    override fun drawBarsBackground(points: List<DataPoint>, innerFrame: Frame) {
+
+        val halfBarWidth =
+            (innerFrame.bottom - innerFrame.top - (points.size + 1) * spacing) / points.size / 2
+
+        painter.prepare(color = barsBackgroundColor, style = Paint.Style.FILL)
+        points.forEach {
+            canvas.drawRoundRect(
+                RectF(
+                    innerFrame.left,
+                    it.screenPositionY - halfBarWidth,
+                    innerFrame.right,
                     it.screenPositionY + halfBarWidth
                 ),
                 barRadius,
@@ -124,7 +139,15 @@ class HorizontalBarChartView @JvmOverloads constructor(
             spacing = getDimension(R.styleable.BarChartAttrs_chart_spacing, spacing)
             barsColor = getColor(R.styleable.BarChartAttrs_chart_barsColor, barsColor)
             barRadius = getDimension(R.styleable.BarChartAttrs_chart_barsRadius, barRadius)
+            barsBackgroundColor =
+                getColor(R.styleable.BarChartAttrs_chart_barsBackgroundColor, barsBackgroundColor)
             recycle()
         }
+    }
+
+    companion object {
+        private const val defaultSpacing = 10f
+        private const val defaultBarsColor = -0x1000000
+        private const val defaultBarsRadius = 0F
     }
 }

@@ -3,27 +3,29 @@
     <declare-styleable name="ChartAttrs">
 
         <attr name="chart_axis">
-            <enum name="none" value="0"/>
-            <enum name="x" value="1"/>
-            <enum name="y" value="2"/>
-            <enum name="xy" value="3"/>
+            <enum name="none" value="0" />
+            <enum name="x" value="1" />
+            <enum name="y" value="2" />
+            <enum name="xy" value="3" />
         </attr>
-        <attr name="chart_labelsColor" format="reference|color"/>
-        <attr name="chart_labelsSize" format="dimension"/>
-        <attr name="chart_labelsFont" format="reference"/>
+        <attr name="chart_labelsColor" format="color" />
+        <attr name="chart_labelsSize" format="dimension" />
+        <attr name="chart_labelsFont" format="reference" />
 
     </declare-styleable>
 
     <declare-styleable name="BarChartAttrs">
-        <attr name="chart_spacing" format="dimension"/>
-        <attr name="chart_barsColor" format="reference|color"/>
-        <attr name="chart_barsRadius" format="dimension"/>
+        <attr name="chart_spacing" format="dimension" />
+        <attr name="chart_barsColor" format="color" />
+        <attr name="chart_barsBackgroundColor" format="color" />
+        <attr name="chart_barsRadius" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="LineChartAttrs">
-        <attr name="chart_lineColor" format="reference|color"/>
-        <attr name="chart_smoothLine" format="boolean"/>
-        <attr name="chart_lineThickness" format="dimension"/>
+        <attr name="chart_lineColor" format="color" />
+        <attr name="chart_smoothLine" format="boolean" />
+        <attr name="chart_lineThickness" format="dimension" />
+        <attr name="chart_pointsDrawable" format="reference" />
     </declare-styleable>
 </resources>
 

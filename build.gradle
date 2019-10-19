@@ -6,11 +6,16 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.41"
+        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
+}
+
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0"
+    id "com.vanniktech.android.junit.jacoco" version "0.15.0"
 }
 
 allprojects {
@@ -19,6 +24,8 @@ allprojects {
         jcenter()
     }
     apply from: "$rootDir/ktlint.gradle"
+    apply from: "$rootDir/detekt.gradle"
+    apply from: "$rootDir/jacoco.gradle"
 }
 
 task clean(type: Delete) {

@@ -36,14 +36,12 @@ class LineChartRenderer(
 
     private lateinit var chartConfiguration: LineChartConfiguration
 
-    internal var scale: Scale? = null
-
     private val xLabels: List<Label> by lazy {
         data.toLabels()
     }
 
     private val yLabels by lazy {
-        val scale = scale ?: data.toScale()
+        val scale = chartConfiguration.scale ?: data.toScale()
         val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
@@ -180,7 +178,7 @@ class LineChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale = scale ?: data.toScale()
+        val scale = chartConfiguration.scale ?: data.toScale()
         val scaleSize = scale.max - scale.min
         val chartHeight = innerFrame.bottom - innerFrame.top
         val widthBetweenLabels = (innerFrame.right - innerFrame.left) / (xLabels.size - 1)

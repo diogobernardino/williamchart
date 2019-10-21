@@ -6,7 +6,7 @@ data class LineChartConfiguration(
     override val paddings: Paddings,
     override val axis: AxisType,
     override val labelsSize: Float,
-    val scale: Scale,
+    val scale: Scale?,
     val lineThickness: Float,
     val pointsDrawableWidth: Int,
     val pointsDrawableHeight: Int,

@@ -73,8 +73,8 @@ class DonutChartView @JvmOverloads constructor(
 
         canvas.drawArc(
             innerFrame.toRect().toRectF(),
-            START_ANGLE,
-            CURRENT_ANGLE,
+            defaultStartAngle,
+            value,
             false,
             paint
         )
@@ -133,7 +133,6 @@ class DonutChartView @JvmOverloads constructor(
         private const val defaultThickness = 50f
         private const val defaultColor = 0
         private const val defaultBackgroundColor = Color.TRANSPARENT
-        private const val START_ANGLE = 90f
-        private const val CURRENT_ANGLE = 120f
+        private const val defaultStartAngle = 90f
     }
 }

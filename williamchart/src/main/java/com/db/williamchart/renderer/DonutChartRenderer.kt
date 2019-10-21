@@ -26,7 +26,7 @@ class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.Donu
 
     override fun draw() {
         view.drawBackground(innerFrameWithStroke)
-        view.drawArc(120f, innerFrameWithStroke)
+        view.drawArc(data.first(), innerFrameWithStroke)
     }
 
     override fun render(datapoints: List<Float>) {

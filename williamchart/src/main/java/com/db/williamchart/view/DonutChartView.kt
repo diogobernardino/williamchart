@@ -59,7 +59,6 @@ class DonutChartView @JvmOverloads constructor(
 
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.DonutChartAttrs))
-        show(listOf())
     }
 
     override fun drawArc(value: Float, innerFrame: Frame) {

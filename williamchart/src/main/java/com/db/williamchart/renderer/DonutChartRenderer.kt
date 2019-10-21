@@ -3,13 +3,15 @@ package com.db.williamchart.renderer
 import com.db.williamchart.ChartContract
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.DonutChartConfiguration
+import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
+import com.db.williamchart.extensions.toDonutDataPoints
 
 class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.DonutRenderer {
 
     private var innerFrameWithStroke: Frame = Frame(0f, 0f, 0f, 0f)
 
-    private var data = listOf<Float>()
+    private var data = emptyList<DonutDataPoint>()
 
     private lateinit var chartConfiguration: DonutChartConfiguration
 
@@ -26,27 +28,30 @@ class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.Donu
         val bottom =
             configuration.height - configuration.paddings.bottom - configuration.thickness / 2
         innerFrameWithStroke = Frame(left, top, right, bottom)
+
+        data.forEach {
+            it.screenDegrees = it.value * fullDegrees / chartConfiguration.total
+        }
+
         return true
     }
 
     override fun draw() {
         view.drawBackground(innerFrameWithStroke)
-        view.drawArc(
-            data.map { it * fullDegrees / chartConfiguration.total }.first(), innerFrameWithStroke
-        )
+        view.drawArc(data.map { it.screenDegrees }.first(), innerFrameWithStroke)
     }
 
     override fun render(datapoints: List<Float>) {
-        data = datapoints
+        data = datapoints.toDonutDataPoints()
         view.postInvalidate()
     }
 
     override fun anim(datapoints: List<Float>, animation: ChartAnimation) {
-        data = datapoints
+        data = datapoints.toDonutDataPoints()
         view.postInvalidate()
     }
 
     companion object {
-        private val fullDegrees = 360f
+        private const val fullDegrees = 360
     }
 }

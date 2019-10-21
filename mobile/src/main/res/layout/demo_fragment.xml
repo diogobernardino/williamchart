@@ -28,18 +28,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.db.williamchart.view.DonutChartView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@android:color/transparent"
-        app:chart_donutBackgroundColor="#70977F"
-        app:chart_donutColor="#fff"
-        app:chart_donutRoundCorners="true"
-        app:chart_donutThickness="15dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appLogo" />
-
     <TextView
         android:id="@+id/lineChartTitle"
         android:layout_width="wrap_content"
@@ -122,8 +110,24 @@
         app:chart_spacing="15dp"
         app:layout_constraintBottom_toTopOf="@id/horizontalBarChart"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/donutChart"
         app:layout_constraintTop_toBottomOf="@id/barChartTitle" />
+
+    <com.db.williamchart.view.DonutChartView
+        android:id="@+id/donutChart"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@android:color/transparent"
+        app:chart_donutBackgroundColor="#70977F"
+        app:chart_donutColor="#fff"
+        app:chart_donutRoundCorners="true"
+        app:chart_donutThickness="15dp"
+        app:layout_constraintBottom_toBottomOf="@id/barChart"
+        app:layout_constraintLeft_toRightOf="@id/barChart"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/barChart" />
 
     <com.db.williamchart.view.HorizontalBarChartView
         android:id="@+id/horizontalBarChart"

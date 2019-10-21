@@ -57,13 +57,7 @@ class DemoFragment : Fragment() {
             "MAR" to 2F,
             "MAY" to 2.3F,
             "APR" to 5F,
-            "JUN" to 4F,
-            "JUL" to 2F,
-            "AUG" to 4F,
-            "SEP" to 5F,
-            "OCT" to 6F,
-            "NOV" to 4F,
-            "DEC" to 3F
+            "JUN" to 4F
         )
 
         private val horizontalBarSet = linkedMapOf(

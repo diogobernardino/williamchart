@@ -11,7 +11,12 @@ class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.Donu
 
     private var data = listOf<Float>()
 
+    private lateinit var chartConfiguration: DonutChartConfiguration
+
     override fun preDraw(configuration: DonutChartConfiguration): Boolean {
+
+        chartConfiguration = configuration
+
         val left =
             configuration.paddings.left + configuration.thickness / 2
         val top =
@@ -26,7 +31,9 @@ class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.Donu
 
     override fun draw() {
         view.drawBackground(innerFrameWithStroke)
-        view.drawArc(data.first(), innerFrameWithStroke)
+        view.drawArc(
+            data.map { it * fullDegrees / chartConfiguration.total }.first(), innerFrameWithStroke
+        )
     }
 
     override fun render(datapoints: List<Float>) {
@@ -37,5 +44,9 @@ class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.Donu
     override fun anim(datapoints: List<Float>, animation: ChartAnimation) {
         data = datapoints
         view.postInvalidate()
+    }
+
+    companion object {
+        private val fullDegrees = 360f
     }
 }

@@ -124,6 +124,7 @@
         app:chart_donutColor="#fff"
         app:chart_donutRoundCorners="true"
         app:chart_donutThickness="15dp"
+        app:chart_donutTotal="200"
         app:layout_constraintBottom_toBottomOf="@id/barChart"
         app:layout_constraintLeft_toRightOf="@id/barChart"
         app:layout_constraintRight_toRightOf="parent"

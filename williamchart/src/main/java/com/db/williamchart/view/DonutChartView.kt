@@ -37,6 +37,9 @@ class DonutChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var donutRoundCorners = false
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var donutTotal = defaultDonutTotal
+
     private lateinit var canvas: Canvas
 
     private var renderer: ChartContract.DonutRenderer = DonutChartRenderer(this)
@@ -54,7 +57,8 @@ class DonutChartView @JvmOverloads constructor(
                     paddingRight.toFloat(),
                     paddingBottom.toFloat()
                 ),
-                thickness = donutThickness
+                thickness = donutThickness,
+                total = donutTotal
             )
 
     init {
@@ -124,6 +128,7 @@ class DonutChartView @JvmOverloads constructor(
             )
             donutRoundCorners =
                 getBoolean(R.styleable.DonutChartAttrs_chart_donutRoundCorners, donutRoundCorners)
+            donutTotal = getFloat(R.styleable.DonutChartAttrs_chart_donutTotal, donutTotal)
             recycle()
         }
     }
@@ -133,5 +138,6 @@ class DonutChartView @JvmOverloads constructor(
         private const val defaultColor = 0
         private const val defaultBackgroundColor = Color.TRANSPARENT
         private const val defaultStartAngle = 90f
+        private const val defaultDonutTotal = 100f
     }
 }

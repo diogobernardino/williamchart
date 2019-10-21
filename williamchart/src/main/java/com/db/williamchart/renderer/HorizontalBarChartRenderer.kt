@@ -43,7 +43,7 @@ class HorizontalBarChartRenderer(
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
             val scaleValue = scale.min + scaleStep * it
             Label(
-                label = scaleValue.toString(),
+                label = chartConfiguration.yScaleLabel(scaleValue),
                 screenPositionX = 0F,
                 screenPositionY = 0F
             )
@@ -51,7 +51,7 @@ class HorizontalBarChartRenderer(
     }
 
     private val yLabels by lazy {
-        data.toLabels()
+        data.toLabels(chartConfiguration.xScaleLabel)
     }
 
     override fun preDraw(configuration: ChartConfiguration): Boolean {

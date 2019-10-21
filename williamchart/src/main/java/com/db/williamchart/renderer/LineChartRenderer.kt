@@ -36,7 +36,7 @@ class LineChartRenderer(
     private lateinit var chartConfiguration: LineChartConfiguration
 
     private val xLabels: List<Label> by lazy {
-        data.toLabels()
+        data.toLabels(chartConfiguration.xScaleLabel)
     }
 
     private val yLabels by lazy {
@@ -46,7 +46,7 @@ class LineChartRenderer(
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
             val scaleValue = scale.min + scaleStep * it
             Label(
-                label = scaleValue.toString(),
+                label = chartConfiguration.yScaleLabel(scaleValue),
                 screenPositionX = 0F,
                 screenPositionY = 0F
             )

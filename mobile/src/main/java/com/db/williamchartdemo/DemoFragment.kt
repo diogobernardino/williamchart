@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.db.williamchart.data.AxisType
 import kotlinx.android.synthetic.main.demo_fragment.*
+import kotlin.math.roundToInt
 
 class DemoFragment : Fragment() {
 
@@ -25,6 +27,8 @@ class DemoFragment : Fragment() {
                 Color.parseColor("#81FFFFFF"),
                 Color.TRANSPARENT
             )
+        lineChart.axis = AxisType.Y
+        lineChart.yScaleLabel = { "${it.roundToInt()}" }
         lineChart.animation.duration = 1000
         lineChart.animate(lineSet)
 

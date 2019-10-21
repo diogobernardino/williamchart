@@ -40,6 +40,12 @@ class BarChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var barsBackgroundColor: Int = -1
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var xScaleLabel: (String) -> String = { it }
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var yScaleLabel: (Float) -> String = { it.toString() }
+
     init {
         doOnPreDraw {
             val chartConfiguration =
@@ -54,7 +60,9 @@ class BarChartView @JvmOverloads constructor(
                     ),
                     axis = axis,
                     labelsSize = labelsSize,
-                    barsBackgroundColor = barsBackgroundColor
+                    barsBackgroundColor = barsBackgroundColor,
+                    xScaleLabel = xScaleLabel,
+                    yScaleLabel = yScaleLabel
                 )
             renderer.preDraw(chartConfiguration)
         }

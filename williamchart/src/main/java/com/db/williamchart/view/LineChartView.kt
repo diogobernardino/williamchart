@@ -52,6 +52,12 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var xScaleLabel: (String) -> String = { it }
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var yScaleLabel: (Float) -> String = { it.toString() }
+
     init {
         doOnPreDraw {
             val chartConfiguration =
@@ -72,7 +78,9 @@ class LineChartView @JvmOverloads constructor(
                     pointsDrawableHeight = if (pointsDrawableRes != -1)
                         getDrawable(pointsDrawableRes)!!.intrinsicHeight else -1,
                     fillColor = fillColor,
-                    gradientFillColors = gradientFillColors
+                    gradientFillColors = gradientFillColors,
+                    xScaleLabel = xScaleLabel,
+                    yScaleLabel = yScaleLabel
                 )
             renderer.preDraw(chartConfiguration)
         }

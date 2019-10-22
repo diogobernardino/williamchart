@@ -12,6 +12,7 @@ import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.DefaultAnimation
+import com.db.williamchart.animation.DefaultDonutAnimation
 import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Paddings
@@ -42,7 +43,8 @@ class DonutChartView @JvmOverloads constructor(
 
     private lateinit var canvas: Canvas
 
-    private var renderer: ChartContract.DonutRenderer = DonutChartRenderer(this)
+    private var renderer: ChartContract.DonutRenderer =
+        DonutChartRenderer(this, DefaultDonutAnimation())
 
     private val paint: Paint = Paint()
 

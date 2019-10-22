@@ -10,7 +10,11 @@ abstract class ChartAnimation {
 
     var interpolator: Interpolator = DecelerateInterpolator()
 
-    abstract fun animateFrom(y: Float, entries: List<DataPoint>, callback: () -> Unit): ChartAnimation
+    abstract fun animateFrom(
+        y: Float,
+        entries: List<DataPoint>,
+        callback: () -> Unit
+    ): ChartAnimation
 
     companion object {
         private const val DEFAULT_DURATION = 1000L

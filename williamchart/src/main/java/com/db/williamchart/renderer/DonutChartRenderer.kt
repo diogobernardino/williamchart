@@ -2,12 +2,16 @@ package com.db.williamchart.renderer
 
 import com.db.williamchart.ChartContract
 import com.db.williamchart.animation.ChartAnimation
+import com.db.williamchart.animation.DefaultDonutAnimation
 import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.extensions.toDonutDataPoints
 
-class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.DonutRenderer {
+class DonutChartRenderer(
+    val view: ChartContract.DonutView,
+    private var animation: DefaultDonutAnimation
+) : ChartContract.DonutRenderer {
 
     private var innerFrameWithStroke: Frame = Frame(0f, 0f, 0f, 0f)
 
@@ -31,6 +35,10 @@ class DonutChartRenderer(val view: ChartContract.DonutView) : ChartContract.Donu
 
         data.forEach {
             it.screenDegrees = it.value * fullDegrees / chartConfiguration.total
+        }
+
+        animation.animateFrom(data) {
+            view.postInvalidate()
         }
 
         return true

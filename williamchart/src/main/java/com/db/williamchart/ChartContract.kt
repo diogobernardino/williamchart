@@ -62,7 +62,7 @@ interface ChartContract {
     interface DonutRenderer {
         fun preDraw(configuration: DonutChartConfiguration): Boolean
         fun draw()
-        fun render(datapoints: List<Float>)
-        fun anim(datapoints: List<Float>, animation: ChartAnimation)
+        fun render(value: Float)
+        fun anim(value: Float, animation: ChartAnimation)
     }
 }

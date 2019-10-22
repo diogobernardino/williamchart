@@ -31,7 +31,7 @@ class DemoFragment : Fragment() {
         barChart.animation.duration = 1000
         barChart.animate(barSet)
 
-        donutChart.show(listOf(130f))
+        donutChart.show(130f)
 
         horizontalBarChart.animation.duration = 1000
         horizontalBarChart.animate(horizontalBarSet)

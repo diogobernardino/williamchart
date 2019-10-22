@@ -6,7 +6,7 @@ import com.db.williamchart.animation.DefaultDonutAnimation
 import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
-import com.db.williamchart.extensions.toDonutDataPoints
+import com.db.williamchart.extensions.toDonutDataPoint
 
 class DonutChartRenderer(
     val view: ChartContract.DonutView,
@@ -15,7 +15,7 @@ class DonutChartRenderer(
 
     private var innerFrameWithStroke: Frame = Frame(0f, 0f, 0f, 0f)
 
-    private var data = emptyList<DonutDataPoint>()
+    private var datapoint: DonutDataPoint = DonutDataPoint(0f, 0f)
 
     private lateinit var chartConfiguration: DonutChartConfiguration
 
@@ -33,11 +33,9 @@ class DonutChartRenderer(
             configuration.height - configuration.paddings.bottom - configuration.thickness / 2
         innerFrameWithStroke = Frame(left, top, right, bottom)
 
-        data.forEach {
-            it.screenDegrees = it.value * fullDegrees / chartConfiguration.total
-        }
+        datapoint.screenDegrees = datapoint.value * fullDegrees / chartConfiguration.total
 
-        animation.animateFrom(data) {
+        animation.animateFrom(listOf(datapoint)) {
             view.postInvalidate()
         }
 
@@ -46,16 +44,16 @@ class DonutChartRenderer(
 
     override fun draw() {
         view.drawBackground(innerFrameWithStroke)
-        view.drawArc(data.map { it.screenDegrees }.first(), innerFrameWithStroke)
+        view.drawArc(datapoint.screenDegrees, innerFrameWithStroke)
     }
 
-    override fun render(datapoints: List<Float>) {
-        data = datapoints.toDonutDataPoints()
+    override fun render(value: Float) {
+        datapoint = value.toDonutDataPoint()
         view.postInvalidate()
     }
 
-    override fun anim(datapoints: List<Float>, animation: ChartAnimation) {
-        data = datapoints.toDonutDataPoints()
+    override fun anim(value: Float, animation: ChartAnimation) {
+        datapoint = value.toDonutDataPoint()
         view.postInvalidate()
     }
 

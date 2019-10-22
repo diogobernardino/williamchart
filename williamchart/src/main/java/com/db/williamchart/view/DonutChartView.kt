@@ -21,9 +21,9 @@ import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.DonutChartRenderer
 
 @Experimental
-annotation class ImplementsBetaChart
+annotation class ImplementsAlphaChart
 
-@ImplementsBetaChart
+@ImplementsAlphaChart
 class DonutChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

@@ -19,6 +19,7 @@ import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
 import com.db.williamchart.renderer.executor.MeasureBarChartPaddings
+import kotlin.math.max
 
 class BarChartRenderer(
     private val view: ChartContract.BarView,
@@ -178,7 +179,8 @@ class BarChartRenderer(
             dataPoint.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
                 innerFrame.bottom -
-                    (chartHeight * (dataPoint.value - scale.min) / scaleSize)
+                                   // bar length must be positive, or zero
+                    (chartHeight * max(0f, dataPoint.value - scale.min) / scaleSize)
         }
     }
 }

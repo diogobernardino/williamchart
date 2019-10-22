@@ -174,7 +174,8 @@ class HorizontalBarChartRenderer(
         data.forEachIndexed { index, dataPoint ->
             dataPoint.screenPositionX =
                 innerFrame.left +
-                    (chartWidth * (dataPoint.value - scale.min) / scaleSize)
+                                  // bar length must be positive, or zero
+                    (chartWidth * max(0f, dataPoint.value - scale.min) / scaleSize)
             dataPoint.screenPositionY =
                 labelsBottomPosition -
                     heightBetweenLabels * index

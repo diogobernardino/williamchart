@@ -26,9 +26,7 @@ class HorizontalBarChartRenderer(
     private var animation: ChartAnimation
 ) : ChartContract.Renderer {
 
-    private var isAlreadyRendered = false
-
-    private lateinit var data: List<DataPoint>
+    private var data = emptyList<DataPoint>()
 
     private lateinit var outerFrame: Frame
 
@@ -55,10 +53,8 @@ class HorizontalBarChartRenderer(
     }
 
     override fun preDraw(configuration: ChartConfiguration): Boolean {
-        require(data.size > 1) { "A chart needs more than one entry." }
 
-        if (isAlreadyRendered) // Data already processed, proceed with drawing
-            return true
+        if (data.isEmpty()) return true
 
         chartConfiguration = configuration as BarChartConfiguration
 
@@ -91,6 +87,8 @@ class HorizontalBarChartRenderer(
     }
 
     override fun draw() {
+
+        if (data.isEmpty()) return
 
         if (chartConfiguration.axis.shouldDisplayAxisX())
             view.drawLabels(xLabels)

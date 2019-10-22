@@ -8,10 +8,10 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.annotation.Size
-import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
+import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
@@ -56,34 +56,33 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
+    override val chartConfiguration: ChartConfiguration
+        get() =
+            LineChartConfiguration(
+                width = measuredWidth,
+                height = measuredHeight,
+                paddings = Paddings(
+                    paddingLeft.toFloat(),
+                    paddingTop.toFloat(),
+                    paddingRight.toFloat(),
+                    paddingBottom.toFloat()
+                ),
+                axis = axis,
+                labelsSize = labelsSize,
+                lineThickness = lineThickness,
+                scale = scale,
+                pointsDrawableWidth = if (pointsDrawableRes != -1)
+                    getDrawable(pointsDrawableRes)!!.intrinsicWidth else -1,
+                pointsDrawableHeight = if (pointsDrawableRes != -1)
+                    getDrawable(pointsDrawableRes)!!.intrinsicHeight else -1,
+                fillColor = fillColor,
+                gradientFillColors = gradientFillColors
+            )
+
     init {
-        doOnPreDraw {
-            val chartConfiguration =
-                LineChartConfiguration(
-                    width = measuredWidth,
-                    height = measuredHeight,
-                    paddings = Paddings(
-                        paddingLeft.toFloat(),
-                        paddingTop.toFloat(),
-                        paddingRight.toFloat(),
-                        paddingBottom.toFloat()
-                    ),
-                    axis = axis,
-                    labelsSize = labelsSize,
-                    lineThickness = lineThickness,
-                    scale = scale,
-                    pointsDrawableWidth = if (pointsDrawableRes != -1)
-                        getDrawable(pointsDrawableRes)!!.intrinsicWidth else -1,
-                    pointsDrawableHeight = if (pointsDrawableRes != -1)
-                        getDrawable(pointsDrawableRes)!!.intrinsicHeight else -1,
-                    fillColor = fillColor,
-                    gradientFillColors = gradientFillColors
-                )
-            renderer.preDraw(chartConfiguration)
-        }
         renderer = LineChartRenderer(this, painter, NoAnimation())
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
-        showEditMode()
+        handleEditMode()
     }
 
     override fun drawLine(points: List<DataPoint>) {

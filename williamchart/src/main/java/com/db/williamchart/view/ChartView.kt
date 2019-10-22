@@ -5,15 +5,16 @@ import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.view.MotionEvent
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.AxisType
+import com.db.williamchart.data.ChartConfiguration
 
 abstract class ChartView @JvmOverloads constructor(
     context: Context,
@@ -80,26 +81,21 @@ abstract class ChartView @JvmOverloads constructor(
         )
     }
 
-    /**
-     * The method listens for chart clicks and checks whether it intercepts
-     * a known Region. It will then use the registered Listener.onClick
-     * to return the region's index.
-     */
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        return super.onTouchEvent(event)
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         this.canvas = canvas
         renderer.draw()
     }
 
+    abstract val chartConfiguration: ChartConfiguration
+
     fun show(entries: LinkedHashMap<String, Float>) {
+        doOnPreDraw { renderer.preDraw(chartConfiguration) }
         renderer.render(entries)
     }
 
     fun animate(entries: LinkedHashMap<String, Float>) {
+        doOnPreDraw { renderer.preDraw(chartConfiguration) }
         renderer.anim(entries, animation)
     }
 
@@ -130,15 +126,9 @@ abstract class ChartView @JvmOverloads constructor(
         }
     }
 
-    protected fun showEditMode() {
+    protected fun handleEditMode() {
         if (isInEditMode) {
-            show(
-                linkedMapOf(
-                    "PORRO" to 5F,
-                    "FUSCE" to 6.4F,
-                    "EGET" to 3F
-                )
-            )
+            show(editModeSampleData)
         }
     }
 
@@ -146,5 +136,12 @@ abstract class ChartView @JvmOverloads constructor(
         private const val defaultFrameWidth = 200
         private const val defaultFrameHeight = 100
         private const val defaultLabelsSize = 60F
+        private val editModeSampleData =
+            linkedMapOf(
+                "Label1" to 1f,
+                "Label2" to 7.5f,
+                "Label3" to 4.7f,
+                "Label4" to 3.5f
+            )
     }
 }

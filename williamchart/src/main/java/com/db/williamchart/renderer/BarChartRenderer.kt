@@ -39,7 +39,7 @@ class BarChartRenderer(
     }
 
     private val yLabels by lazy {
-        val scale = Scale(min = 0F, max = data.limits().second)
+        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
         val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
@@ -166,7 +166,7 @@ class BarChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale = Scale(min = 0F, max = data.limits().second)
+        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
         val scaleSize = scale.max - scale.min
         val chartHeight = innerFrame.bottom - innerFrame.top
         val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2

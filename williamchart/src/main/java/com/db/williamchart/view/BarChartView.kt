@@ -17,6 +17,7 @@ import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
+import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.drawChartBar
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.BarChartRenderer
@@ -40,6 +41,9 @@ class BarChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var barsBackgroundColor: Int = -1
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var scale: Scale? = null
+
     override val chartConfiguration: ChartConfiguration
         get() =
             BarChartConfiguration(
@@ -53,6 +57,7 @@ class BarChartView @JvmOverloads constructor(
                 ),
                 axis = axis,
                 labelsSize = labelsSize,
+                scale = scale,
                 barsBackgroundColor = barsBackgroundColor
             )
 

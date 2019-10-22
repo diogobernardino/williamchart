@@ -2,20 +2,14 @@ package com.db.williamchart.animation
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.view.animation.DecelerateInterpolator
-import android.view.animation.Interpolator
 import com.db.williamchart.data.DonutDataPoint
 
-class DefaultDonutAnimation {
+class DefaultDonutAnimation : DonutAnimation() {
 
-    var duration: Long = DEFAULT_DURATION
-
-    var interpolator: Interpolator = DecelerateInterpolator()
-
-    fun animateFrom(
+    override fun animateFrom(
         entries: List<DonutDataPoint>,
         callback: () -> Unit
-    ): DefaultDonutAnimation {
+    ): DonutAnimation {
 
         // Entries animators
         entries.forEach { dataPoint ->
@@ -34,9 +28,5 @@ class DefaultDonutAnimation {
         animator.start()
 
         return this
-    }
-
-    companion object {
-        private const val DEFAULT_DURATION = 1000L
     }
 }

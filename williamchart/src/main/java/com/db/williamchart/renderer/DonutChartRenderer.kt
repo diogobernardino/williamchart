@@ -1,8 +1,7 @@
 package com.db.williamchart.renderer
 
 import com.db.williamchart.ChartContract
-import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.animation.DefaultDonutAnimation
+import com.db.williamchart.animation.DonutAnimation
 import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
@@ -10,7 +9,7 @@ import com.db.williamchart.extensions.toDonutDataPoint
 
 class DonutChartRenderer(
     val view: ChartContract.DonutView,
-    private var animation: DefaultDonutAnimation
+    private var animation: DonutAnimation
 ) : ChartContract.DonutRenderer {
 
     private var innerFrameWithStroke: Frame = Frame(0f, 0f, 0f, 0f)
@@ -52,8 +51,9 @@ class DonutChartRenderer(
         view.postInvalidate()
     }
 
-    override fun anim(value: Float, animation: ChartAnimation) {
+    override fun anim(value: Float, animation: DonutAnimation) {
         datapoint = value.toDonutDataPoint()
+        this.animation = animation
         view.postInvalidate()
     }
 

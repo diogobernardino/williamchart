@@ -1,6 +1,7 @@
 package com.db.williamchart
 
 import com.db.williamchart.animation.ChartAnimation
+import com.db.williamchart.animation.DonutAnimation
 import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.DonutChartConfiguration
@@ -63,6 +64,6 @@ interface ChartContract {
         fun preDraw(configuration: DonutChartConfiguration): Boolean
         fun draw()
         fun render(value: Float)
-        fun anim(value: Float, animation: ChartAnimation)
+        fun anim(value: Float, animation: DonutAnimation)
     }
 }

@@ -7,11 +7,11 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
-import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.BarChartConfiguration
+import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
@@ -46,29 +46,28 @@ class BarChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var yScaleLabel: (Float) -> String = { it.toString() }
 
+    override val chartConfiguration: ChartConfiguration
+        get() =
+            BarChartConfiguration(
+                width = measuredWidth,
+                height = measuredHeight,
+                paddings = Paddings(
+                    paddingLeft.toFloat(),
+                    paddingTop.toFloat(),
+                    paddingRight.toFloat(),
+                    paddingBottom.toFloat()
+                ),
+                axis = axis,
+                labelsSize = labelsSize,
+                barsBackgroundColor = barsBackgroundColor,
+                xScaleLabel = xScaleLabel,
+                yScaleLabel = yScaleLabel
+            )
+
     init {
-        doOnPreDraw {
-            val chartConfiguration =
-                BarChartConfiguration(
-                    width = measuredWidth,
-                    height = measuredHeight,
-                    paddings = Paddings(
-                        paddingLeft.toFloat(),
-                        paddingTop.toFloat(),
-                        paddingRight.toFloat(),
-                        paddingBottom.toFloat()
-                    ),
-                    axis = axis,
-                    labelsSize = labelsSize,
-                    barsBackgroundColor = barsBackgroundColor,
-                    xScaleLabel = xScaleLabel,
-                    yScaleLabel = yScaleLabel
-                )
-            renderer.preDraw(chartConfiguration)
-        }
         renderer = BarChartRenderer(this, painter, NoAnimation())
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.BarChartAttrs))
-        showEditMode()
+        handleEditMode()
     }
 
     override fun drawBars(

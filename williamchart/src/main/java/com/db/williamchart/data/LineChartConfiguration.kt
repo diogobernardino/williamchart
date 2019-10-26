@@ -6,17 +6,19 @@ data class LineChartConfiguration(
     override val paddings: Paddings,
     override val axis: AxisType,
     override val labelsSize: Float,
+    override val xScaleLabel: (String) -> String = { it },
+    override val yScaleLabel: (Float) -> String = { it.toString() },
     val lineThickness: Float,
     val pointsDrawableWidth: Int,
     val pointsDrawableHeight: Int,
     val fillColor: Int,
-    val gradientFillColors: IntArray,
-    val xScaleLabel: (String) -> String = { it },
-    val yScaleLabel: (Float) -> String = { it.toString() }
+    val gradientFillColors: IntArray
 ) : ChartConfiguration(
     width = width,
     height = height,
     paddings = paddings,
     axis = axis,
-    labelsSize = labelsSize
+    labelsSize = labelsSize,
+    xScaleLabel = xScaleLabel,
+    yScaleLabel = yScaleLabel
 )

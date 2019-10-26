@@ -57,9 +57,9 @@ class HorizontalBarChartView @JvmOverloads constructor(
             ),
             axis,
             labelsSize,
-            barsBackgroundColor,
-            xScaleLabel = yScaleLabel,
-            yScaleLabel = xScaleLabel
+            yScaleLabel,
+            xScaleLabel,
+            barsBackgroundColor
         )
 
     init {

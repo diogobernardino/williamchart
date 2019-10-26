@@ -5,7 +5,8 @@ open class ChartConfiguration(
     open val height: Int,
     open val paddings: Paddings,
     open val axis: AxisType,
-    open val labelsSize: Float
+    open val labelsSize: Float,
+    open val scale: Scale?
 )
 
 internal fun ChartConfiguration.toOuterFrame(): Frame {

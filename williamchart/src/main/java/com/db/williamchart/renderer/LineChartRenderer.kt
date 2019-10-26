@@ -7,6 +7,7 @@ import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.Scale
 import com.db.williamchart.data.LineChartConfiguration
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
@@ -38,7 +39,7 @@ class LineChartRenderer(
     }
 
     private val yLabels by lazy {
-        val scale = data.toScale()
+        val scale = chartConfiguration.scale ?: data.toScale()
         val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
@@ -174,7 +175,7 @@ class LineChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale = data.toScale()
+        val scale = chartConfiguration.scale ?: data.toScale()
         val scaleSize = scale.max - scale.min
         val chartHeight = innerFrame.bottom - innerFrame.top
         val widthBetweenLabels = (innerFrame.right - innerFrame.left) / (xLabels.size - 1)

@@ -19,6 +19,7 @@ import com.db.williamchart.data.LineChartConfiguration
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toLinearGradient
 import com.db.williamchart.data.toRect
+import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.centerAt
 import com.db.williamchart.extensions.getDrawable
 import com.db.williamchart.extensions.obtainStyledAttributes
@@ -37,6 +38,9 @@ class LineChartView @JvmOverloads constructor(
 
     @Suppress("MemberVisibilityCanBePrivate")
     var lineThickness: Float = defaultLineThickness
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var scale: Scale? = null
 
     @Suppress("MemberVisibilityCanBePrivate")
     var fillColor: Int = defaultFillColor
@@ -66,6 +70,7 @@ class LineChartView @JvmOverloads constructor(
                 axis = axis,
                 labelsSize = labelsSize,
                 lineThickness = lineThickness,
+                scale = scale,
                 pointsDrawableWidth = if (pointsDrawableRes != -1)
                     getDrawable(pointsDrawableRes)!!.intrinsicWidth else -1,
                 pointsDrawableHeight = if (pointsDrawableRes != -1)

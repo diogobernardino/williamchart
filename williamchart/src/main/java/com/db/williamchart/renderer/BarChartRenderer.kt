@@ -19,6 +19,7 @@ import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
 import com.db.williamchart.renderer.executor.MeasureBarChartPaddings
+import kotlin.math.max
 
 class BarChartRenderer(
     private val view: ChartContract.BarView,
@@ -39,7 +40,7 @@ class BarChartRenderer(
     }
 
     private val yLabels by lazy {
-        val scale = Scale(min = 0F, max = data.limits().second)
+        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
         val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
@@ -166,7 +167,7 @@ class BarChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale = Scale(min = 0F, max = data.limits().second)
+        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
         val scaleSize = scale.max - scale.min
         val chartHeight = innerFrame.bottom - innerFrame.top
         val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2
@@ -178,7 +179,8 @@ class BarChartRenderer(
             dataPoint.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
                 innerFrame.bottom -
-                    (chartHeight * (dataPoint.value - scale.min) / scaleSize)
+                                   // bar length must be positive, or zero
+                    (chartHeight * max(0f, dataPoint.value - scale.min) / scaleSize)
         }
     }
 }

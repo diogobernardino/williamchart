@@ -7,7 +7,6 @@ import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
-import com.db.williamchart.data.Scale
 import com.db.williamchart.data.LineChartConfiguration
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
@@ -23,7 +22,7 @@ import com.db.williamchart.renderer.executor.MeasureLineChartPaddings
 class LineChartRenderer(
     private val view: ChartContract.LineView,
     private val painter: Painter,
-    private var animation: ChartAnimation
+    private var animation: ChartAnimation<DataPoint>
 ) : ChartContract.Renderer {
 
     private var data = emptyList<DataPoint>()
@@ -131,7 +130,7 @@ class LineChartRenderer(
         view.postInvalidate()
     }
 
-    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation) {
+    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>) {
         data = entries.toDataPoints()
         this.animation = animation
         view.postInvalidate()

@@ -24,7 +24,7 @@ import kotlin.math.max
 class HorizontalBarChartRenderer(
     private val view: ChartContract.BarView,
     private val painter: Painter,
-    private var animation: ChartAnimation
+    private var animation: ChartAnimation<DataPoint>
 ) : ChartContract.Renderer {
 
     private var data = emptyList<DataPoint>()
@@ -60,13 +60,21 @@ class HorizontalBarChartRenderer(
         chartConfiguration = configuration as BarChartConfiguration
 
         val yLongestChartLabelWidth =
-            yLabels.maxValueBy { painter.measureLabelWidth(it.label, chartConfiguration.labelsSize) }
+            yLabels.maxValueBy {
+                painter.measureLabelWidth(
+                    it.label,
+                    chartConfiguration.labelsSize
+                )
+            }
                 ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasureHorizontalBarChartPaddings()(
             axisType = chartConfiguration.axis,
             labelsHeight = painter.measureLabelHeight(chartConfiguration.labelsSize),
-            xLastLabelWidth = painter.measureLabelWidth(xLabels.last().label, chartConfiguration.labelsSize),
+            xLastLabelWidth = painter.measureLabelWidth(
+                xLabels.last().label,
+                chartConfiguration.labelsSize
+            ),
             yLongestLabelWidth = yLongestChartLabelWidth,
             labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart
         )
@@ -122,7 +130,7 @@ class HorizontalBarChartRenderer(
         view.postInvalidate()
     }
 
-    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation) {
+    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>) {
         data = entries.toDataPoints()
         this.animation = animation
         view.postInvalidate()
@@ -174,7 +182,7 @@ class HorizontalBarChartRenderer(
         data.forEachIndexed { index, dataPoint ->
             dataPoint.screenPositionX =
                 innerFrame.left +
-                                  // bar length must be positive, or zero
+                    // bar length must be positive, or zero
                     (chartWidth * max(0f, dataPoint.value - scale.min) / scaleSize)
             dataPoint.screenPositionY =
                 labelsBottomPosition -

@@ -1,10 +1,10 @@
 package com.db.williamchart
 
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.animation.DonutAnimation
 import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.DonutChartConfiguration
+import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 
@@ -57,13 +57,13 @@ interface ChartContract {
         fun preDraw(configuration: ChartConfiguration): Boolean
         fun draw()
         fun render(entries: LinkedHashMap<String, Float>)
-        fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation)
+        fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>)
     }
 
     interface DonutRenderer {
         fun preDraw(configuration: DonutChartConfiguration): Boolean
         fun draw()
         fun render(value: Float)
-        fun anim(value: Float, animation: DonutAnimation)
+        fun anim(value: Float, animation: ChartAnimation<DonutDataPoint>)
     }
 }

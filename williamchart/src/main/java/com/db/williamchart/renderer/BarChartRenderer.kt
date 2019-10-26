@@ -24,7 +24,7 @@ import kotlin.math.max
 class BarChartRenderer(
     private val view: ChartContract.BarView,
     private val painter: Painter,
-    private var animation: ChartAnimation
+    private var animation: ChartAnimation<DataPoint>
 ) : ChartContract.Renderer {
 
     private var data = emptyList<DataPoint>()
@@ -126,7 +126,7 @@ class BarChartRenderer(
         view.postInvalidate()
     }
 
-    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation) {
+    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>) {
         data = entries.toDataPoints()
         this.animation = animation
         view.postInvalidate()
@@ -179,7 +179,7 @@ class BarChartRenderer(
             dataPoint.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
                 innerFrame.bottom -
-                                   // bar length must be positive, or zero
+                    // bar length must be positive, or zero
                     (chartHeight * max(0f, dataPoint.value - scale.min) / scaleSize)
         }
     }

@@ -2,10 +2,11 @@ package com.db.williamchart.animation
 
 import com.db.williamchart.data.DonutDataPoint
 
-class DonutNoAnimation : DonutAnimation() {
+class DonutNoAnimation : ChartAnimation<DonutDataPoint>() {
 
     override fun animateFrom(
+        startPosition: Float,
         entries: List<DonutDataPoint>,
         callback: () -> Unit
-    ): DonutAnimation = this
+    ): ChartAnimation<DonutDataPoint> = this
 }

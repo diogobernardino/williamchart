@@ -4,12 +4,13 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import com.db.williamchart.data.DonutDataPoint
 
-class DefaultDonutAnimation : DonutAnimation() {
+class DefaultDonutAnimation : ChartAnimation<DonutDataPoint>() {
 
     override fun animateFrom(
+        startPosition: Float,
         entries: List<DonutDataPoint>,
         callback: () -> Unit
-    ): DonutAnimation {
+    ): ChartAnimation<DonutDataPoint> {
 
         // Entries animators
         entries.forEach { dataPoint ->

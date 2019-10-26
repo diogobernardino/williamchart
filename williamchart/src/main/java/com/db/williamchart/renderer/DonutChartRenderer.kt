@@ -1,7 +1,7 @@
 package com.db.williamchart.renderer
 
 import com.db.williamchart.ChartContract
-import com.db.williamchart.animation.DonutAnimation
+import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.DonutChartConfiguration
 import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
@@ -9,7 +9,7 @@ import com.db.williamchart.extensions.toDonutDataPoint
 
 class DonutChartRenderer(
     val view: ChartContract.DonutView,
-    private var animation: DonutAnimation
+    private var animation: ChartAnimation<DonutDataPoint>
 ) : ChartContract.DonutRenderer {
 
     private var innerFrameWithStroke: Frame = Frame(0f, 0f, 0f, 0f)
@@ -34,7 +34,7 @@ class DonutChartRenderer(
 
         datapoint.screenDegrees = datapoint.value * fullDegrees / chartConfiguration.total
 
-        animation.animateFrom(listOf(datapoint)) {
+        animation.animateFrom(ignoreStartPosition, listOf(datapoint)) {
             view.postInvalidate()
         }
 
@@ -51,7 +51,7 @@ class DonutChartRenderer(
         view.postInvalidate()
     }
 
-    override fun anim(value: Float, animation: DonutAnimation) {
+    override fun anim(value: Float, animation: ChartAnimation<DonutDataPoint>) {
         datapoint = value.toDonutDataPoint()
         this.animation = animation
         view.postInvalidate()
@@ -59,5 +59,6 @@ class DonutChartRenderer(
 
     companion object {
         private const val fullDegrees = 360
+        private const val ignoreStartPosition = -1234f
     }
 }

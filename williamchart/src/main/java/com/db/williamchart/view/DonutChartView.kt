@@ -11,9 +11,11 @@ import androidx.core.graphics.toRectF
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
+import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultDonutAnimation
 import com.db.williamchart.animation.DonutNoAnimation
 import com.db.williamchart.data.DonutChartConfiguration
+import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
@@ -44,6 +46,8 @@ class DonutChartView @JvmOverloads constructor(
 
     @Suppress("MemberVisibilityCanBePrivate")
     var donutTotal = defaultDonutTotal
+
+    var animation: ChartAnimation<DonutDataPoint> = DefaultDonutAnimation()
 
     private lateinit var canvas: Canvas
 
@@ -120,7 +124,7 @@ class DonutChartView @JvmOverloads constructor(
 
     fun animate(value: Float) {
         doOnPreDraw { renderer.preDraw(configuration) }
-        renderer.anim(value, DefaultDonutAnimation())
+        renderer.anim(value, animation)
     }
 
     private fun handleAttributes(typedArray: TypedArray) {

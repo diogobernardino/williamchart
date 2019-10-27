@@ -39,12 +39,10 @@ class LineChartRenderer(
     }
 
     private val yLabels by lazy {
-        val scale =
-            if (chartConfiguration.scale.notInitialized()) data.toScale() else chartConfiguration.scale
-        val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
+        val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
-            val scaleValue = scale.min + scaleStep * it
+            val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
                 label = scaleValue.toString(),
                 screenPositionX = 0F,
@@ -58,6 +56,9 @@ class LineChartRenderer(
         if (data.isEmpty()) return true
 
         this.chartConfiguration = configuration as LineChartConfiguration
+
+        if (chartConfiguration.scale.notInitialized())
+            chartConfiguration = chartConfiguration.copy(scale = data.toScale())
 
         val longestChartLabelWidth =
             yLabels.maxValueBy {
@@ -176,9 +177,7 @@ class LineChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale =
-            if (chartConfiguration.scale.notInitialized()) data.toScale() else chartConfiguration.scale
-        val scaleSize = scale.max - scale.min
+        val scaleSize = chartConfiguration.scale.size
         val chartHeight = innerFrame.bottom - innerFrame.top
         val widthBetweenLabels = (innerFrame.right - innerFrame.left) / (xLabels.size - 1)
 
@@ -186,7 +185,7 @@ class LineChartRenderer(
             dataPoint.screenPositionX = innerFrame.left + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
                 innerFrame.bottom -
-                    (chartHeight * (dataPoint.value - scale.min) / scaleSize)
+                    (chartHeight * (dataPoint.value - chartConfiguration.scale.min) / scaleSize)
         }
     }
 }

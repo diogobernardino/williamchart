@@ -41,15 +41,10 @@ class BarChartRenderer(
     }
 
     private val yLabels by lazy {
-        val scale =
-            if (chartConfiguration.scale.notInitialized()) Scale(
-                min = 0F,
-                max = data.limits().second
-            ) else chartConfiguration.scale
-        val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
+        val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
-            val scaleValue = scale.min + scaleStep * it
+            val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
                 label = scaleValue.toString(),
                 screenPositionX = 0F,
@@ -63,6 +58,15 @@ class BarChartRenderer(
         if (data.isEmpty()) return true
 
         chartConfiguration = configuration as BarChartConfiguration
+
+        if (chartConfiguration.scale.notInitialized())
+            chartConfiguration =
+                chartConfiguration.copy(
+                    scale = Scale(
+                        min = 0F,
+                        max = data.limits().second
+                    )
+                )
 
         val longestChartLabelWidth =
             yLabels.maxValueBy {
@@ -172,12 +176,7 @@ class BarChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale =
-            if (chartConfiguration.scale.notInitialized()) Scale(
-                min = 0F,
-                max = data.limits().second
-            ) else chartConfiguration.scale
-        val scaleSize = scale.max - scale.min
+        val scaleSize = chartConfiguration.scale.size
         val chartHeight = innerFrame.bottom - innerFrame.top
         val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2
         val labelsLeftPosition = innerFrame.left + halfBarWidth
@@ -189,7 +188,10 @@ class BarChartRenderer(
             dataPoint.screenPositionY =
                 innerFrame.bottom -
                     // bar length must be positive, or zero
-                    (chartHeight * max(0f, dataPoint.value - scale.min) / scaleSize)
+                    (chartHeight * max(
+                        0f,
+                        dataPoint.value - chartConfiguration.scale.min
+                    ) / scaleSize)
         }
     }
 }

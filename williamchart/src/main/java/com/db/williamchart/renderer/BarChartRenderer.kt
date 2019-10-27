@@ -9,6 +9,7 @@ import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Scale
+import com.db.williamchart.data.notInitialized
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.data.toOuterFrame
@@ -40,7 +41,11 @@ class BarChartRenderer(
     }
 
     private val yLabels by lazy {
-        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
+        val scale =
+            if (chartConfiguration.scale.notInitialized()) Scale(
+                min = 0F,
+                max = data.limits().second
+            ) else chartConfiguration.scale
         val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
@@ -167,7 +172,11 @@ class BarChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
+        val scale =
+            if (chartConfiguration.scale.notInitialized()) Scale(
+                min = 0F,
+                max = data.limits().second
+            ) else chartConfiguration.scale
         val scaleSize = scale.max - scale.min
         val chartHeight = innerFrame.bottom - innerFrame.top
         val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2

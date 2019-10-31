@@ -10,17 +10,6 @@ import com.db.williamchart.data.Label
 
 interface ChartContract {
 
-    interface View {
-        fun postInvalidate()
-        fun drawLabels(xLabels: List<Label>)
-        fun drawData(innerFrame: Frame, entries: List<DataPoint>)
-        fun drawDebugFrame(
-            outerFrame: Frame,
-            innerFrame: Frame,
-            labelsFrame: List<Frame>
-        )
-    }
-
     interface LineView {
         fun postInvalidate()
         fun drawLabels(xLabels: List<Label>)

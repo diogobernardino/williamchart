@@ -9,7 +9,10 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.triplet.play'
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+File localPropertiesFiles = project.rootProject.file('local.properties')
+
+if (localPropertiesFiles.exists())
+    properties.load(localPropertiesFiles.newDataInputStream())
 
 android {
 
@@ -24,12 +27,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        release {
-            storeFile file(properties.hasProperty("storeFile") ? properties.getProperty("storeFile") : "dummyStoreFile")
-            storePassword properties.hasProperty("storePassword") ? properties.getProperty("storePassword") : "dummyStorePassword"
-            keyAlias properties.hasProperty("keyAlias") ? properties.getProperty("keyAlias") : "dummyKeyAlias"
-            keyPassword properties.hasProperty("keyPassword") ? properties.getProperty("keyPassword") : "dummyKeyPassword"
+    if (localPropertiesFiles.exists()) {
+        signingConfigs {
+            release {
+                storeFile file(properties.getProperty("storeFile"))
+                storePassword properties.getProperty("storePassword")
+                keyAlias properties.getProperty("keyAlias")
+                keyPassword properties.getProperty("keyPassword")
+            }
         }
     }
 
@@ -37,7 +42,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            if (localPropertiesFiles.exists())
+                signingConfig signingConfigs.release
         }
     }
 }

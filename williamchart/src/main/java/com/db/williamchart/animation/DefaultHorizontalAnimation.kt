@@ -4,18 +4,18 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import com.db.williamchart.data.DataPoint
 
-class DefaultHorizontalAnimation : ChartAnimation() {
+class DefaultHorizontalAnimation : ChartAnimation<DataPoint>() {
 
     override fun animateFrom(
-        y: Float,
+        startPosition: Float,
         entries: List<DataPoint>,
         callback: () -> Unit
-    ): ChartAnimation {
+    ): ChartAnimation<DataPoint> {
 
         // Entries animators
         entries.forEach { dataPoint ->
             val eAnimator: ObjectAnimator =
-                ObjectAnimator.ofFloat(dataPoint, "screenPositionX", y, dataPoint.screenPositionX)
+                ObjectAnimator.ofFloat(dataPoint, "screenPositionX", startPosition, dataPoint.screenPositionX)
             eAnimator.duration = duration
             eAnimator.interpolator = interpolator
             eAnimator.start()

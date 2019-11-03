@@ -22,7 +22,7 @@ import com.db.williamchart.renderer.executor.MeasureLineChartPaddings
 class LineChartRenderer(
     private val view: ChartContract.LineView,
     private val painter: Painter,
-    private var animation: ChartAnimation
+    private var animation: ChartAnimation<DataPoint>
 ) : ChartContract.Renderer {
 
     private var data = emptyList<DataPoint>()
@@ -38,7 +38,7 @@ class LineChartRenderer(
     }
 
     private val yLabels by lazy {
-        val scale = data.toScale()
+        val scale = chartConfiguration.scale ?: data.toScale()
         val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
@@ -130,7 +130,7 @@ class LineChartRenderer(
         view.postInvalidate()
     }
 
-    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation) {
+    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>) {
         data = entries.toDataPoints()
         this.animation = animation
         view.postInvalidate()
@@ -174,7 +174,7 @@ class LineChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale = data.toScale()
+        val scale = chartConfiguration.scale ?: data.toScale()
         val scaleSize = scale.max - scale.min
         val chartHeight = innerFrame.bottom - innerFrame.top
         val widthBetweenLabels = (innerFrame.right - innerFrame.left) / (xLabels.size - 1)

@@ -27,5 +27,13 @@
         <attr name="chart_lineThickness" format="dimension" />
         <attr name="chart_pointsDrawable" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="DonutChartAttrs">
+        <attr name="chart_donutThickness" format="dimension" />
+        <attr name="chart_donutColor" format="color" />
+        <attr name="chart_donutBackgroundColor" format="color" />
+        <attr name="chart_donutRoundCorners" format="boolean" />
+        <attr name="chart_donutTotal" format="float" />
+    </declare-styleable>
 </resources>
 

@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.db.williamchart.data.AxisType
+import com.db.williamchart.view.ImplementsAlphaChart
 import kotlinx.android.synthetic.main.demo_fragment.*
 import kotlin.math.roundToInt
 
+@ImplementsAlphaChart
 class DemoFragment : Fragment() {
 
     override fun onCreateView(
@@ -34,6 +36,8 @@ class DemoFragment : Fragment() {
 
         barChart.animation.duration = 1000
         barChart.animate(barSet)
+
+        donutChart.animate(130f)
 
         horizontalBarChart.animation.duration = 1000
         horizontalBarChart.animate(horizontalBarSet)
@@ -61,13 +65,7 @@ class DemoFragment : Fragment() {
             "MAR" to 2F,
             "MAY" to 2.3F,
             "APR" to 5F,
-            "JUN" to 4F,
-            "JUL" to 2F,
-            "AUG" to 4F,
-            "SEP" to 5F,
-            "OCT" to 6F,
-            "NOV" to 4F,
-            "DEC" to 3F
+            "JUN" to 4F
         )
 
         private val horizontalBarSet = linkedMapOf(

@@ -19,11 +19,12 @@ import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
 import com.db.williamchart.renderer.executor.MeasureHorizontalBarChartPaddings
+import kotlin.math.max
 
 class HorizontalBarChartRenderer(
     private val view: ChartContract.BarView,
     private val painter: Painter,
-    private var animation: ChartAnimation
+    private var animation: ChartAnimation<DataPoint>
 ) : ChartContract.Renderer {
 
     private var data = emptyList<DataPoint>()
@@ -35,7 +36,7 @@ class HorizontalBarChartRenderer(
     private lateinit var chartConfiguration: BarChartConfiguration
 
     private val xLabels: List<Label> by lazy {
-        val scale = Scale(min = 0F, max = data.limits().second)
+        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
         val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
@@ -59,13 +60,21 @@ class HorizontalBarChartRenderer(
         chartConfiguration = configuration as BarChartConfiguration
 
         val yLongestChartLabelWidth =
-            yLabels.maxValueBy { painter.measureLabelWidth(it.label, chartConfiguration.labelsSize) }
+            yLabels.maxValueBy {
+                painter.measureLabelWidth(
+                    it.label,
+                    chartConfiguration.labelsSize
+                )
+            }
                 ?: throw IllegalArgumentException("Looks like there's no labels to find the longest width.")
 
         val paddings = MeasureHorizontalBarChartPaddings()(
             axisType = chartConfiguration.axis,
             labelsHeight = painter.measureLabelHeight(chartConfiguration.labelsSize),
-            xLastLabelWidth = painter.measureLabelWidth(xLabels.last().label, chartConfiguration.labelsSize),
+            xLastLabelWidth = painter.measureLabelWidth(
+                xLabels.last().label,
+                chartConfiguration.labelsSize
+            ),
             yLongestLabelWidth = yLongestChartLabelWidth,
             labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart
         )
@@ -121,7 +130,7 @@ class HorizontalBarChartRenderer(
         view.postInvalidate()
     }
 
-    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation) {
+    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>) {
         data = entries.toDataPoints()
         this.animation = animation
         view.postInvalidate()
@@ -162,7 +171,7 @@ class HorizontalBarChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale = Scale(min = 0F, max = data.limits().second)
+        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
         val scaleSize = scale.max - scale.min
         val chartWidth = innerFrame.right - innerFrame.left
         val halfBarWidth = (innerFrame.bottom - innerFrame.top) / yLabels.size / 2
@@ -173,7 +182,8 @@ class HorizontalBarChartRenderer(
         data.forEachIndexed { index, dataPoint ->
             dataPoint.screenPositionX =
                 innerFrame.left +
-                    (chartWidth * (dataPoint.value - scale.min) / scaleSize)
+                    // bar length must be positive, or zero
+                    (chartWidth * max(0f, dataPoint.value - scale.min) / scaleSize)
             dataPoint.screenPositionY =
                 labelsBottomPosition -
                     heightBetweenLabels * index

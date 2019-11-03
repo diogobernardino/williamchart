@@ -2,25 +2,20 @@ package com.db.williamchart.animation
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.DonutDataPoint
 
-class DefaultAnimation : ChartAnimation<DataPoint>() {
+class DefaultDonutAnimation : ChartAnimation<DonutDataPoint>() {
 
     override fun animateFrom(
         startPosition: Float,
-        entries: List<DataPoint>,
+        entries: List<DonutDataPoint>,
         callback: () -> Unit
-    ): ChartAnimation<DataPoint> {
+    ): ChartAnimation<DonutDataPoint> {
 
         // Entries animators
         entries.forEach { dataPoint ->
             val eAnimator: ObjectAnimator =
-                ObjectAnimator.ofFloat(
-                    dataPoint,
-                    "screenPositionY",
-                    startPosition,
-                    dataPoint.screenPositionY
-                )
+                ObjectAnimator.ofFloat(dataPoint, "screenDegrees", 0f, dataPoint.screenDegrees)
             eAnimator.duration = duration
             eAnimator.interpolator = interpolator
             eAnimator.start()

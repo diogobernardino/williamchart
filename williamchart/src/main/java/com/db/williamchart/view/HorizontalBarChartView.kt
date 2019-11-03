@@ -17,6 +17,7 @@ import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toRect
+import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.HorizontalBarChartRenderer
 
@@ -24,7 +25,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ChartView(context, attrs, defStyleAttr), ChartContract.BarView {
+) : AxisChartView(context, attrs, defStyleAttr), ChartContract.BarView {
 
     @Suppress("MemberVisibilityCanBePrivate")
     var spacing = defaultSpacing
@@ -38,6 +39,9 @@ class HorizontalBarChartView @JvmOverloads constructor(
 
     @Suppress("MemberVisibilityCanBePrivate")
     var barsBackgroundColor: Int = -1
+
+    @Suppress("MemberVisibilityCanBePrivate")
+    var scale: Scale? = null
 
     @Suppress("MemberVisibilityCanBePrivate")
     var yScaleLabel: (Float) -> String = { it.toString() }
@@ -54,6 +58,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
             ),
             axis,
             labelsSize,
+            scale,
             yScaleLabel,
             barsBackgroundColor
         )

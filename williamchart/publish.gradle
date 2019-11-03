@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-version '3.2.0-beta1'
+version '3.2.0'
 group 'com.diogobernardino'
 
 publishing {

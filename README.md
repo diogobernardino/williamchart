@@ -13,7 +13,7 @@ Note: WilliamChart v3 has been completely re-written from scratch in Kotlin and 
 ### Gradle 
 
 ``` groovy
-implementation 'com.diogobernardino:williamchart:3.1.1'
+implementation 'com.diogobernardino:williamchart:3.2.0'
 ```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][1], I will be happy to know about it.
@@ -50,8 +50,21 @@ If you find this library useful and decide to use it in your projects please dro
   ...
   app:chart_spacing="dimension"
   app:chart_barsColor="color"
-  app:chart_barsBackgroundColor="color" ]
+  app:chart_barsBackgroundColor="color"
   app:chart_barsRadius="dimension" 
+/>
+```
+
+#### Donut Chart
+
+```xml
+<com.db.williamchart.view.DonutChartView
+  ...
+  app:chart_donutThickness="dimension"
+  app:chart_donutColor="color"
+  app:chart_donutBackgroundColor="color"
+  app:chart_donutRoundCorners="boolean"
+  app:chart_donutTotal="float"
 />
 ```
 

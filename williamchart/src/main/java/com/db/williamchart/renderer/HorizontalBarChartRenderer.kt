@@ -49,7 +49,7 @@ class HorizontalBarChartRenderer(
     }
 
     private val yLabels by lazy {
-        data.toLabels(chartConfiguration.xScaleLabel)
+        data.toLabels()
     }
 
     override fun preDraw(configuration: ChartConfiguration): Boolean {

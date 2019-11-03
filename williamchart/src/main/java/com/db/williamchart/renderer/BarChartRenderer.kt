@@ -35,7 +35,7 @@ class BarChartRenderer(
     private lateinit var chartConfiguration: BarChartConfiguration
 
     private val xLabels: List<Label> by lazy {
-        data.toLabels(chartConfiguration.xScaleLabel)
+        data.toLabels()
     }
 
     private val yLabels by lazy {

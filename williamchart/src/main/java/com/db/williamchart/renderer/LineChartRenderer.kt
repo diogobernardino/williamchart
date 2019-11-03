@@ -34,7 +34,7 @@ class LineChartRenderer(
     private lateinit var chartConfiguration: LineChartConfiguration
 
     private val xLabels: List<Label> by lazy {
-        data.toLabels(chartConfiguration.xScaleLabel)
+        data.toLabels()
     }
 
     private val yLabels by lazy {

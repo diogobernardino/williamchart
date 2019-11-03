@@ -6,7 +6,6 @@ data class LineChartConfiguration(
     override val paddings: Paddings,
     override val axis: AxisType,
     override val labelsSize: Float,
-    override val xScaleLabel: (String) -> String = { it },
     override val yScaleLabel: (Float) -> String = { it.toString() },
     val lineThickness: Float,
     val pointsDrawableWidth: Int,
@@ -19,6 +18,5 @@ data class LineChartConfiguration(
     paddings = paddings,
     axis = axis,
     labelsSize = labelsSize,
-    xScaleLabel = xScaleLabel,
     yScaleLabel = yScaleLabel
 )

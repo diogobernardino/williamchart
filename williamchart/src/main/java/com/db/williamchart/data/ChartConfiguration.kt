@@ -6,7 +6,6 @@ open class ChartConfiguration(
     open val paddings: Paddings,
     open val axis: AxisType,
     open val labelsSize: Float,
-    open val xScaleLabel: (String) -> String,
     open val yScaleLabel: (Float) -> String
 )
 

@@ -40,10 +40,7 @@ class HorizontalBarChartView @JvmOverloads constructor(
     var barsBackgroundColor: Int = -1
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var xScaleLabel: (Float) -> String = { it.toString() }
-
-    @Suppress("MemberVisibilityCanBePrivate")
-    var yScaleLabel: (String) -> String = { it }
+    var yScaleLabel: (Float) -> String = { it.toString() }
 
     override val chartConfiguration: ChartConfiguration
         get() = BarChartConfiguration(
@@ -58,7 +55,6 @@ class HorizontalBarChartView @JvmOverloads constructor(
             axis,
             labelsSize,
             yScaleLabel,
-            xScaleLabel,
             barsBackgroundColor
         )
 

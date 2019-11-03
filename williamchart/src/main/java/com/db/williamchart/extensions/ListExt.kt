@@ -19,7 +19,7 @@ fun List<DataPoint>.toScale(): Scale {
     return Scale(min = limits.first, max = limits.second)
 }
 
-fun List<DataPoint>.toLabels(label: (String) -> String): List<Label> {
+fun List<DataPoint>.toLabels(label: (String) -> String = { it }): List<Label> {
     return map {
         Label(
             label = label(it.label),

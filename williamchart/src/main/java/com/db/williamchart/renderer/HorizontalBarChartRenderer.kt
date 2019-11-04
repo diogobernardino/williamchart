@@ -9,6 +9,7 @@ import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Scale
+import com.db.williamchart.data.notInitialized
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.data.toOuterFrame
@@ -36,11 +37,10 @@ class HorizontalBarChartRenderer(
     private lateinit var chartConfiguration: BarChartConfiguration
 
     private val xLabels: List<Label> by lazy {
-        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
-        val scaleStep = (scale.max - scale.min) / RendererConstants.defaultScaleNumberOfSteps
+        val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
 
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
-            val scaleValue = scale.min + scaleStep * it
+            val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
                 label = chartConfiguration.yScaleLabel(scaleValue),
                 screenPositionX = 0F,
@@ -58,6 +58,15 @@ class HorizontalBarChartRenderer(
         if (data.isEmpty()) return true
 
         chartConfiguration = configuration as BarChartConfiguration
+
+        if (chartConfiguration.scale.notInitialized())
+            chartConfiguration =
+                chartConfiguration.copy(
+                    scale = Scale(
+                        min = 0F,
+                        max = data.limits().second
+                    )
+                )
 
         val yLongestChartLabelWidth =
             yLabels.maxValueBy {
@@ -171,8 +180,7 @@ class HorizontalBarChartRenderer(
 
     private fun placeDataPoints(innerFrame: Frame) {
 
-        val scale = chartConfiguration.scale ?: Scale(min = 0F, max = data.limits().second)
-        val scaleSize = scale.max - scale.min
+        val scaleSize = chartConfiguration.scale.max - chartConfiguration.scale.min
         val chartWidth = innerFrame.right - innerFrame.left
         val halfBarWidth = (innerFrame.bottom - innerFrame.top) / yLabels.size / 2
         val labelsBottomPosition = innerFrame.bottom - halfBarWidth
@@ -183,7 +191,10 @@ class HorizontalBarChartRenderer(
             dataPoint.screenPositionX =
                 innerFrame.left +
                     // bar length must be positive, or zero
-                    (chartWidth * max(0f, dataPoint.value - scale.min) / scaleSize)
+                    (chartWidth * max(
+                        0f,
+                        dataPoint.value - chartConfiguration.scale.min
+                    ) / scaleSize)
             dataPoint.screenPositionY =
                 labelsBottomPosition -
                     heightBetweenLabels * index

@@ -16,7 +16,9 @@ import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.ChartConfiguration
 import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
+import com.db.williamchart.renderer.RendererConstants.Companion.notInitialized
 
 abstract class AxisChartView @JvmOverloads constructor(
     context: Context,
@@ -31,6 +33,8 @@ abstract class AxisChartView @JvmOverloads constructor(
     var labelsFont: Typeface? = null
 
     var axis: AxisType = AxisType.XY
+
+    var scale: Scale = Scale(notInitialized, notInitialized)
 
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
 

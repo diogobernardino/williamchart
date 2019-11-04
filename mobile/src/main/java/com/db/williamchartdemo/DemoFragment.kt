@@ -19,9 +19,7 @@ class DemoFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.demo_fragment, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.demo_fragment, container, false)
 
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {
 
@@ -39,6 +37,7 @@ class DemoFragment : Fragment() {
         barChart.animation.duration = 1000
         barChart.animate(barSet)
 
+        donutChart.animation.duration = 1000
         donutChart.animate(130f)
 
         horizontalBarChart.animation.duration = 1000

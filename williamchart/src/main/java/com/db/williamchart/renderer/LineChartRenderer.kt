@@ -44,7 +44,7 @@ class LineChartRenderer(
         List(RendererConstants.defaultScaleNumberOfSteps + 1) {
             val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
-                label = chartConfiguration.yScaleLabel(scaleValue),
+                label = chartConfiguration.labelsFormatter(scaleValue),
                 screenPositionX = 0F,
                 screenPositionY = 0F
             )

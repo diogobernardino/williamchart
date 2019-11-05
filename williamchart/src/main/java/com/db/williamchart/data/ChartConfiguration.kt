@@ -7,7 +7,7 @@ open class ChartConfiguration(
     open val axis: AxisType,
     open val labelsSize: Float,
     open val scale: Scale,
-    open val yScaleLabel: (Float) -> String
+    open val labelsFormatter: (Float) -> String
 )
 
 internal fun ChartConfiguration.toOuterFrame(): Frame {

@@ -7,7 +7,7 @@ data class BarChartConfiguration(
     override val axis: AxisType,
     override val labelsSize: Float,
     override val scale: Scale,
-    override val yScaleLabel: (Float) -> String = { it.toString() },
+    override val labelsFormatter: (Float) -> String = { it.toString() },
     val barsBackgroundColor: Int
 ) : ChartConfiguration(
     width = width,
@@ -16,5 +16,5 @@ data class BarChartConfiguration(
     axis = axis,
     labelsSize = labelsSize,
     scale = scale,
-    yScaleLabel = yScaleLabel
+    labelsFormatter = labelsFormatter
 )

@@ -52,9 +52,6 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    var labelsFormatter: (Float) -> String = { it.toString() }
-
     override val chartConfiguration: ChartConfiguration
         get() =
             LineChartConfiguration(

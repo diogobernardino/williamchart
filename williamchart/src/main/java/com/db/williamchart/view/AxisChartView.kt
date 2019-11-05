@@ -36,6 +36,8 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     var scale: Scale = Scale(notInitialized, notInitialized)
 
+    var labelsFormatter: (Float) -> String = { it.toString() }
+
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
 
     protected lateinit var canvas: Canvas

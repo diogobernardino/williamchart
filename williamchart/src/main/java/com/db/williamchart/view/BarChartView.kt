@@ -40,9 +40,6 @@ class BarChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var barsBackgroundColor: Int = -1
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    var labelsFormatter: (Float) -> String = { it.toString() }
-
     override val chartConfiguration: ChartConfiguration
         get() =
             BarChartConfiguration(

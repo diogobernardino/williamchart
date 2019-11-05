@@ -2,7 +2,6 @@ package com.db.williamchart.extensions
 
 import android.graphics.Path
 import com.db.williamchart.data.DataPoint
-import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Scale
 
@@ -20,10 +19,10 @@ fun List<DataPoint>.toScale(): Scale {
     return Scale(min = limits.first, max = limits.second)
 }
 
-fun List<DataPoint>.toLabels(label: (String) -> String = { it }): List<Label> {
+fun List<DataPoint>.toLabels(): List<Label> {
     return map {
         Label(
-            label = label(it.label),
+            label = it.label,
             screenPositionX = 0f,
             screenPositionY = 0f
         )
@@ -91,10 +90,6 @@ fun List<DataPoint>.toSmoothLinePath(smoothFactor: Float): Path {
     }
 
     return res
-}
-
-fun List<Float>.toDonutDataPoints(): List<DonutDataPoint> {
-    return this.map { DonutDataPoint(it) }
 }
 
 private fun List<Float>.floatLimits(): Pair<Float, Float> {

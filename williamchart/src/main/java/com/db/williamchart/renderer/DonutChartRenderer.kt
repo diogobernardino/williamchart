@@ -46,13 +46,13 @@ class DonutChartRenderer(
         view.drawArc(datapoint.screenDegrees, innerFrameWithStroke)
     }
 
-    override fun render(value: Float) {
-        datapoint = value.toDonutDataPoint()
+    override fun render(values: List<Float>) {
+        datapoint = values.first().toDonutDataPoint()
         view.postInvalidate()
     }
 
-    override fun anim(value: Float, animation: ChartAnimation<DonutDataPoint>) {
-        datapoint = value.toDonutDataPoint()
+    override fun anim(values: List<Float>, animation: ChartAnimation<DonutDataPoint>) {
+        datapoint = values.first().toDonutDataPoint()
         this.animation = animation
         view.postInvalidate()
     }

@@ -117,14 +117,14 @@ class DonutChartView @JvmOverloads constructor(
         renderer.draw()
     }
 
-    fun show(value: Float) {
+    fun show(values: List<Float>) {
         doOnPreDraw { renderer.preDraw(configuration) }
-        renderer.render(value)
+        renderer.render(values)
     }
 
-    fun animate(value: Float) {
+    fun animate(values: List<Float>) {
         doOnPreDraw { renderer.preDraw(configuration) }
-        renderer.anim(value, animation)
+        renderer.anim(values, animation)
     }
 
     private fun handleAttributes(typedArray: TypedArray) {

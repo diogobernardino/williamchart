@@ -75,7 +75,7 @@ class DonutChartView @JvmOverloads constructor(
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.DonutChartAttrs))
     }
 
-    override fun drawArc(value: Float, innerFrame: Frame) {
+    override fun drawArc(degrees: List<Float>, innerFrame: Frame) {
 
         if (donutRoundCorners)
             paint.strokeCap = Paint.Cap.ROUND
@@ -84,13 +84,15 @@ class DonutChartView @JvmOverloads constructor(
         paint.strokeWidth = donutThickness
         paint.color = donutColor
 
-        canvas.drawArc(
-            innerFrame.toRect().toRectF(),
-            defaultStartAngle,
-            value,
-            false,
-            paint
-        )
+        degrees.forEach {
+            canvas.drawArc(
+                innerFrame.toRect().toRectF(),
+                defaultStartAngle,
+                it,
+                false,
+                paint
+            )
+        }
     }
 
     override fun drawBackground(innerFrame: Frame) {

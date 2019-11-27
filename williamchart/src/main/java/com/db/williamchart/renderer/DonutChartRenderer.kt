@@ -22,6 +22,10 @@ class DonutChartRenderer(
 
         chartConfiguration = configuration
 
+        if (chartConfiguration.colorsSize < datapoints.size)
+            throw IllegalArgumentException("Number of datapoints is ${datapoints.size} " +
+                "but only ${chartConfiguration.colorsSize} color(s) provided.")
+
         val left =
             configuration.paddings.left + configuration.thickness / 2
         val top =

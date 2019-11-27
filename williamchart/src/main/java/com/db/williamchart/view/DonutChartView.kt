@@ -68,7 +68,8 @@ class DonutChartView @JvmOverloads constructor(
                     paddingBottom.toFloat()
                 ),
                 thickness = donutThickness,
-                total = donutTotal
+                total = donutTotal,
+                colorsSize = donutColors.size
             )
 
     init {

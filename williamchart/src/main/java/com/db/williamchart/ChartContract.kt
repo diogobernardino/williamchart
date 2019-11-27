@@ -37,7 +37,7 @@ interface ChartContract {
 
     interface DonutView {
         fun postInvalidate()
-        fun drawArc(value: Float, innerFrame: Frame)
+        fun drawArc(degrees: List<Float>, innerFrame: Frame)
         fun drawBackground(innerFrame: Frame)
         fun drawDebugFrame(innerFrame: Frame)
     }
@@ -52,7 +52,7 @@ interface ChartContract {
     interface DonutRenderer {
         fun preDraw(configuration: DonutChartConfiguration): Boolean
         fun draw()
-        fun render(value: Float)
-        fun anim(value: Float, animation: ChartAnimation<DonutDataPoint>)
+        fun render(values: List<Float>)
+        fun anim(values: List<Float>, animation: ChartAnimation<DonutDataPoint>)
     }
 }

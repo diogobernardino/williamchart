@@ -33,8 +33,11 @@ class DemoFragment : Fragment() {
         barChart.animation.duration = 1000
         barChart.animate(barSet)
 
+        donutChart.donutColors = intArrayOf(
+            Color.parseColor("#FFFFFF")
+        )
         donutChart.animation.duration = 1000
-        donutChart.animate(130f)
+        donutChart.animate(donutSet)
 
         horizontalBarChart.animation.duration = 1000
         horizontalBarChart.animate(horizontalBarSet)
@@ -69,6 +72,12 @@ class DemoFragment : Fragment() {
             "PORRO" to 5F,
             "FUSCE" to 6.4F,
             "EGET" to 3F
+        )
+
+        private val donutSet = listOf(
+            20f,
+            80f,
+            100f
         )
     }
 }

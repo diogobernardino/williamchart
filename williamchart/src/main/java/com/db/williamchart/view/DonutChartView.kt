@@ -36,7 +36,7 @@ class DonutChartView @JvmOverloads constructor(
     var donutThickness = defaultThickness
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var donutColor = defaultColor
+    var donutColors = intArrayOf(defaultColor)
 
     @Suppress("MemberVisibilityCanBePrivate")
     var donutBackgroundColor = defaultBackgroundColor
@@ -68,29 +68,32 @@ class DonutChartView @JvmOverloads constructor(
                     paddingBottom.toFloat()
                 ),
                 thickness = donutThickness,
-                total = donutTotal
+                total = donutTotal,
+                colorsSize = donutColors.size
             )
 
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.DonutChartAttrs))
     }
 
-    override fun drawArc(value: Float, innerFrame: Frame) {
+    override fun drawArc(degrees: List<Float>, innerFrame: Frame) {
 
         if (donutRoundCorners)
             paint.strokeCap = Paint.Cap.ROUND
 
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = donutThickness
-        paint.color = donutColor
 
-        canvas.drawArc(
-            innerFrame.toRect().toRectF(),
-            defaultStartAngle,
-            value,
-            false,
-            paint
-        )
+        degrees.forEachIndexed { index, degree ->
+            paint.color = donutColors[index]
+            canvas.drawArc(
+                innerFrame.toRect().toRectF(),
+                defaultStartAngle,
+                degree,
+                false,
+                paint
+            )
+        }
     }
 
     override fun drawBackground(innerFrame: Frame) {
@@ -117,21 +120,20 @@ class DonutChartView @JvmOverloads constructor(
         renderer.draw()
     }
 
-    fun show(value: Float) {
+    fun show(values: List<Float>) {
         doOnPreDraw { renderer.preDraw(configuration) }
-        renderer.render(value)
+        renderer.render(values)
     }
 
-    fun animate(value: Float) {
+    fun animate(values: List<Float>) {
         doOnPreDraw { renderer.preDraw(configuration) }
-        renderer.anim(value, animation)
+        renderer.anim(values, animation)
     }
 
     private fun handleAttributes(typedArray: TypedArray) {
         typedArray.apply {
             donutThickness =
                 getDimension(R.styleable.DonutChartAttrs_chart_donutThickness, donutThickness)
-            donutColor = getColor(R.styleable.DonutChartAttrs_chart_donutColor, donutColor)
             donutBackgroundColor = getColor(
                 R.styleable.DonutChartAttrs_chart_donutBackgroundColor,
                 donutBackgroundColor

@@ -14,13 +14,17 @@ class DonutChartRenderer(
 
     private var innerFrameWithStroke: Frame = Frame(0f, 0f, 0f, 0f)
 
-    private var datapoint: DonutDataPoint = DonutDataPoint(0f, 0f)
+    private var datapoints = emptyList<DonutDataPoint>()
 
     private lateinit var chartConfiguration: DonutChartConfiguration
 
     override fun preDraw(configuration: DonutChartConfiguration): Boolean {
 
         chartConfiguration = configuration
+
+        if (chartConfiguration.colorsSize < datapoints.size)
+            throw IllegalArgumentException("Number of datapoints is ${datapoints.size} " +
+                "but only ${chartConfiguration.colorsSize} color(s) provided.")
 
         val left =
             configuration.paddings.left + configuration.thickness / 2
@@ -32,9 +36,10 @@ class DonutChartRenderer(
             configuration.height - configuration.paddings.bottom - configuration.thickness / 2
         innerFrameWithStroke = Frame(left, top, right, bottom)
 
-        datapoint.screenDegrees = datapoint.value * fullDegrees / chartConfiguration.total
+        datapoints.forEach { it.screenDegrees = it.value * fullDegrees / chartConfiguration.total }
+        datapoints = datapoints.sortedByDescending { it.screenDegrees }
 
-        animation.animateFrom(ignoreStartPosition, listOf(datapoint)) {
+        animation.animateFrom(ignoreStartPosition, datapoints) {
             view.postInvalidate()
         }
 
@@ -43,16 +48,22 @@ class DonutChartRenderer(
 
     override fun draw() {
         view.drawBackground(innerFrameWithStroke)
-        view.drawArc(datapoint.screenDegrees, innerFrameWithStroke)
+        view.drawArc(datapoints.map { it.screenDegrees }, innerFrameWithStroke)
     }
 
-    override fun render(value: Float) {
-        datapoint = value.toDonutDataPoint()
+    override fun render(values: List<Float>) {
+        datapoints = values.mapIndexed { index, value ->
+            val valueOffset = if (index == 0) 0f else values[index - 1]
+            value.toDonutDataPoint(valueOffset)
+        }
         view.postInvalidate()
     }
 
-    override fun anim(value: Float, animation: ChartAnimation<DonutDataPoint>) {
-        datapoint = value.toDonutDataPoint()
+    override fun anim(values: List<Float>, animation: ChartAnimation<DonutDataPoint>) {
+        datapoints = values.mapIndexed { index, value ->
+            val valueOffset = if (index == 0) 0f else values[index - 1]
+            value.toDonutDataPoint(valueOffset)
+        }
         this.animation = animation
         view.postInvalidate()
     }

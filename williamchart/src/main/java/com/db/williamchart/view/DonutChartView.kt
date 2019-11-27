@@ -36,7 +36,7 @@ class DonutChartView @JvmOverloads constructor(
     var donutThickness = defaultThickness
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var donutColor = defaultColor
+    var donutColors = intArrayOf(defaultColor)
 
     @Suppress("MemberVisibilityCanBePrivate")
     var donutBackgroundColor = defaultBackgroundColor
@@ -82,13 +82,13 @@ class DonutChartView @JvmOverloads constructor(
 
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = donutThickness
-        paint.color = donutColor
 
-        degrees.forEach {
+        degrees.forEachIndexed { index, degree ->
+            paint.color = donutColors[index]
             canvas.drawArc(
                 innerFrame.toRect().toRectF(),
                 defaultStartAngle,
-                it,
+                degree,
                 false,
                 paint
             )
@@ -133,7 +133,6 @@ class DonutChartView @JvmOverloads constructor(
         typedArray.apply {
             donutThickness =
                 getDimension(R.styleable.DonutChartAttrs_chart_donutThickness, donutThickness)
-            donutColor = getColor(R.styleable.DonutChartAttrs_chart_donutColor, donutColor)
             donutBackgroundColor = getColor(
                 R.styleable.DonutChartAttrs_chart_donutBackgroundColor,
                 donutBackgroundColor

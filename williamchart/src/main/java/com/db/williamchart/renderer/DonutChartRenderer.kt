@@ -32,9 +32,8 @@ class DonutChartRenderer(
             configuration.height - configuration.paddings.bottom - configuration.thickness / 2
         innerFrameWithStroke = Frame(left, top, right, bottom)
 
-        datapoints.forEach {
-            it.screenDegrees = it.value * fullDegrees / chartConfiguration.total
-        }
+        datapoints.forEach { it.screenDegrees = it.value * fullDegrees / chartConfiguration.total }
+        datapoints = datapoints.sortedByDescending { it.screenDegrees }
 
         animation.animateFrom(ignoreStartPosition, datapoints) {
             view.postInvalidate()
@@ -49,12 +48,18 @@ class DonutChartRenderer(
     }
 
     override fun render(values: List<Float>) {
-        datapoints = values.map { it.toDonutDataPoint() }
+        datapoints = values.mapIndexed { index, value ->
+            val valueOffset = if (index == 0) 0f else values[index - 1]
+            value.toDonutDataPoint(valueOffset)
+        }
         view.postInvalidate()
     }
 
     override fun anim(values: List<Float>, animation: ChartAnimation<DonutDataPoint>) {
-        datapoints = values.map { it.toDonutDataPoint() }
+        datapoints = values.mapIndexed { index, value ->
+            val valueOffset = if (index == 0) 0f else values[index - 1]
+            value.toDonutDataPoint(valueOffset)
+        }
         this.animation = animation
         view.postInvalidate()
     }

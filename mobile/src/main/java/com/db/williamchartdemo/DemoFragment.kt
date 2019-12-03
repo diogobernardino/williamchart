@@ -34,7 +34,9 @@ class DemoFragment : Fragment() {
         barChart.animate(barSet)
 
         donutChart.donutColors = intArrayOf(
-            Color.parseColor("#FFFFFF")
+            Color.parseColor("#FFFFFF"),
+            Color.parseColor("#FF4081"),
+            Color.parseColor("#3F51B5")
         )
         donutChart.animation.duration = 1000
         donutChart.animate(donutSet)

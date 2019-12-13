@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.db.williamchart.data.Scale
 import com.db.williamchart.view.ImplementsAlphaChart
 import kotlinx.android.synthetic.main.demo_fragment.*
 
@@ -26,11 +25,10 @@ class DemoFragment : Fragment() {
                 Color.parseColor("#81FFFFFF"),
                 Color.TRANSPARENT
             )
-        lineChart.scale = Scale(1f, 12f)
-        lineChart.animation.duration = 1000
+        lineChart.animation.duration = animationDuration
         lineChart.animate(lineSet)
 
-        barChart.animation.duration = 1000
+        barChart.animation.duration = animationDuration
         barChart.animate(barSet)
 
         donutChart.donutColors = intArrayOf(
@@ -38,10 +36,10 @@ class DemoFragment : Fragment() {
             Color.parseColor("#FF4081"),
             Color.parseColor("#3F51B5")
         )
-        donutChart.animation.duration = 1000
+        donutChart.animation.duration = animationDuration
         donutChart.animate(donutSet)
 
-        horizontalBarChart.animation.duration = 1000
+        horizontalBarChart.animation.duration = animationDuration
         horizontalBarChart.animate(horizontalBarSet)
     }
 
@@ -81,5 +79,7 @@ class DemoFragment : Fragment() {
             80f,
             100f
         )
+
+        private val animationDuration = 1000L
     }
 }

@@ -9,6 +9,7 @@ import com.db.williamchart.data.LineChartConfiguration
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.Scale
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.atMost
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import org.junit.Test
@@ -55,5 +56,35 @@ class LineChartRendererTest {
 
         // Assert
         verify(view).drawLineBackground(any(), any())
+    }
+
+    @Test
+    fun `draw x labels`() {
+        // Arrange
+        val data = linkedMapOf(
+            "this" to 999f,
+            "that" to 111f
+        )
+        val chartConfiguration = LineChartConfiguration(
+            width = 0,
+            height = 0,
+            paddings = Paddings(0f, 0f, 0f, 0f),
+            axis = AxisType.X,
+            labelsSize = 0f,
+            lineThickness = 0f,
+            pointsDrawableWidth = 0,
+            pointsDrawableHeight = 0,
+            fillColor = 20705,
+            gradientFillColors = intArrayOf(),
+            scale = Scale(0f, 0f)
+        )
+
+        // Act
+        lineChartRenderer.render(data)
+        lineChartRenderer.preDraw(chartConfiguration)
+        lineChartRenderer.draw()
+
+        // Assert
+        verify(view, atMost(1)).drawLabels(any())
     }
 }

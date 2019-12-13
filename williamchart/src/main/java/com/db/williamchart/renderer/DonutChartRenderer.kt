@@ -23,8 +23,10 @@ class DonutChartRenderer(
         chartConfiguration = configuration
 
         if (chartConfiguration.colorsSize < datapoints.size)
-            throw IllegalArgumentException("Number of datapoints is ${datapoints.size} " +
-                "but only ${chartConfiguration.colorsSize} color(s) provided.")
+            throw IllegalArgumentException(
+                "Number of datapoints is ${datapoints.size} " +
+                    "but only ${chartConfiguration.colorsSize} color(s) provided."
+            )
 
         val left =
             configuration.paddings.left + configuration.thickness / 2
@@ -47,7 +49,10 @@ class DonutChartRenderer(
     }
 
     override fun draw() {
-        view.drawBackground(innerFrameWithStroke)
+
+        if (chartConfiguration.barBackgroundColor != -1)
+            view.drawBackground(innerFrameWithStroke)
+
         view.drawArc(datapoints.map { it.screenDegrees }, innerFrameWithStroke)
     }
 

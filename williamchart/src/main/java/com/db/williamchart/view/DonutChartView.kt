@@ -69,7 +69,8 @@ class DonutChartView @JvmOverloads constructor(
                 ),
                 thickness = donutThickness,
                 total = donutTotal,
-                colorsSize = donutColors.size
+                colorsSize = donutColors.size,
+                barBackgroundColor = donutBackgroundColor
             )
 
     init {

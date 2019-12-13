@@ -6,5 +6,6 @@ data class DonutChartConfiguration(
     val paddings: Paddings,
     val thickness: Float,
     val total: Float,
-    val colorsSize: Int
+    val colorsSize: Int,
+    val barBackgroundColor: Int
 )

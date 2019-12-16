@@ -29,7 +29,10 @@ publishing {
 
 bintray {
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    File localPropertiesFiles = project.rootProject.file('local.properties')
+    if (localPropertiesFiles.exists())
+        properties.load(localPropertiesFiles.newDataInputStream())
+
     user = properties.containsKey('bintrayUser') ? properties.getProperty('bintrayUser') : System.getenv('BINTRAY_USER')
     key = properties.containsKey('bintrayApiKey') ? properties.getProperty('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
     publications = ['Production']

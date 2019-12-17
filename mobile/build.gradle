@@ -13,7 +13,7 @@ File localPropertiesFiles = project.rootProject.file('local.properties')
 
 if (localPropertiesFiles.exists())
     properties.load(localPropertiesFiles.newDataInputStream())
-
+println "and this"
 android {
 
     compileSdkVersion 29
@@ -61,7 +61,7 @@ dependencies {
 }
 
 play {
-    serviceAccountEmail = properties.hasProperty("play.accountEmail") ? properties.getProperty("play.accountEmail") : "dummyPlayAccountEmail"
-    serviceAccountCredentials = file(properties.hasProperty("play.p12") ? properties.getProperty("play.p12") : "dummyPlayP12")
+    serviceAccountEmail = properties.containsKey("play.accountEmail") ? properties.getProperty("play.accountEmail") : "dummyPlayAccountEmail"
+    serviceAccountCredentials = file(properties.containsKey("play.p12") ? properties.getProperty("play.p12") : "dummyPlayP12")
     track = 'alpha'
 }

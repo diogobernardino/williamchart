@@ -13,7 +13,7 @@ File localPropertiesFiles = project.rootProject.file('local.properties')
 
 if (localPropertiesFiles.exists())
     properties.load(localPropertiesFiles.newDataInputStream())
-println "and this"
+
 android {
 
     compileSdkVersion 29
@@ -22,8 +22,8 @@ android {
         applicationId "com.db.williamchartdemo"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 19
-        versionName "3.2.0"
+        versionCode 20
+        versionName rootProject.williamchartVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -49,8 +49,8 @@ android {
 }
 
 dependencies {
-    //implementation project(path: ':williamchart')
-    implementation "com.diogobernardino:williamchart:$rootProject.williamchartVersion"
+    implementation project(path: ':williamchart')
+    //implementation "com.diogobernardino:williamchart:$rootProject.williamchartVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.50"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'

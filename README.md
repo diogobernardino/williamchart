@@ -61,7 +61,6 @@ If you find this library useful and decide to use it in your projects please dro
 <com.db.williamchart.view.DonutChartView
   ...
   app:chart_donutThickness="dimension"
-  app:chart_donutColor="color"
   app:chart_donutBackgroundColor="color"
   app:chart_donutRoundCorners="boolean"
   app:chart_donutTotal="float"

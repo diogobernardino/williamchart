@@ -6,50 +6,18 @@ nav_order: 2
 
 # Line Chart
 
-#### Smooth
+#### Line Attributes
 
-Use the `smooth` to have smooth line as displayed below.
+| Kotlin | Xml | Description |
+|---|---|---|
+| `smooth` | `chart_smoothLine`  | Use the `smooth` property to have a smooth line. |
+| `lineThickness` | `chart_lineThickness ` | How thick should the line be. |
+| `lineColor` | `chart_lineColor` | Color of the line. |
+| `fillColor` | N/A | Color between line and the bottom of the chart. |
+| `gradientFillColors` | N/A | List of colors to set gradient between line and bottom of the chart. |
 
-IMAGE GOES HERE
+#### Points Attributes
 
-| Kotlin | XML |
-|---|---|
-| `smooth = boolean` | `chart_smoothLine = "boolean"`  |
-
-#### Line Thickness
-
-| Kotlin | XML |
-|---|---|
-| `lineThickness = float` | `chart_lineThickness = "dimension"`  |
-
-#### Line color
-
-| Kotlin | XML |
-|---|---|
-| `lineColor = integer` | `chart_lineColor = "color"`  |
-
-#### Line Fill
-
-A fill can either be a single color or gradient.
-
-IMAGE GOES HERE
-
-| Kotlin |
-|---|
-| `fillColor = integer` |
-
-IMAGE GOES HERE
-
-| Kotlin |
-|---|
-| `gradientFillColors = list<integer>` |
-
-#### Points
-
-Points can be displayed using drawables. The drawable id resource can be passed directly in the XML layout or programatically.
-
-IMAGE GOES HERE
-
-| Kotlin | XML |
-|---|---|
-| `pointsDrawableRes = integer` | `chart_pointDrawable = "drawable"`  |
+| Kotlin | Xml | Description |
+|---|---|---|
+| `pointsDrawableRes` | `chart_pointsDrawable` | Use can pass it a drawable resource to set the points along the line. |

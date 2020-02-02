@@ -8,19 +8,19 @@ Williamchart is an Android Library to rapidly implement attractive and insightfu
 
 ![screenshot][4]
 
-### Hands-on!
+## Hands-on!
 
 Add your gradle dependency:
 
 ``` groovy
-implementation 'com.diogobernardino:williamchart:3.2.0'
+implementation 'com.diogobernardino:williamchart:3.3.0'
 ```
 
 This one goes into your layout:
 
 ```xml
 <com.db.williamchart.view.LinechartView
-	android:id="@+id/myWilliamChart"
+	android:id="@+id/myChart"
 	android:layout_width="match_parent"
 	android:layout_height="200dp"
 />
@@ -30,15 +30,14 @@ Finally, call `show(...)` with your datapoints:
 
 ```kotlin
 val mySet = linkedMapOf("label1" to 4F, "label2" to 7F, "label3" to 2F)
-myWilliamChart.show(mySet)
+myChart(mySet)
 ```
 
-### Credits
+## Credits
 
 If you liked williamchart and decide to use it in your projects, please drop me a line [@dfbernardino][1], I will be happy to know about it.
 
-License
--------
+## License
 
     Copyright 2019 Diogo Bernardino
 

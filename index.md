@@ -30,7 +30,7 @@ Finally, call `show(...)` with your datapoints:
 
 ```kotlin
 val mySet = linkedMapOf("label1" to 4F, "label2" to 7F, "label3" to 2F)
-myChart(mySet)
+myChart.show(mySet)
 ```
 
 ## Credits

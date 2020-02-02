@@ -10,14 +10,14 @@ nav_order: 2
 
 | Kotlin | Xml | Description |
 |---|---|---|
-| `smooth` | `chart_smoothLine`  | Use the `smooth` property to have a smooth line. |
-| `lineThickness` | `chart_lineThickness ` | How thick should the line be. |
-| `lineColor` | `chart_lineColor` | Color of the line. |
-| `fillColor` | N/A | Color between line and the bottom of the chart. |
-| `gradientFillColors` | N/A | List of colors to set gradient between line and bottom of the chart. |
+| `smooth` | `chart_smoothLine`  | Set it to `true` to have a smooth line. |
+| `lineThickness` | `chart_lineThickness ` | Define the thickness of the line. |
+| `lineColor` | `chart_lineColor` | Define the color of the line. |
+| `fillColor` | N/A | Set a foreground color between the line and the bottom of the chart. |
+| `gradientFillColors` | N/A | Set a foreground gradient color between the line and the bottom of the chart. |
 
 #### Points Attributes
 
 | Kotlin | Xml | Description |
 |---|---|---|
-| `pointsDrawableRes` | `chart_pointsDrawable` | Use can pass it a drawable resource to set the points along the line. |
+| `pointsDrawableRes` | `chart_pointsDrawable` | Drawable to be set on each of the points of the line. |

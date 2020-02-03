@@ -36,22 +36,9 @@ class HorizontalBarChartRenderer(
 
     private lateinit var chartConfiguration: BarChartConfiguration
 
-    private val xLabels: List<Label> by lazy {
-        val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
+    private lateinit var xLabels: List<Label>
 
-        List(RendererConstants.defaultScaleNumberOfSteps + 1) {
-            val scaleValue = chartConfiguration.scale.min + scaleStep * it
-            Label(
-                label = chartConfiguration.labelsFormatter(scaleValue),
-                screenPositionX = 0F,
-                screenPositionY = 0F
-            )
-        }
-    }
-
-    private val yLabels by lazy {
-        data.toLabels()
-    }
+    private lateinit var yLabels: List<Label>
 
     override fun preDraw(configuration: ChartConfiguration): Boolean {
 
@@ -67,6 +54,17 @@ class HorizontalBarChartRenderer(
                         max = data.limits().second
                     )
                 )
+
+        val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
+        xLabels = List(RendererConstants.defaultScaleNumberOfSteps + 1) {
+            val scaleValue = chartConfiguration.scale.min + scaleStep * it
+            Label(
+                    label = chartConfiguration.labelsFormatter(scaleValue),
+                    screenPositionX = 0F,
+                    screenPositionY = 0F
+            )
+        }
+        yLabels = data.toLabels()
 
         val yLongestChartLabelWidth =
             yLabels.maxValueBy {

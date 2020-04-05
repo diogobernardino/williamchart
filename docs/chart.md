@@ -15,14 +15,14 @@ In this page you will see how to customize everything that related to axis chart
 | `axis` | `chart_axis` | Define which axis should be displayed. You can display only `x`, only `y`, both `xy`, or `none` of them. |
 | `scale` | N/A | Set limits to the scale displayed in your chart. By default, charts will have a scale between 0 and the maximum value needed to accomodate the range of values passed.|
 
-#### Animations
+### Animations
 
 williamchart allows to customize your chart animation by either playing with interpolators or creating your own animations
 
 #### Interpolators
 Use any interpolator provided by the Android SDK or create your own ones by extending `Interpolator`.
 
-##### Custom animations
+#### Custom animations
 Custom animations can be implemented by extending `ChartAnimation`. I will let you look at the class and understand what you will be required to implement.
 
 ### Labels Attributes

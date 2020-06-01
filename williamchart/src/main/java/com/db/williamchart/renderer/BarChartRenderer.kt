@@ -139,7 +139,7 @@ class BarChartRenderer(
         view.postInvalidate()
     }
 
-    override fun processClick(x: Float, y: Float) {
+    override fun processClick(x: Float?, y: Float?): Int {
         TODO("Not yet implemented")
     }
 

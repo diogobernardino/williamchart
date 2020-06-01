@@ -58,16 +58,6 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
-    private class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
-
-        override fun onDown(e: MotionEvent?): Boolean = true
-
-        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-            println("MyGestureListener.onSingleTapConfirmed")
-            return super.onSingleTapConfirmed(e)
-        }
-    }
-
     private var gestureDetector: GestureDetectorCompat
 
     override val chartConfiguration: ChartConfiguration
@@ -104,10 +94,11 @@ class LineChartView @JvmOverloads constructor(
                 object : GestureDetector.SimpleOnGestureListener() {
                     override fun onDown(e: MotionEvent?): Boolean = true
                     override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                        val x = e?.x ?: return false
-                        val y = e.y
-                        (renderer as LineChartRenderer).processClick(x, y)
-                        return super.onSingleTapConfirmed(e)
+                        val position = (renderer as LineChartRenderer).processClick(e?.x, e?.y)
+                        return if (position != -1) {
+                            println("LineChartView.onSingleTapConfirmed $position")
+                            true
+                        } else super.onSingleTapConfirmed(e)
                     }
                 }
             )

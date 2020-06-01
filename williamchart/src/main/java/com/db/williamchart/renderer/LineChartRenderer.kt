@@ -3,15 +3,15 @@ package com.db.williamchart.renderer
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
+import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.configuration.LineChartConfiguration
+import com.db.williamchart.data.configuration.toOuterFrame
 import com.db.williamchart.data.notInitialized
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
-import com.db.williamchart.data.configuration.toOuterFrame
 import com.db.williamchart.data.withPaddings
 import com.db.williamchart.extensions.maxValueBy
 import com.db.williamchart.extensions.toDataPoints
@@ -52,9 +52,9 @@ class LineChartRenderer(
         yLabels = List(RendererConstants.defaultScaleNumberOfSteps + 1) {
             val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
-                    label = chartConfiguration.labelsFormatter(scaleValue),
-                    screenPositionX = 0F,
-                    screenPositionY = 0F
+                label = chartConfiguration.labelsFormatter(scaleValue),
+                screenPositionX = 0F,
+                screenPositionY = 0F
             )
         }
 
@@ -137,8 +137,24 @@ class LineChartRenderer(
         view.postInvalidate()
     }
 
-    override fun processClick(x: Float, y: Float) {
-        println("LineChartRenderer.processClick $x $y")
+    override fun processClick(x: Float?, y: Float?): Int {
+
+        if (x == null || y == null)
+            return -1
+
+        val radius = 500
+        data.forEachIndexed { index, datapoint ->
+            val left = datapoint.screenPositionX - radius
+            val right = datapoint.screenPositionX + radius
+            val top = datapoint.screenPositionY - radius
+            val bottom = datapoint.screenPositionY + radius
+
+            if (left < right && top < bottom && // check for empty first
+                x >= left && x < right && y >= top && y < bottom
+            )
+                return index
+        }
+        return -1
     }
 
     private fun placeLabelsX(innerFrame: Frame) {

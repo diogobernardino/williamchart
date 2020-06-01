@@ -59,6 +59,9 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var onDataPointClickListener: (Int) -> Unit = {}
+
     private val clickableRadius = defaultClickableArea.toPx()
 
     private var gestureDetector: GestureDetectorCompat
@@ -100,7 +103,7 @@ class LineChartView @JvmOverloads constructor(
                     override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
                         val position = (renderer as LineChartRenderer).processClick(e?.x, e?.y)
                         return if (position != -1) {
-                            println("LineChartView.onSingleTapConfirmed $position")
+                            onDataPointClickListener(position)
                             true
                         } else super.onSingleTapConfirmed(e)
                     }

@@ -26,6 +26,13 @@ class DemoFragment : Fragment() {
                 Color.TRANSPARENT
             )
         lineChart.animation.duration = animationDuration
+        lineChart.onDataPointClickListener = {
+            println("DemoFragment.onViewCreated $it")
+            lineChartValue.text =
+                lineSet.toList()[it]
+                    .second
+                    .toString()
+        }
         lineChart.animate(lineSet)
 
         barChart.animation.duration = animationDuration

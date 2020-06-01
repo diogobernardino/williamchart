@@ -104,7 +104,9 @@ class LineChartView @JvmOverloads constructor(
                 object : GestureDetector.SimpleOnGestureListener() {
                     override fun onDown(e: MotionEvent?): Boolean = true
                     override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                        println("MyGestureListener.onSingleTapConfirmed")
+                        val x = e?.x ?: return false
+                        val y = e.y
+                        (renderer as LineChartRenderer).processClick(x, y)
                         return super.onSingleTapConfirmed(e)
                     }
                 }

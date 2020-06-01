@@ -137,6 +137,10 @@ class LineChartRenderer(
         view.postInvalidate()
     }
 
+    override fun processClick(x: Float, y: Float) {
+        println("LineChartRenderer.processClick $x $y")
+    }
+
     private fun placeLabelsX(innerFrame: Frame) {
 
         val labelsLeftPosition =

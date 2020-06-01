@@ -139,6 +139,10 @@ class BarChartRenderer(
         view.postInvalidate()
     }
 
+    override fun processClick(x: Float, y: Float) {
+        TODO("Not yet implemented")
+    }
+
     private fun placeLabelsX(innerFrame: Frame) {
 
         val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2

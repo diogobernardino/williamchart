@@ -58,6 +58,9 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var clickableRadius = defaultClickableArea
+
     private var gestureDetector: GestureDetectorCompat
 
     override val chartConfiguration: ChartConfiguration
@@ -81,7 +84,8 @@ class LineChartView @JvmOverloads constructor(
                     getDrawable(pointsDrawableRes)!!.intrinsicHeight else -1,
                 fillColor = fillColor,
                 gradientFillColors = gradientFillColors,
-                labelsFormatter = labelsFormatter
+                labelsFormatter = labelsFormatter,
+                clickableRadius = clickableRadius
             )
 
     init {
@@ -205,5 +209,6 @@ class LineChartView @JvmOverloads constructor(
         private const val defaultLineThickness = 4F
         private const val defaultFillColor = 0
         private const val defaultLineColor = Color.BLACK
+        private const val defaultClickableArea = 100
     }
 }

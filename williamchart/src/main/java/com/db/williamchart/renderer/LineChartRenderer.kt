@@ -142,12 +142,11 @@ class LineChartRenderer(
         if (x == null || y == null)
             return -1
 
-        val radius = 500
         data.forEachIndexed { index, datapoint ->
-            val left = datapoint.screenPositionX - radius
-            val right = datapoint.screenPositionX + radius
-            val top = datapoint.screenPositionY - radius
-            val bottom = datapoint.screenPositionY + radius
+            val left = datapoint.screenPositionX - chartConfiguration.clickableRadius
+            val right = datapoint.screenPositionX + chartConfiguration.clickableRadius
+            val top = datapoint.screenPositionY - chartConfiguration.clickableRadius
+            val bottom = datapoint.screenPositionY + chartConfiguration.clickableRadius
 
             if (left < right && top < bottom && // check for empty first
                 x >= left && x < right && y >= top && y < bottom

@@ -47,7 +47,8 @@ class LineChartRendererTest {
                 pointsDrawableHeight = 0,
                 fillColor = 20705,
                 gradientFillColors = intArrayOf(),
-                scale = Scale(0f, 0f)
+                scale = Scale(0f, 0f),
+                clickableRadius = 0
             )
 
         // Act
@@ -78,7 +79,8 @@ class LineChartRendererTest {
                 pointsDrawableHeight = 0,
                 fillColor = 20705,
                 gradientFillColors = intArrayOf(),
-                scale = Scale(0f, 0f)
+                scale = Scale(0f, 0f),
+                clickableRadius = 0
             )
 
         // Act

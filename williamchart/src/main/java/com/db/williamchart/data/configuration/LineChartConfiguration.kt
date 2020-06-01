@@ -16,7 +16,8 @@ data class LineChartConfiguration(
     val pointsDrawableWidth: Int,
     val pointsDrawableHeight: Int,
     val fillColor: Int,
-    val gradientFillColors: IntArray
+    val gradientFillColors: IntArray,
+    val clickableRadius: Int
 ) : ChartConfiguration(
     width = width,
     height = height,

@@ -27,6 +27,7 @@ import com.db.williamchart.extensions.centerAt
 import com.db.williamchart.extensions.getDrawable
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.extensions.toLinePath
+import com.db.williamchart.extensions.toPx
 import com.db.williamchart.extensions.toSmoothLinePath
 import com.db.williamchart.renderer.LineChartRenderer
 
@@ -58,8 +59,7 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    var clickableRadius = defaultClickableArea
+    private val clickableRadius = defaultClickableArea.toPx()
 
     private var gestureDetector: GestureDetectorCompat
 
@@ -209,6 +209,6 @@ class LineChartView @JvmOverloads constructor(
         private const val defaultLineThickness = 4F
         private const val defaultFillColor = 0
         private const val defaultLineColor = Color.BLACK
-        private const val defaultClickableArea = 100
+        private const val defaultClickableArea = 48 // dp
     }
 }

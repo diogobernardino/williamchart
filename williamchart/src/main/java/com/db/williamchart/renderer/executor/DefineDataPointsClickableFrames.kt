@@ -2,7 +2,7 @@ package com.db.williamchart.renderer.executor
 
 import com.db.williamchart.data.Frame
 
-class DebugWithClickableFrames {
+class DefineDataPointsClickableFrames {
 
     operator fun invoke(
         xCoordinates: List<Float>,

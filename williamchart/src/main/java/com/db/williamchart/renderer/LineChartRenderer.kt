@@ -9,6 +9,7 @@ import com.db.williamchart.data.Label
 import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.configuration.LineChartConfiguration
 import com.db.williamchart.data.configuration.toOuterFrame
+import com.db.williamchart.data.contains
 import com.db.williamchart.data.notInitialized
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
@@ -17,8 +18,8 @@ import com.db.williamchart.extensions.maxValueBy
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.extensions.toScale
-import com.db.williamchart.renderer.executor.DebugWithClickableFrames
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
+import com.db.williamchart.renderer.executor.DefineDataPointsClickableFrames
 import com.db.williamchart.renderer.executor.MeasureLineChartPaddings
 
 class LineChartRenderer(
@@ -123,7 +124,7 @@ class LineChartRenderer(
                         yLabels = yLabels,
                         labelsSize = chartConfiguration.labelsSize
                     ) +
-                    DebugWithClickableFrames()(
+                    DefineDataPointsClickableFrames()(
                         data.map { it.screenPositionX },
                         data.map { it.screenPositionY },
                         chartConfiguration.clickableRadius
@@ -148,15 +149,15 @@ class LineChartRenderer(
         if (x == null || y == null)
             return -1
 
-        data.forEachIndexed { index, datapoint ->
-            val left = datapoint.screenPositionX - chartConfiguration.clickableRadius
-            val right = datapoint.screenPositionX + chartConfiguration.clickableRadius
-            val top = datapoint.screenPositionY - chartConfiguration.clickableRadius
-            val bottom = datapoint.screenPositionY + chartConfiguration.clickableRadius
-
-            if (left < right && top < bottom && // check for empty first
-                x >= left && x < right && y >= top && y < bottom
+        val clickableFrames =
+            DefineDataPointsClickableFrames()(
+                data.map { it.screenPositionX },
+                data.map { it.screenPositionY },
+                chartConfiguration.clickableRadius
             )
+
+        clickableFrames.forEachIndexed { index, frame ->
+            if (frame.contains(x, y))
                 return index
         }
         return -1

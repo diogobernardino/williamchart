@@ -28,3 +28,7 @@ fun Frame.toLinearGradient(gradientColors: IntArray): LinearGradient {
         Shader.TileMode.MIRROR
     )
 }
+
+fun Frame.contains(x: Float, y: Float): Boolean =
+    left < right && top < bottom && // check for empty first
+        x >= left && x < right && y >= top && y < bottom

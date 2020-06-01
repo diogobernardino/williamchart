@@ -1,13 +1,17 @@
 package com.db.williamchart.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
 import androidx.annotation.DrawableRes
 import androidx.annotation.Size
+import androidx.core.view.GestureDetectorCompat
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
@@ -30,7 +34,9 @@ class LineChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AxisChartView(context, attrs, defStyleAttr), ChartContract.LineView {
+) :
+    AxisChartView(context, attrs, defStyleAttr),
+    ChartContract.LineView {
 
     @Suppress("MemberVisibilityCanBePrivate")
     var smooth: Boolean = defaultSmooth
@@ -51,6 +57,18 @@ class LineChartView @JvmOverloads constructor(
     @DrawableRes
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
+
+    private class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
+
+        override fun onDown(e: MotionEvent?): Boolean = true
+
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            println("MyGestureListener.onSingleTapConfirmed")
+            return super.onSingleTapConfirmed(e)
+        }
+    }
+
+    private var gestureDetector: GestureDetectorCompat
 
     override val chartConfiguration: ChartConfiguration
         get() =
@@ -80,7 +98,23 @@ class LineChartView @JvmOverloads constructor(
         renderer = LineChartRenderer(this, painter, NoAnimation())
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.LineChartAttrs))
         handleEditMode()
+        gestureDetector =
+            GestureDetectorCompat(
+                this.context,
+                object : GestureDetector.SimpleOnGestureListener() {
+                    override fun onDown(e: MotionEvent?): Boolean = true
+                    override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                        println("MyGestureListener.onSingleTapConfirmed")
+                        return super.onSingleTapConfirmed(e)
+                    }
+                }
+            )
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean =
+        if (gestureDetector.onTouchEvent(event)) true
+        else super.onTouchEvent(event)
 
     override fun drawLine(points: List<DataPoint>) {
 

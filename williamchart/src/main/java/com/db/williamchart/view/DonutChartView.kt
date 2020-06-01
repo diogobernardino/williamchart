@@ -14,7 +14,7 @@ import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultDonutAnimation
 import com.db.williamchart.animation.DonutNoAnimation
-import com.db.williamchart.data.DonutChartConfiguration
+import com.db.williamchart.data.configuration.DonutChartConfiguration
 import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Paddings

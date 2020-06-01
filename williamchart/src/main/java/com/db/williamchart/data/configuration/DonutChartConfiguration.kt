@@ -1,4 +1,6 @@
-package com.db.williamchart.data
+package com.db.williamchart.data.configuration
+
+import com.db.williamchart.data.Paddings
 
 data class DonutChartConfiguration(
     val width: Int,

@@ -2,7 +2,7 @@ package com.db.williamchart.renderer
 
 import com.db.williamchart.ChartContract
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.DonutChartConfiguration
+import com.db.williamchart.data.configuration.DonutChartConfiguration
 import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Paddings
 import com.nhaarman.mockito_kotlin.any
@@ -26,15 +26,16 @@ class DonutChartRendererTest {
     fun `draw background bar`() {
         // Arrange
         val data = listOf(999f)
-        val chartConfiguration = DonutChartConfiguration(
-            width = 0,
-            height = 0,
-            paddings = Paddings(0f, 0f, 0f, 0f),
-            thickness = 0f,
-            total = 0f,
-            colorsSize = 1,
-            barBackgroundColor = 1
-        )
+        val chartConfiguration =
+            DonutChartConfiguration(
+                width = 0,
+                height = 0,
+                paddings = Paddings(0f, 0f, 0f, 0f),
+                thickness = 0f,
+                total = 0f,
+                colorsSize = 1,
+                barBackgroundColor = 1
+            )
 
         // Act
         donutChartRenderer.render(data)

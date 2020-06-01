@@ -2,7 +2,7 @@ package com.db.williamchart.renderer
 
 import com.db.williamchart.ChartContract
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.DonutChartConfiguration
+import com.db.williamchart.data.configuration.DonutChartConfiguration
 import com.db.williamchart.data.DonutDataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.extensions.toDonutDataPoint

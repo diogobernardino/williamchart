@@ -3,8 +3,8 @@ package com.db.williamchart.renderer
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
-import com.db.williamchart.data.BarChartConfiguration
-import com.db.williamchart.data.ChartConfiguration
+import com.db.williamchart.data.configuration.BarChartConfiguration
+import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
@@ -12,7 +12,7 @@ import com.db.williamchart.data.Scale
 import com.db.williamchart.data.notInitialized
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
-import com.db.williamchart.data.toOuterFrame
+import com.db.williamchart.data.configuration.toOuterFrame
 import com.db.williamchart.data.withPaddings
 import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.maxValueBy

@@ -5,7 +5,7 @@ import com.db.williamchart.Painter
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.DataPoint
-import com.db.williamchart.data.LineChartConfiguration
+import com.db.williamchart.data.configuration.LineChartConfiguration
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.Scale
 import com.nhaarman.mockito_kotlin.any
@@ -35,19 +35,20 @@ class LineChartRendererTest {
             "this" to 999f,
             "that" to 111f
         )
-        val chartConfiguration = LineChartConfiguration(
-            width = 0,
-            height = 0,
-            paddings = Paddings(0f, 0f, 0f, 0f),
-            axis = AxisType.NONE,
-            labelsSize = 0f,
-            lineThickness = 0f,
-            pointsDrawableWidth = 0,
-            pointsDrawableHeight = 0,
-            fillColor = 20705,
-            gradientFillColors = intArrayOf(),
-            scale = Scale(0f, 0f)
-        )
+        val chartConfiguration =
+            LineChartConfiguration(
+                width = 0,
+                height = 0,
+                paddings = Paddings(0f, 0f, 0f, 0f),
+                axis = AxisType.NONE,
+                labelsSize = 0f,
+                lineThickness = 0f,
+                pointsDrawableWidth = 0,
+                pointsDrawableHeight = 0,
+                fillColor = 20705,
+                gradientFillColors = intArrayOf(),
+                scale = Scale(0f, 0f)
+            )
 
         // Act
         lineChartRenderer.render(data)
@@ -65,19 +66,20 @@ class LineChartRendererTest {
             "this" to 999f,
             "that" to 111f
         )
-        val chartConfiguration = LineChartConfiguration(
-            width = 0,
-            height = 0,
-            paddings = Paddings(0f, 0f, 0f, 0f),
-            axis = AxisType.X,
-            labelsSize = 0f,
-            lineThickness = 0f,
-            pointsDrawableWidth = 0,
-            pointsDrawableHeight = 0,
-            fillColor = 20705,
-            gradientFillColors = intArrayOf(),
-            scale = Scale(0f, 0f)
-        )
+        val chartConfiguration =
+            LineChartConfiguration(
+                width = 0,
+                height = 0,
+                paddings = Paddings(0f, 0f, 0f, 0f),
+                axis = AxisType.X,
+                labelsSize = 0f,
+                lineThickness = 0f,
+                pointsDrawableWidth = 0,
+                pointsDrawableHeight = 0,
+                fillColor = 20705,
+                gradientFillColors = intArrayOf(),
+                scale = Scale(0f, 0f)
+            )
 
         // Act
         lineChartRenderer.render(data)

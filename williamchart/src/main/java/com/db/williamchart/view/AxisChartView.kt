@@ -14,7 +14,7 @@ import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.AxisType
-import com.db.williamchart.data.ChartConfiguration
+import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes

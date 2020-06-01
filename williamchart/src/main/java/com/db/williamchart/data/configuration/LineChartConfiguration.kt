@@ -1,4 +1,8 @@
-package com.db.williamchart.data
+package com.db.williamchart.data.configuration
+
+import com.db.williamchart.data.AxisType
+import com.db.williamchart.data.Paddings
+import com.db.williamchart.data.Scale
 
 data class LineChartConfiguration(
     override val width: Int,

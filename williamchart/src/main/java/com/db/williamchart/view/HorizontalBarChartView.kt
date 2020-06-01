@@ -10,8 +10,8 @@ import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.DefaultHorizontalAnimation
 import com.db.williamchart.animation.NoAnimation
-import com.db.williamchart.data.BarChartConfiguration
-import com.db.williamchart.data.ChartConfiguration
+import com.db.williamchart.data.configuration.BarChartConfiguration
+import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label

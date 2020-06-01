@@ -11,11 +11,11 @@ import androidx.annotation.Size
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
-import com.db.williamchart.data.ChartConfiguration
+import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
-import com.db.williamchart.data.LineChartConfiguration
+import com.db.williamchart.data.configuration.LineChartConfiguration
 import com.db.williamchart.data.Paddings
 import com.db.williamchart.data.toLinearGradient
 import com.db.williamchart.data.toRect

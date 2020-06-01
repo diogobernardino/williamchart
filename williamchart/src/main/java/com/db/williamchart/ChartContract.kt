@@ -16,11 +16,7 @@ interface ChartContract {
         fun drawLine(points: List<DataPoint>)
         fun drawLineBackground(innerFrame: Frame, points: List<DataPoint>)
         fun drawPoints(points: List<DataPoint>)
-        fun drawDebugFrame(
-            outerFrame: Frame,
-            innerFrame: Frame,
-            labelsFrame: List<Frame>
-        )
+        fun drawDebugFrame(frames: List<Frame>)
     }
 
     interface BarView {

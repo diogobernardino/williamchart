@@ -17,6 +17,7 @@ import com.db.williamchart.extensions.maxValueBy
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.extensions.toScale
+import com.db.williamchart.renderer.executor.DebugWithClickableFrames
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
 import com.db.williamchart.renderer.executor.MeasureLineChartPaddings
 
@@ -113,15 +114,20 @@ class LineChartRenderer(
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(
-                outerFrame,
-                innerFrame,
-                DebugWithLabelsFrame()(
-                    painter = painter,
-                    axisType = chartConfiguration.axis,
-                    xLabels = xLabels,
-                    yLabels = yLabels,
-                    labelsSize = chartConfiguration.labelsSize
-                )
+                listOf(outerFrame) +
+                    listOf(innerFrame) +
+                    DebugWithLabelsFrame()(
+                        painter = painter,
+                        axisType = chartConfiguration.axis,
+                        xLabels = xLabels,
+                        yLabels = yLabels,
+                        labelsSize = chartConfiguration.labelsSize
+                    ) +
+                    DebugWithClickableFrames()(
+                        data.map { it.screenPositionX },
+                        data.map { it.screenPositionY },
+                        chartConfiguration.clickableRadius
+                    )
             )
         }
     }

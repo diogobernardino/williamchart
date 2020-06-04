@@ -27,7 +27,6 @@ class DemoFragment : Fragment() {
             )
         lineChart.animation.duration = animationDuration
         lineChart.onDataPointClickListener = {
-            println("DemoFragment.onViewCreated $it")
             lineChartValue.text =
                 lineSet.toList()[it]
                     .second
@@ -87,6 +86,6 @@ class DemoFragment : Fragment() {
             100f
         )
 
-        private val animationDuration = 1000L
+        private const val animationDuration = 1000L
     }
 }

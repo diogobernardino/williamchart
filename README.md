@@ -13,7 +13,7 @@ Note: WilliamChart v3 has been completely re-written from scratch in Kotlin and 
 ### Gradle 
 
 ``` groovy
-implementation 'com.diogobernardino:williamchart:3.3.2'
+implementation 'com.diogobernardino:williamchart:3.4.0'
 ```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][1], I will be happy to know about it.

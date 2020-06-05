@@ -126,11 +126,9 @@ class HorizontalBarChartView @JvmOverloads constructor(
         }
     }
 
-    override fun drawDebugFrame(outerFrame: Frame, innerFrame: Frame, labelsFrame: List<Frame>) {
+    override fun drawDebugFrame(frames: List<Frame>) {
         painter.prepare(color = -0x1000000, style = Paint.Style.STROKE)
-        canvas.drawRect(outerFrame.toRect(), painter.paint)
-        canvas.drawRect(innerFrame.toRect(), painter.paint)
-        labelsFrame.forEach { canvas.drawRect(it.toRect(), painter.paint) }
+        frames.forEach { canvas.drawRect(it.toRect(), painter.paint) }
     }
 
     private fun handleAttributes(typedArray: TypedArray) {

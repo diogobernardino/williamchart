@@ -115,8 +115,7 @@ class LineChartRenderer(
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(
-                listOf(outerFrame) +
-                    listOf(innerFrame) +
+                listOf(outerFrame, innerFrame) +
                     DebugWithLabelsFrame()(
                         painter = painter,
                         axisType = chartConfiguration.axis,

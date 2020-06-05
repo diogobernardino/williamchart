@@ -60,9 +60,9 @@ class BarChartRenderer(
         yLabels = List(RendererConstants.defaultScaleNumberOfSteps + 1) {
             val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
-                    label = chartConfiguration.labelsFormatter(scaleValue),
-                    screenPositionX = 0F,
-                    screenPositionY = 0F
+                label = chartConfiguration.labelsFormatter(scaleValue),
+                screenPositionX = 0F,
+                screenPositionY = 0F
             )
         }
 
@@ -115,15 +115,14 @@ class BarChartRenderer(
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(
-                outerFrame,
-                innerFrame,
-                DebugWithLabelsFrame()(
-                    painter = painter,
-                    axisType = chartConfiguration.axis,
-                    xLabels = xLabels,
-                    yLabels = yLabels,
-                    labelsSize = chartConfiguration.labelsSize
-                )
+                listOf(outerFrame, innerFrame) +
+                    DebugWithLabelsFrame()(
+                        painter = painter,
+                        axisType = chartConfiguration.axis,
+                        xLabels = xLabels,
+                        yLabels = yLabels,
+                        labelsSize = chartConfiguration.labelsSize
+                    )
             )
         }
     }

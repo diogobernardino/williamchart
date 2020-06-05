@@ -24,11 +24,7 @@ interface ChartContract {
         fun drawLabels(xLabels: List<Label>)
         fun drawBars(points: List<DataPoint>, innerFrame: Frame)
         fun drawBarsBackground(points: List<DataPoint>, innerFrame: Frame)
-        fun drawDebugFrame(
-            outerFrame: Frame,
-            innerFrame: Frame,
-            labelsFrame: List<Frame>
-        )
+        fun drawDebugFrame(frames: List<Frame>)
     }
 
     interface DonutView {

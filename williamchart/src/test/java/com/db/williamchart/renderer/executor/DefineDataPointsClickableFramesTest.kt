@@ -1,5 +1,6 @@
 package com.db.williamchart.renderer.executor
 
+import com.db.williamchart.data.Frame
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -13,8 +14,8 @@ class DefineDataPointsClickableFramesTest {
     fun `clickable areas have the exact radius`() {
         // Act
         val firstClickableFrame = defineDataPointsClickableFrames(
-            xCoordinates = listOf(0f),
-            yCoordinates = listOf(0f),
+            innerFrame = Frame(0f, 0f, 0f, 0f),
+            datapointsCoordinates = listOf(Pair(0f, 0f)),
             clickableRadius = 1
         ).first()
 

@@ -210,6 +210,6 @@ class LineChartView @JvmOverloads constructor(
         private const val defaultLineThickness = 4F
         private const val defaultFillColor = 0
         private const val defaultLineColor = Color.BLACK
-        private const val defaultClickableArea = 16 // dp
+        private const val defaultClickableArea = 24 // dp
     }
 }

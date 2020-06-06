@@ -124,9 +124,14 @@ class LineChartRenderer(
                         labelsSize = chartConfiguration.labelsSize
                     ) +
                     DefineDataPointsClickableFrames()(
-                        data.map { it.screenPositionX },
-                        data.map { it.screenPositionY },
-                        chartConfiguration.clickableRadius
+                        innerFrame = innerFrame,
+                        datapointsCoordinates = data.map {
+                            Pair(
+                                it.screenPositionX,
+                                it.screenPositionY
+                            )
+                        },
+                        clickableRadius = chartConfiguration.clickableRadius
                     )
             )
         }
@@ -150,9 +155,14 @@ class LineChartRenderer(
 
         val clickableFrames =
             DefineDataPointsClickableFrames()(
-                data.map { it.screenPositionX },
-                data.map { it.screenPositionY },
-                chartConfiguration.clickableRadius
+                innerFrame = innerFrame,
+                datapointsCoordinates = data.map {
+                    Pair(
+                        it.screenPositionX,
+                        it.screenPositionY
+                    )
+                },
+                clickableRadius = chartConfiguration.clickableRadius
             )
 
         clickableFrames.forEachIndexed { index, frame ->

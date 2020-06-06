@@ -1,12 +1,16 @@
 package com.db.williamchart.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.Painter
@@ -40,6 +44,8 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
 
+    var onDataPointClickListener: (Int) -> Unit = {}
+
     protected lateinit var canvas: Canvas
 
     protected val painter: Painter = Painter(labelsFont = labelsFont)
@@ -47,8 +53,24 @@ abstract class AxisChartView @JvmOverloads constructor(
     // Initialized in init() by chart views extending `AxisChartView` (e.g. LineChartView)
     protected lateinit var renderer: ChartContract.Renderer
 
+    private var gestureDetector: GestureDetectorCompat
+
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.ChartAttrs))
+        gestureDetector =
+            GestureDetectorCompat(
+                this.context,
+                object : GestureDetector.SimpleOnGestureListener() {
+                    override fun onDown(e: MotionEvent?): Boolean = true
+                    override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                        val position = renderer.processClick(e?.x, e?.y)
+                        return if (position != -1) {
+                            onDataPointClickListener(position)
+                            true
+                        } else super.onSingleTapConfirmed(e)
+                    }
+                }
+            )
     }
 
     override fun onAttachedToWindow() {
@@ -79,6 +101,11 @@ abstract class AxisChartView @JvmOverloads constructor(
         this.canvas = canvas
         renderer.draw()
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent?): Boolean =
+        if (gestureDetector.onTouchEvent(event)) true
+        else super.onTouchEvent(event)
 
     abstract val chartConfiguration: ChartConfiguration
 

@@ -22,10 +22,6 @@ import com.db.williamchart.data.toRect
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.DonutChartRenderer
 
-@Experimental
-annotation class ImplementsAlphaChart
-
-@ImplementsAlphaChart
 class DonutChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.db.williamchart.view.ImplementsAlphaChart
 import kotlinx.android.synthetic.main.demo_fragment.*
 
-@ImplementsAlphaChart
 class DemoFragment : Fragment() {
 
     override fun onCreateView(

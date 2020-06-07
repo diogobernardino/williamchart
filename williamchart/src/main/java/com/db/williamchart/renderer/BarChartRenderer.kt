@@ -21,7 +21,7 @@ import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
 import com.db.williamchart.renderer.executor.DefineVerticalBarsClickableFrames
-import com.db.williamchart.renderer.executor.GetHorizontalBarBackgroundFrames
+import com.db.williamchart.renderer.executor.GetVerticalBarBackgroundFrames
 import com.db.williamchart.renderer.executor.GetVerticalBarFrames
 import com.db.williamchart.renderer.executor.MeasureBarChartPaddings
 import kotlin.math.max
@@ -114,7 +114,7 @@ class BarChartRenderer(
 
         if (chartConfiguration.barsBackgroundColor != -1)
             view.drawBarsBackground(
-                GetHorizontalBarBackgroundFrames()(
+                GetVerticalBarBackgroundFrames()(
                     innerFrame,
                     chartConfiguration.barsSpacing,
                     data

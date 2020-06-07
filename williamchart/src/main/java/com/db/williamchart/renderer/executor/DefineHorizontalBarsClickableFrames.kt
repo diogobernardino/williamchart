@@ -17,7 +17,7 @@ class DefineHorizontalBarsClickableFrames {
             Frame(
                 left = innerFrame.left,
                 top = it.second - halfDistanceBetweenDataPoints,
-                right = it.first,
+                right = innerFrame.right,
                 bottom = it.second + halfDistanceBetweenDataPoints
             )
         }

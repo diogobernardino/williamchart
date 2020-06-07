@@ -16,7 +16,7 @@ class DefineVerticalBarsClickableFrames {
         return datapointsCoordinates.map {
             Frame(
                 left = it.first - halfDistanceBetweenDataPoints,
-                top = it.second,
+                top = innerFrame.top,
                 right = it.first + halfDistanceBetweenDataPoints,
                 bottom = innerFrame.bottom
             )

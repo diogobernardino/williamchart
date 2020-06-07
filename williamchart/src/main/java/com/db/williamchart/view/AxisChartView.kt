@@ -13,6 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
+import com.db.williamchart.ExperimentalFeature
 import com.db.williamchart.Painter
 import com.db.williamchart.R
 import com.db.williamchart.animation.ChartAnimation
@@ -24,6 +25,7 @@ import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.renderer.RendererConstants.Companion.notInitialized
 
+@OptIn(ExperimentalFeature::class)
 abstract class AxisChartView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -44,6 +46,7 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
 
+    @ExperimentalFeature
     var onDataPointClickListener: (Int) -> Unit = {}
 
     protected lateinit var canvas: Canvas

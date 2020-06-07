@@ -2,7 +2,7 @@ package com.db.williamchart.renderer.executor
 
 import com.db.williamchart.data.Frame
 
-class DefineVerticalBarsClickableFrames {
+class DefineHorizontalBarsClickableFrames {
 
     operator fun invoke(
         innerFrame: Frame,
@@ -10,15 +10,15 @@ class DefineVerticalBarsClickableFrames {
     ): List<Frame> {
 
         val halfDistanceBetweenDataPoints =
-            (innerFrame.right - innerFrame.left - (datapointsCoordinates.size + 1)) /
+            (innerFrame.bottom - innerFrame.top - (datapointsCoordinates.size + 1)) /
                 datapointsCoordinates.size / 2
 
         return datapointsCoordinates.map {
             Frame(
-                left = it.first - halfDistanceBetweenDataPoints,
-                top = it.second,
-                right = it.first + halfDistanceBetweenDataPoints,
-                bottom = innerFrame.bottom
+                left = innerFrame.left,
+                top = it.second - halfDistanceBetweenDataPoints,
+                right = it.first,
+                bottom = it.second + halfDistanceBetweenDataPoints
             )
         }
     }

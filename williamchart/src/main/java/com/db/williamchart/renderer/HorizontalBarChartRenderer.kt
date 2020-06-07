@@ -13,12 +13,14 @@ import com.db.williamchart.data.notInitialized
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.data.configuration.toOuterFrame
+import com.db.williamchart.data.contains
 import com.db.williamchart.data.withPaddings
 import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.maxValueBy
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
+import com.db.williamchart.renderer.executor.DefineHorizontalBarsClickableFrames
 import com.db.williamchart.renderer.executor.GetHorizontalBarBackgroundFrames
 import com.db.williamchart.renderer.executor.GetHorizontalBarFrames
 import com.db.williamchart.renderer.executor.MeasureHorizontalBarChartPaddings
@@ -140,6 +142,10 @@ class HorizontalBarChartRenderer(
                         xLabels = xLabels,
                         yLabels = yLabels,
                         labelsSize = chartConfiguration.labelsSize
+                    ) +
+                    DefineHorizontalBarsClickableFrames()(
+                        innerFrame,
+                        data.map { Pair(it.screenPositionX, it.screenPositionY) }
                     )
             )
         }
@@ -157,7 +163,15 @@ class HorizontalBarChartRenderer(
     }
 
     override fun processClick(x: Float?, y: Float?): Int {
-        TODO("Not yet implemented")
+
+        if (x == null || y == null)
+            return -1
+
+        return DefineHorizontalBarsClickableFrames()(
+            innerFrame,
+            data.map { Pair(it.screenPositionX, it.screenPositionY) }
+        )
+            .indexOfFirst { it.contains(x, y) }
     }
 
     private fun placeLabelsX(innerFrame: Frame) {

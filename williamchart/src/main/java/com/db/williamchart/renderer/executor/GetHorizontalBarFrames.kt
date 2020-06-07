@@ -16,10 +16,10 @@ class GetHorizontalBarFrames {
 
         return data.map {
             Frame(
-                innerFrame.left,
-                it.screenPositionY - halfBarWidth,
-                it.screenPositionX,
-                it.screenPositionY + halfBarWidth
+                left = innerFrame.left,
+                top = it.screenPositionY - halfBarWidth,
+                right = it.screenPositionX,
+                bottom = it.screenPositionY + halfBarWidth
             )
         }
     }

@@ -112,7 +112,13 @@ class BarChartRenderer(
         if (chartConfiguration.barsBackgroundColor != -1)
             view.drawBarsBackground(data, innerFrame)
 
-        view.drawBars(GetVerticalBarFrames()(innerFrame, chartConfiguration.barsSpacing, data))
+        view.drawBars(
+            GetVerticalBarFrames()(
+                innerFrame,
+                chartConfiguration.barsSpacing,
+                data
+            )
+        )
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(

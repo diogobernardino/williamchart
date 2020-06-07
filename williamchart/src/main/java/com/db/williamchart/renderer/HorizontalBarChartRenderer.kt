@@ -116,7 +116,13 @@ class HorizontalBarChartRenderer(
         if (chartConfiguration.barsBackgroundColor != -1)
             view.drawBarsBackground(data, innerFrame)
 
-        view.drawBars(GetHorizontalBarFrames()(innerFrame, chartConfiguration.barsSpacing, data))
+        view.drawBars(
+            GetHorizontalBarFrames()(
+                innerFrame,
+                chartConfiguration.barsSpacing,
+                data
+            )
+        )
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.db.williamchart.ExperimentalFeature
 import kotlinx.android.synthetic.main.demo_fragment.*
 
 class DemoFragment : Fragment() {
@@ -16,6 +17,7 @@ class DemoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.demo_fragment, container, false)
 
+    @OptIn(ExperimentalFeature::class)
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {
 
         lineChart.gradientFillColors =

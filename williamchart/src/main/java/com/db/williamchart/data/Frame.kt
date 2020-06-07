@@ -2,12 +2,16 @@ package com.db.williamchart.data
 
 import android.graphics.LinearGradient
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.Shader
+import androidx.core.graphics.toRectF
 
 data class Frame(val left: Float, val top: Float, val right: Float, val bottom: Float)
 
 fun Frame.toRect(): Rect =
     Rect(this.left.toInt(), this.top.toInt(), this.right.toInt(), this.bottom.toInt())
+
+fun Frame.toRectF(): RectF = toRect().toRectF()
 
 fun Frame.withPaddings(paddings: Paddings): Frame =
     Frame(

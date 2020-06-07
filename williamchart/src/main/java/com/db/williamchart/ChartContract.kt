@@ -22,7 +22,7 @@ interface ChartContract {
     interface BarView {
         fun postInvalidate()
         fun drawLabels(xLabels: List<Label>)
-        fun drawBars(points: List<DataPoint>, innerFrame: Frame)
+        fun drawBars(frames: List<Frame>)
         fun drawBarsBackground(points: List<DataPoint>, innerFrame: Frame)
         fun drawDebugFrame(frames: List<Frame>)
     }

@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
+import androidx.core.graphics.toRectF
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.DefaultHorizontalAnimation
@@ -53,7 +54,8 @@ class HorizontalBarChartView @JvmOverloads constructor(
             labelsSize,
             scale,
             labelsFormatter,
-            barsBackgroundColor
+            barsBackgroundColor,
+            spacing
         )
 
     init {
@@ -63,23 +65,11 @@ class HorizontalBarChartView @JvmOverloads constructor(
         handleEditMode()
     }
 
-    override fun drawBars(
-        points: List<DataPoint>,
-        innerFrame: Frame
-    ) {
-
-        val halfBarWidth =
-            (innerFrame.bottom - innerFrame.top - (points.size + 1) * spacing) / points.size / 2
-
+    override fun drawBars(frames: List<Frame>) {
         painter.prepare(color = barsColor, style = Paint.Style.FILL)
-        points.forEach {
+        frames.forEach {
             canvas.drawRoundRect(
-                RectF(
-                    innerFrame.left,
-                    it.screenPositionY - halfBarWidth,
-                    it.screenPositionX,
-                    it.screenPositionY + halfBarWidth
-                ),
+                it.toRect().toRectF(),
                 barRadius,
                 barRadius,
                 painter.paint

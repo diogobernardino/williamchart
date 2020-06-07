@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
+import androidx.core.graphics.toRectF
 import com.db.williamchart.ChartContract
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
@@ -55,6 +56,7 @@ class BarChartView @JvmOverloads constructor(
                 labelsSize = labelsSize,
                 scale = scale,
                 barsBackgroundColor = barsBackgroundColor,
+                barsSpacing = spacing,
                 labelsFormatter = labelsFormatter
             )
 
@@ -64,23 +66,10 @@ class BarChartView @JvmOverloads constructor(
         handleEditMode()
     }
 
-    override fun drawBars(
-        points: List<DataPoint>,
-        innerFrame: Frame
-    ) {
-
-        val halfBarWidth =
-            (innerFrame.right - innerFrame.left - (points.size + 1) * spacing) / points.size / 2
-
+    override fun drawBars(frames: List<Frame>) {
         painter.prepare(color = barsColor, style = Paint.Style.FILL)
-        points.forEach {
-            val bar = RectF(
-                it.screenPositionX - halfBarWidth,
-                it.screenPositionY,
-                it.screenPositionX + halfBarWidth,
-                innerFrame.bottom
-            )
-            canvas.drawChartBar(bar, barRadius, painter.paint)
+        frames.forEach {
+            canvas.drawChartBar(it.toRect().toRectF(), barRadius, painter.paint)
         }
     }
 

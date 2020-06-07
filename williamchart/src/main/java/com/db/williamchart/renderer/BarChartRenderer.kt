@@ -19,6 +19,7 @@ import com.db.williamchart.extensions.maxValueBy
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
+import com.db.williamchart.renderer.executor.GetVerticalBarFrames
 import com.db.williamchart.renderer.executor.MeasureBarChartPaddings
 import kotlin.math.max
 
@@ -111,7 +112,7 @@ class BarChartRenderer(
         if (chartConfiguration.barsBackgroundColor != -1)
             view.drawBarsBackground(data, innerFrame)
 
-        view.drawBars(data, innerFrame)
+        view.drawBars(GetVerticalBarFrames()(innerFrame, chartConfiguration.barsSpacing, data))
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(

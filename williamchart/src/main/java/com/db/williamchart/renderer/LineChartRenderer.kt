@@ -153,23 +153,12 @@ class LineChartRenderer(
         if (x == null || y == null)
             return -1
 
-        val clickableFrames =
-            DefineDataPointsClickableFrames()(
-                innerFrame = innerFrame,
-                datapointsCoordinates = data.map {
-                    Pair(
-                        it.screenPositionX,
-                        it.screenPositionY
-                    )
-                },
-                clickableRadius = chartConfiguration.clickableRadius
-            )
-
-        clickableFrames.forEachIndexed { index, frame ->
-            if (frame.contains(x, y))
-                return index
-        }
-        return -1
+        return DefineDataPointsClickableFrames()(
+            innerFrame,
+            data.map { Pair(it.screenPositionX, it.screenPositionY) },
+            chartConfiguration.clickableRadius
+        )
+            .indexOfFirst { it.contains(x, y) }
     }
 
     private fun placeLabelsX(innerFrame: Frame) {

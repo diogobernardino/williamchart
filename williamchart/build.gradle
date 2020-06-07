@@ -13,9 +13,6 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName rootProject.williamchartVersion
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -34,8 +31,6 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     testImplementation "org.mockito:mockito-core:3.0.0"
     testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
 apply from: 'publish.gradle'

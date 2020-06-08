@@ -69,9 +69,9 @@ abstract class AxisChartView @JvmOverloads constructor(
                 object : GestureDetector.SimpleOnGestureListener() {
                     override fun onDown(e: MotionEvent?): Boolean = true
                     override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                        val position = renderer.processClick(e?.x, e?.y)
-                        return if (position != -1) {
-                            onDataPointClickListener(position)
+                        val datapointIndex = renderer.processClick(e?.x, e?.y)
+                        return if (datapointIndex != -1) {
+                            onDataPointClickListener(datapointIndex)
                             true
                         } else super.onSingleTapConfirmed(e)
                     }
@@ -110,7 +110,9 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        onDataPointSlideListener(renderer.processClick(event?.x, event?.y))
+        val datapointIndex = renderer.processClick(event?.x, event?.y)
+        if (datapointIndex != -1)
+            onDataPointSlideListener(datapointIndex)
         return if (gestureDetector.onTouchEvent(event)) true
         else super.onTouchEvent(event)
     }

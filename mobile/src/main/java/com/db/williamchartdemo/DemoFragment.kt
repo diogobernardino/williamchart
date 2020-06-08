@@ -27,11 +27,10 @@ class DemoFragment : Fragment() {
             )
         lineChart.animation.duration = animationDuration
         lineChart.onDataPointSlideListener = {
-            if (it != -1)
-                lineChartValue.text =
-                    lineSet.toList()[it]
-                        .second
-                        .toString()
+            lineChartValue.text =
+                lineSet.toList()[it]
+                    .second
+                    .toString()
         }
         lineChart.animate(lineSet)
 

@@ -170,9 +170,7 @@ class BarChartRenderer(
             .indexOfFirst { it.contains(x, y) }
     }
 
-    override fun processTouch(x: Float?, y: Float?): Int {
-        TODO("Not yet implemented")
-    }
+    override fun processTouch(x: Float?, y: Float?): Int = processClick(x, y)
 
     private fun placeLabelsX(innerFrame: Frame) {
 

@@ -40,6 +40,7 @@ interface ChartContract {
         fun render(entries: LinkedHashMap<String, Float>)
         fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>)
         fun processClick(x: Float?, y: Float?): Int
+        fun processTouch(x: Float?, y: Float?): Int
     }
 
     interface DonutRenderer {

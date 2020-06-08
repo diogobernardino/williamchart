@@ -170,6 +170,10 @@ class BarChartRenderer(
             .indexOfFirst { it.contains(x, y) }
     }
 
+    override fun processTouch(x: Float?, y: Float?): Int {
+        TODO("Not yet implemented")
+    }
+
     private fun placeLabelsX(innerFrame: Frame) {
 
         val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2

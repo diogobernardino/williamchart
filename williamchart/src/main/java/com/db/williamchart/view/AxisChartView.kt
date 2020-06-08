@@ -110,7 +110,7 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val datapointIndex = renderer.processClick(event?.x, event?.y)
+        val datapointIndex = renderer.processTouch(event?.x, event?.y)
         if (datapointIndex != -1)
             onDataPointSlideListener(datapointIndex)
         return if (gestureDetector.onTouchEvent(event)) true

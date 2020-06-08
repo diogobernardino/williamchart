@@ -20,6 +20,7 @@ import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.extensions.toScale
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
 import com.db.williamchart.renderer.executor.DefineDataPointsClickableFrames
+import com.db.williamchart.renderer.executor.DefineVerticalTouchableFrames
 import com.db.williamchart.renderer.executor.MeasureLineChartPaddings
 
 class LineChartRenderer(
@@ -157,6 +158,18 @@ class LineChartRenderer(
             innerFrame,
             data.map { Pair(it.screenPositionX, it.screenPositionY) },
             chartConfiguration.clickableRadius
+        )
+            .indexOfFirst { it.contains(x, y) }
+    }
+
+    override fun processTouch(x: Float?, y: Float?): Int {
+
+        if (x == null || y == null)
+            return -1
+
+        return DefineVerticalTouchableFrames()(
+            innerFrame,
+            data.map { Pair(it.screenPositionX, it.screenPositionY) }
         )
             .indexOfFirst { it.contains(x, y) }
     }

@@ -49,6 +49,9 @@ abstract class AxisChartView @JvmOverloads constructor(
     @ExperimentalFeature
     var onDataPointClickListener: (Int) -> Unit = {}
 
+    @ExperimentalFeature
+    var onDataPointSlideListener: (Int) -> Unit = {}
+
     protected lateinit var canvas: Canvas
 
     protected val painter: Painter = Painter(labelsFont = labelsFont)
@@ -106,9 +109,11 @@ abstract class AxisChartView @JvmOverloads constructor(
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent?): Boolean =
-        if (gestureDetector.onTouchEvent(event)) true
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        onDataPointSlideListener(renderer.processClick(event?.x, event?.y))
+        return if (gestureDetector.onTouchEvent(event)) true
         else super.onTouchEvent(event)
+    }
 
     abstract val chartConfiguration: ChartConfiguration
 

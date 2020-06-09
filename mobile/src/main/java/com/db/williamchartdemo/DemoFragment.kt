@@ -26,9 +26,9 @@ class DemoFragment : Fragment() {
                 Color.TRANSPARENT
             )
         lineChart.animation.duration = animationDuration
-        lineChart.onDataPointSlideListener = {
+        lineChart.onDataPointSlideListener = { index, _, _ ->
             lineChartValue.text =
-                lineSet.toList()[it]
+                lineSet.toList()[index]
                     .second
                     .toString()
         }

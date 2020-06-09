@@ -47,10 +47,10 @@ abstract class AxisChartView @JvmOverloads constructor(
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
 
     @ExperimentalFeature
-    var onDataPointClickListener: (Int) -> Unit = {}
+    var onDataPointClickListener: (index: Int, x: Float, y: Float) -> Unit = { _, _, _ -> }
 
     @ExperimentalFeature
-    var onDataPointSlideListener: (Int) -> Unit = {}
+    var onDataPointSlideListener: (index: Int, x: Float, y: Float) -> Unit = { _, _, _ -> }
 
     protected lateinit var canvas: Canvas
 
@@ -71,7 +71,7 @@ abstract class AxisChartView @JvmOverloads constructor(
                     override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
                         val datapointIndex = renderer.processClick(e?.x, e?.y)
                         return if (datapointIndex != -1) {
-                            onDataPointClickListener(datapointIndex)
+                            onDataPointClickListener(datapointIndex, 0f, 0f)
                             true
                         } else super.onSingleTapConfirmed(e)
                     }
@@ -112,7 +112,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val datapointIndex = renderer.processTouch(event?.x, event?.y)
         if (datapointIndex != -1)
-            onDataPointSlideListener(datapointIndex)
+            onDataPointSlideListener(datapointIndex, 0f, 0f)
         return if (gestureDetector.onTouchEvent(event)) true
         else super.onTouchEvent(event)
     }

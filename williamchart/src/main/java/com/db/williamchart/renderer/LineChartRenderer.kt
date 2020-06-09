@@ -149,29 +149,36 @@ class LineChartRenderer(
         view.postInvalidate()
     }
 
-    override fun processClick(x: Float?, y: Float?): Int {
+    override fun processClick(x: Float?, y: Float?): Triple<Int, Float, Float> {
 
         if (x == null || y == null)
-            return -1
+            return Triple(1, -1f, -1f)
 
-        return DefineDataPointsClickableFrames()(
-            innerFrame,
-            data.map { Pair(it.screenPositionX, it.screenPositionY) },
-            chartConfiguration.clickableRadius
-        )
-            .indexOfFirst { it.contains(x, y) }
+        val index =
+            DefineDataPointsClickableFrames()(
+                innerFrame,
+                data.map { Pair(it.screenPositionX, it.screenPositionY) },
+                chartConfiguration.clickableRadius
+            ).indexOfFirst { it.contains(x, y) }
+
+        return Triple(index, data[index].screenPositionX, data[index].screenPositionY)
     }
 
-    override fun processTouch(x: Float?, y: Float?): Int {
+    override fun processTouch(x: Float?, y: Float?): Triple<Int, Float, Float> {
 
         if (x == null || y == null)
-            return -1
+            return Triple(-1, -1f, -1f)
 
-        return DefineVerticalTouchableFrames()(
-            innerFrame,
-            data.map { Pair(it.screenPositionX, it.screenPositionY) }
-        )
-            .indexOfFirst { it.contains(x, y) }
+        val index =
+            DefineVerticalTouchableFrames()(
+                innerFrame,
+                data.map { Pair(it.screenPositionX, it.screenPositionY) }
+            )
+                .indexOfFirst { it.contains(x, y) }
+
+        return if (index != -1)
+            Triple(index, data[index].screenPositionX, data[index].screenPositionY)
+        else Triple(-1, -1f, -1f)
     }
 
     private fun placeLabelsX(innerFrame: Frame) {

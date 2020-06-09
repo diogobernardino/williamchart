@@ -39,8 +39,8 @@ interface ChartContract {
         fun draw()
         fun render(entries: LinkedHashMap<String, Float>)
         fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>)
-        fun processClick(x: Float?, y: Float?): Int
-        fun processTouch(x: Float?, y: Float?): Int
+        fun processClick(x: Float?, y: Float?): Triple<Int, Float, Float>
+        fun processTouch(x: Float?, y: Float?): Triple<Int, Float, Float>
     }
 
     interface DonutRenderer {

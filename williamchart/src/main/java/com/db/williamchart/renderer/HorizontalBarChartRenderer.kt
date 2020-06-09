@@ -162,19 +162,23 @@ class HorizontalBarChartRenderer(
         view.postInvalidate()
     }
 
-    override fun processClick(x: Float?, y: Float?): Int {
+    override fun processClick(x: Float?, y: Float?): Triple<Int, Float, Float> {
 
         if (x == null || y == null)
-            return -1
+            return Triple(-1, -1f, -1f)
 
-        return DefineHorizontalBarsClickableFrames()(
-            innerFrame,
-            data.map { Pair(it.screenPositionX, it.screenPositionY) }
-        )
-            .indexOfFirst { it.contains(x, y) }
+        val index =
+            DefineHorizontalBarsClickableFrames()(
+                innerFrame,
+                data.map { Pair(it.screenPositionX, it.screenPositionY) }
+            ).indexOfFirst { it.contains(x, y) }
+
+        return if (index != -1)
+            Triple(index, data[index].screenPositionX, data[index].screenPositionY)
+        else Triple(-1, -1f, -1f)
     }
 
-    override fun processTouch(x: Float?, y: Float?): Int = processClick(x, y)
+    override fun processTouch(x: Float?, y: Float?): Triple<Int, Float, Float> = processClick(x, y)
 
     private fun placeLabelsX(innerFrame: Frame) {
 

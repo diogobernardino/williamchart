@@ -161,7 +161,9 @@ class LineChartRenderer(
                 chartConfiguration.clickableRadius
             ).indexOfFirst { it.contains(x, y) }
 
-        return Triple(index, data[index].screenPositionX, data[index].screenPositionY)
+        return if (index != -1)
+            Triple(index, data[index].screenPositionX, data[index].screenPositionY)
+        else Triple(-1, -1f, -1f)
     }
 
     override fun processTouch(x: Float?, y: Float?): Triple<Int, Float, Float> {

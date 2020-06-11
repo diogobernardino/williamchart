@@ -27,7 +27,10 @@ class DemoFragment : Fragment() {
                 Color.TRANSPARENT
             )
         lineChart.animation.duration = animationDuration
-        lineChart.tooltip = SliderTooltip()
+        lineChart.tooltip =
+            SliderTooltip().also {
+                it.color = Color.WHITE
+            }
         lineChart.onDataPointClickListener = { index, _, _ ->
             lineChartValue.text =
                 lineSet.toList()[index]

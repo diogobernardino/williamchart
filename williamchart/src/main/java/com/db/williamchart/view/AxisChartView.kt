@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GestureDetectorCompat
@@ -48,6 +49,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
 
     var tooltip: Tooltip = object : Tooltip {
+        override fun onCreateTooltip(parentView: ViewGroup) {}
         override fun onDataPointTouch(x: Float, y: Float) {}
     }
 
@@ -82,6 +84,7 @@ abstract class AxisChartView @JvmOverloads constructor(
                     }
                 }
             )
+        doOnPreDraw { tooltip.onCreateTooltip(this) }
     }
 
     override fun onAttachedToWindow() {

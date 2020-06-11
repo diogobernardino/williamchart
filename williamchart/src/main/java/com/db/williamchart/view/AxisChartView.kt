@@ -16,6 +16,7 @@ import com.db.williamchart.ChartContract
 import com.db.williamchart.ExperimentalFeature
 import com.db.williamchart.Painter
 import com.db.williamchart.R
+import com.db.williamchart.Tooltip
 import com.db.williamchart.animation.ChartAnimation
 import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.AxisType
@@ -45,6 +46,10 @@ abstract class AxisChartView @JvmOverloads constructor(
     var labelsFormatter: (Float) -> String = { it.toString() }
 
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
+
+    var tooltip: Tooltip = object : Tooltip {
+        override fun onDataPointTouch(x: Float, y: Float) {}
+    }
 
     @ExperimentalFeature
     var onDataPointClickListener: (index: Int, x: Float, y: Float) -> Unit = { _, _, _ -> }

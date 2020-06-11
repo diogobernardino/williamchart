@@ -57,7 +57,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     var onDataPointClickListener: (index: Int, x: Float, y: Float) -> Unit = { _, _, _ -> }
 
     @ExperimentalFeature
-    var onDataPointSlideListener: (index: Int, x: Float, y: Float) -> Unit = { _, _, _ -> }
+    var onDataPointTouchListener: (index: Int, x: Float, y: Float) -> Unit = { _, _, _ -> }
 
     protected lateinit var canvas: Canvas
 
@@ -120,7 +120,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val (index, x, y) = renderer.processTouch(event?.x, event?.y)
         if (index != -1) {
-            onDataPointSlideListener(index, x, y)
+            onDataPointTouchListener(index, x, y)
             tooltip.onDataPointTouch(x, y)
         }
         return if (gestureDetector.onTouchEvent(event)) true

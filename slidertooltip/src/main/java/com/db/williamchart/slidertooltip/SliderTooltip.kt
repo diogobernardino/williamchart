@@ -13,6 +13,7 @@ class SliderTooltip : Tooltip {
         tooltipView =
             LayoutInflater.from(parentView.context)
                 .inflate(R.layout.tooltip_layout, parentView, false)
+        parentView.addView(tooltipView)
     }
 
     override fun onDataPointTouch(x: Float, y: Float) {

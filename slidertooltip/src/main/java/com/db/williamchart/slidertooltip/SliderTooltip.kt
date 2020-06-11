@@ -13,10 +13,12 @@ class SliderTooltip : Tooltip {
         tooltipView =
             LayoutInflater.from(parentView.context)
                 .inflate(R.layout.tooltip_layout, parentView, false)
+        tooltipView.visibility = View.INVISIBLE
         parentView.addView(tooltipView)
     }
 
     override fun onDataPointTouch(x: Float, y: Float) {
-        tooltipView.x = x
+        tooltipView.visibility = View.VISIBLE
+        tooltipView.x = x - tooltipView.width / 2
     }
 }

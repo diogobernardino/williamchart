@@ -34,6 +34,7 @@ class MeasureLineChartPaddingsTest {
     fun `paddings take into account line thickness`() {
         // Arrange
         val lineThickness = 999f
+        val halfLineThickness = lineThickness / 2
 
         // Act
         val paddings = measureLineChartPaddings.invoke(
@@ -47,9 +48,9 @@ class MeasureLineChartPaddingsTest {
         )
 
         // Assert
-        assertEquals(0f, paddings.left)
+        assertEquals(halfLineThickness, paddings.left)
         assertEquals(lineThickness, paddings.top)
-        assertEquals(0f, paddings.right)
+        assertEquals(halfLineThickness, paddings.right)
         assertEquals(lineThickness, paddings.bottom)
     }
 

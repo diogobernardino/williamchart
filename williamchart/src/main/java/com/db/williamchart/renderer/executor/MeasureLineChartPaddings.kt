@@ -33,9 +33,9 @@ class MeasureLineChartPaddings {
             )
 
         return labelsPaddings.copy(
-            left = labelsPaddings.left + pointsDrawableWidth.toFloat() / 2,
+            left = labelsPaddings.left + lineThickness / 2 + pointsDrawableWidth.toFloat() / 2,
             top = labelsPaddings.top + lineThickness + pointsDrawableHeight.toFloat() / 2,
-            right = labelsPaddings.right + pointsDrawableWidth.toFloat() / 2,
+            right = labelsPaddings.right + lineThickness / 2 + pointsDrawableWidth.toFloat() / 2,
             bottom = labelsPaddings.bottom + lineThickness + pointsDrawableHeight.toFloat() / 2
         )
     }

@@ -21,6 +21,9 @@ class DemoFragment : Fragment() {
     @OptIn(ExperimentalFeature::class)
     override fun onViewCreated(view: View, saveInstanceState: Bundle?) {
 
+        /**
+         * Line Chart
+         */
         lineChart.gradientFillColors =
             intArrayOf(
                 Color.parseColor("#81FFFFFF"),
@@ -39,9 +42,15 @@ class DemoFragment : Fragment() {
         }
         lineChart.animate(lineSet)
 
+        /**
+         * Bar Chart
+         */
         barChart.animation.duration = animationDuration
         barChart.animate(barSet)
 
+        /**
+         * Donut Chart
+         */
         donutChart.donutColors = intArrayOf(
             Color.parseColor("#8DFFFFFF"),
             Color.parseColor("#9EFFFFFF"),
@@ -50,6 +59,9 @@ class DemoFragment : Fragment() {
         donutChart.animation.duration = animationDuration
         donutChart.animate(donutSet)
 
+        /**
+         * Horizontal Bar Chart
+         */
         horizontalBarChart.animation.duration = animationDuration
         horizontalBarChart.animate(horizontalBarSet)
     }

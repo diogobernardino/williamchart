@@ -1,4 +1,4 @@
-# 👨🏻‍🔧 WIP williamchart
+# williamchart
 
 [![Kotlin Version](https://img.shields.io/badge/kotlin-1.3.72-blue.svg)](https://kotlinlang.org)
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)

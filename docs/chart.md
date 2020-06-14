@@ -6,36 +6,37 @@ nav_order: 2
 
 # Axis Chart
 
-In this page you will see how to customize everything that related to axis charts (e.g. line chart). Williamchart supports only 2 dimensional charts, allowing you to customize XY axis and labels.
+Learn how to customize everything related to axis charts (e.g. line chart, bar charts).
+Williamchart supports only 2 dimensional charts, allowing you to customize XY axis and labels.
 
 ### Axis Attributes
 
 | Kotlin | XML | Description |
 |---|---|---|
-| `axis` | `chart_axis` | Define which axis should be displayed. You can display only `x`, only `y`, both `xy`, or `none` of them. |
-| `scale` | N/A | Set limits to the scale displayed in your chart. By default, charts will have a scale between 0 and the maximum value needed to accomodate the range of values passed.|
+| `axis` | `chart_axis` | Define which axis to display. Options are: only `x`, only `y`, both `xy`, or `none` of them. |
+| `scale` | N/A | Set limits to the scale used in the chart. By default, charts will have a scale between 0 and the maximum value needed to accomodate the range of values passed.|
 
 ### Animations
 
-williamchart allows to customize your chart animation by either playing with interpolators or creating your own animations
+Customize enter animations using different Android SDK interpolators or creating your own animations.
 
 #### Interpolators
 Use any interpolator provided by the Android SDK or create your own ones by extending `Interpolator`.
 
 #### Custom animations
-Custom animations can be implemented by extending `ChartAnimation`. I will let you look at the class and understand what you will be required to implement.
+Custom animations should extend `ChartAnimation`.
 
 ### Labels Attributes
 
 | Kotlin | Xml | Description |
 |---|---|---|
-| `labelsFont` | `chart_labelsFont` | Font used in chart labels and scale. |
-| `labelsSize` | `chart_labelsSize`  | What should be the size of your font. |
-| `labelsColor` | `chart_labelsColor ` | Color of text used in labels and scale. |
+| `labelsFont` | `chart_labelsFont` | Font used in labels and scale. |
+| `labelsSize` | `chart_labelsSize`  | Font size used in labels and scale. |
+| `labelsColor` | `chart_labelsColor ` | Text color used in labels and scale. |
 
 ### Format labels
 
-Usually useful when you have labels with specific metrics, you can write your own format which will be applied to each label in your X or Y axis, depending if you have a vertical or horizontal chart.
+Write your own formatter applied in labels shown on X or Y axis, depending on the orientation of your chart (vertical or horizontal). This comes in handy when charting specific metrics (e.g. meters).
 
 | Kotlin |  XML | Description |
 |---|---|---|

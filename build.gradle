@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        williamchartVersion = "3.6.0"
+        williamchartVersion = "3.7.0"
     }
 
     repositories {

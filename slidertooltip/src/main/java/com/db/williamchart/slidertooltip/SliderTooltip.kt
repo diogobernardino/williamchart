@@ -27,4 +27,6 @@ class SliderTooltip : Tooltip {
         tooltipView.visibility = View.VISIBLE
         tooltipView.x = x - tooltipView.width / 2
     }
+
+    override fun onDataPointClick(x: Float, y: Float) {}
 }

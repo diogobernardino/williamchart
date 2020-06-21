@@ -27,7 +27,9 @@ class PointTooltip : Tooltip {
         parentView.addView(tooltipView)
     }
 
-    override fun onDataPointTouch(x: Float, y: Float) {
+    override fun onDataPointTouch(x: Float, y: Float) {}
+
+    override fun onDataPointClick(x: Float, y: Float) {
         tooltipView.visibility = View.VISIBLE
         tooltipView.x = x - tooltipView.width / 2
         tooltipView.y = y - tooltipView.height / 2

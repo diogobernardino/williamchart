@@ -1,4 +1,4 @@
-# 👨🏻‍🔧 WIP Welcome
+# Welcome
 
 [![Kotlin Version](https://img.shields.io/badge/kotlin-1.3.50-blue.svg)](https://kotlinlang.org)
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
@@ -54,6 +54,4 @@ If you liked williamchart and decide to use it in your projects, please drop me 
     limitations under the License.
 
 [1]: https://twitter.com/dfbernardino
-[2]: ./art/phone.png
-[3]: ./art/watch.png
 [4]: ./art/demo_screenshot.png

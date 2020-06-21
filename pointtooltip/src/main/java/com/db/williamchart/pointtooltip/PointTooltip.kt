@@ -1,11 +1,18 @@
 package com.db.williamchart.pointtooltip
 
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.db.williamchart.Tooltip
 
 class PointTooltip : Tooltip {
+
     override fun onCreateTooltip(parentView: ViewGroup) {
-        TODO("Not yet implemented")
+        val tooltipView: View =
+            LayoutInflater.from(parentView.context)
+                .inflate(R.layout.point_tooltip_layout, parentView, false)
+        val imageView = tooltipView.findViewById<ImageView>(R.id.tooltipImage)
     }
 
     override fun onDataPointTouch(x: Float, y: Float) {

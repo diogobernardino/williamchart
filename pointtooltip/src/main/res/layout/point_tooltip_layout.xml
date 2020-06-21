@@ -2,6 +2,6 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tooltipImage"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:ignore="ContentDescription" />

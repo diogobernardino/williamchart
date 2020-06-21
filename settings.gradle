@@ -1,1 +1,1 @@
-include ':mobile', ':williamchart', ':slidertooltip', ':pointtooltip'
+include ':mobile', ':williamchart', ':slidertooltip', ':pointstooltip'

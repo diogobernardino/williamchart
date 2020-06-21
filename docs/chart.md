@@ -36,7 +36,7 @@ Custom animations should extend `ChartAnimation`.
 
 ### Format labels
 
-Write your own formatter applied in labels shown on X or Y axis, depending on the orientation of your chart (vertical or horizontal). This comes in handy when charting specific metrics (e.g. meters).
+Write your own formatter which will be applied to labels shown on X or Y axis, depending on the orientation of your chart (vertical or horizontal). This comes in handy when charting specific metrics (e.g. meters).
 
 | Kotlin |  XML | Description |
 |---|---|---|

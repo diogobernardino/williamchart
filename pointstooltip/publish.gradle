@@ -7,9 +7,9 @@ group 'com.diogobernardino.williamchart'
 publishing {
     publications {
         Production(MavenPublication) {
-            artifact("$buildDir/outputs/aar/slidertooltip-release.aar")
+            artifact("$buildDir/outputs/aar/pointstooltip-release.aar")
             groupId this.group
-            artifactId 'tooltip-slider'
+            artifactId 'tooltip-points'
             version this.version
 
             pom.withXml {
@@ -45,7 +45,7 @@ bintray {
     publish = true
     pkg {
         repo = 'maven' // the name of the repository you created on Bintray
-        name = 'com.diogobernardino.williamchart:tooltip-slider'
+        name = 'com.diogobernardino.williamchart:tooltip-points'
         // the name of the package you created inside it
         version {
             name = this.version

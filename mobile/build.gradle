@@ -51,7 +51,6 @@ android {
 dependencies {
     implementation project(path: ':williamchart')
     implementation project(path: ':slidertooltip')
-    implementation project(path: ':pointstooltip')
     //implementation "com.diogobernardino:williamchart:$rootProject.williamchartVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72"
     implementation 'androidx.appcompat:appcompat:1.1.0'

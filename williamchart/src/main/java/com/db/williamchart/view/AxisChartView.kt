@@ -15,6 +15,7 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.ExperimentalFeature
+import com.db.williamchart.Grid
 import com.db.williamchart.Painter
 import com.db.williamchart.R
 import com.db.williamchart.Tooltip
@@ -54,6 +55,10 @@ abstract class AxisChartView @JvmOverloads constructor(
         override fun onDataPointClick(x: Float, y: Float) {}
     }
 
+    var grid: Grid = object : Grid {
+        override fun onCreateTooltip(parentView: ViewGroup) {}
+    }
+
     @ExperimentalFeature
     var onDataPointClickListener: (index: Int, x: Float, y: Float) -> Unit = { _, _, _ -> }
 
@@ -87,6 +92,7 @@ abstract class AxisChartView @JvmOverloads constructor(
                 }
             )
         doOnPreDraw { tooltip.onCreateTooltip(this) }
+        doOnPreDraw { grid.onCreateTooltip(this) }
     }
 
     override fun onAttachedToWindow() {

@@ -55,8 +55,6 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
-    private val clickableRadius = defaultClickableArea.toPx()
-
     override val chartConfiguration: ChartConfiguration
         get() =
             LineChartConfiguration(
@@ -79,7 +77,7 @@ class LineChartView @JvmOverloads constructor(
                 fillColor = fillColor,
                 gradientFillColors = gradientFillColors,
                 labelsFormatter = labelsFormatter,
-                clickableRadius = clickableRadius
+                clickableRadius = defaultClickableArea.toPx()
             )
 
     init {

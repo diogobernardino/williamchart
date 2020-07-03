@@ -4,10 +4,16 @@ apply plugin: 'com.jfrog.bintray'
 version rootProject.williamchartVersion
 group 'com.diogobernardino.williamchart'
 
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
 publishing {
     publications {
         Production(MavenPublication) {
             artifact("$buildDir/outputs/aar/slidertooltip-release.aar")
+            artifact sourcesJar
             groupId this.group
             artifactId 'tooltip-slider'
             version this.version

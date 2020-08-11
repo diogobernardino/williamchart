@@ -29,7 +29,7 @@ class DemoFragment : Fragment() {
                 Color.parseColor("#81FFFFFF"),
                 Color.TRANSPARENT
             )
-        lineChart.animation.duration = animationDuration
+        lineChart.animation.duration = ANIMATION_DURATION
         lineChart.tooltip =
             SliderTooltip().also {
                 it.color = Color.WHITE
@@ -45,7 +45,7 @@ class DemoFragment : Fragment() {
         /**
          * Bar Chart
          */
-        barChart.animation.duration = animationDuration
+        barChart.animation.duration = ANIMATION_DURATION
         barChart.animate(barSet)
 
         /**
@@ -56,13 +56,13 @@ class DemoFragment : Fragment() {
             Color.parseColor("#9EFFFFFF"),
             Color.parseColor("#FFFFFF")
         )
-        donutChart.animation.duration = animationDuration
+        donutChart.animation.duration = ANIMATION_DURATION
         donutChart.animate(donutSet)
 
         /**
          * Horizontal Bar Chart
          */
-        horizontalBarChart.animation.duration = animationDuration
+        horizontalBarChart.animation.duration = ANIMATION_DURATION
         horizontalBarChart.animate(horizontalBarSet)
     }
 
@@ -103,6 +103,6 @@ class DemoFragment : Fragment() {
             100f
         )
 
-        private const val animationDuration = 1000L
+        private const val ANIMATION_DURATION = 1000L
     }
 }

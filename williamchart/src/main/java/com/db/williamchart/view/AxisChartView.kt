@@ -25,7 +25,7 @@ import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
-import com.db.williamchart.renderer.RendererConstants.Companion.notInitialized
+import com.db.williamchart.renderer.RendererConstants.Companion.NOT_INITIALIZED
 
 @OptIn(ExperimentalFeature::class)
 abstract class AxisChartView @JvmOverloads constructor(
@@ -34,7 +34,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    var labelsSize: Float = defaultLabelsSize
+    var labelsSize: Float = DEFAULT_LABEL_SIZE
 
     var labelsColor: Int = -0x1000000
 
@@ -42,7 +42,7 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     var axis: AxisType = AxisType.XY
 
-    var scale: Scale = Scale(notInitialized, notInitialized)
+    var scale: Scale = Scale(NOT_INITIALIZED, NOT_INITIALIZED)
 
     var labelsFormatter: (Float) -> String = { it.toString() }
 
@@ -107,8 +107,8 @@ abstract class AxisChartView @JvmOverloads constructor(
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
 
         setMeasuredDimension(
-            if (widthMode == MeasureSpec.AT_MOST) defaultFrameWidth else widthMeasureSpec,
-            if (heightMode == MeasureSpec.AT_MOST) defaultFrameHeight else heightMeasureSpec
+            if (widthMode == MeasureSpec.AT_MOST) DEFAULT_FRAME_WIDTH else widthMeasureSpec,
+            if (heightMode == MeasureSpec.AT_MOST) DEFAULT_FRAME_HEIGHT else heightMeasureSpec
         )
     }
 
@@ -170,15 +170,15 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     protected fun handleEditMode() {
         if (isInEditMode) {
-            show(editModeSampleData)
+            show(EDIT_MODE_SAMPLE_DATA)
         }
     }
 
     companion object {
-        private const val defaultFrameWidth = 200
-        private const val defaultFrameHeight = 100
-        private const val defaultLabelsSize = 60F
-        private val editModeSampleData =
+        private const val DEFAULT_FRAME_WIDTH = 200
+        private const val DEFAULT_FRAME_HEIGHT = 100
+        private const val DEFAULT_LABEL_SIZE = 60F
+        private val EDIT_MODE_SAMPLE_DATA =
             linkedMapOf(
                 "Label1" to 1f,
                 "Label2" to 7.5f,

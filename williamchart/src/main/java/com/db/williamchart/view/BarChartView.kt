@@ -27,14 +27,14 @@ class BarChartView @JvmOverloads constructor(
 ) : AxisChartView(context, attrs, defStyleAttr), ChartContract.BarView {
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var spacing = defaultSpacing
+    var spacing = DEFAULT_SPACING
 
     @ColorInt
     @Suppress("MemberVisibilityCanBePrivate")
-    var barsColor: Int = defaultBarsColor
+    var barsColor: Int = DEFAULT_BARS_COLOR
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var barRadius: Float = defaultBarsRadius
+    var barRadius: Float = DEFAULT_BARS_RADIUS
 
     @Suppress("MemberVisibilityCanBePrivate")
     var barsBackgroundColor: Int = -1
@@ -120,8 +120,8 @@ class BarChartView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val defaultSpacing = 10f
-        private const val defaultBarsColor = Color.BLACK
-        private const val defaultBarsRadius = 0F
+        private const val DEFAULT_SPACING = 10f
+        private const val DEFAULT_BARS_COLOR = Color.BLACK
+        private const val DEFAULT_BARS_RADIUS = 0F
     }
 }

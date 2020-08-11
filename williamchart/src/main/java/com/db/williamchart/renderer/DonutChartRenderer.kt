@@ -38,10 +38,10 @@ class DonutChartRenderer(
             configuration.height - configuration.paddings.bottom - configuration.thickness / 2
         innerFrameWithStroke = Frame(left, top, right, bottom)
 
-        datapoints.forEach { it.screenDegrees = it.value * fullDegrees / chartConfiguration.total }
+        datapoints.forEach { it.screenDegrees = it.value * FULL_DEGREES / chartConfiguration.total }
         datapoints = datapoints.sortedByDescending { it.screenDegrees }
 
-        animation.animateFrom(ignoreStartPosition, datapoints) {
+        animation.animateFrom(IGNORE_START_POSITION, datapoints) {
             view.postInvalidate()
         }
 
@@ -74,7 +74,7 @@ class DonutChartRenderer(
     }
 
     companion object {
-        private const val fullDegrees = 360
-        private const val ignoreStartPosition = -1234f
+        private const val FULL_DEGREES = 360
+        private const val IGNORE_START_POSITION = -1234f
     }
 }

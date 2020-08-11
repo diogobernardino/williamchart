@@ -51,8 +51,8 @@ class LineChartRenderer(
             chartConfiguration = chartConfiguration.copy(scale = data.toScale())
 
         xLabels = data.toLabels()
-        val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
-        yLabels = List(RendererConstants.defaultScaleNumberOfSteps + 1) {
+        val scaleStep = chartConfiguration.scale.size / RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS
+        yLabels = List(RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS + 1) {
             val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
                 label = chartConfiguration.labelsFormatter(scaleValue),
@@ -74,7 +74,7 @@ class LineChartRenderer(
             axisType = chartConfiguration.axis,
             labelsHeight = painter.measureLabelHeight(chartConfiguration.labelsSize),
             longestLabelWidth = longestChartLabelWidth,
-            labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart,
+            labelsPaddingToInnerChart = RendererConstants.LABELS_PADDING_TO_INNER_CHART,
             lineThickness = chartConfiguration.lineThickness,
             pointsDrawableWidth = chartConfiguration.pointsDrawableWidth,
             pointsDrawableHeight = chartConfiguration.pointsDrawableHeight
@@ -114,7 +114,7 @@ class LineChartRenderer(
         view.drawLine(data)
         view.drawPoints(data)
 
-        if (RendererConstants.inDebug) {
+        if (RendererConstants.IN_DEBUG) {
             view.drawDebugFrame(
                 listOf(outerFrame, innerFrame) +
                     DebugWithLabelsFrame()(
@@ -195,7 +195,7 @@ class LineChartRenderer(
         val xLabelsVerticalPosition =
             innerFrame.bottom -
                 painter.measureLabelAscent(chartConfiguration.labelsSize) +
-                RendererConstants.labelsPaddingToInnerChart
+                RendererConstants.LABELS_PADDING_TO_INNER_CHART
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
@@ -206,14 +206,14 @@ class LineChartRenderer(
     private fun placeLabelsY(innerFrame: Frame) {
 
         val heightBetweenLabels =
-            (innerFrame.bottom - innerFrame.top) / RendererConstants.defaultScaleNumberOfSteps
+            (innerFrame.bottom - innerFrame.top) / RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS
         val labelsBottomPosition =
             innerFrame.bottom + painter.measureLabelHeight(chartConfiguration.labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 innerFrame.left -
-                    RendererConstants.labelsPaddingToInnerChart -
+                    RendererConstants.LABELS_PADDING_TO_INNER_CHART -
                     painter.measureLabelWidth(label.label, chartConfiguration.labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }

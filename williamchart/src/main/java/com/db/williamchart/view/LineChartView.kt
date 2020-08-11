@@ -36,16 +36,16 @@ class LineChartView @JvmOverloads constructor(
     ChartContract.LineView {
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var smooth: Boolean = defaultSmooth
+    var smooth: Boolean = DEFAULT_SMOOTH
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var lineThickness: Float = defaultLineThickness
+    var lineThickness: Float = DEFAULT_LINE_THICKNESS
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var fillColor: Int = defaultFillColor
+    var fillColor: Int = DEFAULT_FILL_COLOR
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var lineColor: Int = defaultLineColor
+    var lineColor: Int = DEFAULT_LINE_COLOR
 
     @Size(min = 2, max = 2)
     @Suppress("MemberVisibilityCanBePrivate")
@@ -55,7 +55,7 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var pointsDrawableRes = -1
 
-    private val clickableRadius = defaultClickableArea.toPx()
+    private val clickableRadius = DEFAULT_CLICKABLE_AREA.toPx()
 
     override val chartConfiguration: ChartConfiguration
         get() =
@@ -92,7 +92,7 @@ class LineChartView @JvmOverloads constructor(
 
         val linePath =
             if (!smooth) points.toLinePath()
-            else points.toSmoothLinePath(defaultSmoothFactor)
+            else points.toSmoothLinePath(DEFAULT_SMOOTH_FACTOR)
 
         painter.prepare(color = lineColor, style = Paint.Style.STROKE, strokeWidth = lineThickness)
         canvas.drawPath(linePath, painter.paint)
@@ -102,7 +102,7 @@ class LineChartView @JvmOverloads constructor(
 
         val linePath =
             if (!smooth) points.toLinePath()
-            else points.toSmoothLinePath(defaultSmoothFactor)
+            else points.toSmoothLinePath(DEFAULT_SMOOTH_FACTOR)
         val backgroundPath = createBackgroundPath(linePath, points, innerFrame.bottom)
 
         if (fillColor != 0)
@@ -177,11 +177,11 @@ class LineChartView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val defaultSmoothFactor = 0.20f
-        private const val defaultSmooth = false
-        private const val defaultLineThickness = 4F
-        private const val defaultFillColor = 0
-        private const val defaultLineColor = Color.BLACK
-        private const val defaultClickableArea = 24 // dp
+        private const val DEFAULT_SMOOTH_FACTOR = 0.20f
+        private const val DEFAULT_SMOOTH = false
+        private const val DEFAULT_LINE_THICKNESS = 4F
+        private const val DEFAULT_FILL_COLOR = 0
+        private const val DEFAULT_LINE_COLOR = Color.BLACK
+        private const val DEFAULT_CLICKABLE_AREA = 24 // dp
     }
 }

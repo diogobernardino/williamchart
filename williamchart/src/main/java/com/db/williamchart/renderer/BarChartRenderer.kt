@@ -60,8 +60,8 @@ class BarChartRenderer(
                 )
 
         xLabels = data.toLabels()
-        val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
-        yLabels = List(RendererConstants.defaultScaleNumberOfSteps + 1) {
+        val scaleStep = chartConfiguration.scale.size / RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS
+        yLabels = List(RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS + 1) {
             val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
                 label = chartConfiguration.labelsFormatter(scaleValue),
@@ -83,7 +83,7 @@ class BarChartRenderer(
             axisType = chartConfiguration.axis,
             labelsHeight = painter.measureLabelHeight(chartConfiguration.labelsSize),
             longestLabelWidth = longestChartLabelWidth,
-            labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart
+            labelsPaddingToInnerChart = RendererConstants.LABELS_PADDING_TO_INNER_CHART
         )
 
         outerFrame = chartConfiguration.toOuterFrame()
@@ -129,7 +129,7 @@ class BarChartRenderer(
             )
         )
 
-        if (RendererConstants.inDebug) {
+        if (RendererConstants.IN_DEBUG) {
             view.drawDebugFrame(
                 listOf(outerFrame, innerFrame) +
                     DebugWithLabelsFrame()(
@@ -186,7 +186,7 @@ class BarChartRenderer(
         val xLabelsVerticalPosition =
             innerFrame.bottom -
                 painter.measureLabelAscent(chartConfiguration.labelsSize) +
-                RendererConstants.labelsPaddingToInnerChart
+                RendererConstants.LABELS_PADDING_TO_INNER_CHART
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
@@ -197,14 +197,14 @@ class BarChartRenderer(
     private fun placeLabelsY(innerFrame: Frame) {
 
         val heightBetweenLabels =
-            (innerFrame.bottom - innerFrame.top) / RendererConstants.defaultScaleNumberOfSteps
+            (innerFrame.bottom - innerFrame.top) / RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS
         val labelsBottomPosition =
             innerFrame.bottom + painter.measureLabelHeight(chartConfiguration.labelsSize) / 2
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 innerFrame.left -
-                    RendererConstants.labelsPaddingToInnerChart -
+                    RendererConstants.LABELS_PADDING_TO_INNER_CHART -
                     painter.measureLabelWidth(label.label, chartConfiguration.labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }

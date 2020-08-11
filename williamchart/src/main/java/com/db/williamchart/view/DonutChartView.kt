@@ -29,19 +29,19 @@ class DonutChartView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr), ChartContract.DonutView {
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var donutThickness = defaultThickness
+    var donutThickness = DEFAULT_THICKNESS
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var donutColors = intArrayOf(defaultColor)
+    var donutColors = intArrayOf(DEFAULT_COLOR)
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var donutBackgroundColor = defaultBackgroundColor
+    var donutBackgroundColor = DEFAULT_BACKGROUND_COLOR
 
     @Suppress("MemberVisibilityCanBePrivate")
     var donutRoundCorners = false
 
     @Suppress("MemberVisibilityCanBePrivate")
-    var donutTotal = defaultDonutTotal
+    var donutTotal = DEFAULT_DONUT_TOTAL
 
     var animation: ChartAnimation<DonutDataPoint> = DefaultDonutAnimation()
 
@@ -85,7 +85,7 @@ class DonutChartView @JvmOverloads constructor(
             paint.color = donutColors[index]
             canvas.drawArc(
                 innerFrame.toRect().toRectF(),
-                defaultStartAngle,
+                DEFAULT_START_ANGLE,
                 degree,
                 false,
                 paint
@@ -143,10 +143,10 @@ class DonutChartView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val defaultThickness = 50f
-        private const val defaultColor = 0
-        private const val defaultBackgroundColor = Color.TRANSPARENT
-        private const val defaultStartAngle = 90f
-        private const val defaultDonutTotal = 100f
+        private const val DEFAULT_THICKNESS = 50f
+        private const val DEFAULT_COLOR = 0
+        private const val DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT
+        private const val DEFAULT_START_ANGLE = 90f
+        private const val DEFAULT_DONUT_TOTAL = 100f
     }
 }

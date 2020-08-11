@@ -59,8 +59,8 @@ class HorizontalBarChartRenderer(
                     )
                 )
 
-        val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
-        xLabels = List(RendererConstants.defaultScaleNumberOfSteps + 1) {
+        val scaleStep = chartConfiguration.scale.size / RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS
+        xLabels = List(RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS + 1) {
             val scaleValue = chartConfiguration.scale.min + scaleStep * it
             Label(
                 label = chartConfiguration.labelsFormatter(scaleValue),
@@ -87,7 +87,7 @@ class HorizontalBarChartRenderer(
                 chartConfiguration.labelsSize
             ),
             yLongestLabelWidth = yLongestChartLabelWidth,
-            labelsPaddingToInnerChart = RendererConstants.labelsPaddingToInnerChart
+            labelsPaddingToInnerChart = RendererConstants.LABELS_PADDING_TO_INNER_CHART
         )
 
         outerFrame = chartConfiguration.toOuterFrame()
@@ -133,7 +133,7 @@ class HorizontalBarChartRenderer(
             )
         )
 
-        if (RendererConstants.inDebug) {
+        if (RendererConstants.IN_DEBUG) {
             view.drawDebugFrame(
                 listOf(outerFrame, innerFrame) +
                     DebugWithLabelsFrame()(
@@ -183,11 +183,11 @@ class HorizontalBarChartRenderer(
     private fun placeLabelsX(innerFrame: Frame) {
 
         val widthBetweenLabels =
-            (innerFrame.right - innerFrame.left) / RendererConstants.defaultScaleNumberOfSteps
+            (innerFrame.right - innerFrame.left) / RendererConstants.DEFAULT_SCALE_NUMBER_OF_STEPS
         val xLabelsVerticalPosition =
             innerFrame.bottom -
                 painter.measureLabelAscent(chartConfiguration.labelsSize) +
-                RendererConstants.labelsPaddingToInnerChart
+                RendererConstants.LABELS_PADDING_TO_INNER_CHART
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = innerFrame.left + widthBetweenLabels * index

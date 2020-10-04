@@ -81,8 +81,10 @@ class DonutChartView @JvmOverloads constructor(
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = donutThickness
 
+        val invertedColors = donutColors.reversed() // Degrees list come inverted
+
         degrees.forEachIndexed { index, degree ->
-            paint.color = donutColors[index]
+            paint.color = invertedColors[index]
             canvas.drawArc(
                 innerFrame.toRect().toRectF(),
                 defaultStartAngle,

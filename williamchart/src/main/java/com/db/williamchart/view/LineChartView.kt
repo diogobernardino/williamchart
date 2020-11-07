@@ -47,7 +47,7 @@ class LineChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var lineColor: Int = defaultLineColor
 
-    @Size(min = 2, max = 2)
+    @Size(2)
     @Suppress("MemberVisibilityCanBePrivate")
     var gradientFillColors: IntArray = intArrayOf(0, 0)
 

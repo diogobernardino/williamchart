@@ -15,6 +15,7 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.ExperimentalFeature
+import com.db.williamchart.Labels
 import com.db.williamchart.Painter
 import com.db.williamchart.R
 import com.db.williamchart.Tooltip
@@ -25,6 +26,7 @@ import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
+import com.db.williamchart.plugin.AxisLabels
 import com.db.williamchart.renderer.RendererConstants.Companion.notInitialized
 
 @OptIn(ExperimentalFeature::class)
@@ -47,6 +49,8 @@ abstract class AxisChartView @JvmOverloads constructor(
     var labelsFormatter: (Float) -> String = { it.toString() }
 
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
+
+    val labels: Labels = AxisLabels()
 
     var tooltip: Tooltip = object : Tooltip {
         override fun onCreateTooltip(parentView: ViewGroup) {}

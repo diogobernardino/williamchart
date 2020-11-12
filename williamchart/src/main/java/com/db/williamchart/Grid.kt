@@ -4,4 +4,5 @@ import android.view.ViewGroup
 
 interface Grid {
     fun onCreateTooltip(parentView: ViewGroup)
+    fun draw()
 }

@@ -61,6 +61,7 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     var grid: Grid = object : Grid {
         override fun onCreateTooltip(parentView: ViewGroup) {}
+        override fun draw() {}
     }
 
     @ExperimentalFeature

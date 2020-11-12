@@ -13,6 +13,7 @@ interface ChartContract {
     interface AxisView {
         fun postInvalidate()
         fun drawLabels(xLabels: List<Label>)
+        fun drawAxis()
         fun drawDebugFrame(frames: List<Frame>)
     }
 

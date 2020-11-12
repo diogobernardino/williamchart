@@ -91,6 +91,10 @@ class BarChartView @JvmOverloads constructor(
         labels.draw(canvas, painter.paint, xLabels)
     }
 
+    override fun drawAxis() {
+        TODO("Not yet implemented")
+    }
+
     override fun drawDebugFrame(frames: List<Frame>) {
         painter.prepare(color = -0x1000000, style = Paint.Style.STROKE)
         frames.forEach { canvas.drawRect(it.toRect(), painter.paint) }

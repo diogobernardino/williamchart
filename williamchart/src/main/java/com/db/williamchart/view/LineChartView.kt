@@ -119,6 +119,10 @@ class LineChartView @JvmOverloads constructor(
         labels.draw(canvas, painter.paint, xLabels)
     }
 
+    override fun drawAxis() {
+        TODO("Not yet implemented")
+    }
+
     override fun drawPoints(points: List<DataPoint>) {
         if (pointsDrawableRes != -1) {
             points.forEach { dataPoint ->

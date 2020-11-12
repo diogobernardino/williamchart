@@ -9,4 +9,6 @@ class FullGrid : Grid {
         LayoutInflater.from(parentView.context)
             .inflate(R.layout.grid_layout, parentView, true)
     }
+
+    override fun draw() {}
 }

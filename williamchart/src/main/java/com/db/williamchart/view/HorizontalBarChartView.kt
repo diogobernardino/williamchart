@@ -88,21 +88,8 @@ class HorizontalBarChartView @JvmOverloads constructor(
     }
 
     override fun drawLabels(xLabels: List<Label>) {
-
-        painter.prepare(
-            textSize = labelsSize,
-            color = labelsColor,
-            font = labelsFont
-        )
-
-        xLabels.forEach {
-            canvas.drawText(
-                it.label,
-                it.screenPositionX,
-                it.screenPositionY,
-                painter.paint
-            )
-        }
+        painter.prepare(textSize = labelsSize, color = labelsColor, font = labelsFont)
+        labels.draw(canvas, painter.paint, xLabels)
     }
 
     override fun drawDebugFrame(frames: List<Frame>) {

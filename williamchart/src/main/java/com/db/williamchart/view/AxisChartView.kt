@@ -69,25 +69,24 @@ abstract class AxisChartView @JvmOverloads constructor(
      */
     protected lateinit var renderer: ChartContract.Renderer
 
-    private var gestureDetector: GestureDetectorCompat
+    private val gestureDetector: GestureDetectorCompat =
+        GestureDetectorCompat(
+            this.context,
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDown(e: MotionEvent?): Boolean = true
+                override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                    val (index, x, y) = renderer.processClick(e?.x, e?.y)
+                    return if (index != -1) {
+                        onDataPointClickListener(index, x, y)
+                        tooltip.onDataPointClick(x, y)
+                        true
+                    } else false
+                }
+            }
+        )
 
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.ChartAttrs))
-        gestureDetector =
-            GestureDetectorCompat(
-                this.context,
-                object : GestureDetector.SimpleOnGestureListener() {
-                    override fun onDown(e: MotionEvent?): Boolean = true
-                    override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                        val (index, x, y) = renderer.processClick(e?.x, e?.y)
-                        return if (index != -1) {
-                            onDataPointClickListener(index, x, y)
-                            tooltip.onDataPointClick(x, y)
-                            true
-                        } else super.onSingleTapConfirmed(e)
-                    }
-                }
-            )
         doOnPreDraw { tooltip.onCreateTooltip(this) }
     }
 

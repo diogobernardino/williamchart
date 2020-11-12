@@ -13,7 +13,7 @@ interface ChartContract {
     interface AxisView {
         fun postInvalidate()
         fun drawLabels(xLabels: List<Label>)
-        fun drawAxis()
+        fun drawGrid(innerFrame: Frame, xLabelsPositions: List<Float>)
         fun drawDebugFrame(frames: List<Frame>)
     }
 

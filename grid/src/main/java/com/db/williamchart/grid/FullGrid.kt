@@ -1,14 +1,9 @@
 package com.db.williamchart.grid
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.graphics.Canvas
 import com.db.williamchart.Grid
+import com.db.williamchart.data.Frame
 
 class FullGrid : Grid {
-    override fun onCreateTooltip(parentView: ViewGroup) {
-        LayoutInflater.from(parentView.context)
-            .inflate(R.layout.grid_layout, parentView, true)
-    }
-
-    override fun draw() {}
+    override fun draw(canvas: Canvas, innerFrame: Frame, xLabelsPositions: List<Float>) {}
 }

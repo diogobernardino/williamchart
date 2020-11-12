@@ -106,6 +106,8 @@ class LineChartRenderer(
         if (chartConfiguration.axis.shouldDisplayAxisY())
             view.drawLabels(yLabels)
 
+        view.drawGrid(innerFrame, xLabels.map { it.screenPositionX })
+
         if (chartConfiguration.fillColor != 0 ||
             chartConfiguration.gradientFillColors.isNotEmpty()
         )

@@ -1,8 +1,8 @@
 package com.db.williamchart
 
-import android.view.ViewGroup
+import android.graphics.Canvas
+import com.db.williamchart.data.Frame
 
 interface Grid {
-    fun onCreateTooltip(parentView: ViewGroup)
-    fun draw()
+    fun draw(canvas: Canvas, innerFrame: Frame, xLabelsPositions: List<Float>)
 }

@@ -25,6 +25,7 @@ import com.db.williamchart.animation.DefaultAnimation
 import com.db.williamchart.data.AxisType
 import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
+import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.plugin.AxisLabels
@@ -60,8 +61,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     }
 
     var grid: Grid = object : Grid {
-        override fun onCreateTooltip(parentView: ViewGroup) {}
-        override fun draw() {}
+        override fun draw(canvas: Canvas, innerFrame: Frame, xLabelsPositions: List<Float>) {}
     }
 
     @ExperimentalFeature
@@ -98,7 +98,6 @@ abstract class AxisChartView @JvmOverloads constructor(
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.ChartAttrs))
         doOnPreDraw { tooltip.onCreateTooltip(this) }
-        doOnPreDraw { grid.onCreateTooltip(this) }
     }
 
     override fun onAttachedToWindow() {

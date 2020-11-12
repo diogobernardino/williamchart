@@ -91,7 +91,7 @@ class BarChartView @JvmOverloads constructor(
         labels.draw(canvas, painter.paint, xLabels)
     }
 
-    override fun drawAxis() {
+    override fun drawGrid(innerFrame: Frame, xLabelsPositions: List<Float>) {
         TODO("Not yet implemented")
     }
 

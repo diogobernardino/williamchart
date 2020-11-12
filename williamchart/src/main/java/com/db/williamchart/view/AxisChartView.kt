@@ -64,7 +64,9 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     protected val painter: Painter = Painter(labelsFont = labelsFont)
 
-    // Initialized in init() by chart views extending `AxisChartView` (e.g. LineChartView)
+    /**
+     * Initialized in init function by chart views extending [AxisChartView] (e.g. [LineChartView])
+     */
     protected lateinit var renderer: ChartContract.Renderer
 
     private var gestureDetector: GestureDetectorCompat

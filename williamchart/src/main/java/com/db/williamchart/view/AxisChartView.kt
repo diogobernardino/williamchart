@@ -15,6 +15,7 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.doOnPreDraw
 import com.db.williamchart.ChartContract
 import com.db.williamchart.ExperimentalFeature
+import com.db.williamchart.Labels
 import com.db.williamchart.Grid
 import com.db.williamchart.Painter
 import com.db.williamchart.R
@@ -26,6 +27,7 @@ import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
+import com.db.williamchart.plugin.AxisLabels
 import com.db.williamchart.renderer.RendererConstants.Companion.notInitialized
 
 @OptIn(ExperimentalFeature::class)
@@ -49,6 +51,8 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     var animation: ChartAnimation<DataPoint> = DefaultAnimation()
 
+    val labels: Labels = AxisLabels()
+
     var tooltip: Tooltip = object : Tooltip {
         override fun onCreateTooltip(parentView: ViewGroup) {}
         override fun onDataPointTouch(x: Float, y: Float) {}
@@ -69,28 +73,29 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     protected val painter: Painter = Painter(labelsFont = labelsFont)
 
-    // Initialized in init() by chart views extending `AxisChartView` (e.g. LineChartView)
+    /**
+     * Initialized in init function by chart views extending [AxisChartView] (e.g. [LineChartView])
+     */
     protected lateinit var renderer: ChartContract.Renderer
 
-    private var gestureDetector: GestureDetectorCompat
+    private val gestureDetector: GestureDetectorCompat =
+        GestureDetectorCompat(
+            this.context,
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDown(e: MotionEvent?): Boolean = true
+                override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+                    val (index, x, y) = renderer.processClick(e?.x, e?.y)
+                    return if (index != -1) {
+                        onDataPointClickListener(index, x, y)
+                        tooltip.onDataPointClick(x, y)
+                        true
+                    } else false
+                }
+            }
+        )
 
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.ChartAttrs))
-        gestureDetector =
-            GestureDetectorCompat(
-                this.context,
-                object : GestureDetector.SimpleOnGestureListener() {
-                    override fun onDown(e: MotionEvent?): Boolean = true
-                    override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                        val (index, x, y) = renderer.processClick(e?.x, e?.y)
-                        return if (index != -1) {
-                            onDataPointClickListener(index, x, y)
-                            tooltip.onDataPointClick(x, y)
-                            true
-                        } else super.onSingleTapConfirmed(e)
-                    }
-                }
-            )
         doOnPreDraw { tooltip.onCreateTooltip(this) }
         doOnPreDraw { grid.onCreateTooltip(this) }
     }

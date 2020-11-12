@@ -112,7 +112,9 @@ class LineChartRenderer(
             view.drawLineBackground(innerFrame, data)
 
         view.drawLine(data)
-        view.drawPoints(data)
+
+        if (chartConfiguration.pointsDrawableWidth != -1)
+            view.drawPoints(data)
 
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(

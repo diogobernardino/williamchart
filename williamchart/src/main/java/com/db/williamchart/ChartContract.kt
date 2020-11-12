@@ -10,21 +10,21 @@ import com.db.williamchart.data.Label
 
 interface ChartContract {
 
-    interface LineView {
+    interface AxisView {
         fun postInvalidate()
         fun drawLabels(xLabels: List<Label>)
-        fun drawLine(points: List<DataPoint>)
-        fun drawLineBackground(innerFrame: Frame, points: List<DataPoint>)
-        fun drawPoints(points: List<DataPoint>)
         fun drawDebugFrame(frames: List<Frame>)
     }
 
-    interface BarView {
-        fun postInvalidate()
-        fun drawLabels(xLabels: List<Label>)
+    interface LineView : AxisView {
+        fun drawLine(points: List<DataPoint>)
+        fun drawLineBackground(innerFrame: Frame, points: List<DataPoint>)
+        fun drawPoints(points: List<DataPoint>)
+    }
+
+    interface BarView : AxisView {
         fun drawBars(frames: List<Frame>)
         fun drawBarsBackground(frames: List<Frame>)
-        fun drawDebugFrame(frames: List<Frame>)
     }
 
     interface DonutView {

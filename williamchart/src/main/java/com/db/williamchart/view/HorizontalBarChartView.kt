@@ -92,8 +92,12 @@ class HorizontalBarChartView @JvmOverloads constructor(
         labels.draw(canvas, painter.paint, xLabels)
     }
 
-    override fun drawGrid(innerFrame: Frame, xLabelsPositions: List<Float>) {
-        TODO("Not yet implemented")
+    override fun drawGrid(
+        innerFrame: Frame,
+        xLabelsPositions: List<Float>,
+        yLabelsPositions: List<Float>
+    ) {
+        grid.draw(canvas, innerFrame, xLabelsPositions, yLabelsPositions)
     }
 
     override fun drawDebugFrame(frames: List<Frame>) {

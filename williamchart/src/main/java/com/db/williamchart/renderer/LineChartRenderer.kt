@@ -83,12 +83,8 @@ class LineChartRenderer(
         outerFrame = chartConfiguration.toOuterFrame()
         innerFrame = outerFrame.withPaddings(paddings)
 
-        if (chartConfiguration.axis.shouldDisplayAxisX())
-            placeLabelsX(innerFrame)
-
-        if (chartConfiguration.axis.shouldDisplayAxisY())
-            placeLabelsY(innerFrame)
-
+        placeLabelsX(innerFrame)
+        placeLabelsY(innerFrame)
         placeDataPoints(innerFrame)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
@@ -106,7 +102,11 @@ class LineChartRenderer(
         if (chartConfiguration.axis.shouldDisplayAxisY())
             view.drawLabels(yLabels)
 
-        view.drawGrid(innerFrame, xLabels.map { it.screenPositionX })
+        view.drawGrid(
+            innerFrame,
+            xLabels.map { it.screenPositionX },
+            yLabels.map { it.screenPositionY }
+        )
 
         if (chartConfiguration.fillColor != 0 ||
             chartConfiguration.gradientFillColors.isNotEmpty()

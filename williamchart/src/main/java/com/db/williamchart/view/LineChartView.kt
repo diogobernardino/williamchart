@@ -119,8 +119,12 @@ class LineChartView @JvmOverloads constructor(
         labels.draw(canvas, painter.paint, xLabels)
     }
 
-    override fun drawGrid(innerFrame: Frame, xLabelsPositions: List<Float>) {
-        grid.draw(canvas, innerFrame, xLabelsPositions)
+    override fun drawGrid(
+        innerFrame: Frame,
+        xLabelsPositions: List<Float>,
+        yLabelsPositions: List<Float>
+    ) {
+        grid.draw(canvas, innerFrame, xLabelsPositions, yLabelsPositions)
     }
 
     override fun drawPoints(points: List<DataPoint>) {

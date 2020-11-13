@@ -4,5 +4,10 @@ import android.graphics.Canvas
 import com.db.williamchart.data.Frame
 
 interface Grid {
-    fun draw(canvas: Canvas, innerFrame: Frame, xLabelsPositions: List<Float>)
+    fun draw(
+        canvas: Canvas,
+        innerFrame: Frame,
+        xLabelsPositions: List<Float>,
+        yLabelsPositions: List<Float>
+    )
 }

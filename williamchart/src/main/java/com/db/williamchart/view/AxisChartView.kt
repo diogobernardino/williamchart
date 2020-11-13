@@ -61,7 +61,13 @@ abstract class AxisChartView @JvmOverloads constructor(
     }
 
     var grid: Grid = object : Grid {
-        override fun draw(canvas: Canvas, innerFrame: Frame, xLabelsPositions: List<Float>) {}
+        override fun draw(
+            canvas: Canvas,
+            innerFrame: Frame,
+            xLabelsPositions: List<Float>,
+            yLabelsPositions: List<Float>
+        ) {
+        }
     }
 
     @ExperimentalFeature

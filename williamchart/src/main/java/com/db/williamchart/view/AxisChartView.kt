@@ -28,6 +28,7 @@ import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
+import com.db.williamchart.plugin.AxisGrid
 import com.db.williamchart.plugin.AxisLabels
 import com.db.williamchart.renderer.RendererConstants.Companion.notInitialized
 
@@ -163,6 +164,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     private fun handleAttributes(typedArray: TypedArray) {
         typedArray.apply {
 
+            // Customize Axis
             axis = when (getString(R.styleable.ChartAttrs_chart_axis)) {
                 "0" -> AxisType.NONE
                 "1" -> AxisType.X
@@ -170,6 +172,7 @@ abstract class AxisChartView @JvmOverloads constructor(
                 else -> AxisType.XY
             }
 
+            // Customize Labels
             labelsSize = getDimension(R.styleable.ChartAttrs_chart_labelsSize, labelsSize)
 
             labelsColor = getColor(R.styleable.ChartAttrs_chart_labelsColor, labelsColor)
@@ -181,6 +184,16 @@ abstract class AxisChartView @JvmOverloads constructor(
                         getResourceId(R.styleable.ChartAttrs_chart_labelsFont, -1)
                     )
                 painter.labelsFont = labelsFont
+            }
+
+            // Customize Grid
+            val shouldDisplayGrid = getBoolean(R.styleable.ChartAttrs_chart_grid, false)
+            if (shouldDisplayGrid) {
+                grid = AxisGrid().apply {
+                    color = getColor(R.styleable.ChartAttrs_chart_gridColor, color)
+                    strokeWidth =
+                        getDimension(R.styleable.ChartAttrs_chart_gridStrokeWidth, strokeWidth)
+                }
             }
 
             recycle()

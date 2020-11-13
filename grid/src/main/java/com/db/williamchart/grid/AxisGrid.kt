@@ -7,7 +7,11 @@ import com.db.williamchart.data.Frame
 
 class AxisGrid : Grid {
 
-    private val paint = Paint()
+    var color = -0x1000000
+
+    private val paint = Paint().apply {
+        this.color = this@AxisGrid.color
+    }
 
     override fun draw(
         canvas: Canvas,

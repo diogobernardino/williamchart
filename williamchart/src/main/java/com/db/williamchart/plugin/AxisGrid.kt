@@ -15,17 +15,17 @@ class AxisGrid : Grid {
     var strokeWidth = DEFAULT_STROKE_WIDTH
     var dashEffect = false
 
-    private val paint = Paint()
-
-    override fun preDraw() {
-        paint.color = color
-        paint.strokeWidth = strokeWidth
-        if (dashEffect)
-            paint.pathEffect =
-                DashPathEffect(
-                    floatArrayOf(DEFAULT_DASH_INTERVAL, DEFAULT_DASH_INTERVAL),
-                    0f
-                )
+    private val paint by lazy {
+        Paint().apply {
+            color = this@AxisGrid.color
+            strokeWidth = this@AxisGrid.strokeWidth
+            if (dashEffect)
+                pathEffect =
+                    DashPathEffect(
+                        floatArrayOf(DEFAULT_DASH_INTERVAL, DEFAULT_DASH_INTERVAL),
+                        0f
+                    )
+        }
     }
 
     override fun draw(

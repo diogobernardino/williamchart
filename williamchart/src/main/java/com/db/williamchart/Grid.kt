@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import com.db.williamchart.data.Frame
 
 interface Grid {
+    fun preDraw()
     fun draw(
         canvas: Canvas,
         innerFrame: Frame,

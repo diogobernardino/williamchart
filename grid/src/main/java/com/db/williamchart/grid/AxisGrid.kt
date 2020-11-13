@@ -9,8 +9,10 @@ class AxisGrid : Grid {
 
     var color = -0x1000000
 
-    private val paint = Paint().apply {
-        this.color = this@AxisGrid.color
+    private val paint = Paint()
+
+    override fun preDraw() {
+        paint.color = color
     }
 
     override fun draw(

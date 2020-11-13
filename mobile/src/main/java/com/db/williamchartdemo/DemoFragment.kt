@@ -35,7 +35,7 @@ class DemoFragment : Fragment() {
             SliderTooltip().also {
                 it.color = Color.WHITE
             }
-        lineChart.grid = AxisGrid()
+        lineChart.grid = AxisGrid().also { it.color = Color.RED }
         lineChart.onDataPointTouchListener = { index, _, _ ->
             lineChartValue.text =
                 lineSet.toList()[index]

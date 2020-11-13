@@ -61,6 +61,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     }
 
     var grid: Grid = object : Grid {
+        override fun preDraw() {}
         override fun draw(
             canvas: Canvas,
             innerFrame: Frame,
@@ -104,6 +105,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.ChartAttrs))
         doOnPreDraw { tooltip.onCreateTooltip(this) }
+        doOnPreDraw { grid.preDraw() }
     }
 
     override fun onAttachedToWindow() {

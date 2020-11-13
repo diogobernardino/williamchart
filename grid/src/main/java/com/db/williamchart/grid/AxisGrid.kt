@@ -8,11 +8,13 @@ import com.db.williamchart.data.Frame
 class AxisGrid : Grid {
 
     var color = -0x1000000
+    var strokeWidth = 5F
 
     private val paint = Paint()
 
     override fun preDraw() {
         paint.color = color
+        paint.strokeWidth = strokeWidth
     }
 
     override fun draw(

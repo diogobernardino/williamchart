@@ -14,11 +14,11 @@ Note: WilliamChart v3 has been completely re-written from scratch in Kotlin and 
 
 ``` groovy
 // Charts
-implementation 'com.diogobernardino:williamchart:3.7.2'
+implementation 'com.diogobernardino:williamchart:3.8.0'
 
 // Tooltips
-implementation 'com.diogobernardino.williamchart:tooltip-slider:3.7.2'
-implementation 'com.diogobernardino.williamchart:tooltip-points:3.7.2'
+implementation 'com.diogobernardino.williamchart:tooltip-slider:3.8.0'
+implementation 'com.diogobernardino.williamchart:tooltip-points:3.8.0'
 ```
 
 If you find this library useful and decide to use it in your projects please drop me a line [@dfbernardino][1], I will be happy to know about it.

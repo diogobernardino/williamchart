@@ -52,9 +52,9 @@ class DemoFragment : Fragment() {
          * Donut Chart
          */
         donutChart.donutColors = intArrayOf(
-            Color.parseColor("#8DFFFFFF"),
+            Color.parseColor("#FFFFFF"),
             Color.parseColor("#9EFFFFFF"),
-            Color.parseColor("#FFFFFF")
+            Color.parseColor("#8DFFFFFF")
         )
         donutChart.animation.duration = animationDuration
         donutChart.animate(donutSet)

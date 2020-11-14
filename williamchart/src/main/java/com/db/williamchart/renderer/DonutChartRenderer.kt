@@ -57,20 +57,29 @@ class DonutChartRenderer(
     }
 
     override fun render(values: List<Float>) {
+        val valuesOffset = values.generateValuesOffset()
         datapoints = values.mapIndexed { index, value ->
-            val valueOffset = if (index == 0) 0f else values[index - 1]
-            value.toDonutDataPoint(valueOffset)
+            value.toDonutDataPoint(valuesOffset[index])
         }
         view.postInvalidate()
     }
 
     override fun anim(values: List<Float>, animation: ChartAnimation<DonutDataPoint>) {
+        val valuesOffset = values.generateValuesOffset()
         datapoints = values.mapIndexed { index, value ->
-            val valueOffset = if (index == 0) 0f else values[index - 1]
-            value.toDonutDataPoint(valueOffset)
+            value.toDonutDataPoint(valuesOffset[index])
         }
         this.animation = animation
         view.postInvalidate()
+    }
+
+    private fun List<Float>.generateValuesOffset(): List<Float> {
+        val valuesOffset: MutableList<Float> = mutableListOf()
+        this.forEachIndexed { index, _ ->
+            val offset = if (index == 0) 0f else valuesOffset[index - 1] + this[index - 1]
+            valuesOffset.add(index, offset)
+        }
+        return valuesOffset.toList()
     }
 
     companion object {

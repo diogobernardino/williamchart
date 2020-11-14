@@ -34,7 +34,7 @@ Custom animations should extend `ChartAnimation`.
 | `labelsSize` | `chart_labelsSize`  | Font size used in labels and scale. |
 | `labelsColor` | `chart_labelsColor ` | Text color used in labels and scale. |
 
-### Format labels
+#### Format labels
 
 Write your own formatter which will be applied to labels shown on X or Y axis, depending on the orientation of your chart (vertical or horizontal). This comes in handy when charting specific metrics (e.g. meters).
 
@@ -46,4 +46,26 @@ The following snippet will concatenate "€" at the end of all labels (e.g. 300�
 
 ```kotlin
 lineChartView.labelsFormatter = { it + "€" }
+```
+
+### Grid Attributes
+
+| Xml | Description |
+|---|---|
+| `chart_grid` | `true` if it should display a grid, `false` otherwise. If not provided, default grid properties are used (e.g. color).  |
+| `chart_gridColor`  | Color used in grid dividers. |
+| `chart_gridStrokeWidth ` | Thickness used in grid dividers.|
+
+#### Programmatically
+
+Create and customize your grid programmatically using `AxisGrid`.
+
+```kotlin
+// Create and customize axis object
+val myGrid = AxisGrid()
+grid.color = Color.RED
+grid.strokeWidth = 110f
+
+// Set grid
+lineChartView.grid = myGrid 
 ```

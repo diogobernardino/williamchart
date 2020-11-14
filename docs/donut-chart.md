@@ -17,8 +17,12 @@ nav_order: 5
 | `donutBackgroundColor ` | `chart_donutBackgroundColor ` | Background color staying behind bar. |
 | `donutRoundCorners ` | `chart_donutRoundCorners ` | Define if donut should have round corners or not, `true` or `false`. |
 
-#### WIP Animation
+### Animations
 
-* Animation
-* Interpolator
-* Example
+Customize enter animations using different Android SDK interpolators or creating your own animations.
+
+#### Interpolators
+Use any interpolator provided by the Android SDK or create your own ones by extending `Interpolator`.
+
+#### Custom animations
+Custom animations should extend `ChartAnimation`.

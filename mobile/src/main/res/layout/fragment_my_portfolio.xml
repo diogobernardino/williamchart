@@ -1,34 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:theme="@style/Theme.MyPortfolioTheme">
+    android:background="#46244E"
+    app:theme="@style/Theme.MyPortfolioTheme">
 
     <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/myPortfolioToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         app:title="My Portfolio" />
 
-    <com.google.android.material.card.MaterialCardView
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginRight="@dimen/spacing_small"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_tune_my_portfolio"
+        app:layout_constraintBottom_toBottomOf="@id/myPortfolioToolbar"
+        app:layout_constraintRight_toRightOf="@id/myPortfolioToolbar"
+        app:layout_constraintTop_toTopOf="@id/myPortfolioToolbar"
+        tools:ignore="ContentDescription" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/todoView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginHorizontal="@dimen/spacing_medium" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/myPortfolioToolbar">
+
+        <com.db.williamchart.view.DonutChartView
+            android:id="@+id/donutChart"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:chart_donutBackgroundColor="#fff"
+            app:chart_donutThickness="@dimen/spacing_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/depositLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deposit"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintLeft_toRightOf="@+id/donutChart"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$3,000"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintLeft_toLeftOf="@+id/depositLabel"
+            app:layout_constraintTop_toBottomOf="@id/depositLabel" />
+
+        <TextView
+            android:id="@+id/rateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rate"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintLeft_toRightOf="@+id/depositLabel"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+10.25%"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintLeft_toLeftOf="@+id/rateLabel"
+            app:layout_constraintTop_toBottomOf="@id/rateLabel" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.db.williamchart.view.LineChartView
+        android:id="@+id/myPortfolioLineChart"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        app:chart_axis="none" />
+        app:chart_axis="none"
+        app:chart_lineColor="#C4BACA"
+        app:chart_smoothLine="true"
+        app:layout_constraintTop_toBottomOf="@id/todoView" />
 
     <com.db.williamchart.view.BarChartView
+        android:id="@+id/myPortfolioBarChart"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="200dp"
+        app:chart_axis="none"
+        app:chart_barsColor="#3F51B5"
+        app:chart_barsRadius="@dimen/spacing_small"
+        app:chart_spacing="@dimen/spacing_small"
+        app:layout_constraintTop_toBottomOf="@+id/myPortfolioLineChart" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_small"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myPortfolioBarChart">
+
+        <com.google.android.material.button.MaterialButton
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="55dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginRight="@dimen/spacing_small"
+            android:text="1h"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.button.MaterialButton
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="55dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginRight="@dimen/spacing_small"
+            android:text="1d"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.button.MaterialButton
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="55dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginRight="@dimen/spacing_small"
+            android:text="1w"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.button.MaterialButton
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="55dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginRight="@dimen/spacing_small"
+            android:text="1m"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.button.MaterialButton
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="55dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginRight="@dimen/spacing_small"
+            android:text="1y"
+            tools:ignore="HardcodedText" />
+
+        <com.google.android.material.button.MaterialButton
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="55dp"
+            android:layout_height="100dp"
+            android:text="All"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/spacing_medium"
-        android:text="See more" />
+        android:text="See more"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="HardcodedText" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

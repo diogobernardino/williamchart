@@ -31,7 +31,7 @@
 
     <style name="Widget.MyPortfolio.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="textAllCaps">false</item>
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">@color/my_portfolio_text_btn</item>
         <item name="backgroundTint">@color/my_portfolio_outlined_btn</item>
         <item name="strokeColor">#64386B</item>
     </style>

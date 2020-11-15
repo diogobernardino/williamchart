@@ -37,7 +37,7 @@
     </style>
 
     <style name="ShapeAppearance.MyPortfolio.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-        <item name="cornerRadius">@dimen/spacing_xxlarge</item>
+        <item name="cornerSize">@dimen/spacing_medium</item>
         <item name="cornerFamily">rounded</item>
     </style>
 

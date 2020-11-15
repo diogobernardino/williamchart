@@ -6,4 +6,5 @@
     <dimen name="spacing_large">24dp</dimen>
     <dimen name="spacing_xlarge">32dp</dimen>
     <dimen name="spacing_xxlarge">40dp</dimen>
+    <dimen name="my_portfolio_timespan_height">80dp</dimen>
 </resources>

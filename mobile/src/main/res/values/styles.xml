@@ -12,7 +12,6 @@
         <item name="materialButtonStyle">@style/Widget.MyPortfolio.Button</item>
         <item name="materialButtonOutlinedStyle">@style/Widget.MyPortfolio.Button.OutlinedButton
         </item>
-        <item name="materialCardViewStyle">@style/Widget.MyPortfolio.CardView</item>
         <item name="shapeAppearanceSmallComponent">
             @style/ShapeAppearance.MyPortfolio.SmallComponent
         </item>
@@ -26,7 +25,7 @@
     <style name="Widget.MyPortfolio.Button" parent="Widget.MaterialComponents.Button">
         <item name="textAllCaps">false</item>
         <item name="android:textColor">#fff</item>
-        <item name="backgroundTint">#331A39</item>
+        <item name="backgroundTint">#46244E</item>
     </style>
 
     <style name="Widget.MyPortfolio.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -34,14 +33,11 @@
         <item name="android:textColor">@color/my_portfolio_text_btn</item>
         <item name="backgroundTint">@color/my_portfolio_outlined_btn</item>
         <item name="strokeColor">#64386B</item>
+        <item name="strokeWidth">1.5dp</item>
     </style>
 
     <style name="ShapeAppearance.MyPortfolio.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerSize">@dimen/spacing_medium</item>
         <item name="cornerFamily">rounded</item>
-    </style>
-
-    <style name="Widget.MyPortfolio.CardView" parent="Widget.MaterialComponents.CardView">
-        <item name="cardBackgroundColor">#FF9800</item>
     </style>
 </resources>

@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/myPortfolioToolbar">
 
         <com.db.williamchart.view.DonutChartView
-            android:id="@+id/donutChart"
+            android:id="@+id/myPortfolioDonutChart"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:chart_donutBackgroundColor="#fff"
@@ -47,13 +47,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Deposit"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            app:layout_constraintLeft_toRightOf="@+id/donutChart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintLeft_toRightOf="@+id/myPortfolioDonutChart"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/depositValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xsmall"
             android:text="$3,000"
             android:textAppearance="?attr/textAppearanceHeadline6"
             app:layout_constraintLeft_toLeftOf="@+id/depositLabel"
@@ -64,107 +66,212 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rate"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            app:layout_constraintLeft_toRightOf="@+id/depositLabel"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintLeft_toLeftOf="@+id/rateValue"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/rateValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_xxlarge"
+            android:layout_marginLeft="@dimen/spacing_xxlarge"
+            android:layout_marginTop="@dimen/spacing_xsmall"
             android:text="+10.25%"
             android:textAppearance="?attr/textAppearanceHeadline6"
-            app:layout_constraintLeft_toLeftOf="@+id/rateLabel"
+            app:layout_constraintLeft_toRightOf="@+id/depositValue"
             app:layout_constraintTop_toBottomOf="@id/rateLabel" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.db.williamchart.view.LineChartView
         android:id="@+id/myPortfolioLineChart"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="175dp"
         app:chart_axis="none"
         app:chart_lineColor="#C4BACA"
+        app:chart_lineThickness="4dp"
         app:chart_smoothLine="true"
         app:layout_constraintTop_toBottomOf="@id/todoView" />
 
     <com.db.williamchart.view.BarChartView
         android:id="@+id/myPortfolioBarChart"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="75dp"
         app:chart_axis="none"
-        app:chart_barsColor="#3F51B5"
+        app:chart_barsColor="#64386B"
         app:chart_barsRadius="@dimen/spacing_small"
         app:chart_spacing="@dimen/spacing_small"
         app:layout_constraintTop_toBottomOf="@+id/myPortfolioLineChart" />
 
     <LinearLayout
+        android:id="@+id/myPortfolioTimespanButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_small"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/myPortfolioListPanel"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myPortfolioBarChart">
 
         <com.google.android.material.button.MaterialButton
             style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="55dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/my_portfolio_timespan_height"
             android:layout_marginEnd="@dimen/spacing_small"
             android:layout_marginRight="@dimen/spacing_small"
+            android:layout_weight="1"
             android:text="1h"
+            android:textSize="13.5sp"
             tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/myPortfolioDaysButton"
             style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="55dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/my_portfolio_timespan_height"
             android:layout_marginEnd="@dimen/spacing_small"
             android:layout_marginRight="@dimen/spacing_small"
+            android:layout_weight="1"
             android:text="1d"
+            android:textSize="13.5sp"
             tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="55dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/my_portfolio_timespan_height"
             android:layout_marginEnd="@dimen/spacing_small"
             android:layout_marginRight="@dimen/spacing_small"
+            android:layout_weight="1"
             android:text="1w"
+            android:textSize="13.5sp"
             tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="55dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/my_portfolio_timespan_height"
             android:layout_marginEnd="@dimen/spacing_small"
             android:layout_marginRight="@dimen/spacing_small"
+            android:layout_weight="1"
             android:text="1m"
+            android:textSize="13.5sp"
             tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="55dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/my_portfolio_timespan_height"
             android:layout_marginEnd="@dimen/spacing_small"
             android:layout_marginRight="@dimen/spacing_small"
+            android:layout_weight="1"
             android:text="1y"
+            android:textSize="13.5sp"
             tools:ignore="HardcodedText" />
 
         <com.google.android.material.button.MaterialButton
             style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="55dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/my_portfolio_timespan_height"
+            android:layout_weight="1"
             android:text="All"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/myPortfolioListPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_medium"
-        android:text="See more"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="HardcodedText" />
+        android:background="@drawable/bottom_panel_my_portfolio_bg"
+        android:paddingHorizontal="@dimen/spacing_medium"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/myPortfolioPanelArrow"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_arrow_up_my_portfolio"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/myPortfolioPanelFirstCompanyImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/company_my_portfolio_bg"
+            android:padding="@dimen/spacing_small"
+            android:src="@drawable/ic_first_company"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPortfolioPanelArrow"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/myPortfolioPanelFirstCompanyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginLeft="@dimen/spacing_medium"
+            android:text="AND"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintLeft_toRightOf="@id/myPortfolioPanelFirstCompanyImage"
+            app:layout_constraintTop_toTopOf="@id/myPortfolioPanelFirstCompanyImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.3784"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="#46244E"
+            app:layout_constraintLeft_toLeftOf="@id/myPortfolioPanelFirstCompanyName"
+            app:layout_constraintTop_toBottomOf="@id/myPortfolioPanelFirstCompanyName" />
+
+        <ImageView
+            android:id="@+id/myPortfolioPanelSecondCompanyImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:background="@drawable/company_highlight_my_portfolio_bg"
+            android:padding="@dimen/spacing_small"
+            android:src="@drawable/ic_second_company_my_portfolio"
+            app:layout_constraintBottom_toTopOf="@+id/myPortfolioSeeMoreButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myPortfolioPanelFirstCompanyImage"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/myPortfolioPanelSecondCompanyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginLeft="@dimen/spacing_medium"
+            android:text="RPL"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintLeft_toRightOf="@id/myPortfolioPanelSecondCompanyImage"
+            app:layout_constraintTop_toTopOf="@id/myPortfolioPanelSecondCompanyImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.3784"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="#FD9A70"
+            app:layout_constraintLeft_toLeftOf="@id/myPortfolioPanelSecondCompanyName"
+            app:layout_constraintTop_toBottomOf="@id/myPortfolioPanelSecondCompanyName" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/myPortfolioSeeMoreButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:text="See more"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="HardcodedText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

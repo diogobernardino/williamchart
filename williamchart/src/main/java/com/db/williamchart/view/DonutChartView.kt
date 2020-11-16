@@ -146,7 +146,7 @@ class DonutChartView @JvmOverloads constructor(
 
     companion object {
         private const val defaultThickness = 50f
-        private const val defaultColor = 0
+        private const val defaultColor = Color.BLACK
         private const val defaultBackgroundColor = Color.TRANSPARENT
         private const val defaultStartAngle = 90f
         private const val defaultDonutTotal = 100f

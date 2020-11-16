@@ -12,6 +12,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.atMost
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import org.junit.Assert
 import org.junit.Test
 
 class LineChartRendererTest {
@@ -90,5 +91,16 @@ class LineChartRendererTest {
 
         // Assert
         verify(view, atMost(1)).drawLabels(any())
+    }
+
+    @Test
+    fun `do not execute click check if no data available`() {
+        // Act
+        val got = lineChartRenderer.processClick(1f, 2f)
+
+        // Assert
+        Assert.assertEquals(-1, got.first)
+        Assert.assertEquals(-1f, got.second)
+        Assert.assertEquals(-1f, got.third)
     }
 }

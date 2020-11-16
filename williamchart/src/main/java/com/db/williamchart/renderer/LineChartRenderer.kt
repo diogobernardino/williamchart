@@ -155,8 +155,8 @@ class LineChartRenderer(
 
     override fun processClick(x: Float?, y: Float?): Triple<Int, Float, Float> {
 
-        if (x == null || y == null)
-            return Triple(1, -1f, -1f)
+        if (x == null || y == null || data.isEmpty())
+            return Triple(-1, -1f, -1f)
 
         val index =
             DefineDataPointsClickableFrames()(

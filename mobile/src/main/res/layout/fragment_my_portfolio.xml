@@ -36,6 +36,7 @@
             android:id="@+id/myPortfolioDonutChart"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:background="@android:color/transparent"
             app:chart_donutBackgroundColor="#fff"
             app:chart_donutThickness="@dimen/spacing_small"
             app:layout_constraintBottom_toBottomOf="parent"

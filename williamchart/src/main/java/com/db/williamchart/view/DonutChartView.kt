@@ -71,6 +71,7 @@ class DonutChartView @JvmOverloads constructor(
 
     init {
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.DonutChartAttrs))
+        handleEditMode()
     }
 
     override fun drawArc(degrees: List<Float>, innerFrame: Frame) {
@@ -129,6 +130,12 @@ class DonutChartView @JvmOverloads constructor(
         renderer.anim(values, animation)
     }
 
+    private fun handleEditMode() {
+        if (isInEditMode) {
+            show(editModeSampleData)
+        }
+    }
+
     private fun handleAttributes(typedArray: TypedArray) {
         typedArray.apply {
             donutThickness =
@@ -150,5 +157,6 @@ class DonutChartView @JvmOverloads constructor(
         private const val defaultBackgroundColor = Color.TRANSPARENT
         private const val defaultStartAngle = 90f
         private const val defaultDonutTotal = 100f
+        private val editModeSampleData = listOf(70f)
     }
 }

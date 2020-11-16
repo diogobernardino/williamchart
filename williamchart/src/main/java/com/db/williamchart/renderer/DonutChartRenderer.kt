@@ -50,7 +50,7 @@ class DonutChartRenderer(
 
     override fun draw() {
 
-        if (chartConfiguration.barBackgroundColor != -1)
+        if (chartConfiguration.barBackgroundColor != 0)
             view.drawBackground(innerFrameWithStroke)
 
         view.drawArc(datapoints.map { it.screenDegrees }, innerFrameWithStroke)

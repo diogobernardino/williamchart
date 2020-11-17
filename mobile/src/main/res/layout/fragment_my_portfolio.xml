@@ -30,15 +30,17 @@
         android:id="@+id/todoView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
         app:layout_constraintTop_toBottomOf="@+id/myPortfolioToolbar">
 
         <com.db.williamchart.view.DonutChartView
             android:id="@+id/myPortfolioDonutChart"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="@dimen/spacing_medium"
             android:background="@android:color/transparent"
             app:chart_donutBackgroundColor="#fff"
-            app:chart_donutThickness="@dimen/spacing_small"
+            app:chart_donutThickness="@dimen/spacing_xsmall"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,6 +51,7 @@
             android:layout_height="wrap_content"
             android:text="Deposit"
             android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:layout_marginStart="@dimen/spacing_xxlarge"
             app:layout_constraintLeft_toRightOf="@+id/myPortfolioDonutChart"
             app:layout_constraintTop_toTopOf="parent" />
 

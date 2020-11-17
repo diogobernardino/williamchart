@@ -18,6 +18,7 @@ class MyPortfolioFragment : Fragment(R.layout.fragment_my_portfolio) {
             this.requireActivity().window.statusBarColor = Color.parseColor("#331A39")
         }
 
+        myPortfolioDonutChart.donutColors = intArrayOf(Color.parseColor("#FD9A70"))
         myPortfolioDonutChart.show(donutChartData)
 
         myPortfolioLineChart.tooltip = PointTooltip()
@@ -29,7 +30,7 @@ class MyPortfolioFragment : Fragment(R.layout.fragment_my_portfolio) {
     }
 
     companion object {
-        private val donutChartData = listOf(20f)
+        private val donutChartData = listOf(40f)
 
         private val lineChartData = linkedMapOf(
             "1" to 4F,

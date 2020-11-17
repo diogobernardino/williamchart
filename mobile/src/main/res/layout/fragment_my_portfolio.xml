@@ -12,19 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="My Portfolio" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/spacing_small"
-        android:layout_marginRight="@dimen/spacing_small"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_tune_my_portfolio"
-        app:layout_constraintBottom_toBottomOf="@id/myPortfolioToolbar"
-        app:layout_constraintRight_toRightOf="@id/myPortfolioToolbar"
-        app:layout_constraintTop_toTopOf="@id/myPortfolioToolbar"
-        tools:ignore="ContentDescription" />
+        app:title="My Portfolio"
+        app:menu="@menu/menu_my_portfolio"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/todoView"

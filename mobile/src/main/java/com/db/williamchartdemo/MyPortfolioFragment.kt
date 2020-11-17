@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_my_portfolio.*
 
@@ -16,6 +17,11 @@ class MyPortfolioFragment : Fragment(R.layout.fragment_my_portfolio) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             this.requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             this.requireActivity().window.statusBarColor = Color.parseColor("#331A39")
+        }
+
+        myPortfolioToolbar.setOnMenuItemClickListener {
+            Toast.makeText(requireContext(), "Hi! I do nothing.", Toast.LENGTH_SHORT).show()
+            return@setOnMenuItemClickListener true
         }
 
         myPortfolioDonutChart.donutColors = intArrayOf(Color.parseColor("#FD9A70"))

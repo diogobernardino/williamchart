@@ -35,8 +35,8 @@
 
         <com.db.williamchart.view.DonutChartView
             android:id="@+id/myPortfolioDonutChart"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="@dimen/spacing_medium"
             android:background="@android:color/transparent"
             app:chart_donutBackgroundColor="#fff"
@@ -49,9 +49,9 @@
             android:id="@+id/depositLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_xxlarge"
             android:text="Deposit"
             android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:layout_marginStart="@dimen/spacing_xxlarge"
             app:layout_constraintLeft_toRightOf="@+id/myPortfolioDonutChart"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -92,6 +92,7 @@
         android:id="@+id/myPortfolioLineChart"
         android:layout_width="match_parent"
         android:layout_height="175dp"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
         app:chart_axis="none"
         app:chart_lineColor="#C4BACA"
         app:chart_lineThickness="4dp"
@@ -102,6 +103,7 @@
         android:id="@+id/myPortfolioBarChart"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:layout_marginHorizontal="@dimen/spacing_medium"
         app:chart_axis="none"
         app:chart_barsColor="#64386B"
         app:chart_barsRadius="@dimen/spacing_small"
@@ -234,12 +236,32 @@
             app:layout_constraintLeft_toLeftOf="@id/myPortfolioPanelFirstCompanyName"
             app:layout_constraintTop_toBottomOf="@id/myPortfolioPanelFirstCompanyName" />
 
+        <TextView
+            android:id="@+id/myPortfolioPanelFirstCompanyValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:layout_marginRight="@dimen/spacing_medium"
+            android:text="$5.40"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/myPortfolioPanelFirstCompanyName" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+1.34%"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="#46244E"
+            app:layout_constraintRight_toRightOf="@id/myPortfolioPanelFirstCompanyValue"
+            app:layout_constraintTop_toBottomOf="@id/myPortfolioPanelFirstCompanyValue" />
+
         <ImageView
             android:id="@+id/myPortfolioPanelSecondCompanyImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
-            android:layout_marginBottom="@dimen/spacing_small"
+            android:layout_marginBottom="@dimen/spacing_medium"
             android:background="@drawable/company_highlight_my_portfolio_bg"
             android:padding="@dimen/spacing_small"
             android:src="@drawable/ic_second_company_my_portfolio"
@@ -267,6 +289,26 @@
             android:textColor="#FD9A70"
             app:layout_constraintLeft_toLeftOf="@id/myPortfolioPanelSecondCompanyName"
             app:layout_constraintTop_toBottomOf="@id/myPortfolioPanelSecondCompanyName" />
+
+        <TextView
+            android:id="@+id/myPortfolioPanelSecondCompanyValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:layout_marginRight="@dimen/spacing_medium"
+            android:text="$6.73"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/myPortfolioPanelSecondCompanyName" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+11.32"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="#FD9A70"
+            app:layout_constraintRight_toRightOf="@id/myPortfolioPanelSecondCompanyValue"
+            app:layout_constraintTop_toBottomOf="@id/myPortfolioPanelSecondCompanyValue" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/myPortfolioSeeMoreButton"

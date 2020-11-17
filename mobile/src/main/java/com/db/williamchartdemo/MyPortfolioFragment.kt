@@ -19,8 +19,12 @@ class MyPortfolioFragment : Fragment(R.layout.fragment_my_portfolio) {
         }
 
         myPortfolioDonutChart.show(donutChartData)
+
+        myPortfolioLineChart.tooltip = PointTooltip()
         myPortfolioLineChart.show(lineChartData)
+
         myPortfolioBarChart.show(barChartData)
+
         myPortfolioDaysButton.isActivated = true
     }
 

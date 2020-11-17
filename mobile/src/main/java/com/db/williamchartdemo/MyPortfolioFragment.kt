@@ -21,6 +21,7 @@ class MyPortfolioFragment : Fragment(R.layout.fragment_my_portfolio) {
         myPortfolioDonutChart.donutColors = intArrayOf(Color.parseColor("#FD9A70"))
         myPortfolioDonutChart.show(donutChartData)
 
+        myPortfolioLineChart.grid = HorizontalDotGrid()
         myPortfolioLineChart.tooltip = PointTooltip()
         myPortfolioLineChart.show(lineChartData)
 

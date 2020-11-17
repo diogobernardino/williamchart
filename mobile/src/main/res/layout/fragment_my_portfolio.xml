@@ -92,7 +92,7 @@
         android:id="@+id/myPortfolioLineChart"
         android:layout_width="match_parent"
         android:layout_height="175dp"
-        android:layout_marginHorizontal="@dimen/spacing_medium"
+        android:layout_margin="@dimen/spacing_medium"
         app:chart_axis="none"
         app:chart_lineColor="#C4BACA"
         app:chart_lineThickness="4dp"

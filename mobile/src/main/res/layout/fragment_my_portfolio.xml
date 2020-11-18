@@ -184,10 +184,11 @@
         android:paddingHorizontal="@dimen/spacing_medium"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/myPortfolioPanelArrow"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_arrow_up_my_portfolio"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

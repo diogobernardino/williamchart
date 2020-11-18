@@ -19,9 +19,11 @@ class MyPortfolioFragment : Fragment(R.layout.fragment_my_portfolio) {
             this.requireActivity().window.statusBarColor = Color.parseColor("#331A39")
         }
 
+        myPortfolioPanelArrow.setOnClickListener { toastIt() }
+        myPortfolioSeeMoreButton.setOnClickListener { toastIt() }
         myPortfolioToolbar.setOnMenuItemClickListener {
-            Toast.makeText(requireContext(), "Hi! I do nothing.", Toast.LENGTH_SHORT).show()
-            return@setOnMenuItemClickListener true
+            toastIt()
+            true
         }
 
         myPortfolioDonutChart.donutColors = intArrayOf(Color.parseColor("#FD9A70"))
@@ -34,6 +36,10 @@ class MyPortfolioFragment : Fragment(R.layout.fragment_my_portfolio) {
         myPortfolioBarChart.show(barChartData)
 
         myPortfolioDaysButton.isActivated = true
+    }
+
+    private fun toastIt() {
+        Toast.makeText(requireContext(), "Hi! I do nothing.", Toast.LENGTH_SHORT).show()
     }
 
     companion object {

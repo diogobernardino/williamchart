@@ -11,6 +11,7 @@ private const val DEFAULT_DASH_INTERVAL = 10f
 
 class AxisGrid : Grid {
 
+    var gridType = GridType.FULL
     var color = -0x1000000
     var strokeWidth = DEFAULT_STROKE_WIDTH
     var dashEffect = false
@@ -34,11 +35,22 @@ class AxisGrid : Grid {
         xLabelsPositions: List<Float>,
         yLabelsPositions: List<Float>
     ) {
-        xLabelsPositions.forEach {
-            canvas.drawLine(it, innerFrame.bottom, it, innerFrame.top, paint)
+        if (gridType == GridType.FULL || gridType == GridType.VERTICAL) {
+            xLabelsPositions.forEach {
+                canvas.drawLine(it, innerFrame.bottom, it, innerFrame.top, paint)
+            }
         }
-        yLabelsPositions.forEach {
-            canvas.drawLine(innerFrame.left, it, innerFrame.right, it, paint)
+
+        if (gridType == GridType.FULL || gridType == GridType.HORIZONTAL) {
+            yLabelsPositions.forEach {
+                canvas.drawLine(innerFrame.left, it, innerFrame.right, it, paint)
+            }
         }
     }
+}
+
+enum class GridType {
+    FULL,
+    VERTICAL,
+    HORIZONTAL
 }

@@ -30,6 +30,7 @@ import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.plugin.AxisGrid
 import com.db.williamchart.plugin.AxisLabels
+import com.db.williamchart.plugin.GridType
 import com.db.williamchart.renderer.RendererConstants.Companion.notInitialized
 
 @OptIn(ExperimentalFeature::class)
@@ -185,11 +186,17 @@ abstract class AxisChartView @JvmOverloads constructor(
             }
 
             // Customize Grid
-            val shouldDisplayGrid = getBoolean(R.styleable.ChartAttrs_chart_grid, false)
-            if (shouldDisplayGrid) {
+            val gridType = when (getString(R.styleable.ChartAttrs_chart_grid)) {
+                "0" -> GridType.FULL
+                "1" -> GridType.VERTICAL
+                "2" -> GridType.HORIZONTAL
+                else -> null
+            }
+            if (gridType != null) {
                 grid = AxisGrid().apply {
-                    color = getColor(R.styleable.ChartAttrs_chart_gridColor, color)
-                    strokeWidth =
+                    this.gridType = gridType
+                    this.color = getColor(R.styleable.ChartAttrs_chart_gridColor, color)
+                    this.strokeWidth =
                         getDimension(R.styleable.ChartAttrs_chart_gridStrokeWidth, strokeWidth)
                 }
             }

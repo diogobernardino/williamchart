@@ -9,12 +9,18 @@
             <enum name="y" value="2" />
             <enum name="xy" value="3" />
         </attr>
+
         <!-- Labels -->
         <attr name="chart_labelsColor" format="color" />
         <attr name="chart_labelsSize" format="dimension" />
         <attr name="chart_labelsFont" format="reference" />
+
         <!-- Grid -->
-        <attr name="chart_grid" format="boolean" />
+        <attr name="chart_grid">
+            <enum name="full" value="0" />
+            <enum name="vertical" value="1" />
+            <enum name="horizontal" value="2" />
+        </attr>
         <attr name="chart_gridColor" format="color" />
         <attr name="chart_gridStrokeWidth" format="dimension" />
 

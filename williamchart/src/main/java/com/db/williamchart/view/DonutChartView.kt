@@ -70,6 +70,7 @@ class DonutChartView @JvmOverloads constructor(
             )
 
     init {
+        setBackgroundColor(Color.TRANSPARENT)
         handleAttributes(obtainStyledAttributes(attrs, R.styleable.DonutChartAttrs))
         handleEditMode()
     }

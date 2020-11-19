@@ -30,6 +30,7 @@ import com.db.williamchart.data.Scale
 import com.db.williamchart.extensions.obtainStyledAttributes
 import com.db.williamchart.plugin.AxisGrid
 import com.db.williamchart.plugin.AxisLabels
+import com.db.williamchart.plugin.GridEffect
 import com.db.williamchart.plugin.GridType
 import com.db.williamchart.renderer.RendererConstants.Companion.notInitialized
 
@@ -186,18 +187,24 @@ abstract class AxisChartView @JvmOverloads constructor(
             }
 
             // Customize Grid
-            val gridType = when (getString(R.styleable.ChartAttrs_chart_grid)) {
-                "0" -> GridType.FULL
-                "1" -> GridType.VERTICAL
-                "2" -> GridType.HORIZONTAL
-                else -> null
-            }
-            if (gridType != null) {
+            if (hasValue(R.styleable.ChartAttrs_chart_grid)) {
                 grid = AxisGrid().apply {
-                    this.gridType = gridType
+                    this.gridType = when (getString(R.styleable.ChartAttrs_chart_grid)) {
+                        "0" -> GridType.FULL
+                        "1" -> GridType.VERTICAL
+                        "2" -> GridType.HORIZONTAL
+                        else -> GridType.FULL
+                    }
                     this.color = getColor(R.styleable.ChartAttrs_chart_gridColor, color)
                     this.strokeWidth =
                         getDimension(R.styleable.ChartAttrs_chart_gridStrokeWidth, strokeWidth)
+                    this.gridEffect =
+                        when (getString(R.styleable.ChartAttrs_chart_gridEffect)) {
+                            "0" -> GridEffect.SOLID
+                            "1" -> GridEffect.DASHED
+                            "2" -> GridEffect.DOTTED
+                            else -> GridEffect.SOLID
+                        }
                 }
             }
 

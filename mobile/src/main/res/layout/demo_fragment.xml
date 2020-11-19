@@ -47,6 +47,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         app:chart_axis="none"
+        app:chart_gridEffect="dotted"
         app:chart_labelsColor="#FF70977F"
         app:chart_labelsFont="@font/open_sans_bold"
         app:chart_labelsSize="10sp"

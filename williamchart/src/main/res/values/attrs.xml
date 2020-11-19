@@ -21,6 +21,11 @@
             <enum name="vertical" value="1" />
             <enum name="horizontal" value="2" />
         </attr>
+        <attr name="chart_gridEffect">
+            <enum name="solid" value="0" />
+            <enum name="dashed" value="1" />
+            <enum name="dotted" value="2" />
+        </attr>
         <attr name="chart_gridColor" format="color" />
         <attr name="chart_gridStrokeWidth" format="dimension" />
 

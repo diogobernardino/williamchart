@@ -12,20 +12,26 @@ private const val DEFAULT_DASH_INTERVAL = 10f
 class AxisGrid : Grid {
 
     var gridType = GridType.FULL
+    var gridEffect = GridEffect.SOLID
     var color = -0x1000000
     var strokeWidth = DEFAULT_STROKE_WIDTH
-    var dashEffect = false
 
     private val paint by lazy {
         Paint().apply {
+
             color = this@AxisGrid.color
             strokeWidth = this@AxisGrid.strokeWidth
-            if (dashEffect)
+
+            if (gridEffect != GridEffect.SOLID) {
+                val interval =
+                    if (gridEffect == GridEffect.DASHED) DEFAULT_STROKE_WIDTH * 2
+                    else DEFAULT_STROKE_WIDTH
                 pathEffect =
                     DashPathEffect(
-                        floatArrayOf(DEFAULT_DASH_INTERVAL, DEFAULT_DASH_INTERVAL),
+                        floatArrayOf(interval, interval),
                         0f
                     )
+            }
         }
     }
 
@@ -53,4 +59,10 @@ enum class GridType {
     FULL,
     VERTICAL,
     HORIZONTAL
+}
+
+enum class GridEffect {
+    SOLID,
+    DASHED,
+    DOTTED
 }

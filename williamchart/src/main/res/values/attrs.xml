@@ -34,6 +34,7 @@
     <declare-styleable name="BarChartAttrs">
         <attr name="chart_spacing" format="dimension" />
         <attr name="chart_barsColor" format="color" />
+        <attr name="chart_barsColorsList" format="reference" />
         <attr name="chart_barsBackgroundColor" format="color" />
         <attr name="chart_barsRadius" format="dimension" />
     </declare-styleable>

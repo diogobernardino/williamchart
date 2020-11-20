@@ -34,6 +34,9 @@ class BarChartView @JvmOverloads constructor(
     var barsColor: Int = defaultBarsColor
 
     @Suppress("MemberVisibilityCanBePrivate")
+    var barsColorsList: List<Int>? = null
+
+    @Suppress("MemberVisibilityCanBePrivate")
     var barRadius: Float = defaultBarsRadius
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -65,10 +68,17 @@ class BarChartView @JvmOverloads constructor(
     }
 
     override fun drawBars(frames: List<Frame>) {
-        painter.prepare(color = barsColor, style = Paint.Style.FILL)
-        frames.forEach {
+
+        if (barsColorsList == null)
+            barsColorsList = List(frames.size) { barsColor }.toList()
+
+        if (barsColorsList!!.size != frames.size)
+            throw IllegalArgumentException("Colors provided do not match the number of datapoints.")
+
+        frames.forEachIndexed { index, frame ->
+            painter.prepare(color = barsColorsList!![index], style = Paint.Style.FILL)
             canvas.drawChartBar(
-                it.toRectF(),
+                frame.toRectF(),
                 barRadius,
                 painter.paint
             )
@@ -111,6 +121,9 @@ class BarChartView @JvmOverloads constructor(
             barRadius = getDimension(R.styleable.BarChartAttrs_chart_barsRadius, barRadius)
             barsBackgroundColor =
                 getColor(R.styleable.BarChartAttrs_chart_barsBackgroundColor, barsBackgroundColor)
+            val resourceId = getResourceId(R.styleable.BarChartAttrs_chart_barsColorsList, -1)
+            if (resourceId != -1)
+                barsColorsList = resources.getIntArray(resourceId).toList()
             recycle()
         }
     }

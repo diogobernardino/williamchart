@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        williamchartVersion = "3.8.1"
+        williamchartVersion = "3.9.0"
         targetSdkVersion = 30
         minSdkVersion = 16
         kotlinVersion = "1.4.10"

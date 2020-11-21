@@ -16,12 +16,12 @@ if (localPropertiesFiles.exists())
 
 android {
 
-    compileSdkVersion 30
+    compileSdkVersion rootProject.targetSdkVersion
 
     defaultConfig {
         applicationId "com.db.williamchartdemo"
-        minSdkVersion 16
-        targetSdkVersion 30
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 20
         versionName rootProject.williamchartVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -52,7 +52,7 @@ dependencies {
     implementation project(path: ':williamchart')
     implementation project(path: ':slidertooltip')
     //implementation "com.diogobernardino:williamchart:$rootProject.williamchartVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlinVersion"
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'

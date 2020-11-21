@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
 import com.db.williamchart.ChartContract
+import com.db.williamchart.ExperimentalFeature
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.configuration.BarChartConfiguration
@@ -33,6 +34,7 @@ class BarChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var barsColor: Int = defaultBarsColor
 
+    @ExperimentalFeature
     @Suppress("MemberVisibilityCanBePrivate")
     var barsColorsList: List<Int>? = null
 

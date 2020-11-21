@@ -4,10 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.db.williamchart.ExperimentalFeature
 import com.db.williamchart.Tooltip
 
-@ExperimentalFeature
 class PointTooltip : Tooltip {
 
     private lateinit var tooltipView: View

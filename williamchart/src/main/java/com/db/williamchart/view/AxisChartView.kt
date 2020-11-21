@@ -63,6 +63,7 @@ abstract class AxisChartView @JvmOverloads constructor(
         override fun onDataPointClick(x: Float, y: Float) {}
     }
 
+    @ExperimentalFeature
     var grid: Grid = object : Grid {
         override fun draw(
             canvas: Canvas,

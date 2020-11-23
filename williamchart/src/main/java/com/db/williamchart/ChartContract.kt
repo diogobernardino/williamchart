@@ -13,7 +13,12 @@ interface ChartContract {
     interface AxisView {
         fun postInvalidate()
         fun drawLabels(xLabels: List<Label>)
-        fun drawGrid(innerFrame: Frame, xLabelsPositions: List<Float>, yLabelsPositions: List<Float>)
+        fun drawGrid(
+            innerFrame: Frame,
+            xLabelsPositions: List<Float>,
+            yLabelsPositions: List<Float>
+        )
+
         fun drawDebugFrame(frames: List<Frame>)
     }
 
@@ -38,8 +43,8 @@ interface ChartContract {
     interface Renderer {
         fun preDraw(configuration: ChartConfiguration): Boolean
         fun draw()
-        fun render(entries: LinkedHashMap<String, Float>)
-        fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>)
+        fun render(entries: List<Pair<String, Float>>)
+        fun anim(entries: List<Pair<String, Float>>, animation: ChartAnimation<DataPoint>)
         fun processClick(x: Float?, y: Float?): Triple<Int, Float, Float>
         fun processTouch(x: Float?, y: Float?): Triple<Int, Float, Float>
     }

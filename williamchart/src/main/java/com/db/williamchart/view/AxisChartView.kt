@@ -152,12 +152,24 @@ abstract class AxisChartView @JvmOverloads constructor(
 
     abstract val chartConfiguration: ChartConfiguration
 
+    @Deprecated("New method receives a List<Pair<String, Float>> as argument.")
     fun show(entries: LinkedHashMap<String, Float>) {
+        doOnPreDraw { renderer.preDraw(chartConfiguration) }
+        renderer.render(entries.toList())
+    }
+
+    @Deprecated("New method receives a List<Pair<String, Float>> as argument.")
+    fun animate(entries: LinkedHashMap<String, Float>) {
+        doOnPreDraw { renderer.preDraw(chartConfiguration) }
+        renderer.anim(entries.toList(), animation)
+    }
+
+    fun show(entries: List<Pair<String, Float>>) {
         doOnPreDraw { renderer.preDraw(chartConfiguration) }
         renderer.render(entries)
     }
 
-    fun animate(entries: LinkedHashMap<String, Float>) {
+    fun animate(entries: List<Pair<String, Float>>) {
         doOnPreDraw { renderer.preDraw(chartConfiguration) }
         renderer.anim(entries, animation)
     }
@@ -224,7 +236,7 @@ abstract class AxisChartView @JvmOverloads constructor(
         private const val defaultFrameHeight = 100
         private const val defaultLabelsSize = 60F
         private val editModeSampleData =
-            linkedMapOf(
+            listOf(
                 "Label1" to 1f,
                 "Label2" to 7.5f,
                 "Label3" to 4.7f,

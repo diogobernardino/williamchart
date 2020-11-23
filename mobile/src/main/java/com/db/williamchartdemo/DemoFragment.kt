@@ -67,7 +67,7 @@ class DemoFragment : Fragment() {
     }
 
     companion object {
-        private val lineSet = linkedMapOf(
+        private val lineSet = listOf(
             "label1" to 5f,
             "label2" to 4.5f,
             "label3" to 4.7f,
@@ -82,7 +82,7 @@ class DemoFragment : Fragment() {
             "label12" to 4f
         )
 
-        private val barSet = linkedMapOf(
+        private val barSet = listOf(
             "JAN" to 4F,
             "FEB" to 7F,
             "MAR" to 2F,
@@ -91,7 +91,7 @@ class DemoFragment : Fragment() {
             "JUN" to 4F
         )
 
-        private val horizontalBarSet = linkedMapOf(
+        private val horizontalBarSet = listOf(
             "PORRO" to 5F,
             "FUSCE" to 6.4F,
             "EGET" to 3F

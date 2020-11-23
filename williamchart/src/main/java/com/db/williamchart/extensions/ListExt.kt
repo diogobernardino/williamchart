@@ -113,3 +113,13 @@ private fun si(setSize: Int, i: Int): Int {
         else -> i
     }
 }
+
+internal fun List<Pair<String, Float>>.toDataPoints(): List<DataPoint> =
+    map {
+        DataPoint(
+            label = it.first,
+            value = it.second,
+            screenPositionX = 0f,
+            screenPositionY = 0f
+        )
+    }

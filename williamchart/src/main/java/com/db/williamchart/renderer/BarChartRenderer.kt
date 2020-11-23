@@ -149,12 +149,12 @@ class BarChartRenderer(
         }
     }
 
-    override fun render(entries: LinkedHashMap<String, Float>) {
+    override fun render(entries: List<Pair<String, Float>>) {
         data = entries.toDataPoints()
         view.postInvalidate()
     }
 
-    override fun anim(entries: LinkedHashMap<String, Float>, animation: ChartAnimation<DataPoint>) {
+    override fun anim(entries: List<Pair<String, Float>>, animation: ChartAnimation<DataPoint>) {
         data = entries.toDataPoints()
         this.animation = animation
         view.postInvalidate()

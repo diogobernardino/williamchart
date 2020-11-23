@@ -32,7 +32,7 @@ class LineChartRendererTest {
     @Test
     fun `draw line background`() {
         // Arrange
-        val data = linkedMapOf(
+        val data = listOf(
             "this" to 999f,
             "that" to 111f
         )
@@ -64,7 +64,7 @@ class LineChartRendererTest {
     @Test
     fun `draw x labels`() {
         // Arrange
-        val data = linkedMapOf(
+        val data = listOf(
             "this" to 999f,
             "that" to 111f
         )

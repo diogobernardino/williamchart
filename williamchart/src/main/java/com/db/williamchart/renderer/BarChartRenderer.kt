@@ -201,10 +201,10 @@ class BarChartRenderer(
 
     private fun placeLabelsY(innerFrame: Frame) {
 
+        val halfLabelHeight = painter.measureLabelHeight(chartConfiguration.labelsSize) / 2
         val heightBetweenLabels =
-            (innerFrame.bottom - innerFrame.top) / RendererConstants.defaultScaleNumberOfSteps
-        val labelsBottomPosition =
-            innerFrame.bottom + painter.measureLabelHeight(chartConfiguration.labelsSize) / 2
+            (innerFrame.bottom - innerFrame.top - halfLabelHeight) / RendererConstants.defaultScaleNumberOfSteps
+        val labelsBottomPosition = innerFrame.bottom - halfLabelHeight
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
@@ -226,12 +226,14 @@ class BarChartRenderer(
 
         data.forEachIndexed { index, dataPoint ->
             dataPoint.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
-            dataPoint.screenPositionY = innerFrame.bottom -
-                    // bar length must be positive, or zero
-                    (chartHeight * max(
-                        0f,
-                        dataPoint.value - chartConfiguration.scale.min
-                    ) / scaleSize)
+            dataPoint.screenPositionY =
+                (chartConfiguration.scale.max - dataPoint.value) / scaleSize * chartHeight
+            /*innerFrame.bottom -
+                        // bar length must be positive, or zero
+                        (chartHeight * max(
+                            0f,
+                            dataPoint.value - chartConfiguration.scale.min
+                        ) / scaleSize)*/
         }
     }
 }

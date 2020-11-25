@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#475F50</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="portfolio_orange">#FD9A70</color>
+    <color name="portfolio_purple">#64386B</color>
 </resources>

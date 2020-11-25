@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="My Portfolio"
-        app:menu="@menu/menu_my_portfolio"/>
+        app:menu="@menu/menu_my_portfolio"
+        app:title="My Portfolio" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/todoView"
@@ -96,7 +96,7 @@
         android:layout_height="75dp"
         android:layout_marginHorizontal="@dimen/spacing_medium"
         app:chart_axis="none"
-        app:chart_barsColor="#64386B"
+        app:chart_barsColorsList="@array/bar_chart_colors"
         app:chart_barsRadius="@dimen/spacing_small"
         app:chart_spacing="@dimen/spacing_small"
         app:layout_constraintTop_toBottomOf="@+id/myPortfolioLineChart" />

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="bar_chart_colors">
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_orange</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+        <item>@color/portfolio_purple</item>
+    </integer-array>
+</resources>

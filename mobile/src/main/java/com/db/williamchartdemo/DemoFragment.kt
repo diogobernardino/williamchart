@@ -88,12 +88,12 @@ class DemoFragment : Fragment() {
         )
 
         private val barSet = listOf(
-            "JAN" to 5F,
-            "FEB" to 10F,
-            "MAR" to -2F,
-            "MAY" to 3F,
-            "APR" to -5F,
-            "JUN" to 4F
+            "JAN\n2020" to 5F,
+            "FEB\n2020" to 10F,
+            "MAR\n2020" to -2F,
+            "MAY\n2020" to 3F,
+            "APR\n2020" to -5F,
+            "JUN\n2020" to 4F
         )
 
         private val horizontalBarSet = listOf(

@@ -82,6 +82,7 @@ class DonutChartView @JvmOverloads constructor(
 
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = donutThickness
+        paint.isAntiAlias = true
 
         val invertedColors = donutColors.reversed() // Degrees list come inverted
 
@@ -101,6 +102,7 @@ class DonutChartView @JvmOverloads constructor(
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = donutThickness
         paint.color = donutBackgroundColor
+        paint.isAntiAlias = true
 
         val radius = (innerFrame.bottom - innerFrame.top) / 2
         canvas.drawCircle(

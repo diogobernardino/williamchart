@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.db.williamchart.ExperimentalFeature
+import com.db.williamchart.data.Scale
 import com.db.williamchart.slidertooltip.SliderTooltip
 import kotlinx.android.synthetic.main.demo_fragment.*
 
@@ -46,6 +47,10 @@ class DemoFragment : Fragment() {
          * Bar Chart
          */
         barChart.animation.duration = animationDuration
+        barChart.scale = Scale(
+            barSet.map { it.second }.minOrNull() ?: 0F,
+            barSet.map { it.second }.maxOrNull() ?: 0F
+        )
         barChart.animate(barSet)
 
         /**
@@ -83,12 +88,12 @@ class DemoFragment : Fragment() {
         )
 
         private val barSet = listOf(
-            "JAN" to 4F,
-            "FEB" to 7F,
-            "MAR" to 2F,
-            "MAY" to 2.3F,
-            "APR" to 5F,
-            "JUN" to 4F
+            "JAN\n2020" to 5F,
+            "FEB\n2020" to 10F,
+            "MAR\n2020" to -2F,
+            "MAY\n2020" to 3F,
+            "APR\n2020" to -5F,
+            "JUN\n2020" to 4F
         )
 
         private val horizontalBarSet = listOf(

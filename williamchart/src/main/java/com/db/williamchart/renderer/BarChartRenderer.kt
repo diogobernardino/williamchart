@@ -93,7 +93,9 @@ class BarChartRenderer(
         placeLabelsY(innerFrame)
         placeDataPoints(innerFrame)
 
-        animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
+        val chartHeight = innerFrame.bottom - innerFrame.top
+        val startPoint = chartHeight * configuration.scale.max / configuration.scale.size
+        animation.animateFrom(startPoint, data) { view.postInvalidate() }
 
         return false
     }
@@ -126,6 +128,7 @@ class BarChartRenderer(
         view.drawBars(
             GetVerticalBarFrames()(
                 innerFrame,
+                chartConfiguration.scale,
                 chartConfiguration.barsSpacing,
                 data
             )
@@ -134,17 +137,17 @@ class BarChartRenderer(
         if (RendererConstants.inDebug) {
             view.drawDebugFrame(
                 listOf(outerFrame, innerFrame) +
-                    DebugWithLabelsFrame()(
-                        painter = painter,
-                        axisType = chartConfiguration.axis,
-                        xLabels = xLabels,
-                        yLabels = yLabels,
-                        labelsSize = chartConfiguration.labelsSize
-                    ) +
-                    DefineVerticalBarsClickableFrames()(
-                        innerFrame,
-                        data.map { Pair(it.screenPositionX, it.screenPositionY) }
-                    )
+                        DebugWithLabelsFrame()(
+                            painter = painter,
+                            axisType = chartConfiguration.axis,
+                            xLabels = xLabels,
+                            yLabels = yLabels,
+                            labelsSize = chartConfiguration.labelsSize
+                        ) +
+                        DefineVerticalBarsClickableFrames()(
+                            innerFrame,
+                            data.map { Pair(it.screenPositionX, it.screenPositionY) }
+                        )
             )
         }
     }
@@ -187,8 +190,8 @@ class BarChartRenderer(
         val widthBetweenLabels = (labelsRightPosition - labelsLeftPosition) / (xLabels.size - 1)
         val xLabelsVerticalPosition =
             innerFrame.bottom -
-                painter.measureLabelAscent(chartConfiguration.labelsSize) +
-                RendererConstants.labelsPaddingToInnerChart
+                    painter.measureLabelAscent(chartConfiguration.labelsSize) +
+                    RendererConstants.labelsPaddingToInnerChart
 
         xLabels.forEachIndexed { index, label ->
             label.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
@@ -198,16 +201,16 @@ class BarChartRenderer(
 
     private fun placeLabelsY(innerFrame: Frame) {
 
+        val halfLabelHeight = painter.measureLabelHeight(chartConfiguration.labelsSize) / 2
         val heightBetweenLabels =
-            (innerFrame.bottom - innerFrame.top) / RendererConstants.defaultScaleNumberOfSteps
-        val labelsBottomPosition =
-            innerFrame.bottom + painter.measureLabelHeight(chartConfiguration.labelsSize) / 2
+            (innerFrame.bottom - innerFrame.top - halfLabelHeight) / RendererConstants.defaultScaleNumberOfSteps
+        val labelsBottomPosition = innerFrame.bottom - halfLabelHeight
 
         yLabels.forEachIndexed { index, label ->
             label.screenPositionX =
                 innerFrame.left -
-                    RendererConstants.labelsPaddingToInnerChart -
-                    painter.measureLabelWidth(label.label, chartConfiguration.labelsSize) / 2
+                        RendererConstants.labelsPaddingToInnerChart -
+                        painter.measureLabelWidth(label.label, chartConfiguration.labelsSize) / 2
             label.screenPositionY = labelsBottomPosition - heightBetweenLabels * index
         }
     }
@@ -224,12 +227,13 @@ class BarChartRenderer(
         data.forEachIndexed { index, dataPoint ->
             dataPoint.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
-                innerFrame.bottom -
-                    // bar length must be positive, or zero
-                    (chartHeight * max(
-                        0f,
-                        dataPoint.value - chartConfiguration.scale.min
-                    ) / scaleSize)
+                (chartConfiguration.scale.max - dataPoint.value) / scaleSize * chartHeight
+            /*innerFrame.bottom -
+                        // bar length must be positive, or zero
+                        (chartHeight * max(
+                            0f,
+                            dataPoint.value - chartConfiguration.scale.min
+                        ) / scaleSize)*/
         }
     }
 }

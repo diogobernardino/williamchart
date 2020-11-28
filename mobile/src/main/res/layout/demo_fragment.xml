@@ -105,7 +105,7 @@
         android:layout_height="150dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        app:chart_axis="x"
+        app:chart_axis="xy"
         app:chart_barsColor="#fff"
         app:chart_barsRadius="4dp"
         app:chart_labelsColor="#FF70977F"

@@ -8,15 +8,14 @@ import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.DataPoint
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
-import com.db.williamchart.data.Scale
 import com.db.williamchart.data.notInitialized
 import com.db.williamchart.data.shouldDisplayAxisX
 import com.db.williamchart.data.shouldDisplayAxisY
 import com.db.williamchart.data.configuration.toOuterFrame
 import com.db.williamchart.data.contains
 import com.db.williamchart.data.withPaddings
-import com.db.williamchart.extensions.limits
 import com.db.williamchart.extensions.maxValueBy
+import com.db.williamchart.extensions.toBarScale
 import com.db.williamchart.extensions.toDataPoints
 import com.db.williamchart.extensions.toLabels
 import com.db.williamchart.renderer.executor.DebugWithLabelsFrame
@@ -24,7 +23,6 @@ import com.db.williamchart.renderer.executor.DefineVerticalBarsClickableFrames
 import com.db.williamchart.renderer.executor.GetVerticalBarBackgroundFrames
 import com.db.williamchart.renderer.executor.GetVerticalBarFrames
 import com.db.williamchart.renderer.executor.MeasureBarChartPaddings
-import kotlin.math.max
 
 class BarChartRenderer(
     private val view: ChartContract.BarView,
@@ -33,6 +31,8 @@ class BarChartRenderer(
 ) : ChartContract.Renderer {
 
     private var data = emptyList<DataPoint>()
+
+    private var zeroPositionY: Float = 0.0f
 
     private lateinit var outerFrame: Frame
 
@@ -51,13 +51,7 @@ class BarChartRenderer(
         chartConfiguration = configuration as BarChartConfiguration
 
         if (chartConfiguration.scale.notInitialized())
-            chartConfiguration =
-                chartConfiguration.copy(
-                    scale = Scale(
-                        min = 0F,
-                        max = data.limits().second
-                    )
-                )
+            chartConfiguration = chartConfiguration.copy(scale = data.toBarScale())
 
         xLabels = data.toLabels()
         val scaleStep = chartConfiguration.scale.size / RendererConstants.defaultScaleNumberOfSteps
@@ -89,9 +83,16 @@ class BarChartRenderer(
         outerFrame = chartConfiguration.toOuterFrame()
         innerFrame = outerFrame.withPaddings(paddings)
 
+        zeroPositionY =
+            processZeroPositionY(
+                innerTop = innerFrame.top,
+                innerBottom = innerFrame.bottom,
+                scaleRange = chartConfiguration.scale.size
+            )
+
         placeLabelsX(innerFrame)
         placeLabelsY(innerFrame)
-        placeDataPoints(innerFrame)
+        placeDataPoints(innerFrame, zeroPositionY)
 
         animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
 
@@ -126,6 +127,7 @@ class BarChartRenderer(
         view.drawBars(
             GetVerticalBarFrames()(
                 innerFrame,
+                zeroPositionY,
                 chartConfiguration.barsSpacing,
                 data
             )
@@ -144,7 +146,8 @@ class BarChartRenderer(
                     DefineVerticalBarsClickableFrames()(
                         innerFrame,
                         data.map { Pair(it.screenPositionX, it.screenPositionY) }
-                    )
+                    ) +
+                    Frame(innerFrame.left, zeroPositionY, innerFrame.right, zeroPositionY)
             )
         }
     }
@@ -212,10 +215,18 @@ class BarChartRenderer(
         }
     }
 
-    private fun placeDataPoints(innerFrame: Frame) {
+    private fun placeDataPoints(
+        innerFrame: Frame,
+        zeroPositionY: Float
+    ) {
+        // Chart upper part with positive points
+        val positiveHeight = zeroPositionY - innerFrame.top
+        val positiveScale = chartConfiguration.scale.max
 
-        val scaleSize = chartConfiguration.scale.size
-        val chartHeight = innerFrame.bottom - innerFrame.top
+        // Chart bottom part with negative points
+        val negativeHeight = innerFrame.bottom - zeroPositionY
+        val negativeScale = chartConfiguration.scale.min
+
         val halfBarWidth = (innerFrame.right - innerFrame.left) / xLabels.size / 2
         val labelsLeftPosition = innerFrame.left + halfBarWidth
         val labelsRightPosition = innerFrame.right - halfBarWidth
@@ -224,12 +235,18 @@ class BarChartRenderer(
         data.forEachIndexed { index, dataPoint ->
             dataPoint.screenPositionX = labelsLeftPosition + (widthBetweenLabels * index)
             dataPoint.screenPositionY =
-                innerFrame.bottom -
-                    // bar length must be positive, or zero
-                    (chartHeight * max(
-                        0f,
-                        dataPoint.value - chartConfiguration.scale.min
-                    ) / scaleSize)
+                if (dataPoint.value >= 0f)
+                    zeroPositionY - (positiveHeight * dataPoint.value / positiveScale) // Positive
+                else zeroPositionY + (negativeHeight * dataPoint.value / negativeScale) // Negative
         }
+    }
+
+    private fun processZeroPositionY(
+        innerTop: Float = innerFrame.top,
+        innerBottom: Float = innerFrame.bottom,
+        scaleRange: Float = chartConfiguration.scale.size
+    ): Float {
+        val chartHeight = innerBottom - innerTop
+        return innerFrame.top + (chartHeight * chartConfiguration.scale.max / scaleRange)
     }
 }

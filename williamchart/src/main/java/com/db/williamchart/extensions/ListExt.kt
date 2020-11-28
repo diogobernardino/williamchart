@@ -19,6 +19,15 @@ fun List<DataPoint>.toScale(): Scale {
     return Scale(min = limits.first, max = limits.second)
 }
 
+fun List<DataPoint>.toBarScale(): Scale {
+    val limits = limits()
+    return when {
+        limits.first > 0 -> Scale(0f, limits.second)
+        limits.first < 0 -> Scale(limits.first, 0f)
+        else -> Scale(limits.first, limits.second)
+    }
+}
+
 fun List<DataPoint>.toLabels(): List<Label> {
     return map {
         Label(

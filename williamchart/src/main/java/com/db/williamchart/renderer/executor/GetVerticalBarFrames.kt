@@ -7,6 +7,7 @@ class GetVerticalBarFrames {
 
     operator fun invoke(
         innerFrame: Frame,
+        zeroPositionY: Float,
         spacingBetweenBars: Float,
         data: List<DataPoint>
     ): List<Frame> {
@@ -19,7 +20,7 @@ class GetVerticalBarFrames {
                 left = it.screenPositionX - halfBarWidth,
                 top = it.screenPositionY,
                 right = it.screenPositionX + halfBarWidth,
-                bottom = innerFrame.bottom
+                bottom = zeroPositionY
             )
         }
     }

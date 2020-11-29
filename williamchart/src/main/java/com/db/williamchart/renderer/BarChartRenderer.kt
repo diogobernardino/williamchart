@@ -94,7 +94,7 @@ class BarChartRenderer(
         placeLabelsY(innerFrame)
         placeDataPoints(innerFrame, zeroPositionY)
 
-        animation.animateFrom(innerFrame.bottom, data) { view.postInvalidate() }
+        animation.animateFrom(zeroPositionY, data) { view.postInvalidate() }
 
         return false
     }
@@ -242,11 +242,11 @@ class BarChartRenderer(
     }
 
     private fun processZeroPositionY(
-        innerTop: Float = innerFrame.top,
-        innerBottom: Float = innerFrame.bottom,
-        scaleRange: Float = chartConfiguration.scale.size
+        innerTop: Float,
+        innerBottom: Float,
+        scaleRange: Float
     ): Float {
         val chartHeight = innerBottom - innerTop
-        return innerFrame.top + (chartHeight * chartConfiguration.scale.max / scaleRange)
+        return innerTop + (chartHeight * chartConfiguration.scale.max / scaleRange)
     }
 }

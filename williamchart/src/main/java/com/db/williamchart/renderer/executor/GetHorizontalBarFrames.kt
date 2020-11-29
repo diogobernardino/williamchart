@@ -7,6 +7,7 @@ class GetHorizontalBarFrames {
 
     operator fun invoke(
         innerFrame: Frame,
+        zeroPositionX: Float,
         spacingBetweenBars: Float,
         data: List<DataPoint>
     ): List<Frame> {
@@ -16,7 +17,7 @@ class GetHorizontalBarFrames {
 
         return data.map {
             Frame(
-                left = innerFrame.left,
+                left = zeroPositionX,
                 top = it.screenPositionY - halfBarWidth,
                 right = it.screenPositionX,
                 bottom = it.screenPositionY + halfBarWidth

@@ -44,6 +44,8 @@ class HorizontalBarChartRenderer(
 
     private lateinit var yLabels: List<Label>
 
+    private lateinit var barsBackgroundFrames: List<Frame>
+
     override fun preDraw(configuration: ChartConfiguration): Boolean {
 
         if (data.isEmpty()) return true
@@ -98,6 +100,13 @@ class HorizontalBarChartRenderer(
         placeLabelsY(outerFrame, innerFrame)
         placeDataPoints(innerFrame)
 
+        barsBackgroundFrames =
+            GetHorizontalBarBackgroundFrames()(
+                innerFrame,
+                chartConfiguration.barsSpacing,
+                data
+            )
+
         animation.animateFrom(zeroPositionX, data) { view.postInvalidate() }
 
         return false
@@ -114,13 +123,7 @@ class HorizontalBarChartRenderer(
             view.drawLabels(yLabels)
 
         if (chartConfiguration.barsBackgroundColor != -1)
-            view.drawBarsBackground(
-                GetHorizontalBarBackgroundFrames()(
-                    innerFrame,
-                    chartConfiguration.barsSpacing,
-                    data
-                )
-            )
+            view.drawBarsBackground(barsBackgroundFrames)
 
         view.drawBars(
             GetHorizontalBarFrames()(

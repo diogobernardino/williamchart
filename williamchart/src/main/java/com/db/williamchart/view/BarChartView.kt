@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
+import androidx.annotation.Size
 import com.db.williamchart.ChartContract
 import com.db.williamchart.ExperimentalFeature
 import com.db.williamchart.R
@@ -37,6 +38,10 @@ class BarChartView @JvmOverloads constructor(
     @ExperimentalFeature
     @Suppress("MemberVisibilityCanBePrivate")
     var barsColorsList: List<Int>? = null
+
+    @Size(2)
+    @Suppress("MemberVisibilityCanBePrivate")
+    var barsGradientColors: IntArray = intArrayOf(0, 0)
 
     @Suppress("MemberVisibilityCanBePrivate")
     var barRadius: Float = defaultBarsRadius

@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import androidx.annotation.ColorInt
 import androidx.annotation.Size
 import com.db.williamchart.ChartContract
-import com.db.williamchart.ExperimentalFeature
 import com.db.williamchart.R
 import com.db.williamchart.animation.NoAnimation
 import com.db.williamchart.data.configuration.BarChartConfiguration
@@ -16,6 +15,7 @@ import com.db.williamchart.data.configuration.ChartConfiguration
 import com.db.williamchart.data.Frame
 import com.db.williamchart.data.Label
 import com.db.williamchart.data.Paddings
+import com.db.williamchart.data.toLinearGradient
 import com.db.williamchart.data.toRect
 import com.db.williamchart.data.toRectF
 import com.db.williamchart.extensions.drawChartBar
@@ -35,13 +35,12 @@ class BarChartView @JvmOverloads constructor(
     @Suppress("MemberVisibilityCanBePrivate")
     var barsColor: Int = defaultBarsColor
 
-    @ExperimentalFeature
     @Suppress("MemberVisibilityCanBePrivate")
     var barsColorsList: List<Int>? = null
 
     @Size(2)
     @Suppress("MemberVisibilityCanBePrivate")
-    var barsGradientColors: IntArray = intArrayOf(0, 0)
+    var barsGradientColors: IntArray? = null
 
     @Suppress("MemberVisibilityCanBePrivate")
     var barRadius: Float = defaultBarsRadius
@@ -76,14 +75,25 @@ class BarChartView @JvmOverloads constructor(
 
     override fun drawBars(frames: List<Frame>) {
 
-        if (barsColorsList == null)
-            barsColorsList = List(frames.size) { barsColor }.toList()
+        if (barsGradientColors == null) {
 
-        if (barsColorsList!!.size != frames.size)
-            throw IllegalArgumentException("Colors provided do not match the number of datapoints.")
+            if (barsColorsList == null)
+                barsColorsList = List(frames.size) { barsColor }.toList()
+
+            if (barsColorsList!!.size != frames.size)
+                throw IllegalArgumentException("Colors provided do not match the number of datapoints.")
+        }
 
         frames.forEachIndexed { index, frame ->
-            painter.prepare(color = barsColorsList!![index], style = Paint.Style.FILL)
+            if (barsGradientColors != null) {
+                painter.prepare(
+                    shader = frame.toLinearGradient(barsGradientColors!!),
+                    style = Paint.Style.FILL
+                )
+            } else {
+                painter.prepare(color = barsColorsList!![index], style = Paint.Style.FILL)
+            }
+
             canvas.drawChartBar(
                 frame.toRectF(),
                 barRadius,

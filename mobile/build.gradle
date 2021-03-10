@@ -1,18 +1,21 @@
 plugins {
     id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
     id("com.github.triplet.play") version "2.0.0"
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.github.triplet.play'
-
 Properties properties = new Properties()
 File localPropertiesFiles = project.rootProject.file('local.properties')
-
 if (localPropertiesFiles.exists())
     properties.load(localPropertiesFiles.newDataInputStream())
+
+def storeFileProperty = properties.getProperty("storeFile")
+def storePasswordProperty = properties.getProperty("storePassword")
+def keyAliasProperty = properties.getProperty("keyAlias")
+def keyPasswordProperty = properties.getProperty("keyPassword")
+
+def validSigningConfig = storeFileProperty && storePasswordProperty && keyAliasProperty && keyPasswordProperty
 
 android {
 
@@ -27,13 +30,13 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    if (localPropertiesFiles.exists()) {
+    if (validSigningConfig) {
         signingConfigs {
             release {
-                storeFile file(properties.getProperty("storeFile"))
-                storePassword properties.getProperty("storePassword")
-                keyAlias properties.getProperty("keyAlias")
-                keyPassword properties.getProperty("keyPassword")
+                storeFile file(storeFileProperty)
+                storePassword storePasswordProperty
+                keyAlias keyAliasProperty
+                keyPassword keyPasswordProperty
             }
         }
     }
@@ -42,7 +45,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (localPropertiesFiles.exists())
+            if (validSigningConfig)
                 signingConfig signingConfigs.release
         }
     }

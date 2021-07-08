@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.vanniktech.maven.publish'
 
 android {
     kotlinOptions {
@@ -32,5 +33,3 @@ dependencies {
     testImplementation "org.mockito:mockito-core:3.3.3"
     testImplementation "com.nhaarman:mockito-kotlin:1.6.0"
 }
-
-apply from: 'publish.gradle'

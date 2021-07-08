@@ -9,14 +9,16 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.15.1'
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.32'
     }
 }
 
@@ -29,6 +31,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
     }
     apply from: "$rootDir/ktlint.gradle"
     apply from: "$rootDir/detekt.gradle"

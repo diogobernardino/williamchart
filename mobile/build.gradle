@@ -49,8 +49,8 @@ android {
 }
 
 dependencies {
-    //implementation project(path: ':williamchart')
-    implementation "com.diogobernardino:williamchart:$rootProject.williamchartVersion"
+    implementation project(path: ':williamchart')
+    //implementation "com.diogobernardino:williamchart:$rootProject.williamchartVersion"
     implementation project(path: ':slidertooltip')
     //implementation "com.diogobernardino.williamchart:tooltip-slider:$rootProject.williamchartVersion"
     //implementation "com.diogobernardino.williamchart:tooltip-points:$rootProject.williamchartVersion"

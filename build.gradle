@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        williamchartVersion = "3.10.1"
+        williamchartVersion = "3.11.0"
         targetSdkVersion = 30
         minSdkVersion = 16
         kotlinVersion = "1.4.10"
@@ -30,8 +30,8 @@ plugins {
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
+        jcenter()
     }
     apply from: "$rootDir/ktlint.gradle"
     apply from: "$rootDir/detekt.gradle"

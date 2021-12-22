@@ -79,7 +79,7 @@ class BarChartView @JvmOverloads constructor(
 
         if (barsGradientColors == null) {
 
-            if (barsColorsList == null)
+            if (barsColorsList == null || barsColorsList.size != frames.size)
                 barsColorsList = List(frames.size) { barsColor }.toList()
 
             if (barsColorsList!!.size != frames.size)

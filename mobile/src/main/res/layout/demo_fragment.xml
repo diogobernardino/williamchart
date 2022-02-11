@@ -40,7 +40,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/backgroundGuideline" />
 
-    <com.db.williamchart.view.LineChartView
+    <com.db.williamchart.view.BarChartView
         android:id="@+id/lineChart"
         android:layout_width="0dp"
         android:layout_height="70dp"

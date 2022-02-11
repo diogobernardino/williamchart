@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.db.williamchart.ExperimentalFeature
-import com.db.williamchart.slidertooltip.SliderTooltip
 import kotlinx.android.synthetic.main.demo_fragment.*
 
 class DemoFragment : Fragment() {
@@ -24,16 +23,9 @@ class DemoFragment : Fragment() {
         /**
          * Line Chart
          */
-        lineChart.gradientFillColors =
-            intArrayOf(
-                Color.parseColor("#81FFFFFF"),
-                Color.TRANSPARENT
-            )
+
         lineChart.animation.duration = animationDuration
-        lineChart.tooltip =
-            SliderTooltip().also {
-                it.color = Color.WHITE
-            }
+        lineChart.tooltip = TextTooltip(lineSet)
         lineChart.onDataPointTouchListener = { index, _, _ ->
             lineChartValue.text =
                 lineSet.toList()[index]

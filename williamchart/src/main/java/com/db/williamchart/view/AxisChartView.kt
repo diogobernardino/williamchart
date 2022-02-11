@@ -60,7 +60,7 @@ abstract class AxisChartView @JvmOverloads constructor(
     var tooltip: Tooltip = object : Tooltip {
         override fun onCreateTooltip(parentView: ViewGroup) {}
         override fun onDataPointTouch(x: Float, y: Float) {}
-        override fun onDataPointClick(x: Float, y: Float) {}
+        override fun onDataPointClick(index: Int, x: Float, y: Float) {}
     }
 
     @ExperimentalFeature
@@ -98,7 +98,7 @@ abstract class AxisChartView @JvmOverloads constructor(
                     val (index, x, y) = renderer.processClick(e?.x, e?.y)
                     return if (index != -1) {
                         onDataPointClickListener(index, x, y)
-                        tooltip.onDataPointClick(x, y)
+                        tooltip.onDataPointClick(index, x, y)
                         true
                     } else false
                 }

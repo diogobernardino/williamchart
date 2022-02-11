@@ -28,5 +28,5 @@ class SliderTooltip : Tooltip {
         tooltipView.x = x - tooltipView.width / 2
     }
 
-    override fun onDataPointClick(x: Float, y: Float) {}
+    override fun onDataPointClick(index: Int, x: Float, y: Float) {}
 }

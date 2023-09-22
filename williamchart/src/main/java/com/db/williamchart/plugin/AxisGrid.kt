@@ -5,6 +5,7 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import com.db.williamchart.Grid
 import com.db.williamchart.data.Frame
+import com.db.williamchart.renderer.RendererConstants
 
 private const val DEFAULT_STROKE_WIDTH = 5f
 private const val DEFAULT_DASH_INTERVAL = 10f
@@ -49,7 +50,7 @@ class AxisGrid : Grid {
 
         if (gridType == GridType.FULL || gridType == GridType.HORIZONTAL) {
             yLabelsPositions.forEach {
-                canvas.drawLine(innerFrame.left, it, innerFrame.right, it, paint)
+                canvas.drawLine(innerFrame.left, it - RendererConstants.labelsPaddingToInnerChart, innerFrame.right, it - RendererConstants.labelsPaddingToInnerChart, paint)
             }
         }
     }
